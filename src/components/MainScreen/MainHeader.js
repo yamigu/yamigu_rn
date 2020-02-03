@@ -41,5 +41,4 @@ const MainHeader = props => {
     </Header>
   );
 };
-
 export default MainHeader;

@@ -8,9 +8,6 @@ import SplashScreen from './src/screens/SplashScreen';
 const AppStack = createStackNavigator({
   Main: {
     screen: MainScreen, // MainScreen 컴포넌트를 네비게이터에 등록
-    navigationOptions: {
-      headerShown: false,
-    },
   },
 });
 const AuthStack = createStackNavigator({

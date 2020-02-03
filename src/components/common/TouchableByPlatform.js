@@ -7,9 +7,17 @@ import {
 
 const TouchableByPlatform = props => {
   if (Platform.OS === 'android') {
-    return <TouchableNativeFeedback>{props.children}</TouchableNativeFeedback>;
+    return (
+      <TouchableNativeFeedback style={props.style}>
+        {props.children}
+      </TouchableNativeFeedback>
+    );
   } else {
-    return <TouchableHighlight>{props.children}</TouchableHighlight>;
+    return (
+      <TouchableHighlight style={props.style}>
+        {props.children}
+      </TouchableHighlight>
+    );
   }
 };
 
