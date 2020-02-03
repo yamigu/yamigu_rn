@@ -2,8 +2,7 @@
 import React from 'react';
 import {Image, StyleSheet} from 'react-native';
 import {Header, Body, Left, Right, Icon} from 'native-base';
-import {TouchableNativeFeedback} from 'react-native-gesture-handler';
-
+import TouchableByPlatform from '~/components/common/TouchableByPlatform';
 const styles = StyleSheet.create({
   touchable: {
     height: 25,
@@ -13,6 +12,7 @@ const styles = StyleSheet.create({
     borderRadius: 50,
   },
 });
+
 const MainHeader = props => {
   const openMenu = () => {
     props.openDrawer();
@@ -20,7 +20,7 @@ const MainHeader = props => {
   return (
     <Header style={{height: 90, backgroundColor: 'white'}}>
       <Left>
-        <TouchableNativeFeedback style={styles.touchable}>
+        <TouchableByPlatform style={styles.touchable}>
           <Icon
             name="menu"
             style={{
@@ -28,15 +28,15 @@ const MainHeader = props => {
             }}
             // onPress={openMenu}
           />
-        </TouchableNativeFeedback>
+        </TouchableByPlatform>
       </Left>
       <Body>
         <Image source={require('../../images/yamigu-logo-text.png')} />
       </Body>
       <Right>
-        <TouchableNativeFeedback>
+        <TouchableByPlatform>
           <Image source={require('../../images/chat-bubble-outline.png')} />
-        </TouchableNativeFeedback>
+        </TouchableByPlatform>
       </Right>
     </Header>
   );

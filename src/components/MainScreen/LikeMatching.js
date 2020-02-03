@@ -2,7 +2,7 @@ import React from 'react';
 import {View, StyleSheet, ImageBackground} from 'react-native';
 import {CustomTextMedium, CustomTextLight} from '../common/CustomText';
 import palette from '~/lib/styles/palette';
-import {TouchableNativeFeedback} from 'react-native-gesture-handler';
+import TouchableByPlatform from '~/components/common/TouchableByPlatform';
 
 const styles = StyleSheet.create({
   container: {
@@ -42,7 +42,7 @@ const LikeMatching = () => {
   return (
     <View style={styles.container}>
       <View style={styles.wrapper}>
-        <TouchableNativeFeedback styles={styles.touchable}>
+        <TouchableByPlatform styles={styles.touchable}>
           <ImageBackground
             source={require('../../images/gold-inner-circle.png')}
             style={styles.innerBackground}>
@@ -54,7 +54,7 @@ const LikeMatching = () => {
               </CustomTextLight>
             </ImageBackground>
           </ImageBackground>
-        </TouchableNativeFeedback>
+        </TouchableByPlatform>
       </View>
       <CustomTextMedium color={palette.black} size={16}>
         좋아요

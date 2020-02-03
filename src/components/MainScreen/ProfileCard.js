@@ -15,7 +15,7 @@ import {
 import Ionicon from 'react-native-vector-icons/Ionicons';
 import palette from '~/lib/styles/palette';
 import RoundTextView from '../common/RoundTextView';
-import {TouchableNativeFeedback} from 'react-native-gesture-handler';
+import TouchableByPlatform from '~/components/common/TouchableByPlatform';
 import LinearGradient from 'react-native-linear-gradient';
 
 const data = ['2:2 미팅', '3:3 미팅', '4:4 미팅', '날짜는 조율 가능해요'];
@@ -148,16 +148,16 @@ const ProfileCard = ({params}) => (
     </View>
     <View style={styles.horizontalDivider} />
     <View style={styles.actionDiv}>
-      <TouchableNativeFeedback style={styles.touchable}>
+      <TouchableByPlatform style={styles.touchable}>
         <View style={styles.button}>
           <Ionicon name="ios-heart-empty" color="#898989" size={18} />
           <CustomTextMedium size={14} color="#898989" style={{marginLeft: 4}}>
             좋아요
           </CustomTextMedium>
         </View>
-      </TouchableNativeFeedback>
+      </TouchableByPlatform>
       <View style={styles.verticalDivider} />
-      <TouchableNativeFeedback style={styles.touchable}>
+      <TouchableByPlatform style={styles.touchable}>
         <View style={styles.button}>
           <Image
             source={require('../../images/chat-bubble2-outline.png')}
@@ -167,7 +167,7 @@ const ProfileCard = ({params}) => (
             미팅 신청
           </CustomTextMedium>
         </View>
-      </TouchableNativeFeedback>
+      </TouchableByPlatform>
     </View>
   </View>
 );
