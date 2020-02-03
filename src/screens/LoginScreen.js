@@ -50,7 +50,9 @@ const BottomDivApple = ({kakaoLogin}) => {
   );
 };
 const BottomDivbyPlatform = Platform.select({
-  ios: () => BottomDivApple,
+  ios: ({kakaoLogin}) => {
+    return <BottomDivApple kakaoLogin={kakaoLogin} />;
+  },
   android: ({kakaoLogin}) => {
     return <BottomDivAndroid kakaoLogin={kakaoLogin} />;
   },

@@ -14,11 +14,11 @@ const styles = StyleSheet.create({
   },
 });
 const MainHeader = props => {
-  const openDrawer = () => {
+  const openMenu = () => {
     props.openDrawer();
   };
   return (
-    <Header style={{backgroundColor: 'white'}}>
+    <Header style={{height: 90, backgroundColor: 'white'}}>
       <Left>
         <TouchableNativeFeedback style={styles.touchable}>
           <Icon
@@ -26,7 +26,7 @@ const MainHeader = props => {
             style={{
               color: '#333333',
             }}
-            onPress={openDrawer}
+            // onPress={openMenu}
           />
         </TouchableNativeFeedback>
       </Left>

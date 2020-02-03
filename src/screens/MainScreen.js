@@ -5,7 +5,6 @@ import {Container, Drawer, Content} from 'native-base';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import palette from '~/lib/styles/palette';
 import SideBar from '~/components/MainScreen/SideBar';
-import MainHeader from '~/components/MainScreen/MainHeader';
 import BottomOverlay from '~/components/MainScreen/BottomOverlay';
 import LikeMatchingList from '~/components/MainScreen/LikeMatchingList';
 import ProfileCardList from '~/components/MainScreen/ProfileCardList';
@@ -27,7 +26,6 @@ const MainScreen = () => {
         content={<SideBar />}
         onClose={() => closeDrawer()}>
         <Container style={styles.container}>
-          <MainHeader openDrawer={openDrawer} />
           <Content
             contentContainerStyle={styles.innerView}
             showsVerticalScrollIndicator={false}>
