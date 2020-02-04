@@ -33,7 +33,7 @@ const DrawerStack = createDrawerNavigator(
     contentComponent: SideBar,
   },
 );
-export default createAppContainer(
+const Navigation = createAppContainer(
   createSwitchNavigator(
     {
       SplashLoading: SplashScreen,
@@ -41,7 +41,8 @@ export default createAppContainer(
       Auth: AuthStack,
     },
     {
-      initialRouteName: 'App',
+      initialRouteName: 'Auth',
     },
   ),
 );
+export default Navigation;
