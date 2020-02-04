@@ -60,17 +60,17 @@
 		<string>FontAwesome.ttf</string>
 		<string>FontAwesome5_Regular.ttf</string>
 		<string>FontAwesome5_Brands.ttf</string>
-		<string>FontAwesome5_Solid.ttf&#xD;
-MaterialCommunityIcons.ttf&#xD;
-MaterialIcons.ttf&#xD;
-Octicons.ttf&#xD;
-Roboto_medium.ttf&#xD;
-Roboto.ttf&#xD;
-rubicon-icon-font.ttf&#xD;
-SimpleLineIcons.ttf&#xD;
-Zocial.ttf&#xD;
-Ionicons.ttf&#xD;
-Foundation.ttf&#xD;
+		<string>FontAwesome5_Solid.ttf;
+MaterialCommunityIcons.ttf;
+MaterialIcons.ttf;
+Octicons.ttf;
+Roboto_medium.ttf;
+Roboto.ttf;
+rubicon-icon-font.ttf;
+SimpleLineIcons.ttf;
+Zocial.ttf;
+Ionicons.ttf;
+Foundation.ttf;
 Fontisto.ttf</string>
 		<string>Fontisto.ttf</string>
 		<string>Foundation.ttf</string>
