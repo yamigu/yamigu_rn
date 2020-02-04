@@ -1,6 +1,7 @@
 import React from 'react';
 import {Text} from 'react-native';
 import Styled from 'styled-components/native';
+import {SafeAreaView} from 'react-navigation';
 
 const StyledView = Styled.View`
   backgroundColor: white;
@@ -8,9 +9,9 @@ const StyledView = Styled.View`
 `;
 const SideBar = () => {
   return (
-    <StyledView>
+    <SafeAreaView style={{flex: 1}}>
       <Text>asd</Text>
-    </StyledView>
+    </SafeAreaView>
   );
 };
 
