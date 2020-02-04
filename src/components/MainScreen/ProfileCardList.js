@@ -1,6 +1,6 @@
 import React from 'react';
 import {View} from 'react-native';
-import ProfileCard from './ProfileCard';
+import ProfileCardFeed from './ProfileCardFeed';
 const data = [
   {
     name: '또잉',
@@ -37,7 +37,7 @@ const data = [
 const ProfileCardList = ({params}) => (
   <View>
     {data.map(item => {
-      return <ProfileCard />;
+      return <ProfileCardFeed />;
     })}
   </View>
 );

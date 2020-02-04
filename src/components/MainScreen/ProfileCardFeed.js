@@ -14,9 +14,11 @@ import {
 } from '../common/CustomText';
 import Ionicon from 'react-native-vector-icons/Ionicons';
 import palette from '~/lib/styles/palette';
-import RoundTextView from '../common/RoundTextView';
+import RoundBorderTextView from '../common/RoundBorderTextView';
 import TouchableByPlatform from '~/components/common/TouchableByPlatform';
 import LinearGradient from 'react-native-linear-gradient';
+import MeetingSettingPane from '../common/MeetingSettingPane';
+import ProfileCard from '../common/ProfileCard';
 
 const data = ['2:2 미팅', '3:3 미팅', '4:4 미팅', '날짜는 조율 가능해요'];
 
@@ -100,8 +102,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  cardView: {
+    backgroundColor: 'white',
+    padding: 12,
+    paddingBottom: 0,
+  },
 });
-const ProfileCard = ({params}) => (
+const ProfileCardFeed = ({params}) => (
   <View style={styles.container}>
     <ImageBackground
       style={styles.image}
@@ -117,34 +124,18 @@ const ProfileCard = ({params}) => (
         친구들과 새로운 친구들을 만나보세요
       </CustomTextRegular>
     </ImageBackground>
-    <View style={styles.content}>
-      <View style={styles.profile}>
-        <Image
-          style={styles.thumbnail}
-          source={require('../../images/test-user-profile-5.png')}
-        />
-        <View style={styles.profileText}>
-          <View style={styles.profileTextFirstLine}>
-            <CustomTextBold
-              size={14}
-              color={palette.black}
-              style={{marginRight: 6}}>
-              또로링
-            </CustomTextBold>
-            <CustomTextMedium size={12} color={palette.black}>
-              24살
-            </CustomTextMedium>
-          </View>
-          <CustomTextRegular size={12} color="#898989">
-            고려대, 서울
-          </CustomTextRegular>
-        </View>
-      </View>
-      <View style={styles.meetingStyles}>
-        {data.map(item => {
-          return <RoundTextView>{item}</RoundTextView>;
-        })}
-      </View>
+    <View style={styles.cardView}>
+      <ProfileCard
+        size={50}
+        fontSizes={[14, 12, 12]}
+        nickname="또잉또잉또잉"
+        image={require('~/images/test-user-profile-1.png')}
+        age={24}
+        belong="서울대"
+        department="자유전공학부"
+        location="서울"
+      />
+      <MeetingSettingPane data={data} />
     </View>
     <View style={styles.horizontalDivider} />
     <View style={styles.actionDiv}>
@@ -172,4 +163,4 @@ const ProfileCard = ({params}) => (
   </View>
 );
 
-export default ProfileCard;
+export default ProfileCardFeed;

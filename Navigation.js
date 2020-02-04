@@ -7,10 +7,14 @@ import MainScreen from './src/screens/MainScreen';
 import LoginScreen from './src/screens/LoginScreen';
 import SplashScreen from './src/screens/SplashScreen';
 import SideBar from '~/components/MainScreen/SideBar';
+import ProfileDetailScreen from '~/screens/ProfileDetailScreen';
 
 const AppStack = createStackNavigator({
   Main: {
     screen: MainScreen, // MainScreen 컴포넌트를 네비게이터에 등록
+  },
+  Profile: {
+    screen: ProfileDetailScreen,
   },
 });
 const AuthStack = createStackNavigator({
@@ -30,7 +34,7 @@ const DrawerStack = createDrawerNavigator(
     },
   },
   {
-    // contentComponent: SideBar,
+    contentComponent: SideBar,
   },
 );
 const Navigation = createAppContainer(
@@ -41,7 +45,7 @@ const Navigation = createAppContainer(
       Auth: AuthStack,
     },
     {
-      initialRouteName: 'Auth',
+      initialRouteName: 'App',
     },
   ),
 );

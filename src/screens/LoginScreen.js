@@ -22,6 +22,7 @@ import {
   IndicatorViewPager,
   PagerDotIndicator,
 } from 'react-native-best-viewpager';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 
 const ButtonContainerAndroid = ({kakaoLogin}) => {
   return (
@@ -58,7 +59,6 @@ var deviceWidth = Dimensions.get('window').width;
 const LoginScreen = ({navigation}) => {
   const [loginLoading, setLoginLoading] = useState(false);
   const [token, setToken] = useState(TOKEN_EMPTY);
-  const [currentPage, setCurrentPage] = useState(0);
 
   const kakaoLogin = () => {
     logCallback('Login Start', setLoginLoading(true));
@@ -134,13 +134,17 @@ const LoginScreen = ({navigation}) => {
         </View>
         <View style={styles.policyContainer}>
           <CustomTextRegular size={10}>로그인시 </CustomTextRegular>
-          <CustomTextBold decoLine="underline" size={10}>
-            이용약관
-          </CustomTextBold>
+          <TouchableOpacity>
+            <CustomTextBold decoLine="underline" size={10}>
+              이용약관
+            </CustomTextBold>
+          </TouchableOpacity>
           <CustomTextRegular size={10}> & </CustomTextRegular>
-          <CustomTextBold decoLine="underline" size={10}>
-            개인정보 취급방침
-          </CustomTextBold>
+          <TouchableOpacity>
+            <CustomTextBold decoLine="underline" size={10}>
+              개인정보 취급방침
+            </CustomTextBold>
+          </TouchableOpacity>
           <CustomTextRegular size={10}>
             에 동의한 것으로 간주합니다
           </CustomTextRegular>
