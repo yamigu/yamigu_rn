@@ -7,6 +7,8 @@ import MainScreen from './src/screens/MainScreen';
 import LoginScreen from './src/screens/LoginScreen';
 import SplashScreen from './src/screens/SplashScreen';
 import SideBar from '~/components/MainScreen/SideBar';
+import IVScreen from '~/screens/IVScreen';
+import WebViewScreen from '~/screens/WebViewScreen';
 
 const AppStack = createStackNavigator({
   Main: {
@@ -22,6 +24,7 @@ const AuthStack = createStackNavigator({
     },
   },
 });
+
 const DrawerStack = createDrawerNavigator(
   {
     Main: {
@@ -33,16 +36,35 @@ const DrawerStack = createDrawerNavigator(
     contentComponent: SideBar,
   },
 );
+const IVStack = createStackNavigator({
+  IV: {
+    screen: IVScreen,
+    navigationOptions: {
+      headerShown: false,
+    },
+  },
+});
+const WebViewStack = createStackNavigator({
+  WebView: {
+    screen: WebViewScreen,
+    navigationOptions: {
+      headerShown: false,
+    },
+  },
+});
 const Navigation = createAppContainer(
   createSwitchNavigator(
     {
       SplashLoading: SplashScreen,
       App: DrawerStack,
       Auth: AuthStack,
+      IV: IVStack,
+      WebView: WebViewStack,
     },
     {
-      initialRouteName: 'App',
+      initialRouteName: 'IV',
     },
   ),
 );
+
 export default Navigation;
