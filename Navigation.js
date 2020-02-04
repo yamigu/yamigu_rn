@@ -30,7 +30,7 @@ const DrawerStack = createDrawerNavigator(
     },
   },
   {
-    contentComponent: SideBar,
+    // contentComponent: SideBar,
   },
 );
 const Navigation = createAppContainer(
@@ -41,7 +41,7 @@ const Navigation = createAppContainer(
       Auth: AuthStack,
     },
     {
-      initialRouteName: 'App',
+      initialRouteName: 'Auth',
     },
   ),
 );
