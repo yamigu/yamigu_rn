@@ -11,7 +11,7 @@ import TouchableByPlatform from '~/components/common/TouchableByPlatform';
 import {DrawerActions} from 'react-navigation-drawer';
 const MainScreen = props => {
   return (
-    <SafeAreaProvider style={styles.root}>
+    <View style={styles.root}>
       <Container style={styles.container}>
         <Content
           contentContainerStyle={styles.innerView}
@@ -19,10 +19,11 @@ const MainScreen = props => {
           <LikeMatchingList />
           <View style={styles.dividerLine} />
           <ProfileCardList />
+          <View style={styles.lastScroll} />
         </Content>
         <BottomOverlay />
       </Container>
-    </SafeAreaProvider>
+    </View>
   );
 };
 MainScreen.navigationOptions = ({navigation}) => ({
@@ -54,6 +55,7 @@ MainScreen.navigationOptions = ({navigation}) => ({
   ),
   headerMode: 'screen',
   headerStyle: {
+    flex: 1,
     backgroundColor: 'white',
   },
 });
@@ -64,6 +66,7 @@ const styles = StyleSheet.create({
   },
   container: {
     backgroundColor: palette.default_bg,
+    flex: 1,
   },
   innerView: {
     flexDirection: 'column',
@@ -73,6 +76,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#D9D9D9',
     height: 0.5,
     marginTop: 12,
+  },
+  lastScroll: {
+    height: 40,
+    flex: 1,
   },
 });
 export default MainScreen;

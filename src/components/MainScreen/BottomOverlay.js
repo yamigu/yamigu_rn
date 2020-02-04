@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import {View, StyleSheet} from 'react-native';
+import {View, StyleSheet, SafeAreaView} from 'react-native';
 import FAB from './FAB';
 import FABDesc from './FABDesc';
 
@@ -16,12 +16,12 @@ const styles = StyleSheet.create({
 });
 const BottomOverlay = props => {
   return (
-    <View style={styles.bottomOverlay}>
+    <SafeAreaView style={styles.bottomOverlay}>
       <View style={styles.fabWrapper}>
         <FAB style={styles.fab} />
         <FABDesc styles={styles.fabdesc} />
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 

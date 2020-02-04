@@ -3,6 +3,7 @@ import {Platform} from 'react-native';
 import {
   TouchableNativeFeedback,
   TouchableHighlight,
+  TouchableOpacity,
 } from 'react-native-gesture-handler';
 
 const TouchableByPlatform = props => {
@@ -14,9 +15,9 @@ const TouchableByPlatform = props => {
     );
   } else {
     return (
-      <TouchableHighlight style={props.style} onPress={props.onPress}>
+      <TouchableOpacity style={props.style} onPress={props.onPress}>
         {props.children}
-      </TouchableHighlight>
+      </TouchableOpacity>
     );
   }
 };
