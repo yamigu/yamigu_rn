@@ -200,7 +200,7 @@ PODS:
     - React-cxxreact (= 0.61.5)
     - React-jsi (= 0.61.5)
   - React-jsinspector (0.61.5)
-  - react-native-safe-area-context (0.6.2):
+  - react-native-safe-area-context (0.6.4):
     - React
   - react-native-viewpager (3.3.0):
     - React
@@ -241,9 +241,9 @@ PODS:
     - ReactCommon/jscallinvoker (= 0.61.5)
   - RNCMaskedView (0.1.6):
     - React
-  - RNGestureHandler (1.5.3):
+  - RNGestureHandler (1.5.6):
     - React
-  - RNReanimated (1.5.0):
+  - RNReanimated (1.7.0):
     - React
   - RNScreens (2.0.0-alpha.33):
     - React
@@ -384,7 +384,7 @@ SPEC CHECKSUMS:
   React-jsi: cb2cd74d7ccf4cffb071a46833613edc79cdf8f7
   React-jsiexecutor: d5525f9ed5f782fdbacb64b9b01a43a9323d2386
   React-jsinspector: fa0ecc501688c3c4c34f28834a76302233e29dc0
-  react-native-safe-area-context: 25260c5d0b9c53fd7aa88e569e2edae72af1f6a3
+  react-native-safe-area-context: 52342d2d80ea8faadd0ffa76d83b6051f20c5329
   react-native-viewpager: a7b438ca32c57b2614ece2a123e7fe116f743131
   React-RCTActionSheet: 600b4d10e3aea0913b5a92256d2719c0cdd26d76
   React-RCTAnimation: 791a87558389c80908ed06cc5dfc5e7920dfa360
@@ -397,8 +397,8 @@ SPEC CHECKSUMS:
   React-RCTVibration: a49a1f42bf8f5acf1c3e297097517c6b3af377ad
   ReactCommon: 198c7c8d3591f975e5431bec1b0b3b581aa1c5dd
   RNCMaskedView: a88953beefbd347a29072d9eba90e42945fe291e
-  RNGestureHandler: 02905abe54e1f6e59c081a10b4bd689721e17aa6
-  RNReanimated: 1761c14b3982fc77fc9fdad6ea2f42ed861c342a
+  RNGestureHandler: 911d3b110a7a233a34c4f800e7188a84b75319c6
+  RNReanimated: 031fe8d9ea93c2bd689a40f05320ef9d96f74d7f
   RNScreens: 1c7fd499b915c77c21e8e6c327890c5af9b4cf7e
   RNVectorIcons: 0bb4def82230be1333ddaeee9fcba45f0b288ed4
   Yoga: f2a7cd4280bfe2cca5a7aed98ba0eb3d1310f18b
