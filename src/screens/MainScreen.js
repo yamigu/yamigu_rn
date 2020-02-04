@@ -1,54 +1,41 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import {StyleSheet, View, Image} from 'react-native';
-import {Container, Drawer, Content, Icon} from 'native-base';
-import {SafeAreaView} from 'react-native-safe-area-context';
+import {Container, Content, Icon} from 'native-base';
+import {SafeAreaView, SafeAreaProvider} from 'react-native-safe-area-context';
 import palette from '~/lib/styles/palette';
-import SideBar from '~/components/MainScreen/SideBar';
 import BottomOverlay from '~/components/MainScreen/BottomOverlay';
 import LikeMatchingList from '~/components/MainScreen/LikeMatchingList';
 import ProfileCardList from '~/components/MainScreen/ProfileCardList';
 import TouchableByPlatform from '~/components/common/TouchableByPlatform';
-
-const MainScreen = () => {
-  let drawer;
-  const openDrawer = () => {
-    drawer._root.open();
-  };
-  const closeDrawer = () => {
-    drawer._root.close();
-  };
+import {DrawerActions} from 'react-navigation-drawer';
+const MainScreen = props => {
   return (
-    <SafeAreaView style={styles.root}>
-      <Drawer
-        ref={ref => {
-          drawer = ref;
-        }}
-        content={<SideBar />}
-        onClose={() => closeDrawer()}>
-        <Container style={styles.container}>
-          <Content
-            contentContainerStyle={styles.innerView}
-            showsVerticalScrollIndicator={false}>
-            <LikeMatchingList />
-            <View style={styles.dividerLine} />
-            <ProfileCardList />
-          </Content>
-          <BottomOverlay />
-        </Container>
-      </Drawer>
-    </SafeAreaView>
+    <SafeAreaProvider style={styles.root}>
+      <Container style={styles.container}>
+        <Content
+          contentContainerStyle={styles.innerView}
+          showsVerticalScrollIndicator={false}>
+          <LikeMatchingList />
+          <View style={styles.dividerLine} />
+          <ProfileCardList />
+        </Content>
+        <BottomOverlay />
+      </Container>
+    </SafeAreaProvider>
   );
 };
-MainScreen.navigationOptions = props => ({
+MainScreen.navigationOptions = ({navigation}) => ({
   headerLeft: () => (
-    <TouchableByPlatform style={styles.touchable}>
+    <TouchableByPlatform
+      style={styles.touchable}
+      onPress={() => navigation.dispatch(DrawerActions.openDrawer())}>
       <Icon
         name="menu"
         style={{
           color: '#333333',
+          margin: 10,
         }}
-        onPress={props.navigation.openDrawer}
       />
     </TouchableByPlatform>
   ),
@@ -57,9 +44,18 @@ MainScreen.navigationOptions = props => ({
   ),
   headerRight: () => (
     <TouchableByPlatform>
-      <Image source={require('../images/chat-bubble-outline.png')} />
+      <Image
+        source={require('../images/chat-bubble-outline.png')}
+        style={{
+          margin: 10,
+        }}
+      />
     </TouchableByPlatform>
   ),
+  headerMode: 'screen',
+  headerStyle: {
+    backgroundColor: 'white',
+  },
 });
 
 const styles = StyleSheet.create({

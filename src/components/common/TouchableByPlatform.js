@@ -8,13 +8,13 @@ import {
 const TouchableByPlatform = props => {
   if (Platform.OS === 'android') {
     return (
-      <TouchableNativeFeedback style={props.style}>
+      <TouchableNativeFeedback style={props.style} onPress={props.onPress}>
         {props.children}
       </TouchableNativeFeedback>
     );
   } else {
     return (
-      <TouchableHighlight style={props.style}>
+      <TouchableHighlight style={props.style} onPress={props.onPress}>
         {props.children}
       </TouchableHighlight>
     );
