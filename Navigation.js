@@ -8,6 +8,10 @@ import LoginScreen from './src/screens/LoginScreen';
 import SplashScreen from './src/screens/SplashScreen';
 import SideBar from '~/components/MainScreen/SideBar';
 import ProfileDetailScreen from '~/screens/ProfileDetailScreen';
+import IVScreen from '~/screens/IVScreen';
+import WebViewScreen from '~/screens/WebViewScreen';
+import ChattingListScreen from '~/screens/ChattingListScreen';
+import ChattingScreen from '~/screens/ChattingScreen';
 
 const AppStack = createStackNavigator({
   Main: {
@@ -26,6 +30,7 @@ const AuthStack = createStackNavigator({
     },
   },
 });
+
 const DrawerStack = createDrawerNavigator(
   {
     Main: {
@@ -37,16 +42,53 @@ const DrawerStack = createDrawerNavigator(
     contentComponent: SideBar,
   },
 );
+const IVStack = createStackNavigator({
+  IV: {
+    screen: IVScreen,
+    navigationOptions: {
+      headerShown: true,
+    },
+  },
+});
+const WebViewStack = createStackNavigator({
+  WebView: {
+    screen: WebViewScreen,
+    navigationOptions: {
+      headerShown: false,
+    },
+  },
+});
+const ChattingListStack = createStackNavigator({
+  ChattngList: {
+    screen: ChattingListScreen,
+    navigationOptions: {
+      headerShown: true,
+    },
+  },
+});
+const ChattingStack = createStackNavigator({
+  Chatting: {
+    screen: ChattingScreen,
+    navigationOptions: {
+      headerShown: true,
+    },
+  },
+});
 const Navigation = createAppContainer(
   createSwitchNavigator(
     {
       SplashLoading: SplashScreen,
       App: DrawerStack,
       Auth: AuthStack,
+      IV: IVStack,
+      WebView: WebViewStack,
+      ChattingList: ChattingListStack,
+      Chatting: ChattingStack,
     },
     {
-      initialRouteName: 'App',
+      initialRouteName: 'Chatting',
     },
   ),
 );
+
 export default Navigation;

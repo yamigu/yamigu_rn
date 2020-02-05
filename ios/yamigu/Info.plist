@@ -33,10 +33,19 @@
 	</array>
 	<key>CFBundleVersion</key>
 	<string>1</string>
-	<key>LSRequiresIPhoneOS</key>
-	<true/>
 	<key>KAKAO_APP_KEY</key>
 	<string>8f227ce17d6a3f4f4cee01b62114ac95</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>kakao8f227ce17d6a3f4f4cee01b62114ac95</string>
+		<string>kakaokompassauth</string>
+		<string>storykompassauth</string>
+		<string>kakaolink</string>
+		<string>kakaotalk-5.9.7</string>
+		<string>storylink</string>
+	</array>
+	<key>LSRequiresIPhoneOS</key>
+	<true/>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
@@ -51,16 +60,16 @@
 		</dict>
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string/>
+	<string></string>
 	<key>UIAppFonts</key>
 	<array>
-		<string>Entypo.ttf</string>
-		<string>EvilIcons.ttf</string>
-		<string>Feather.ttf</string>
-		<string>FontAwesome.ttf</string>
-		<string>FontAwesome5_Regular.ttf</string>
-		<string>FontAwesome5_Brands.ttf</string>
-		<string>FontAwesome5_Solid.ttf;
+		<string>Fonts/Entypo.ttf</string>
+		<string>Fonts/EvilIcons.ttf</string>
+		<string>Fonts/Feather.ttf</string>
+		<string>Fonts/FontAwesome.ttf</string>
+		<string>Fonts/FontAwesome5_Regular.ttf</string>
+		<string>Fonts/FontAwesome5_Brands.ttf</string>
+		<string>Fonts/FontAwesome5_Solid.ttf;
 MaterialCommunityIcons.ttf;
 MaterialIcons.ttf;
 Octicons.ttf;
@@ -72,19 +81,28 @@ Zocial.ttf;
 Ionicons.ttf;
 Foundation.ttf;
 Fontisto.ttf</string>
-		<string>Fontisto.ttf</string>
-		<string>Foundation.ttf</string>
-		<string>Ionicons.ttf</string>
-		<string>MaterialCommunityIcons.ttf</string>
-		<string>MaterialIcons.ttf</string>
-		<string>Octicons.ttf</string>
-		<string>Roboto_medium.ttf</string>
-		<string>Roboto.ttf</string>
-		<string>rubicon-icon-font.ttf</string>
-		<string>SimpleLineIcons.ttf</string>
-		<string>Zocial.ttf</string>
-		<string>AntDesign.ttf</string>
-		<string>FontAwesome5_Solid.ttf</string>
+		<string>Fonts/Fontisto.ttf</string>
+		<string>Fonts/Foundation.ttf</string>
+		<string>Fonts/Ionicons.ttf</string>
+		<string>Fonts/MaterialCommunityIcons.ttf</string>
+		<string>Fonts/MaterialIcons.ttf</string>
+		<string>Fonts/Octicons.ttf</string>
+		<string>Fonts/Roboto_medium.ttf</string>
+		<string>Fonts/Roboto.ttf</string>
+		<string>Fonts/rubicon-icon-font.ttf</string>
+		<string>Fonts/SimpleLineIcons.ttf</string>
+		<string>Fonts/Zocial.ttf</string>
+		<string>Fonts/AntDesign.ttf</string>
+		<string>Fonts/NotoSansCJKkr-Bold.otf</string>
+		<string>NotoSansCJKkr-Bold 2.otf</string>
+		<string>Fonts/NotoSansCJKkr-Black.otf</string>
+		<string>Fonts/NotoSansCJKkr-DemiLight.otf</string>
+		<string>Fonts/NotoSansCJKkr-Thin.otf</string>
+		<string>Fonts/NotoSansCJKkr-Regular.otf</string>
+		<string>Fonts/NotoSansCJKkr-Medium.otf</string>
+		<string>Fonts/NotoSansCJKkr-Light.otf</string>
+		<string>Fonts/NotoSansMonoCJKkr-Bold.otf</string>
+		<string>Fonts/NotoSansMonoCJKkr-Regular.otf</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
@@ -100,16 +118,7 @@ Fontisto.ttf</string>
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<array>
-		<string/>
-	</array>
-	<key>LSApplicationQueriesSchemes</key>
-	<array>
-		<string>kakao8f227ce17d6a3f4f4cee01b62114ac95</string>
-		<string>kakaokompassauth</string>
-		<string>storykompassauth</string>
-		<string>kakaolink</string>
-		<string>kakaotalk-5.9.7</string>
-		<string>storylink</string>
+		<string></string>
 	</array>
 </dict>
 </plist>
