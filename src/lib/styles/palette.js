@@ -26,7 +26,6 @@ const palette = {
   black: '#333333',
   gold: '#CCAC00',
   yellow: '#FFD700',
-  white: '#FFFFFF',
 };
 
 export default palette;
