@@ -8,7 +8,6 @@ import {
   CustomTextLight,
 } from '~/components/common/CustomText';
 import palette from '~/lib/styles/palette';
-import {ParallaxImage} from 'react-native-snap-carousel';
 import {WebView} from 'react-native-webview'; // for webview
 
 // import TouchableByPlatform from '~/components/common/TouchableByPlatform';
