@@ -5,7 +5,7 @@ import {CustomTextMedium} from '../common/CustomText';
 import {ListItem, List, Badge} from 'native-base';
 import ChattingPreview from './ChattingPreview';
 
-const ReceivedList = ({style}) => (
+const ReceivedList = ({style, navigation}) => (
   <List style={[styles.list, style]}>
     <ListItem itemDivider style={styles.listItemHeader}>
       <View style={styles.listItemHeaderView}>
@@ -19,14 +19,20 @@ const ReceivedList = ({style}) => (
         </Badge>
       </View>
     </ListItem>
-    <ChattingPreview label style={{marginBottom: 18}} />
+    <ChattingPreview
+      label
+      style={{marginVertical: 9}}
+      navigation={navigation}
+    />
   </List>
 );
 
 const styles = StyleSheet.create({
   list: {},
   listItemHeader: {
-    paddingVertical: 0,
+    marginTop: 12,
+    paddingTop: 0,
+    paddingBottom: 3,
   },
   listItemHeaderView: {
     flexDirection: 'row',

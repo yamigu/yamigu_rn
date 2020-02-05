@@ -5,8 +5,11 @@ import {ListItem, Left, Badge, Body, Right} from 'native-base';
 import UserProfileSmall from '../common/UserProfileSmall';
 import {CustomTextMedium, CustomTextRegular} from '../common/CustomText';
 
-const ChattingPreview = ({style, label}) => (
-  <ListItem avatar style={[styles.chatPreview, style]}>
+const ChattingPreview = ({style, label, navigation}) => (
+  <ListItem
+    avatar
+    style={[styles.chatPreview, style]}
+    onPress={() => navigation.navigate('Chatting')}>
     <Left style={styles.chatPreviewLeft}>
       <UserProfileSmall
         imageSource={require('~/images/test-user-profile-4.png')}
@@ -53,6 +56,7 @@ const styles = StyleSheet.create({
   chatPreviewLeft: {
     paddingTop: 0,
     paddingBottom: 0,
+    justifyContent: 'center',
   },
   chatPreviewBody: {
     borderBottomWidth: 0,

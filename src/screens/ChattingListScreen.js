@@ -7,10 +7,10 @@ import {Icon, Content} from 'native-base';
 import ChattingList from '~/components/ChattingListScreen/ChattingList';
 import ReceivedList from '~/components/ChattingListScreen/ReceivedList';
 
-const ChattingListScreen = ({params}) => (
+const ChattingListScreen = ({navigation}) => (
   <Content showsVerticalScrollIndicator={false} style={styles.root}>
-    <ReceivedList />
-    <ChattingList style={{marginTop: 12}} />
+    <ReceivedList navigation={navigation} />
+    <ChattingList style={{marginTop: 12}} navigation={navigation} />
   </Content>
 );
 
