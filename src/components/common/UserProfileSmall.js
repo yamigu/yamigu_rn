@@ -6,14 +6,12 @@ import palette from '~/lib/styles/palette';
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    marginRight: 12,
   },
   imageContainer: {},
   image: {
     width: 66,
     height: 66,
     borderRadius: 33,
-    marginBottom: 3,
   },
   badgeWrapper: {
     position: 'absolute',
@@ -23,15 +21,17 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-end',
   },
 });
-const UserProfileSmall = ({imageSource, userName, badgeComponent}) => (
-  <View style={styles.container}>
+const UserProfileSmall = ({style, imageSource, userName, badgeComponent}) => (
+  <View style={[styles.container, style]}>
     <View style={styles.imageContainer}>
       <Image source={imageSource} style={styles.image} />
       <View style={styles.badgeWrapper}>{badgeComponent}</View>
     </View>
-    <CustomTextMedium size={12} color={palette.black}>
-      {userName}
-    </CustomTextMedium>
+    {userName ? (
+      <CustomTextMedium size={12} color={palette.black} style={{marginTop: 3}}>
+        {userName}
+      </CustomTextMedium>
+    ) : null}
   </View>
 );
 

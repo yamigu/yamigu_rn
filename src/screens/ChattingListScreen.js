@@ -1,17 +1,17 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import {Text, View, Image, Dimensions} from 'react-native';
+import {View, Image, StyleSheet} from 'react-native';
 import palette from '~/lib/styles/palette';
 import TouchableByPlatform from '~/components/common/TouchableByPlatform';
-import {Icon} from 'native-base';
-
-const deviceWidth = Dimensions.get('window').width;
+import {Icon, Content} from 'native-base';
+import ChattingList from '~/components/ChattingListScreen/ChattingList';
+import ReceivedList from '~/components/ChattingListScreen/ReceivedList';
 
 const ChattingListScreen = ({params}) => (
-  <View>
-    <Text>ChattingListScreen</Text>
-    <Text>TDB by Charlie</Text>
-  </View>
+  <Content showsVerticalScrollIndicator={false} style={styles.root}>
+    <ReceivedList />
+    <ChattingList style={{marginTop: 12}} />
+  </Content>
 );
 
 ChattingListScreen.navigationOptions = ({navigation}) => ({
@@ -37,4 +37,10 @@ ChattingListScreen.navigationOptions = ({navigation}) => ({
   headerTitleAlign: 'center',
 });
 
+const styles = StyleSheet.create({
+  root: {
+    flex: 1,
+    backgroundColor: palette.default_bg,
+  },
+});
 export default ChattingListScreen;
