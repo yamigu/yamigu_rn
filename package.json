@@ -37,7 +37,6 @@
     "react-navigation-drawer": "^2.3.3",
     "react-navigation-stack": "^2.0.15",
     "react-navigation-tabs": "^2.7.0",
-    "rn-viewpager": "^1.2.9",
     "styled-components": "^5.0.0"
   },
   "devDependencies": {
