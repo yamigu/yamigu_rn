@@ -65,6 +65,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   button: {
+    elevation: 0,
     borderRadius: 5,
     backgroundColor: '#60BAFF',
     justifyContent: 'center',
