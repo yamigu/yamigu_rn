@@ -1,6 +1,5 @@
 import React from 'react';
-import {StyleSheet, Dimensions} from 'react-native';
-import {Text, View} from 'react-native';
+import {StyleSheet, Dimensions, View} from 'react-native';
 import {Left, Right, Body, ListItem, Thumbnail, Row} from 'native-base';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import palette from '~/lib/styles/palette';
