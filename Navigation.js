@@ -9,6 +9,8 @@ import SplashScreen from './src/screens/SplashScreen';
 import SideBar from '~/components/MainScreen/SideBar';
 import IVScreen from '~/screens/IVScreen';
 import WebViewScreen from '~/screens/WebViewScreen';
+import ChattingListScreen from '~/screens/ChattingListScreen';
+import ChattingScreen from '~/screens/ChattingScreen';
 
 const AppStack = createStackNavigator({
   Main: {
@@ -40,7 +42,7 @@ const IVStack = createStackNavigator({
   IV: {
     screen: IVScreen,
     navigationOptions: {
-      headerShown: false,
+      headerShown: true,
     },
   },
 });
@@ -52,6 +54,22 @@ const WebViewStack = createStackNavigator({
     },
   },
 });
+const ChattingListStack = createStackNavigator({
+  ChattngList: {
+    screen: ChattingListScreen,
+    navigationOptions: {
+      headerShown: true,
+    },
+  },
+});
+const ChattingStack = createStackNavigator({
+  Chatting: {
+    screen: ChattingScreen,
+    navigationOptions: {
+      headerShown: true,
+    },
+  },
+});
 const Navigation = createAppContainer(
   createSwitchNavigator(
     {
@@ -60,9 +78,11 @@ const Navigation = createAppContainer(
       Auth: AuthStack,
       IV: IVStack,
       WebView: WebViewStack,
+      ChattingList: ChattingListStack,
+      Chatting: ChattingStack,
     },
     {
-      initialRouteName: 'IV',
+      initialRouteName: 'Chatting',
     },
   ),
 );
