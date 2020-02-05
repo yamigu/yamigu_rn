@@ -29,8 +29,8 @@ ChattingScreen.navigationOptions = ({navigation}) => ({
       onPress={() => navigation.goBack()}>
       <Icon
         name="arrow-back"
+        color={palette.black}
         style={{
-          color: '#FFFFFFF',
           marginLeft: 12,
         }}
       />
@@ -41,8 +41,8 @@ ChattingScreen.navigationOptions = ({navigation}) => ({
     <TouchableByPlatform>
       <Icon
         name="more"
+        color={palette.black}
         style={{
-          color: '#FFFFFFF',
           marginRight: 12,
         }}
       />
@@ -50,7 +50,6 @@ ChattingScreen.navigationOptions = ({navigation}) => ({
   ),
   headerMode: 'screen',
   headerStyle: {
-    flex: 1,
     backgroundColor: 'white',
   },
 });
@@ -61,19 +60,6 @@ const styles = StyleSheet.create({
   },
   container: {
     backgroundColor: palette.default_bg,
-    flex: 1,
-  },
-  innerView: {
-    flexDirection: 'column',
-  },
-  dividerLine: {
-    flex: 1,
-    backgroundColor: '#D9D9D9',
-    height: 0.5,
-    marginTop: 12,
-  },
-  lastScroll: {
-    height: 40,
     flex: 1,
   },
 });
