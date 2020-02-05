@@ -70,7 +70,11 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     maxWidth: deviceWidth - 144,
   },
-  bodyReceived: {flexDirection: 'row', paddingTop: 0, borderBottomWidth: 0},
+  bodyReceived: {
+    flexDirection: 'row',
+    paddingTop: 0,
+    borderBottomWidth: 0,
+  },
   right: {
     paddingTop: 0,
     alignSelf: 'flex-end',
