@@ -5472,13 +5472,6 @@ react-native-elements@^1.2.7:
     react-native-ratings "^6.3.0"
     react-native-status-bar-height "^2.2.0"
 
-react-native-event-listeners@1.0.3:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/react-native-event-listeners/-/react-native-event-listeners-1.0.3.tgz#8e210491b0eab8f714317a0f8c2d322bb2036268"
-  integrity sha1-jiEEkbDquPcUMXoPjC0yK7IDYmg=
-  dependencies:
-    type-detect "4.0.3"
-
 react-native-fab@^1.0.9:
   version "1.0.9"
   resolved "https://registry.yarnpkg.com/react-native-fab/-/react-native-fab-1.0.9.tgz#6f8c8982c55c4aa8e4d5b7fe55e08dc7ca4deb31"
@@ -5521,14 +5514,6 @@ react-native-loading-spinner-overlay@^1.0.1:
   integrity sha512-njZZWs+cgyq6Ni7tkYEowMmuAuHVljuH4CqTWA0plNOfSzZhEcrW209y7WcgHjRWz0RvvEYF5oWGT8DWtTq8bA==
   dependencies:
     prop-types "^15.6.2"
-
-react-native-mirror@0.0.21:
-  version "0.0.21"
-  resolved "https://registry.yarnpkg.com/react-native-mirror/-/react-native-mirror-0.0.21.tgz#9fad642f6ace4aac3df8819d4e9fc66c49f38a2f"
-  integrity sha512-CbySVviZQw+f1H3ucfZ9UT4oRojSurw/zyp9tbMmTuFZBJS/fQ65hedsicQ6932feaidNB7IVCnzVom+vxpNSg==
-  dependencies:
-    react-native-event-listeners "1.0.3"
-    type-detect "4.0.3"
 
 react-native-ratings@^6.3.0:
   version "6.5.0"
@@ -5606,12 +5591,13 @@ react-native-vector-icons@^6.6.0:
     prop-types "^15.6.2"
     yargs "^13.2.2"
 
-react-native-viewpager-carousel@^0.3.2:
-  version "0.3.2"
-  resolved "https://registry.yarnpkg.com/react-native-viewpager-carousel/-/react-native-viewpager-carousel-0.3.2.tgz#9747e119f253361500b266293d7fd056e83ed26f"
-  integrity sha512-4fdrj+YBWStZ8Nq0RxQuXHUkbAqIsfm3tJ3N6crmwUCmzdJRQQWTklnsDNDOjTnU0ocstLEhT/O2wViNGAZQ/w==
+react-native-webview@8.0.6:
+  version "8.0.6"
+  resolved "https://registry.yarnpkg.com/react-native-webview/-/react-native-webview-8.0.6.tgz#247e6e16926e06105144bb33ec9d0429e01c8900"
+  integrity sha512-lvapBzV0Ymv39EpubaitF8RzkhYDb7uT9n230f5V+SpDU3BN03WnED7v3HHQDXoPwjDBNRWzDgoImnFn9WlSzw==
   dependencies:
-    react-native-mirror "0.0.21"
+    escape-string-regexp "2.0.0"
+    invariant "2.2.4"
 
 react-native@^0.61.5:
   version "0.61.5"
@@ -5976,11 +5962,6 @@ rimraf@~2.2.6:
   version "2.2.8"
   resolved "https://registry.yarnpkg.com/rimraf/-/rimraf-2.2.8.tgz#e439be2aaee327321952730f99a8929e4fc50582"
   integrity sha1-5Dm+Kq7jJzIZUnMPmaiSnk/FBYI=
-
-rn-viewpager@^1.2.9:
-  version "1.2.9"
-  resolved "https://registry.yarnpkg.com/rn-viewpager/-/rn-viewpager-1.2.9.tgz#7f06f898e23b296f3b5be7c98bd9101d94427779"
-  integrity sha512-wN4HlNhjTkrg25qBeEHTJ6TzRGtLu8SpKSZ9/mWcgWHMNr3RT06Zzrky3Tg14PPgaPp//6h02FCcAaQ83VGdgQ==
 
 rsvp@^4.8.4:
   version "4.8.5"
@@ -6721,11 +6702,6 @@ type-check@~0.3.2:
   dependencies:
     prelude-ls "~1.1.2"
 
-type-detect@4.0.3:
-  version "4.0.3"
-  resolved "https://registry.yarnpkg.com/type-detect/-/type-detect-4.0.3.tgz#0e3f2670b44099b0b46c284d136a7ef49c74c2ea"
-  integrity sha1-Dj8mcLRAmbC0bChNE2p+9Jx0wuo=
-
 type-fest@^0.7.1:
   version "0.7.1"
   resolved "https://registry.yarnpkg.com/type-fest/-/type-fest-0.7.1.tgz#8dda65feaf03ed78f0a3f9678f1869147f7c5c48"
@@ -6907,13 +6883,6 @@ walker@^1.0.7, walker@~1.0.5:
   integrity sha1-L3+bj9ENZ3JisYqITijRlhjgKPs=
   dependencies:
     makeerror "1.0.x"
-
-warning@^2.1.0:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/warning/-/warning-2.1.0.tgz#21220d9c63afc77a8c92111e011af705ce0c6901"
-  integrity sha1-ISINnGOvx3qMkhEeARr3Bc4MaQE=
-  dependencies:
-    loose-envify "^1.0.0"
 
 wcwidth@^1.0.1:
   version "1.0.1"

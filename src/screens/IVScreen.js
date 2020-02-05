@@ -31,7 +31,7 @@ const IVScreen = ({navigation}) => {
       </View>
       <View>
         <Button style={styles.button} onPress={gotoWebView}>
-          <CustomTextMedium size={16} color={palette.white}>
+          <CustomTextMedium size={16} color="white">
             본인인증 진행하기
           </CustomTextMedium>
         </Button>
