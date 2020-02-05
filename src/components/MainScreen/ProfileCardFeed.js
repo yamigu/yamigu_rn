@@ -108,22 +108,24 @@ const styles = StyleSheet.create({
     paddingBottom: 0,
   },
 });
-const ProfileCardFeed = ({params}) => (
+const ProfileCardFeed = ({navigation}) => (
   <View style={styles.container}>
-    <ImageBackground
-      style={styles.image}
-      source={require('~/images/test-user-profile-5.png')}>
-      <LinearGradient
-        colors={['#333333ff', '#ffffff00']}
-        style={styles.linearGradient}
-      />
-      <CustomTextMedium size={24} color="white">
-        고려대랑 미팅할래요?
-      </CustomTextMedium>
-      <CustomTextRegular size={12} color="white">
-        친구들과 새로운 친구들을 만나보세요
-      </CustomTextRegular>
-    </ImageBackground>
+    <TouchableByPlatform onPress={() => navigation.navigate('Profile')}>
+      <ImageBackground
+        style={styles.image}
+        source={require('~/images/test-user-profile-5.png')}>
+        <LinearGradient
+          colors={['#333333ff', '#ffffff00']}
+          style={styles.linearGradient}
+        />
+        <CustomTextMedium size={24} color="white">
+          고려대랑 미팅할래요?
+        </CustomTextMedium>
+        <CustomTextRegular size={12} color="white">
+          친구들과 새로운 친구들을 만나보세요
+        </CustomTextRegular>
+      </ImageBackground>
+    </TouchableByPlatform>
     <View style={styles.cardView}>
       <ProfileCard
         size={50}

@@ -34,10 +34,10 @@ const data = [
   },
 ];
 
-const ProfileCardList = ({params}) => (
+const ProfileCardList = ({navigation}) => (
   <View>
     {data.map(item => {
-      return <ProfileCardFeed />;
+      return <ProfileCardFeed navigation={navigation} />;
     })}
   </View>
 );

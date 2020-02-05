@@ -52,6 +52,7 @@ ChattingScreen.navigationOptions = ({navigation}) => ({
   headerStyle: {
     backgroundColor: 'white',
   },
+  headerTitleAlign: 'center',
 });
 
 const styles = StyleSheet.create({

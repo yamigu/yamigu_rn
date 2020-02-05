@@ -20,12 +20,35 @@ const AppStack = createStackNavigator({
   Profile: {
     screen: ProfileDetailScreen,
   },
+  ChattingList: {
+    screen: ChattingListScreen,
+    navigationOptions: {
+      headerShown: true,
+    },
+  },
+  Chatting: {
+    screen: ChattingScreen,
+    navigationOptions: {
+      headerShown: true,
+    },
+  },
 });
 const AuthStack = createStackNavigator({
   Login: {
     screen: LoginScreen,
     navigationOptions: {
-      // title: 'Login',
+      headerShown: false,
+    },
+  },
+  IV: {
+    screen: IVScreen,
+    navigationOptions: {
+      headerShown: true,
+    },
+  },
+  WebView: {
+    screen: WebViewScreen,
+    navigationOptions: {
       headerShown: false,
     },
   },
@@ -37,56 +60,25 @@ const DrawerStack = createDrawerNavigator(
       name: 'MainStack',
       screen: AppStack,
     },
+    Auth: {
+      name: 'AuthStack',
+      screen: AuthStack,
+    },
   },
   {
     contentComponent: SideBar,
   },
 );
-const IVStack = createStackNavigator({
-  IV: {
-    screen: IVScreen,
-    navigationOptions: {
-      headerShown: true,
-    },
-  },
-});
-const WebViewStack = createStackNavigator({
-  WebView: {
-    screen: WebViewScreen,
-    navigationOptions: {
-      headerShown: false,
-    },
-  },
-});
-const ChattingListStack = createStackNavigator({
-  ChattngList: {
-    screen: ChattingListScreen,
-    navigationOptions: {
-      headerShown: true,
-    },
-  },
-});
-const ChattingStack = createStackNavigator({
-  Chatting: {
-    screen: ChattingScreen,
-    navigationOptions: {
-      headerShown: true,
-    },
-  },
-});
+
 const Navigation = createAppContainer(
   createSwitchNavigator(
     {
       SplashLoading: SplashScreen,
       App: DrawerStack,
       Auth: AuthStack,
-      IV: IVStack,
-      WebView: WebViewStack,
-      ChattingList: ChattingListStack,
-      Chatting: ChattingStack,
     },
     {
-      initialRouteName: 'IV',
+      initialRouteName: 'App',
     },
   ),
 );
