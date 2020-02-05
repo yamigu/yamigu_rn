@@ -54,7 +54,7 @@ const logCallback = (log, callback) => {
   console.log(log);
   callback;
 };
-var deviceWidth = Dimensions.get('window').width;
+const deviceWidth = Dimensions.get('window').width;
 
 const LoginScreen = ({navigation}) => {
   const [loginLoading, setLoginLoading] = useState(false);
