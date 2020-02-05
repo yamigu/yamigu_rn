@@ -38,7 +38,6 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0,
     flexDirection: 'row-reverse',
   },
-
   chattingBox: {
     padding: 10,
     marginLeft: 4,
