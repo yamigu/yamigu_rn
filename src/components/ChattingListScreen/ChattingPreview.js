@@ -49,6 +49,7 @@ const styles = StyleSheet.create({
     backgroundColor: palette.red,
     justifyContent: 'center',
     alignItems: 'center',
+    marginTop: 2,
   },
   chatPreview: {
     borderBottomWidth: 0,
