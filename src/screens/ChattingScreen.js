@@ -4,7 +4,6 @@ import {StyleSheet, View, Image} from 'react-native';
 import {Container, Content, Icon, Text, List} from 'native-base';
 import {SafeAreaView, SafeAreaProvider} from 'react-native-safe-area-context';
 import palette from '~/lib/styles/palette';
-import BottomOverlay from '~/components/MainScreen/BottomOverlay';
 import TouchableByPlatform from '~/components/common/TouchableByPlatform';
 import {DrawerActions} from 'react-navigation-drawer';
 import ReceivedItem from '~/components/ChattingScreen/ReceivedItem';
@@ -16,12 +15,9 @@ const ChattingScreen = props => {
       <Container style={styles.container}>
         <List>
           <ReceivedItem />
-          <Text>Chatting screen</Text>
           <ReceivedItem />
-          <Text>Chatting screen</Text>
           <SentItem />
         </List>
-        <BottomOverlay />
       </Container>
     </View>
   );
@@ -30,7 +26,7 @@ ChattingScreen.navigationOptions = ({navigation}) => ({
   headerLeft: () => (
     <TouchableByPlatform
       style={styles.touchable}
-      onPress={() => navigation.dispatch(DrawerActions.openDrawer())}>
+      onPress={() => navigation.goBack()}>
       <Icon
         name="arrow-back"
         style={{
