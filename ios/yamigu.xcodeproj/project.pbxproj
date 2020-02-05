@@ -10,18 +10,16 @@
 		00E356F31AD99517003FC87E /* yamiguTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* yamiguTests.m */; };
 		131649C307146AA52CB0DCFB /* libPods-yamigu-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D8358A19ED37E2C40D4169A0 /* libPods-yamigu-tvOSTests.a */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
-		13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
-		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		2D02E4BC1E0B4A80006451C7 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		2D02E4BD1E0B4A84006451C7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		2D02E4BF1E0B4AB3006451C7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		2DCD954D1E0B4F2C00145EB5 /* yamiguTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* yamiguTests.m */; };
 		3F2CB62623E8506600D482C4 /* KakaoOpenSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3F2CB62523E8506600D482C4 /* KakaoOpenSDK.framework */; };
+		3FE4BAFB23E9A45400511EED /* Fonts in Resources */ = {isa = PBXBuildFile; fileRef = 3FE4BAFA23E9A45400511EED /* Fonts */; };
 		45545FFCD60205FA07EFB7C8 /* libPods-yamiguTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B4495EF07C19F210B2EDDF4 /* libPods-yamiguTests.a */; };
 		85E457287673DE2CD5AC0311 /* libPods-yamigu-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B28A8D1C5E8B876C912C1438 /* libPods-yamigu-tvOS.a */; };
 		C44EBEFC947EAE682CD3E87D /* libPods-yamigu.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 78797E191067D863BEA889B3 /* libPods-yamigu.a */; };
-		
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -61,6 +59,7 @@
 		2D02E4901E0B4A5D006451C7 /* yamigu-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "yamigu-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		37337A5D0527A7193D61D026 /* Pods-yamigu-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-yamigu-tvOS.release.xcconfig"; path = "Target Support Files/Pods-yamigu-tvOS/Pods-yamigu-tvOS.release.xcconfig"; sourceTree = "<group>"; };
 		3F2CB62523E8506600D482C4 /* KakaoOpenSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = KakaoOpenSDK.framework; sourceTree = "<group>"; };
+		3FE4BAFA23E9A45400511EED /* Fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Fonts; sourceTree = "<group>"; };
 		4177BE91C5DB5A56ED6FCCF1 /* Pods-yamigu-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-yamigu-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-yamigu-tvOS/Pods-yamigu-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
 		64133A8B5D5DF611DF362ABE /* Pods-yamigu.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-yamigu.release.xcconfig"; path = "Target Support Files/Pods-yamigu/Pods-yamigu.release.xcconfig"; sourceTree = "<group>"; };
 		78797E191067D863BEA889B3 /* libPods-yamigu.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-yamigu.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -70,7 +69,6 @@
 		DBCA1C64D366EF433E99A605 /* Pods-yamiguTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-yamiguTests.release.xcconfig"; path = "Target Support Files/Pods-yamiguTests/Pods-yamiguTests.release.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
-		
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -180,6 +178,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				3FE4BAFA23E9A45400511EED /* Fonts */,
 				13B07FAE1A68108700A75B9A /* yamigu */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* yamiguTests */,
@@ -203,7 +202,6 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -347,9 +345,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
-				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
-				
+				3FE4BAFB23E9A45400511EED /* Fonts in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -383,11 +379,11 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
+			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh\n";
 		};
 		1A0F5B0730038944F787631E /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
+			buildActionMask = 12;
 			files = (
 			);
 			inputPaths = (
