@@ -4,6 +4,7 @@ import {Left, Right, Body, ListItem, Thumbnail, Row} from 'native-base';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import palette from '~/lib/styles/palette';
 import {CustomTextMedium, CustomTextRegular} from '../common/CustomText';
+
 const deviceWidth = Dimensions.get('window').width;
 
 const ReceivedItem = ({params}) => (
