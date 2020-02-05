@@ -12,6 +12,7 @@ import IVScreen from '~/screens/IVScreen';
 import WebViewScreen from '~/screens/WebViewScreen';
 import ChattingListScreen from '~/screens/ChattingListScreen';
 import ChattingScreen from '~/screens/ChattingScreen';
+import SignupScreen from '~/screens/SignupScreen';
 
 const AppStack = createStackNavigator({
   Main: {
@@ -50,6 +51,12 @@ const AuthStack = createStackNavigator({
     screen: WebViewScreen,
     navigationOptions: {
       headerShown: false,
+    },
+  },
+  Signup: {
+    screen: SignupScreen,
+    navigationOptions: {
+      headerShown: true,
     },
   },
 });

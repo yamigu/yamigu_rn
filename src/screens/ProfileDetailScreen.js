@@ -10,10 +10,8 @@ import {
   ListItem,
   Left,
   Right,
-  Thumbnail,
   Body,
 } from 'native-base';
-import {SafeAreaProvider, SafeAreaView} from 'react-native-safe-area-context';
 import Ionicon from 'react-native-vector-icons/Ionicons';
 import palette from '~/lib/styles/palette';
 import {
@@ -27,6 +25,7 @@ import {
 } from 'react-native-best-viewpager';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import MeetingSettingPane from '~/components/common/MeetingSettingPane';
+import {HeaderBackButton} from 'react-navigation-stack';
 const deviceWidth = Dimensions.get('window').width;
 const meeting_setting_data = [
   '2:2 미팅',
@@ -227,15 +226,7 @@ const ProfileDetailScreen = props => {
 };
 ProfileDetailScreen.navigationOptions = ({navigation}) => ({
   headerLeft: () => (
-    <TouchableOpacity onPress={() => navigation.goBack()}>
-      <Icon
-        name="arrow-back"
-        style={{
-          color: 'white',
-          margin: 10,
-        }}
-      />
-    </TouchableOpacity>
+    <HeaderBackButton tintColor="white" onPress={() => navigation.goBack()} />
   ),
   headerTitle: () => <View />,
   headerTransparent: true,

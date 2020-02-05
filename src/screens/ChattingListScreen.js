@@ -6,6 +6,7 @@ import TouchableByPlatform from '~/components/common/TouchableByPlatform';
 import {Icon, Content} from 'native-base';
 import ChattingList from '~/components/ChattingListScreen/ChattingList';
 import ReceivedList from '~/components/ChattingListScreen/ReceivedList';
+import {HeaderBackButton} from 'react-navigation-stack';
 
 const ChattingListScreen = ({navigation}) => (
   <Content showsVerticalScrollIndicator={false} style={styles.root}>
@@ -15,19 +16,7 @@ const ChattingListScreen = ({navigation}) => (
 );
 
 ChattingListScreen.navigationOptions = ({navigation}) => ({
-  headerLeft: () => (
-    <View>
-      <TouchableByPlatform onPress={() => navigation.goBack()}>
-        <Icon
-          name="arrow-back"
-          style={{
-            color: palette.black,
-            margin: 10,
-          }}
-        />
-      </TouchableByPlatform>
-    </View>
-  ),
+  headerLeft: () => <HeaderBackButton onPress={() => navigation.goBack()} />,
   headerTitle: () => (
     <Image source={require('~/images/chat-bubble-orange.png')} />
   ),

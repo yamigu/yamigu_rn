@@ -2,7 +2,6 @@
 import React from 'react';
 import {StyleSheet, View, Image} from 'react-native';
 import {Container, Content, Icon} from 'native-base';
-import {SafeAreaView, SafeAreaProvider} from 'react-native-safe-area-context';
 import palette from '~/lib/styles/palette';
 import BottomOverlay from '~/components/MainScreen/BottomOverlay';
 import LikeMatchingList from '~/components/MainScreen/LikeMatchingList';
