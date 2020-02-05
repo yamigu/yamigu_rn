@@ -19,7 +19,7 @@ const ReceivedList = ({style}) => (
         </Badge>
       </View>
     </ListItem>
-    <ChattingPreview style={{marginBottom: 18}} />
+    <ChattingPreview label style={{marginBottom: 18}} />
   </List>
 );
 

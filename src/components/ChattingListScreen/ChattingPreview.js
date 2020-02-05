@@ -5,12 +5,12 @@ import {ListItem, Left, Badge, Body, Right} from 'native-base';
 import UserProfileSmall from '../common/UserProfileSmall';
 import {CustomTextMedium, CustomTextRegular} from '../common/CustomText';
 
-const ChattingPreview = ({style}) => (
+const ChattingPreview = ({style, label}) => (
   <ListItem avatar style={[styles.chatPreview, style]}>
     <Left style={styles.chatPreviewLeft}>
       <UserProfileSmall
         imageSource={require('~/images/test-user-profile-4.png')}
-        badgeComponent={<Badge style={styles.label} />}
+        badgeComponent={label ? <Badge style={styles.label} /> : null}
       />
     </Left>
     <Body style={styles.chatPreviewBody}>
