@@ -27,7 +27,7 @@ import {
 } from 'react-native-best-viewpager';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import MeetingSettingPane from '~/components/common/MeetingSettingPane';
-var deviceWidth = Dimensions.get('window').width;
+const deviceWidth = Dimensions.get('window').width;
 const meeting_setting_data = [
   '2:2 미팅',
   '3:3 미팅',
