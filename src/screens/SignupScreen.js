@@ -11,22 +11,29 @@ import BelongPage from '~/components/SignupScreen/BelongPage';
 import ImagePage from '~/components/SignupScreen/ImagePage';
 import ViewPager from '@react-native-community/viewpager';
 import {Button} from 'native-base';
+import {SafeAreaView} from 'react-navigation';
+
+let global_viewPager;
 const SignupScreen = ({navigation}) => {
   const [page, setPage] = useState(0);
   const viewPager = createRef();
+  global_viewPager = viewPager;
   const go = next_page => {
     viewPager.current.setPage(next_page);
     setPage(next_page);
+    global_viewPager = viewPager;
+    navigation.setParams({
+      page: next_page,
+      move: page => setPage(page),
+    });
   };
   const move = delta => {
     go(page + delta);
   };
+
   return (
-    <View style={styles.root}>
-      <ViewPager
-        ref={viewPager}
-        styles={styles.viewPager}
-        scrollEnabled={false}>
+    <SafeAreaView style={styles.root}>
+      <ViewPager ref={viewPager} style={styles.viewPager} scrollEnabled={false}>
         <NicknamePage />
         <BelongPage />
         <ImagePage />
@@ -64,12 +71,24 @@ const SignupScreen = ({navigation}) => {
           </Button>
         )}
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
 SignupScreen.navigationOptions = ({navigation}) => ({
-  headerLeft: () => <HeaderBackButton onPress={() => navigation.goBack()} />,
+  headerLeft: () =>
+    navigation.getParam('page', 0) > 0 ? (
+      <HeaderBackButton
+        onPress={() => {
+          const page = navigation.getParam('page', 0);
+          global_viewPager.current.setPage(page - 1);
+          navigation.getParam('move')(page - 1);
+          navigation.setParams({
+            page: page - 1,
+          });
+        }}
+      />
+    ) : null,
   headerTitle: () => (
     <CustomTextMedium size={16} color={palette.black}>
       회원가입
