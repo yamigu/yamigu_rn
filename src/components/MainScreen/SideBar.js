@@ -10,7 +10,7 @@ const StyledView = Styled.View`
 const SideBar = props => {
   return (
     <SafeAreaView style={{flex: 1}}>
-      <Text onPress={() => props.navigation.navigate('Profile')}>asd</Text>
+      <Text onPress={() => props.navigation.navigate('Signup')}>asd</Text>
     </SafeAreaView>
   );
 };
