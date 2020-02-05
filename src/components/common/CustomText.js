@@ -12,6 +12,7 @@ export const CustomTextRegular = props => {
           fontSize: props.size ? props.size : 16,
           lineHeight: props.size ? props.size + 10 : 18,
           includeFontPadding: false,
+          textDecorationLine: props.decoLine ? props.decoLine : '',
         }
       }>
       {props.children}
@@ -29,6 +30,7 @@ export const CustomTextMedium = props => {
           fontSize: props.size ? props.size : 16,
           lineHeight: props.size ? props.size + 10 : 18,
           includeFontPadding: false,
+          textDecorationLine: props.decoLine ? props.decoLine : '',
         },
       ]}>
       {props.children}
@@ -46,6 +48,7 @@ export const CustomTextBold = props => {
           fontSize: props.size ? props.size : 16,
           lineHeight: props.size ? props.size + 10 : 18,
           includeFontPadding: false,
+          textDecorationLine: props.decoLine ? props.decoLine : '',
         },
       ]}>
       {props.children}
@@ -63,6 +66,7 @@ export const CustomTextBlack = props => {
           fontSize: props.size ? props.size : 16,
           lineHeight: props.size ? props.size + 10 : 18,
           includeFontPadding: false,
+          textDecorationLine: props.decoLine ? props.decoLine : '',
         },
       ]}>
       {props.children}
@@ -72,6 +76,7 @@ export const CustomTextBlack = props => {
 export const CustomTextLight = props => {
   return (
     <Text
+      textDecorationLine={props.decoLine ? props.decoLine : ''}
       style={[
         props.style,
         {
@@ -80,6 +85,7 @@ export const CustomTextLight = props => {
           fontSize: props.size ? props.size : 16,
           lineHeight: props.size ? props.size + 10 : 18,
           includeFontPadding: false,
+          textDecorationLine: props.decoLine ? props.decoLine : '',
         },
       ]}>
       {props.children}

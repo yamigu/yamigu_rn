@@ -7,6 +7,7 @@ import MainScreen from './src/screens/MainScreen';
 import LoginScreen from './src/screens/LoginScreen';
 import SplashScreen from './src/screens/SplashScreen';
 import SideBar from '~/components/MainScreen/SideBar';
+import ProfileDetailScreen from '~/screens/ProfileDetailScreen';
 import IVScreen from '~/screens/IVScreen';
 import WebViewScreen from '~/screens/WebViewScreen';
 import ChattingListScreen from '~/screens/ChattingListScreen';
@@ -15,6 +16,9 @@ import ChattingScreen from '~/screens/ChattingScreen';
 const AppStack = createStackNavigator({
   Main: {
     screen: MainScreen, // MainScreen 컴포넌트를 네비게이터에 등록
+  },
+  Profile: {
+    screen: ProfileDetailScreen,
   },
 });
 const AuthStack = createStackNavigator({

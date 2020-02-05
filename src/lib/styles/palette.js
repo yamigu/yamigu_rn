@@ -22,10 +22,12 @@ const palette = {
   nonselect: '#AEAEAE',
   sub: '#707070',
   red: '#E53030',
+  blue: '#475FFF',
   brown: ['#463C33', '#362C23'],
   black: '#333333',
   gold: '#CCAC00',
   yellow: '#FFD700',
+  divider: '#DDDDDD',
 };
 
 export default palette;

@@ -1,36 +1,36 @@
 import React from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
 import {List, ListItem} from 'native-base';
-import {CustomTextMedium} from '../common/CustomText';
+import {CustomTextMedium} from '~/components/common/CustomText';
 import palette from '~/lib/styles/palette';
 import LikeMatching from './LikeMatching';
-import UserProfileSmall from '../common/UserProfileSmall';
-import GoldBadge from '../common/GoldBadge';
+import UserProfileSmall from '~/components/common/UserProfileSmall';
+import GoldBadge from '~/components/common/GoldBadge';
 
 const data = [
   {
     name: '또로링',
-    image: require('../../images/test-user-profile-1.png'),
+    image: require('~/images/test-user-profile-1.png'),
     isUnread: true,
   },
   {
     name: '뚜루뚜막뚜',
-    image: require('../../images/test-user-profile-2.png'),
+    image: require('~/images/test-user-profile-2.png'),
     isUnread: true,
   },
   {
     name: '꿈발라',
-    image: require('../../images/test-user-profile-3.png'),
+    image: require('~/images/test-user-profile-3.png'),
     isUnread: false,
   },
   {
     name: '요잇',
-    image: require('../../images/test-user-profile-4.png'),
+    image: require('~/images/test-user-profile-4.png'),
     isUnread: false,
   },
   {
     name: '요잇',
-    image: require('../../images/test-user-profile-4.png'),
+    image: require('~/images/test-user-profile-4.png'),
     isUnread: false,
   },
 ];

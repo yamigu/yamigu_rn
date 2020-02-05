@@ -5,11 +5,11 @@ import palette from '~/lib/styles/palette';
 
 const styles = StyleSheet.create({
   wrapper: {
-    paddingLeft: 9,
-    paddingRight: 9,
-    paddingTop: 3,
-    paddingBottom: 3,
-    borderRadius: 12.5,
+    paddingLeft: 16,
+    paddingRight: 16,
+    paddingTop: 8,
+    paddingBottom: 8,
+    borderRadius: 17.5,
     borderColor: palette.orange[0],
     borderWidth: 1,
     justifyContent: 'center',
@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
 });
-const RoundTextView = props => (
+const RoundBorderTextView = props => (
   <View style={styles.wrapper}>
     <CustomTextRegular size={12} color={palette.orange}>
       {props.children}
@@ -26,4 +26,4 @@ const RoundTextView = props => (
   </View>
 );
 
-export default RoundTextView;
+export default RoundBorderTextView;

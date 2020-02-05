@@ -1,60 +1,50 @@
 import React, {useState} from 'react';
-import {StyleSheet, Platform} from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
-import Styled from 'styled-components/native';
+import {
+  StyleSheet,
+  Platform,
+  View,
+  Image,
+  Dimensions,
+  ImageBackground,
+} from 'react-native';
 import KakaoLoginButton from '~/components/LoginScreen/KakaoLoginButton';
 import AppleLoginButton from '~/components/LoginScreen/AppleLoginButton';
 import KakaoLogins from '@react-native-seoul/kakao-login';
 import Spinner from 'react-native-loading-spinner-overlay';
 import axios from 'axios';
+import {
+  CustomTextRegular,
+  CustomTextBold,
+  CustomTextMedium,
+} from '~/components/common/CustomText';
+import palette from '~/lib/styles/palette';
+import {
+  IndicatorViewPager,
+  PagerDotIndicator,
+} from 'react-native-best-viewpager';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 
-const TopDiv = Styled.View`
-    height: 80%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-`;
-const BottomDiv = Styled.View`
-    height: 16%;
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    justify-content: flex-end;
-
-`;
-const YamiguLogo = Styled.Image`
-    overflow: visible;
-    height: 14%;
-    resizeMode: contain;
-`;
-const YamiguSubLogo = Styled.Image`
-    height: 7%;
-    marginTop: 4%;
-    resizeMode: contain;
-`;
-
-const BottomDivAndroid = ({kakaoLogin}) => {
+const ButtonContainerAndroid = ({kakaoLogin}) => {
   return (
-    <BottomDiv>
+    <View style={styles.buttonContainer}>
       <KakaoLoginButton onPress={kakaoLogin} />
-    </BottomDiv>
+    </View>
   );
 };
-const BottomDivApple = ({kakaoLogin}) => {
+const ButtonContainerApple = ({kakaoLogin}) => {
   return (
-    <BottomDiv>
+    <View style={styles.buttonContainer}>
       <AppleLoginButton />
       <KakaoLoginButton onPress={kakaoLogin} />
-    </BottomDiv>
+    </View>
   );
 };
-const BottomDivbyPlatform = Platform.select({
+const ButtonContainerbyPlatform = Platform.select({
   ios: ({kakaoLogin}) => {
-    return <BottomDivApple kakaoLogin={kakaoLogin} />;
+    return <ButtonContainerApple kakaoLogin={kakaoLogin} />;
   },
   android: ({kakaoLogin}) => {
-    return <BottomDivAndroid kakaoLogin={kakaoLogin} />;
+    return <ButtonContainerAndroid kakaoLogin={kakaoLogin} />;
   },
 });
 
@@ -64,6 +54,8 @@ const logCallback = (log, callback) => {
   console.log(log);
   callback;
 };
+const deviceWidth = Dimensions.get('window').width;
+
 const LoginScreen = ({navigation}) => {
   const [loginLoading, setLoginLoading] = useState(false);
   const [token, setToken] = useState(TOKEN_EMPTY);
@@ -99,27 +91,114 @@ const LoginScreen = ({navigation}) => {
         }
       });
   };
+  const _renderDotIndicator = () => {
+    return (
+      <PagerDotIndicator
+        pageCount={3}
+        dotStyle={styles.dot}
+        selectedDotStyle={styles.selectedDot}
+      />
+    );
+  };
   return (
-    <LinearGradient
-      colors={['#FFA022', '#FF6C2B']}
-      style={styles.linearGradient}>
-      <TopDiv>
-        <YamiguLogo source={require('~/images/yamigu-logo.png')} />
-        <YamiguSubLogo source={require('~/images/yamigu-sub-logo.png')} />
+    <View style={styles.container}>
+      <View style={styles.topContainer}>
+        <IndicatorViewPager
+          style={styles.viewPager}
+          indicator={_renderDotIndicator()}>
+          <Image
+            style={styles.viewPage}
+            key="1"
+            source={require('~/images/onboarding-screen-1.png')}
+          />
+          <Image
+            style={styles.viewPage}
+            key="2"
+            source={require('~/images/onboarding-screen-2.png')}
+          />
+          <Image
+            style={styles.viewPage}
+            key="3"
+            source={require('~/images/onboarding-screen-3.png')}
+          />
+        </IndicatorViewPager>
         <Spinner
           visible={loginLoading}
           textContent={'Loading...'}
           textStyle={styles.spinnerTextStyle}
         />
-      </TopDiv>
-      <BottomDivbyPlatform kakaoLogin={kakaoLogin} />
-    </LinearGradient>
+      </View>
+      <View style={styles.bottomContainer}>
+        <View style={styles.buttonContainerWrapper}>
+          <ButtonContainerbyPlatform kakaoLogin={kakaoLogin} />
+        </View>
+        <View style={styles.policyContainer}>
+          <CustomTextRegular size={10}>로그인시 </CustomTextRegular>
+          <TouchableOpacity>
+            <CustomTextBold decoLine="underline" size={10}>
+              이용약관
+            </CustomTextBold>
+          </TouchableOpacity>
+          <CustomTextRegular size={10}> & </CustomTextRegular>
+          <TouchableOpacity>
+            <CustomTextBold decoLine="underline" size={10}>
+              개인정보 취급방침
+            </CustomTextBold>
+          </TouchableOpacity>
+          <CustomTextRegular size={10}>
+            에 동의한 것으로 간주합니다
+          </CustomTextRegular>
+        </View>
+      </View>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  linearGradient: {
+  container: {
     flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+  },
+  topContainer: {
+    flex: 1,
+    justifyContent: 'flex-start',
+  },
+  viewPager: {
+    marginTop: 15,
+    height: deviceWidth * 1.16,
+    justifyContent: 'flex-start',
+  },
+  viewPage: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    resizeMode: 'contain',
+  },
+  dot: {
+    backgroundColor: palette.nonselect,
+  },
+  selectedDot: {
+    backgroundColor: palette.orange[0],
+  },
+  image: {
+    resizeMode: 'contain',
+  },
+  bottomContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'column',
+    marginBottom: 10,
+  },
+  buttonContainerWrapper: {
+    marginBottom: 10,
+  },
+  buttonContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  policyContainer: {
+    flexDirection: 'row',
   },
   spinnerTextStyle: {
     color: '#FFF',

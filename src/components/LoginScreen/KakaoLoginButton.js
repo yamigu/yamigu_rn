@@ -17,7 +17,7 @@ const KakaoLoginButton = ({onPress}) => {
   return (
     <View style={styles.container}>
       <TouchableOpacity style={styles.touchable} onPress={onPress}>
-        <Image style={styles.icon} source={require('../../images/kakao.png')} />
+        <Image style={styles.icon} source={require('~/images/kakao.png')} />
         <Text
           style={{
             color: palette.kakao_font,
