@@ -82,7 +82,7 @@ const Navigation = createAppContainer(
       Chatting: ChattingStack,
     },
     {
-      initialRouteName: 'Chatting',
+      initialRouteName: 'IV',
     },
   ),
 );
