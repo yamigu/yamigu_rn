@@ -31,11 +31,11 @@ const MainHeader = props => {
         </TouchableByPlatform>
       </Left>
       <Body>
-        <Image source={require('../../images/yamigu-logo-text.png')} />
+        <Image source={require('~/images/yamigu-logo-text.png')} />
       </Body>
       <Right>
         <TouchableByPlatform>
-          <Image source={require('../../images/chat-bubble-outline.png')} />
+          <Image source={require('~/images/chat-bubble-outline.png')} />
         </TouchableByPlatform>
       </Right>
     </Header>

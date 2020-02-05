@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, StyleSheet, Dimensions} from 'react-native';
-import {CustomTextRegular} from '../common/CustomText';
+import {CustomTextRegular} from '~/components/common/CustomText';
 import palette from '~/lib/styles/palette';
 
 const width = Dimensions.get('window').width;

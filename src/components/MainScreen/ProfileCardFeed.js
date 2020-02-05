@@ -11,14 +11,14 @@ import {
   CustomTextMedium,
   CustomTextRegular,
   CustomTextBold,
-} from '../common/CustomText';
+} from '~/components/common/CustomText';
 import Ionicon from 'react-native-vector-icons/Ionicons';
 import palette from '~/lib/styles/palette';
-import RoundBorderTextView from '../common/RoundBorderTextView';
+import RoundBorderTextView from '~/components/common/RoundBorderTextView';
 import TouchableByPlatform from '~/components/common/TouchableByPlatform';
 import LinearGradient from 'react-native-linear-gradient';
-import MeetingSettingPane from '../common/MeetingSettingPane';
-import ProfileCard from '../common/ProfileCard';
+import MeetingSettingPane from '~/components/common/MeetingSettingPane';
+import ProfileCard from '~/components/common/ProfileCard';
 
 const data = ['2:2 미팅', '3:3 미팅', '4:4 미팅', '날짜는 조율 가능해요'];
 
@@ -112,7 +112,7 @@ const ProfileCardFeed = ({params}) => (
   <View style={styles.container}>
     <ImageBackground
       style={styles.image}
-      source={require('../../images/test-user-profile-5.png')}>
+      source={require('~/images/test-user-profile-5.png')}>
       <LinearGradient
         colors={['#333333ff', '#ffffff00']}
         style={styles.linearGradient}
@@ -151,7 +151,7 @@ const ProfileCardFeed = ({params}) => (
       <TouchableByPlatform style={styles.touchable}>
         <View style={styles.button}>
           <Image
-            source={require('../../images/chat-bubble2-outline.png')}
+            source={require('~/images/chat-bubble2-outline.png')}
             style={{height: 16, width: 16}}
           />
           <CustomTextMedium size={14} color="#898989" style={{marginLeft: 4}}>

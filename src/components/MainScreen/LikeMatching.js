@@ -1,6 +1,9 @@
 import React from 'react';
 import {View, StyleSheet, ImageBackground} from 'react-native';
-import {CustomTextMedium, CustomTextLight} from '../common/CustomText';
+import {
+  CustomTextMedium,
+  CustomTextLight,
+} from '~/components/common/CustomText';
 import palette from '~/lib/styles/palette';
 import TouchableByPlatform from '~/components/common/TouchableByPlatform';
 
@@ -44,10 +47,10 @@ const LikeMatching = () => {
       <View style={styles.wrapper}>
         <TouchableByPlatform styles={styles.touchable}>
           <ImageBackground
-            source={require('../../images/gold-inner-circle.png')}
+            source={require('~/images/gold-inner-circle.png')}
             style={styles.innerBackground}>
             <ImageBackground
-              source={require('../../images/gold-like.png')}
+              source={require('~/images/gold-like.png')}
               style={styles.goldLike}>
               <CustomTextLight size={16} color="white">
                 16
