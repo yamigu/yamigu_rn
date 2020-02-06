@@ -34,34 +34,38 @@ const ImagePage = ({params}) => (
         </Button>
       </ImageBackground>
       <View style={styles.rightButtonView}>
-        <Button style={styles.button}>
-          <AntDesignIcon
-            name="plus"
-            size={((deviceWidth - 76) / 2) * 0.468 * 0.332}
-            color={palette.orange[0]}
-          />
-        </Button>
-        <Button style={styles.button}>
-          <AntDesignIcon
-            name="plus"
-            size={((deviceWidth - 76) / 2) * 0.468 * 0.332}
-            color={palette.orange[0]}
-          />
-        </Button>
-        <Button style={[styles.button, {marginTop: 10}]}>
-          <AntDesignIcon
-            name="plus"
-            size={((deviceWidth - 76) / 2) * 0.468 * 0.332}
-            color={palette.orange[0]}
-          />
-        </Button>
-        <Button style={[styles.button, {marginTop: 10}]}>
-          <AntDesignIcon
-            name="plus"
-            size={((deviceWidth - 76) / 2) * 0.467 * 0.332}
-            color={palette.orange[0]}
-          />
-        </Button>
+        <View style={styles.rightButtonViewFirst}>
+          <Button style={styles.button}>
+            <AntDesignIcon
+              name="plus"
+              size={((deviceWidth - 76) / 2) * 0.468 * 0.332}
+              color={palette.orange[0]}
+            />
+          </Button>
+          <Button style={styles.button}>
+            <AntDesignIcon
+              name="plus"
+              size={((deviceWidth - 76) / 2) * 0.468 * 0.332}
+              color={palette.orange[0]}
+            />
+          </Button>
+        </View>
+        <View style={styles.rightButtonViewSecond}>
+          <Button style={styles.button}>
+            <AntDesignIcon
+              name="plus"
+              size={((deviceWidth - 76) / 2) * 0.468 * 0.332}
+              color={palette.orange[0]}
+            />
+          </Button>
+          <Button style={styles.button}>
+            <AntDesignIcon
+              name="plus"
+              size={((deviceWidth - 76) / 2) * 0.468 * 0.332}
+              color={palette.orange[0]}
+            />
+          </Button>
+        </View>
       </View>
     </View>
   </View>
@@ -96,7 +100,16 @@ const styles = StyleSheet.create({
   },
   rightButtonView: {
     width: (deviceWidth - 76) / 2,
-    height: ((deviceWidth - 76) / 2) * 1.067,
+    height: (deviceWidth - 76) / 2,
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+  },
+  rightButtonViewFirst: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+  },
+  rightButtonViewSecond: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
