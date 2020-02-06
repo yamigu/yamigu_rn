@@ -12,10 +12,12 @@
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		2D02E4BC1E0B4A80006451C7 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
-		2D02E4BD1E0B4A84006451C7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		2D02E4BF1E0B4AB3006451C7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		2DCD954D1E0B4F2C00145EB5 /* yamiguTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* yamiguTests.m */; };
 		3F2CB62623E8506600D482C4 /* KakaoOpenSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3F2CB62523E8506600D482C4 /* KakaoOpenSDK.framework */; };
+		3F4E8F2123EAB1780038B220 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
+		3F4E8F2223EAB1790038B220 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
+		3F4E8F2323EAB2150038B220 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
 		3FE4BAFB23E9A45400511EED /* Fonts in Resources */ = {isa = PBXBuildFile; fileRef = 3FE4BAFA23E9A45400511EED /* Fonts */; };
 		45545FFCD60205FA07EFB7C8 /* libPods-yamiguTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B4495EF07C19F210B2EDDF4 /* libPods-yamiguTests.a */; };
 		85E457287673DE2CD5AC0311 /* libPods-yamigu-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B28A8D1C5E8B876C912C1438 /* libPods-yamigu-tvOS.a */; };
@@ -346,6 +348,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				3FE4BAFB23E9A45400511EED /* Fonts in Resources */,
+				3F4E8F2323EAB2150038B220 /* LaunchScreen.xib in Resources */,
+				3F4E8F2123EAB1780038B220 /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -353,7 +357,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2D02E4BD1E0B4A84006451C7 /* Images.xcassets in Resources */,
+				3F4E8F2223EAB1790038B220 /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
