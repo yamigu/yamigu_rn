@@ -6,7 +6,7 @@ import {createStackNavigator} from 'react-navigation-stack';
 import MainScreen from './src/screens/MainScreen';
 import LoginScreen from './src/screens/LoginScreen';
 import SplashScreen from './src/screens/SplashScreen';
-import SideBar from '~/components/MainScreen/SideBar';
+import SideMenu from '~/components/MainScreen/SideMenu';
 import ProfileDetailScreen from '~/screens/ProfileDetailScreen';
 import IVScreen from '~/screens/IVScreen';
 import WebViewScreen from '~/screens/WebViewScreen';
@@ -73,7 +73,7 @@ const DrawerStack = createDrawerNavigator(
     },
   },
   {
-    contentComponent: SideBar,
+    contentComponent: SideMenu,
   },
 );
 

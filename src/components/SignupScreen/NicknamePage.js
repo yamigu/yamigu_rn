@@ -7,6 +7,7 @@ import {Item, Input} from 'native-base';
 const deviceWidth = Dimensions.get('window').width;
 const NicknamePage = ({params}) => {
   const [text, setText] = useState('');
+  const [focus, setFocus] = useState(false);
   return (
     <View style={styles.root}>
       <CustomTextMedium size={20} color={palette.black}>
@@ -18,11 +19,14 @@ const NicknamePage = ({params}) => {
       <Item style={styles.item}>
         <Input
           style={styles.input}
-          placeholder="한글, 영문, 숫자만 입력 가능"
+          placeholder={focus ? '' : '한글, 영문, 숫자만 입력 가능'}
           onChangeText={value => setText({value})}
           value={text}
+          onFocus={() => setFocus(true)}
+          onBlur={() => setFocus(false)}
           selectionColor={palette.orange[0]}
           placeholderTextColor={palette.nonselect}
+          caretHidden={true}
         />
         <View style={styles.inputRightView}>
           <CustomTextRegular size={9} color={palette.blue}>
@@ -51,7 +55,7 @@ const styles = StyleSheet.create({
     fontFamily: 'NotoSansCJKkr-Regular',
     paddingTop: 0,
     paddingBottom: 0,
-    marginBottom: 0,
+    marginBottom: -10,
     color: palette.black,
   },
   inputRightView: {
