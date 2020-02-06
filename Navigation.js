@@ -80,12 +80,11 @@ const DrawerStack = createDrawerNavigator(
 const Navigation = createAppContainer(
   createSwitchNavigator(
     {
-      SplashLoading: SplashScreen,
       App: DrawerStack,
       Auth: AuthStack,
     },
     {
-      initialRouteName: 'App',
+      initialRouteName: 'Auth',
     },
   ),
 );
