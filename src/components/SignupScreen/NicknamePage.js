@@ -40,6 +40,7 @@ const NicknamePage = ({params}) => {
 
 const styles = StyleSheet.create({
   root: {
+    padding: 20,
     backgroundColor: palette.default_bg,
     flexDirection: 'column',
   },
