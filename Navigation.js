@@ -14,6 +14,8 @@ import ChattingListScreen from '~/screens/ChattingListScreen';
 import ChattingScreen from '~/screens/ChattingScreen';
 import SignupScreen from '~/screens/SignupScreen';
 
+const deviceWidth = Dimensions.get('window').width;
+
 const AppStack = createStackNavigator({
   Main: {
     screen: MainScreen, // MainScreen 컴포넌트를 네비게이터에 등록
@@ -74,6 +76,7 @@ const DrawerStack = createDrawerNavigator(
   },
   {
     contentComponent: SideMenu,
+    drawerWidth: deviceWidth * 0.813,
   },
 );
 

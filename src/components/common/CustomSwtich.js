@@ -3,13 +3,13 @@ import {StyleSheet} from 'react-native';
 import {Switch} from 'react-native-switch';
 import palette from '~/lib/styles/palette';
 
-export const CustomSwitch = ({toggleState, onPress}) => (
+export const CustomSwitch = ({toggleState, onPress, size}) => (
   <Switch
     value={toggleState}
     onValueChange={onPress}
-    circleSize={50}
-    barHeight={50}
-    circleBorderWidth={11}
+    circleSize={size}
+    barHeight={size}
+    circleBorderWidth={size / 5}
     backgroundActive={palette.orange[0]}
     backgroundInactive={palette.nonselect}
     circleActiveColor={'white'}

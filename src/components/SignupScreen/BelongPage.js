@@ -71,7 +71,8 @@ const BelongPage = ({params}) => {
               selectionColor={palette.orange[0]}
               placeholderTextColor={palette.nonselect}
               caretHidden={true}
-              onFocus={setFocus1}
+              onFocus={() => setFocus1(true)}
+              onBlur={() => setFocus1(false)}
             />
           </Item>
           <Item stackedLabel style={styles.formItem}>
@@ -92,7 +93,8 @@ const BelongPage = ({params}) => {
               selectionColor={palette.orange[0]}
               placeholderTextColor={palette.nonselect}
               caretHidden={true}
-              onFocus={setFocus2}
+              onFocus={() => setFocus2(true)}
+              onBlur={() => setFocus2(false)}
             />
           </Item>
         </Form>
