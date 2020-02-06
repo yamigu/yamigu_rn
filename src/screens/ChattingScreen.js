@@ -8,6 +8,7 @@ import TouchableByPlatform from '~/components/common/TouchableByPlatform';
 import {DrawerActions} from 'react-navigation-drawer';
 import ReceivedItem from '~/components/ChattingScreen/ReceivedItem';
 import SentItem from '~/components/ChattingScreen/SentItem';
+import {HeaderBackButton} from 'react-navigation-stack';
 
 const ChattingScreen = props => {
   return (
@@ -23,19 +24,7 @@ const ChattingScreen = props => {
   );
 };
 ChattingScreen.navigationOptions = ({navigation}) => ({
-  headerLeft: () => (
-    <TouchableByPlatform
-      style={styles.touchable}
-      onPress={() => navigation.goBack()}>
-      <Icon
-        name="arrow-back"
-        color={palette.black}
-        style={{
-          marginLeft: 12,
-        }}
-      />
-    </TouchableByPlatform>
-  ),
+  headerLeft: () => <HeaderBackButton onPress={() => navigation.goBack()} />,
   headerTitle: () => <Text style={{alignSelf: 'center'}}>제이름은요</Text>,
   headerRight: () => (
     <TouchableByPlatform>
@@ -43,7 +32,7 @@ ChattingScreen.navigationOptions = ({navigation}) => ({
         name="more"
         color={palette.black}
         style={{
-          marginRight: 12,
+          margin: 10,
         }}
       />
     </TouchableByPlatform>
@@ -52,6 +41,7 @@ ChattingScreen.navigationOptions = ({navigation}) => ({
   headerStyle: {
     backgroundColor: 'white',
   },
+  headerTitleAlign: 'center',
 });
 
 const styles = StyleSheet.create({

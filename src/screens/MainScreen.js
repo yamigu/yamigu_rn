@@ -2,7 +2,6 @@
 import React from 'react';
 import {StyleSheet, View, Image} from 'react-native';
 import {Container, Content, Icon} from 'native-base';
-import {SafeAreaView, SafeAreaProvider} from 'react-native-safe-area-context';
 import palette from '~/lib/styles/palette';
 import BottomOverlay from '~/components/MainScreen/BottomOverlay';
 import LikeMatchingList from '~/components/MainScreen/LikeMatchingList';
@@ -18,7 +17,7 @@ const MainScreen = props => {
           showsVerticalScrollIndicator={false}>
           <LikeMatchingList />
           <View style={styles.dividerLine} />
-          <ProfileCardList />
+          <ProfileCardList navigation={props.navigation} />
           <View style={styles.lastScroll} />
         </Content>
         <BottomOverlay />
@@ -44,7 +43,7 @@ MainScreen.navigationOptions = ({navigation}) => ({
     <Image source={require('../images/yamigu-logo-text.png')} />
   ),
   headerRight: () => (
-    <TouchableByPlatform>
+    <TouchableByPlatform onPress={() => navigation.navigate('ChattingList')}>
       <Image
         source={require('../images/chat-bubble-outline.png')}
         style={{
@@ -55,9 +54,9 @@ MainScreen.navigationOptions = ({navigation}) => ({
   ),
   headerMode: 'screen',
   headerStyle: {
-    flex: 1,
     backgroundColor: 'white',
   },
+  headerTitleAlign: 'center',
 });
 
 const styles = StyleSheet.create({

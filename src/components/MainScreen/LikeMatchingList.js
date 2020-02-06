@@ -56,6 +56,7 @@ const LikeMatchingList = () => {
         {data.map(user => {
           return (
             <UserProfileSmall
+              style={{marginRight: 12}}
               userName={user.name}
               imageSource={user.image}
               badgeComponent={user.isUnread === true ? <GoldBadge /> : null}

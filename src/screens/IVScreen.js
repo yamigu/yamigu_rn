@@ -48,6 +48,7 @@ IVScreen.navigationOptions = ({navigation}) => ({
       <CustomTextRegular>본인인증</CustomTextRegular>
     </>
   ),
+  headerTitleAlign: 'center',
 });
 
 const styles = StyleSheet.create({
