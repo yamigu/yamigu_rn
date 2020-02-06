@@ -38,7 +38,7 @@ const SignupScreen = ({navigation}) => {
         <BelongPage />
         <ImagePage />
       </ViewPager>
-      <View>
+      <View style={styles.bottomView}>
         <View style={styles.indicator}>
           <CustomTextRegular
             style={styles.indicatorText}
@@ -104,11 +104,13 @@ const styles = StyleSheet.create({
   root: {
     flex: 1,
     backgroundColor: palette.default_bg,
-    padding: 20,
     justifyContent: 'space-between',
   },
   viewPager: {
     flex: 1,
+  },
+  bottomView: {
+    padding: 20,
   },
   indicator: {
     marginBottom: 14,
