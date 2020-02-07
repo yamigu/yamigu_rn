@@ -116,7 +116,6 @@ const BelongPage = ({params}) => {
 const styles = StyleSheet.create({
   root: {
     padding: 20,
-    paddingTop: 0,
     flex: 1,
     backgroundColor: palette.default_bg,
     flexDirection: 'column',
@@ -125,7 +124,7 @@ const styles = StyleSheet.create({
     flex: 1,
     width: '100%',
     flexDirection: 'row',
-    marginTop: 16,
+    paddingTop: 16,
   },
   button: {
     width: '50%',

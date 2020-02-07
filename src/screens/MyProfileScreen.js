@@ -9,9 +9,9 @@ import InfoView from '~/components/MyProfileScreen/InfoView';
 
 const MyProfileScreen = ({params}) => (
   <View style={styles.root}>
-    <ImageView></ImageView>
-    <FriendsView></FriendsView>
-    <InfoView></InfoView>
+    <ImageView />
+    <FriendsView />
+    <InfoView />
   </View>
 );
 MyProfileScreen.navigationOptions = ({navigation}) => ({
@@ -27,6 +27,9 @@ MyProfileScreen.navigationOptions = ({navigation}) => ({
   headerTitleAlign: 'center',
 });
 const styles = StyleSheet.create({
-  root: {},
+  root: {
+    flex: 1,
+    backgroundColor: palette.default_bg,
+  },
 });
 export default MyProfileScreen;

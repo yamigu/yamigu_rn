@@ -112,6 +112,7 @@ const styles = StyleSheet.create({
   },
   bottomView: {
     padding: 20,
+    paddingTop: 0,
   },
   indicator: {
     marginBottom: 14,
