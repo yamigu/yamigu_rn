@@ -6,13 +6,16 @@ import palette from '~/lib/styles/palette';
 import ImageView from '~/components/MyProfileScreen/ImageView';
 import FriendsView from '~/components/MyProfileScreen/FriendsView';
 import InfoView from '~/components/MyProfileScreen/InfoView';
+import {Content} from 'native-base';
 
 const MyProfileScreen = ({params}) => (
-  <View style={styles.root}>
+  <Content style={styles.root}>
     <ImageView />
+    <View style={styles.divider} />
     <FriendsView />
+    <View style={styles.divider} />
     <InfoView />
-  </View>
+  </Content>
 );
 MyProfileScreen.navigationOptions = ({navigation}) => ({
   headerLeft: () => <HeaderBackButton onPress={() => navigation.goBack()} />,
@@ -30,6 +33,11 @@ const styles = StyleSheet.create({
   root: {
     flex: 1,
     backgroundColor: palette.default_bg,
+  },
+  divider: {
+    height: 1,
+    backgroundColor: palette.divider,
+    marginHorizontal: 12,
   },
 });
 export default MyProfileScreen;

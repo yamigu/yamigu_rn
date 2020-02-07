@@ -30,17 +30,5 @@ const styles = StyleSheet.create({
     backgroundColor: palette.default_bg,
     flexDirection: 'column',
   },
-
-  button: {
-    width: ((deviceWidth - 76) / 2) * 0.468,
-    height: ((deviceWidth - 76) / 2) * 0.468,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#ffffff00',
-    borderColor: palette.orange[0],
-    borderWidth: 0.5,
-    borderRadius: 5,
-    elevation: 0,
-  },
 });
 export default ImagePage;
