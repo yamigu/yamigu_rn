@@ -13,6 +13,7 @@ import WebViewScreen from '~/screens/WebViewScreen';
 import ChattingListScreen from '~/screens/ChattingListScreen';
 import ChattingScreen from '~/screens/ChattingScreen';
 import SignupScreen from '~/screens/SignupScreen';
+import MeetingSettingScreen from '~screens/MeetingSettingScreen';
 
 const AppStack = createStackNavigator({
   Main: {
@@ -32,6 +33,9 @@ const AppStack = createStackNavigator({
     navigationOptions: {
       headerShown: true,
     },
+  },
+  MeetingSetting: {
+    screen: MeetingSettingScreen,
   },
 });
 const AuthStack = createStackNavigator({
@@ -80,6 +84,7 @@ const DrawerStack = createDrawerNavigator(
 const Navigation = createAppContainer(
   createSwitchNavigator(
     {
+      Chat: ChattingScreen,
       App: DrawerStack,
       Auth: AuthStack,
     },
