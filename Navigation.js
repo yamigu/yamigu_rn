@@ -13,6 +13,7 @@ import WebViewScreen from '~/screens/WebViewScreen';
 import ChattingListScreen from '~/screens/ChattingListScreen';
 import ChattingScreen from '~/screens/ChattingScreen';
 import SignupScreen from '~/screens/SignupScreen';
+import MyProfileScreen from '~/screens/MyProfileScreen';
 
 const deviceWidth = Dimensions.get('window').width;
 
@@ -25,15 +26,12 @@ const AppStack = createStackNavigator({
   },
   ChattingList: {
     screen: ChattingListScreen,
-    navigationOptions: {
-      headerShown: true,
-    },
   },
   Chatting: {
     screen: ChattingScreen,
-    navigationOptions: {
-      headerShown: true,
-    },
+  },
+  MyProfile: {
+    screen: MyProfileScreen,
   },
 });
 const AuthStack = createStackNavigator({
