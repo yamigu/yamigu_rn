@@ -12,6 +12,7 @@ import ImagePage from '~/components/SignupScreen/ImagePage';
 import ViewPager from '@react-native-community/viewpager';
 import {Button} from 'native-base';
 import {SafeAreaView} from 'react-navigation';
+import BottomOverlay from '~/components/MainScreen/BottomOverlay';
 
 let global_viewPager;
 const SignupScreen = ({navigation}) => {

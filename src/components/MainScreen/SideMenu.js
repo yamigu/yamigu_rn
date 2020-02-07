@@ -28,8 +28,9 @@ import MaterialCommunityicon from 'react-native-vector-icons/MaterialCommunityIc
 import palette from '~/lib/styles/palette';
 import {CustomSwitch} from '../common/CustomSwtich';
 import TouchableByPlatform from '../common/TouchableByPlatform';
+import Navigation from '~/../Navigation';
 const deviceWidth = Dimensions.get('window').width;
-const SideMenu = props => {
+const SideMenu = ({navigation}) => {
   const [toggle, setToggle] = useState(false);
   const [numOfFreinds, setNumOfFriends] = useState(1);
 
@@ -37,7 +38,7 @@ const SideMenu = props => {
     <SafeAreaView style={styles.root}>
       <Content showsVerticalScrollIndicator={false}>
         <View style={styles.profileView}>
-          <TouchableByPlatform>
+          <TouchableByPlatform onPress={() => navigation.navigate('Signup')}>
             <ImageBackground
               style={styles.profileBackground}
               source={require('~/images/profile-default-background.png')}>
