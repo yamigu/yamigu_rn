@@ -19,6 +19,7 @@ import TouchableByPlatform from '~/components/common/TouchableByPlatform';
 import {Icon} from 'native-base';
 import palette from '~/lib/styles/palette';
 import AddFriendsScreen from '~/screens/AddFriendsScreen';
+import StoreScreen from '~/screens/StoreScreen';
 
 const deviceWidth = Dimensions.get('window').width;
 
@@ -73,6 +74,9 @@ const AppStack = createStackNavigator({
   },
   AddFriends: {
     screen: AddFriendsScreen,
+  },
+  Store: {
+    screen: StoreScreen,
   },
 });
 const AuthStack = createStackNavigator({

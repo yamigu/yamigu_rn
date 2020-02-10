@@ -161,7 +161,7 @@ const SideMenu = ({navigation}) => {
               )}
             </Body>
           </ListItem>
-          <TouchableByPlatform>
+          <TouchableByPlatform onPress={() => navigation.navigate('Store')}>
             <ListItem icon noIndent style={styles.listItem}>
               <Left style={styles.listItemLeft}>
                 <Materialicon
