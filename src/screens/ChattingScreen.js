@@ -45,7 +45,6 @@ const ChattingScreen = props => {
       <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
         <ScrollView
           bounces="false"
-          overScrollMode="never"
           ref={_scrollToBottomY}
           onContentSizeChange={() => {
             _scrollToBottomY.current.scrollToEnd();

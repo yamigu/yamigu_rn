@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, StyleSheet} from 'react-native';
-import {CustomTextRegular} from './CustomText';
+import {CustomTextRegular, CustomTextMedium} from './CustomText';
 import palette from '~/lib/styles/palette';
 
 const styles = StyleSheet.create({
@@ -20,9 +20,9 @@ const styles = StyleSheet.create({
 });
 const RoundBorderTextView = props => (
   <View style={styles.wrapper}>
-    <CustomTextRegular size={12} color={palette.orange}>
+    <CustomTextMedium size={12} color={palette.orange}>
       {props.children}
-    </CustomTextRegular>
+    </CustomTextMedium>
   </View>
 );
 

@@ -6,9 +6,7 @@ import {SafeAreaView} from 'react-navigation';
 const SideMenu = props => {
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
-      <Text onPress={() => props.navigation.navigate('MeetingSetting')}>
-        asd
-      </Text>
+      <Text onPress={() => props.navigation.navigate('BV')}>asd</Text>
     </SafeAreaView>
   );
 };

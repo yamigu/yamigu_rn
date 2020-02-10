@@ -24,6 +24,7 @@
     "react-native-elements": "^1.2.7",
     "react-native-fab": "^1.0.9",
     "react-native-gesture-handler": "^1.5.6",
+    "react-native-image-picker": "2.3.0",
     "react-native-keyboard-aware-scroll-view": "0.9.1",
     "react-native-keyboard-aware-scrollview": "2.1.0",
     "react-native-linear-gradient": "^2.5.6",
