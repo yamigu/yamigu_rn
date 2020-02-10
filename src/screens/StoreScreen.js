@@ -12,7 +12,7 @@ import ListItemWithNavigation from '~/components/StoreScreen/ListItemWithNavigat
 import TouchableByPlatform from '~/components/common/TouchableByPlatform';
 
 const StoreScreen = ({navigation}) => (
-  <Content style={styles.root}>
+  <Content showsVerticalScrollIndicator={false} style={styles.root}>
     <List style={styles.list}>
       <ListItem itemHeader style={styles.listItemHeader}>
         <Body style={styles.listItemHeaderBody}>

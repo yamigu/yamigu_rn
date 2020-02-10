@@ -9,7 +9,7 @@ import InfoView from '~/components/MyProfileScreen/InfoView';
 import {Content} from 'native-base';
 
 const MyProfileScreen = ({navigation}) => (
-  <Content style={styles.root}>
+  <Content showsVerticalScrollIndicator={false} style={styles.root}>
     <ImageView />
     <View style={styles.divider} />
     <FriendsView navigation={navigation} />

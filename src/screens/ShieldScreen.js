@@ -12,7 +12,7 @@ import Octionicon from 'react-native-vector-icons/Octicons';
 const deviceWidth = Dimensions.get('window').width;
 
 const ShieldScreen = ({params}) => (
-  <Content style={styles.root}>
+  <Content showsVerticalScrollIndicator={false} style={styles.root}>
     <View style={styles.container}>
       <CustomTextMedium size={18} color={palette.black}>
         혹시 아는 사람 만날까봐 걱정되시나요?

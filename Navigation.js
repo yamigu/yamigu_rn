@@ -21,6 +21,7 @@ import palette from '~/lib/styles/palette';
 import AddFriendsScreen from '~/screens/AddFriendsScreen';
 import StoreScreen from '~/screens/StoreScreen';
 import ShieldScreen from '~/screens/ShieldScreen';
+import SettingScreen from '~/screens/SettingScreen';
 
 const deviceWidth = Dimensions.get('window').width;
 
@@ -81,6 +82,9 @@ const AppStack = createStackNavigator({
   },
   Shield: {
     screen: ShieldScreen,
+  },
+  Setting: {
+    screen: SettingScreen,
   },
 });
 const AuthStack = createStackNavigator({
