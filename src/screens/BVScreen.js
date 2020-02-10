@@ -210,7 +210,6 @@ BVScreen.navigationOptions = ({navigation}) => ({
       onPress={() => {
         navigation.goBack();
       }}
-      style={{width: 100}}
     />
   ),
   headerTitle: () => (
