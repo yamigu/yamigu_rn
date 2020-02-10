@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import {Dimensions, Image} from 'react-native';
 import {createAppContainer, createSwitchNavigator} from 'react-navigation';
@@ -17,6 +18,7 @@ import MyProfileScreen from '~/screens/MyProfileScreen';
 import TouchableByPlatform from '~/components/common/TouchableByPlatform';
 import {Icon} from 'native-base';
 import palette from '~/lib/styles/palette';
+import AddFriendsScreen from '~/screens/AddFriendsScreen';
 
 const deviceWidth = Dimensions.get('window').width;
 
@@ -68,6 +70,9 @@ const AppStack = createStackNavigator({
   },
   MyProfile: {
     screen: MyProfileScreen,
+  },
+  AddFriends: {
+    screen: AddFriendsScreen,
   },
 });
 const AuthStack = createStackNavigator({

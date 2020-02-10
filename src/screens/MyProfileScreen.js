@@ -8,11 +8,11 @@ import FriendsView from '~/components/MyProfileScreen/FriendsView';
 import InfoView from '~/components/MyProfileScreen/InfoView';
 import {Content} from 'native-base';
 
-const MyProfileScreen = ({params}) => (
+const MyProfileScreen = ({navigation}) => (
   <Content style={styles.root}>
     <ImageView />
     <View style={styles.divider} />
-    <FriendsView />
+    <FriendsView navigation={navigation} />
     <View style={styles.divider} />
     <InfoView />
   </Content>

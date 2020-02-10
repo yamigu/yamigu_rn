@@ -111,7 +111,8 @@ const SideMenu = ({navigation}) => {
               </Body>
             </ListItem>
           </TouchableByPlatform>
-          <TouchableByPlatform>
+          <TouchableByPlatform
+            onPress={() => navigation.navigate('AddFriends')}>
             <ListItem icon noIndent style={styles.listItem}>
               <Left style={styles.listItemLeft}>
                 <Image

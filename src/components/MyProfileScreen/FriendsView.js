@@ -5,7 +5,7 @@ import palette from '~/lib/styles/palette';
 import {Button, ListItem, List, Body, Icon, Right} from 'native-base';
 import ProfileCard from '../common/ProfileCard';
 import Octionicon from 'react-native-vector-icons/Octicons';
-const FriendsView = ({params}) => {
+const FriendsView = ({navigation}) => {
   const [numOfFriends, setNumOfFriends] = useState(0);
 
   return (
@@ -47,7 +47,9 @@ const FriendsView = ({params}) => {
         </CustomTextRegular>
       )}
 
-      <Button style={styles.button}>
+      <Button
+        style={styles.button}
+        onPress={() => navigation.navigate('AddFriends')}>
         <CustomTextMedium size={14} color="white">
           친구 등록하기
         </CustomTextMedium>
