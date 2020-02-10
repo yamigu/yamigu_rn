@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Dimensions,
   Image,
+  Switch,
 } from 'react-native';
 import {SafeAreaView} from 'react-navigation';
 import {
@@ -29,11 +30,11 @@ import palette from '~/lib/styles/palette';
 import {CustomSwitch} from '../common/CustomSwtich';
 import TouchableByPlatform from '../common/TouchableByPlatform';
 import Navigation from '~/../Navigation';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 const deviceWidth = Dimensions.get('window').width;
 const SideMenu = ({navigation}) => {
   const [toggle, setToggle] = useState(false);
   const [numOfFreinds, setNumOfFriends] = useState(0);
-
   return (
     <SafeAreaView style={styles.root}>
       <Content showsVerticalScrollIndicator={false}>
@@ -134,9 +135,7 @@ const SideMenu = ({navigation}) => {
                   </CustomTextRegular>
                 </View>
               ) : (
-                <Content
-                  horizontal={true}
-                  contentContainerStyle={styles.friendList}>
+                <Content contentContainerStyle={styles.friendList}>
                   <Thumbnail
                     source={require('~/images/test-user-profile-2.png')}
                     style={styles.friend}
@@ -202,7 +201,14 @@ const SideMenu = ({navigation}) => {
               </Body>
             </ListItem>
           </TouchableByPlatform>
-          <ListItem icon noIndent style={styles.listItem}>
+          <ListItem
+            button
+            icon
+            noIndent
+            style={styles.listItem}
+            onPress={() => {
+              setToggle(!toggle);
+            }}>
             <Left style={styles.listItemLeft}>
               <MaterialCommunityicon
                 name="shield-check"
@@ -216,10 +222,17 @@ const SideMenu = ({navigation}) => {
               </CustomTextRegular>
             </Body>
             <Right style={styles.listItemRight}>
-              <CustomSwitch
-                onPress={() => setToggle(!toggle)}
+              {/* <CustomSwitch
                 toggleState={toggle}
                 size={deviceWidth * 0.813 * 0.0524}
+              /> */}
+              <Switch
+                value={toggle}
+                onValueChange={() => {
+                  setToggle(!toggle);
+                }}
+                thumbColor="white"
+                trackColor={{false: palette.nonselect, true: palette.orange}}
               />
             </Right>
           </ListItem>
@@ -261,6 +274,8 @@ const SideMenu = ({navigation}) => {
                 </CustomTextRegular>
               </Body>
             </ListItem>
+          </TouchableByPlatform>
+          <TouchableByPlatform>
             <ListItem noIndent style={styles.listItem}>
               <Body style={styles.listItemBody}>
                 <CustomTextRegular size={14} color={palette.black}>
@@ -269,6 +284,7 @@ const SideMenu = ({navigation}) => {
               </Body>
             </ListItem>
           </TouchableByPlatform>
+
           <ListItem itemDivider style={styles.itemDivider}>
             <CustomTextMedium size={24} color={palette.black}>
               정보
@@ -356,10 +372,16 @@ const styles = StyleSheet.create({
   },
   list: {
     marginTop: deviceWidth * 0.81 * 0.0393,
+    backgroundColor: 'white',
+    paddingBottom: 0,
+    marginBottom: 0,
   },
   listItem: {
+    width: deviceWidth * 0.813,
     marginTop: deviceWidth * 0.81 * 0.009,
-    backgroundColor: 'white',
+    paddingRight: 0,
+    borderBottomWidth: 3,
+    borderColor: palette.default_bg,
   },
   listItemLeft: {},
   listItemBody: {
@@ -370,9 +392,17 @@ const styles = StyleSheet.create({
   listItemRight: {
     paddingTop: 0,
     paddingBottom: 0,
-    paddingRight: 0,
-    paddingLeft: 0,
+    paddingRight: 10,
+    paddingLeft: 10,
     alignSelf: 'center',
+    overflow: 'visible',
+    borderBottomWidth: 0,
+  },
+  listItemButton: {
+    flex: 1,
+    backgroundColor: '#ffffff00',
+    width: deviceWidth * 0.813,
+    elevation: 0,
   },
   iconWarning: {
     color: palette.red,
@@ -395,10 +425,10 @@ const styles = StyleSheet.create({
     color: palette.black,
   },
   friendListPane: {
-    marginTop: deviceWidth * 0.81 * 0.009,
     borderBottomWidth: 0,
     paddingLeft: 0,
     paddingRight: 0,
+    backgroundColor: palette.default_bg,
   },
   friendList: {
     flexDirection: 'row',
@@ -412,8 +442,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  itemDivider: {
-    marginTop: deviceWidth * 0.81 * 0.039,
-  },
+  itemDivider: {},
 });
 export default SideMenu;

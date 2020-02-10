@@ -6,7 +6,6 @@ import palette from '~/lib/styles/palette';
 export const CustomSwitch = ({toggleState, onPress, size}) => (
   <Switch
     value={toggleState}
-    onValueChange={onPress}
     circleSize={size}
     barHeight={size}
     circleBorderWidth={size / 5}
@@ -15,10 +14,9 @@ export const CustomSwitch = ({toggleState, onPress, size}) => (
     circleActiveColor={'white'}
     circleInActiveColor={'white'}
     innerCircleStyle={
-      toggleState ? styles.innerCircle : styles.innerCircleInactive
+      toggleState === true ? styles.innerCircle : styles.innerCircleInactive
     }
     outerCircleStyle={styles.outerCircleStyle}
-    changeValueImmediately={true}
   />
 );
 
