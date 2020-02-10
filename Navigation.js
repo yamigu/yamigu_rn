@@ -20,6 +20,7 @@ import {Icon} from 'native-base';
 import palette from '~/lib/styles/palette';
 import AddFriendsScreen from '~/screens/AddFriendsScreen';
 import StoreScreen from '~/screens/StoreScreen';
+import ShieldScreen from '~/screens/ShieldScreen';
 
 const deviceWidth = Dimensions.get('window').width;
 
@@ -77,6 +78,9 @@ const AppStack = createStackNavigator({
   },
   Store: {
     screen: StoreScreen,
+  },
+  Shield: {
+    screen: ShieldScreen,
   },
 });
 const AuthStack = createStackNavigator({
