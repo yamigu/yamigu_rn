@@ -16,6 +16,7 @@ import SignupScreen from '~/screens/SignupScreen';
 import MeetingSettingScreen from '~screens/MeetingSettingScreen';
 import BVScreen from '~/screens/BVScreen';
 import NoticeScreen from '~/screens/NoticeScreen';
+import GuideScreen from '~/screens/GuideScreen';
 
 const AppStack = createStackNavigator({
   Main: {
@@ -44,6 +45,9 @@ const AppStack = createStackNavigator({
   },
   Notice: {
     screen: NoticeScreen,
+  },
+  Guide: {
+    screen: GuideScreen,
   },
 });
 const AuthStack = createStackNavigator({
