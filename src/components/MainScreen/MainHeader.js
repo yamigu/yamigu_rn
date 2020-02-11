@@ -24,7 +24,7 @@ const MainHeader = props => {
           <Icon
             name="menu"
             style={{
-              color: '#333333',
+              color: palette.black,
             }}
             // onPress={openMenu}
           />

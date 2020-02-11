@@ -126,7 +126,7 @@ ChattingScreen.navigationOptions = ({navigation}) => ({
   headerLeft: () => (
     <HeaderBackButton
       label=" "
-      tintColor="black"
+      tintColor=palette.black
       onPress={() => {
         navigation.goBack();
       }}
@@ -152,7 +152,7 @@ ChattingScreen.navigationOptions = ({navigation}) => ({
 });
 const styles = StyleSheet.create({
   root: {
-    backgroundColor: '#F7F7F7',
+    backgroundColor: palette.default_bg,
     flexDirection: 'column',
     justifyContent: 'space-between',
     flex: 1,
@@ -164,7 +164,7 @@ const styles = StyleSheet.create({
   bottomButton: {
     flexDirection: 'column',
     justifyContent: 'space-between',
-    backgroundColor: '#F7F7F7',
+    backgroundColor: palette.default_bg,
     margin: 20,
     height: 40,
   },

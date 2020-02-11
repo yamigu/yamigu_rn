@@ -52,14 +52,14 @@ NoticeScreen.navigationOptions = ({navigation}) => ({
   headerLeft: () => (
     <HeaderBackButton
       label=" "
-      tintColor="black"
+      tintColor=palette.black
       onPress={() => {
         navigation.goBack();
       }}
     />
   ),
   headerTitle: () => (
-    <CustomTextRegular size={16} color="#333333">
+    <CustomTextRegular size={16} color=palette.black>
       공지사항
     </CustomTextRegular>
   ),

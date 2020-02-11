@@ -33,7 +33,7 @@ MainScreen.navigationOptions = ({navigation}) => ({
       <Icon
         name="menu"
         style={{
-          color: '#333333',
+          color: palette.black,
           margin: 10,
         }}
       />

@@ -61,7 +61,7 @@ const BVScreen = ({params}) => {
   };
   return (
     <Content style={styles.root}>
-      <CustomTextMedium size={20} color="#333333">
+      <CustomTextMedium size={20} color=palette.black>
         소속을 인증 해 주세요
       </CustomTextMedium>
       <CustomTextRegular size={16} color={palette.gray}>
@@ -148,8 +148,8 @@ const BVScreen = ({params}) => {
         onPress={selectPhotoTapped}
         style={{
           flex: 1,
-          borderColor: '#AEAEAE',
-          backgroundColor: '#F7F7F7',
+          borderColor: palette.nonselect,
+          backgroundColor: palette.default_bg,
           borderRadius: 5,
           width: dw * 0.9,
           height: dw * 0.41,
@@ -159,8 +159,8 @@ const BVScreen = ({params}) => {
             style={{
               flex: 1,
               borderWidth: 1,
-              borderColor: '#AEAEAE',
-              backgroundColor: '#F7F7F7',
+              borderColor: palette.nonselect,
+              backgroundColor: palette.default_bg,
               borderRadius: 5,
               width: dw * 0.9,
               height: dw * 0.41,
@@ -173,10 +173,10 @@ const BVScreen = ({params}) => {
               size={32}
               style={styles.icon}
             />
-            <CustomTextRegular size={14} color="#AEAEAE">
+            <CustomTextRegular size={14} color=palette.nonselect>
               인증하기
             </CustomTextRegular>
-            <CustomTextRegular size={11} color="#AEAEAE">
+            <CustomTextRegular size={11} color=palette.nonselect>
               * 사원증, 명함, 사업자등록증 등을 첨부해주세요
             </CustomTextRegular>
           </View>
@@ -185,16 +185,16 @@ const BVScreen = ({params}) => {
         )}
       </Button>
       <View style={{marginLeft: dw * 0.04}}>
-        <CustomTextRegular color="black" size={12} style={{marginTop: 9}}>
+        <CustomTextRegular color=palette.black size={12} style={{marginTop: 9}}>
           * 본인 인증과 입력한 정보가 동일한지 확인합니다.
         </CustomTextRegular>
-        <CustomTextRegular color="black" size={12}>
+        <CustomTextRegular color=palette.black size={12}>
           * 인증은 최대 2일까지 소요됩니다.
         </CustomTextRegular>
-        <CustomTextRegular color="black" size={12}>
+        <CustomTextRegular color=palette.black size={12}>
           * 개인정보는 인증시에만 사용됩니다.
         </CustomTextRegular>
-        <CustomTextRegular color="black" size={12}>
+        <CustomTextRegular color=palette.black size={12}>
           * 사원증 위조는 사문서부정행사죄가 성립됩니다.
         </CustomTextRegular>
       </View>
@@ -206,14 +206,14 @@ BVScreen.navigationOptions = ({navigation}) => ({
   headerLeft: () => (
     <HeaderBackButton
       label=" "
-      tintColor="black"
+      tintColor=palette.black
       onPress={() => {
         navigation.goBack();
       }}
     />
   ),
   headerTitle: () => (
-    <CustomTextRegular size={16} color="#333333">
+    <CustomTextRegular size={16} color=palette.black>
       소속 인증하기
     </CustomTextRegular>
   ),
@@ -241,7 +241,7 @@ const styles = StyleSheet.create({
   attachBox: {
     width: dw * 0.9,
     borderRadius: 5,
-    backgroundColor: '#F7F7F7',
+    backgroundColor: palette.default_bg,
   },
   buttonView: {
     flex: 1,
@@ -263,7 +263,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     height: 32,
     width: 32,
-    color: '#AEAEAE',
+    color: palette.nonselect,
   },
   buttonActive: {
     width: '50%',
@@ -291,8 +291,8 @@ const styles = StyleSheet.create({
   },
   ImageContainer: {
     borderWidth: 1,
-    borderColor: '#AEAEAE',
-    backgroundColor: '#F7F7F7',
+    borderColor: palette.nonselect,
+    backgroundColor: palette.default_bg,
     borderRadius: 5,
     width: dw * 0.9,
     height: dw * 0.41,
