@@ -22,6 +22,7 @@ import {HeaderBackButton} from 'react-navigation-stack';
 import {SafeAreaView} from 'react-navigation';
 import {createRef} from 'react';
 import {} from 'react-native-gesture-handler';
+import {CustomTextMedium} from '~/components/common/CustomText';
 
 const deviceWidth = Dimensions.get('window').width;
 const buttonWidth = deviceWidth * 0.9;
@@ -126,13 +127,13 @@ ChattingScreen.navigationOptions = ({navigation}) => ({
   headerLeft: () => (
     <HeaderBackButton
       label=" "
-      tintColor=palette.black
+      tintColor={palette.black}
       onPress={() => {
         navigation.goBack();
       }}
     />
   ),
-  headerTitle: () => <Text style={{alignSelf: 'center'}}>제이름은요</Text>,
+  headerTitle: () => <CustomTextMedium>제이름은요</CustomTextMedium>,
   headerRight: () => (
     <TouchableByPlatform>
       <Icon

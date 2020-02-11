@@ -25,54 +25,70 @@ const NoticeScreen = () => {
         }}>
         <Image source={require('~/images/logo_guide.png')} />
         <Image source={require('~/images/copy_guide.png')} />
-        <CustomTextBold color="white">- 이용 안내 -</CustomTextBold>
+        <CustomTextBold color="white" size={14}>
+          - 이용 안내 -
+        </CustomTextBold>
       </LinearGradient>
 
       <View style={styles.bigView}>
-        <CustomTextBold size={20} style={{marginBottom: 10}}>
+        <CustomTextBold
+          size={20}
+          color={palette.black}
+          style={{marginBottom: 10}}>
           먼저 기본 설정을 해보세요!
         </CustomTextBold>
-        <RoundBorderTextView size={12}>
+        <RoundBorderTextView size={12} color={palette.black}>
           # 배경사진, 기본정보
         </RoundBorderTextView>
-        <CustomTextRegular size={16}>
+        <CustomTextRegular size={16} color={palette.black}>
           배경은 친구들 사진, 내가 잘나온 사진, 내가 올리고 싶은 모든 사진
           상관없어요! 지역과 키도 설정하세요!
         </CustomTextRegular>
       </View>
 
       <View style={styles.bigView}>
-        <CustomTextBold size={20} style={{marginBottom: 10}}>
+        <CustomTextBold
+          size={20}
+          color={palette.black}
+          style={{marginBottom: 10}}>
           좋아요를 눌러보세요!
         </CustomTextBold>
-        <RoundBorderTextView size={12}># 무한 좋아요</RoundBorderTextView>
-        <CustomTextRegular size={16}>
+        <RoundBorderTextView size={12} color={palette.black}>
+          # 무한 좋아요
+        </RoundBorderTextView>
+        <CustomTextRegular size={16} color={palette.black}>
           "음 괜찮은데?"라 생각되면 부담없이 좋아요를 눌러보세요! 걱정마세요
           상대는 누가 좋아요했는지 몰라요!
         </CustomTextRegular>
       </View>
 
       <View style={styles.bigView}>
-        <CustomTextBold size={20} style={{marginBottom: 10}}>
+        <CustomTextBold
+          size={20}
+          color={palette.black}
+          style={{marginBottom: 10}}>
           먼저 기본 설정을 해보세요!
         </CustomTextBold>
-        <RoundBorderTextView size={12}>
+        <RoundBorderTextView size={12} color={palette.black}>
           # 배경사진, 기본정보
         </RoundBorderTextView>
-        <CustomTextRegular size={16}>
+        <CustomTextRegular size={16} color={palette.black}>
           배경은 친구들 사진, 내가 잘나온 사진, 내가 올리고 싶은 모든 사진
           상관없어요! 지역과 키도 설정하세요!
         </CustomTextRegular>
       </View>
 
       <View style={styles.bigView}>
-        <CustomTextBold size={20} style={{marginBottom: 10}}>
+        <CustomTextBold
+          size={20}
+          color={palette.black}
+          style={{marginBottom: 10}}>
           먼저 기본 설정을 해보세요!
         </CustomTextBold>
-        <RoundBorderTextView size={12}>
+        <RoundBorderTextView size={12} color={palette.black}>
           # 배경사진, 기본정보
         </RoundBorderTextView>
-        <CustomTextRegular size={16}>
+        <CustomTextRegular size={16} color={palette.black}>
           배경은 친구들 사진, 내가 잘나온 사진, 내가 올리고 싶은 모든 사진
           상관없어요! 지역과 키도 설정하세요!
         </CustomTextRegular>
@@ -85,14 +101,14 @@ NoticeScreen.navigationOptions = ({navigation}) => ({
   headerLeft: () => (
     <HeaderBackButton
       label=" "
-      tintColor=palette.black
+      tintColor={palette.black}
       onPress={() => {
         navigation.goBack();
       }}
     />
   ),
   headerTitle: () => (
-    <CustomTextRegular size={16} color=palette.black>
+    <CustomTextRegular size={16} color={palette.black}>
       이용 방법
     </CustomTextRegular>
   ),
