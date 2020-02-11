@@ -27,14 +27,14 @@ TermsScreen.navigationOptions = ({navigation}) => ({
   headerLeft: () => (
     <HeaderBackButton
       label=" "
-      tintColor=palette.black
+      tintColor={palette.black}
       onPress={() => {
         navigation.goBack();
       }}
     />
   ),
   headerTitle: () => (
-    <CustomTextRegular size={16} color=palette.black>
+    <CustomTextRegular size={16} color={palette.black}>
       서비스 이용 약관
     </CustomTextRegular>
   ),

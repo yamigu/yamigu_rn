@@ -326,7 +326,6 @@ const SideMenu = ({navigation}) => {
         </List>
       </Content>
       {/* <Text onPress={() => props.navigation.navigate('Signup')}>asd</Text> */}
->>>>>>> master
     </SafeAreaView>
   );
 };

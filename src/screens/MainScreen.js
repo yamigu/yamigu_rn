@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import {Icon} from 'native-base';
+import {Icon, View} from 'native-base';
 import Materialicon from 'react-native-vector-icons/MaterialCommunityIcons';
 import palette from '~/lib/styles/palette';
 import {createBottomTabNavigator} from 'react-navigation-tabs';
