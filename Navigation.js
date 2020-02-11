@@ -6,7 +6,6 @@ import {createDrawerNavigator, DrawerActions} from 'react-navigation-drawer';
 import {createStackNavigator} from 'react-navigation-stack';
 import MainScreen from './src/screens/MainScreen';
 import LoginScreen from './src/screens/LoginScreen';
-import SplashScreen from './src/screens/SplashScreen';
 import SideMenu from '~/components/MainScreen/SideMenu';
 import ProfileDetailScreen from '~/screens/ProfileDetailScreen';
 import IVScreen from '~/screens/IVScreen';
@@ -14,6 +13,12 @@ import WebViewScreen from '~/screens/WebViewScreen';
 import ChattingListScreen from '~/screens/ChattingListScreen';
 import ChattingScreen from '~/screens/ChattingScreen';
 import SignupScreen from '~/screens/SignupScreen';
+import MeetingSettingScreen from '~screens/MeetingSettingScreen';
+import BVScreen from '~/screens/BVScreen';
+import NoticeScreen from '~/screens/NoticeScreen';
+import GuideScreen from '~/screens/GuideScreen';
+import TermsScreen from '~/screens/TermsScreen';
+import PrivacyScreen from '~/screens/PrivacyScreen';
 import MyProfileScreen from '~/screens/MyProfileScreen';
 import TouchableByPlatform from '~/components/common/TouchableByPlatform';
 import {Icon} from 'native-base';
@@ -86,6 +91,24 @@ const AppStack = createStackNavigator({
   Setting: {
     screen: SettingScreen,
   },
+  MeetingSetting: {
+    screen: MeetingSettingScreen,
+  },
+  BV: {
+    screen: BVScreen,
+  },
+  Notice: {
+    screen: NoticeScreen,
+  },
+  Guide: {
+    screen: GuideScreen,
+  },
+  Terms: {
+    screen: TermsScreen,
+  },
+  Privacy: {
+    screen: PrivacyScreen,
+  },
 });
 const AuthStack = createStackNavigator({
   Login: {
@@ -134,6 +157,7 @@ const DrawerStack = createDrawerNavigator(
 const Navigation = createAppContainer(
   createSwitchNavigator(
     {
+      Chat: ChattingScreen,
       App: DrawerStack,
       Auth: AuthStack,
     },

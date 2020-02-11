@@ -32,7 +32,7 @@ const ReceivedItem = ({manager}) => (
               ? [styles.chattingBox, {backgroundColor: '#FFF7F0'}]
               : styles.chattingBox
           }>
-          <CustomTextRegular size={14} color={'#333333'}>
+          <CustomTextRegular size={14} color={palette.black}>
             안녕하세요, 야미구 매칭 축하드려요! 두 분과 친구들과 만날 약속을
             빨리 잡아 즐거운 미팅 하시길 바래요!
           </CustomTextRegular>
