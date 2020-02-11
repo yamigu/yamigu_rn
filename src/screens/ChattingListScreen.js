@@ -16,7 +16,15 @@ const ChattingListScreen = ({navigation}) => (
 );
 
 ChattingListScreen.navigationOptions = ({navigation}) => ({
-  headerLeft: () => <HeaderBackButton onPress={() => navigation.goBack()} />,
+  headerLeft: () => (
+    <HeaderBackButton
+      label=" "
+      tintColor={palette.black}
+      onPress={() => {
+        navigation.goBack();
+      }}
+    />
+  ),
   headerTitle: () => (
     <Image source={require('~/images/chat-bubble-orange.png')} />
   ),

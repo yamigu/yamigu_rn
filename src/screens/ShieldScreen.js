@@ -61,7 +61,15 @@ const ShieldScreen = ({params}) => (
   </Content>
 );
 ShieldScreen.navigationOptions = ({navigation}) => ({
-  headerLeft: () => <HeaderBackButton onPress={() => navigation.goBack()} />,
+  headerLeft: () => (
+    <HeaderBackButton
+      label=" "
+      tintColor={palette.black}
+      onPress={() => {
+        navigation.goBack();
+      }}
+    />
+  ),
   headerTitle: () => (
     <CustomTextMedium size={16} color={palette.black}>
       아는 사람 피하기

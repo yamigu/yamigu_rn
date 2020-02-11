@@ -215,7 +215,15 @@ const MeetingSettingScreen = ({navigation}) => {
 };
 
 MeetingSettingScreen.navigationOptions = ({navigation}) => ({
-  headerLeft: () => <HeaderBackButton onPress={() => navigation.goBack()} />,
+  headerLeft: () => (
+    <HeaderBackButton
+      label=" "
+      tintColor={palette.black}
+      onPress={() => {
+        navigation.goBack();
+      }}
+    />
+  ),
 
   headerTitle: () => (
     <CustomTextMedium size={16} color={palette.black}>

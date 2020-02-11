@@ -226,7 +226,13 @@ const ProfileDetailScreen = props => {
 };
 ProfileDetailScreen.navigationOptions = ({navigation}) => ({
   headerLeft: () => (
-    <HeaderBackButton tintColor="white" onPress={() => navigation.goBack()} />
+    <HeaderBackButton
+      label=" "
+      tintColor={palette.black}
+      onPress={() => {
+        navigation.goBack();
+      }}
+    />
   ),
   headerTitle: () => <View />,
   headerTransparent: true,

@@ -58,7 +58,15 @@ const StoreScreen = ({navigation}) => (
   </Content>
 );
 StoreScreen.navigationOptions = ({navigation}) => ({
-  headerLeft: () => <HeaderBackButton onPress={() => navigation.goBack()} />,
+  headerLeft: () => (
+    <HeaderBackButton
+      label=" "
+      tintColor={palette.black}
+      onPress={() => {
+        navigation.goBack();
+      }}
+    />
+  ),
   headerTitle: () => (
     <CustomTextMedium size={16} color={palette.black}>
       야미 스토어

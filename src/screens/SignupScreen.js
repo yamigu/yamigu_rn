@@ -81,6 +81,8 @@ SignupScreen.navigationOptions = ({navigation}) => ({
   headerLeft: () =>
     navigation.getParam('page', 0) > 0 ? (
       <HeaderBackButton
+        lable=" "
+        tintColor={palette.black}
         onPress={() => {
           const page = navigation.getParam('page', 0);
           global_viewPager.current.setPage(page - 1);
