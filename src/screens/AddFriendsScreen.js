@@ -138,6 +138,9 @@ const styles = StyleSheet.create({
     borderColor: palette.orange,
     backgroundColor: '#ffffff00',
     justifyContent: 'center',
+    alignItems: 'center',
+    paddingTop: 0,
+    paddingBottom: 0,
     elevation: 0,
   },
   declineButton: {
@@ -148,6 +151,9 @@ const styles = StyleSheet.create({
     borderColor: palette.gray,
     backgroundColor: '#ffffff00',
     justifyContent: 'center',
+    alignItems: 'center',
+    paddingTop: 0,
+    paddingBottom: 0,
     elevation: 0,
   },
 });
