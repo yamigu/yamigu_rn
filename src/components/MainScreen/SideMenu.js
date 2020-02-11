@@ -243,7 +243,7 @@ const SideMenu = ({navigation}) => {
               더보기
             </CustomTextMedium>
           </ListItem>
-          <TouchableByPlatform>
+          <TouchableByPlatform onPress={() => navigation.navigate('Guide')}>
             <ListItem noIndent style={styles.listItem}>
               <Body style={styles.listItemBody}>
                 <CustomTextRegular size={14} color={palette.black}>
@@ -305,7 +305,7 @@ const SideMenu = ({navigation}) => {
               </Right>
             </ListItem>
           </TouchableByPlatform>
-          <TouchableByPlatform>
+          <TouchableByPlatform onPress={() => navigation.navigate('Privacy')}>
             <ListItem noIndent style={styles.listItem}>
               <Body style={styles.listItemBody}>
                 <CustomTextRegular size={14} color={palette.black}>
@@ -314,11 +314,11 @@ const SideMenu = ({navigation}) => {
               </Body>
             </ListItem>
           </TouchableByPlatform>
-          <TouchableByPlatform>
+          <TouchableByPlatform onPress={() => navigation.navigate('Terms')}>
             <ListItem noIndent style={styles.listItem}>
               <Body style={styles.listItemBody}>
                 <CustomTextRegular size={14} color={palette.black}>
-                  서비스 이용약관
+                  서비스 이용 약관
                 </CustomTextRegular>
               </Body>
             </ListItem>

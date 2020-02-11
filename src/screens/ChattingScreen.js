@@ -3,12 +3,10 @@ import React, {useState, useEffect} from 'react';
 import {
   StyleSheet,
   View,
-  Image,
   Dimensions,
   KeyboardAvoidingView,
-  FlatList,
   ScrollView,
-  findNodeHandle,
+  Platform,
 } from 'react-native';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 
@@ -27,7 +25,13 @@ import {CustomTextMedium} from '~/components/common/CustomText';
 const deviceWidth = Dimensions.get('window').width;
 const buttonWidth = deviceWidth * 0.9;
 
+const pf = Platform.OS;
+
 const ChattingScreen = props => {
+  let keyboardPadding = 0;
+  if (pf === 'ios') keyboardPadding = 100;
+  else keyboardPadding = -400;
+
   const [toggle, setToggle] = useState(0);
   const changeView = () => {
     setToggle(0);
@@ -39,6 +43,7 @@ const ChattingScreen = props => {
 
   const gotoBot = () => {
     console.log('im  in');
+    console.log(pf);
     _scrollToBottomY.current.scrollToEnd();
   };
   //behavior : position ###
@@ -46,11 +51,10 @@ const ChattingScreen = props => {
     <SafeAreaView style={styles.root}>
       <KeyboardAvoidingView
         style={styles.container}
-        behavior="position"
-        keyboardVerticalOffset={85}>
+        behavior="padding"
+        keyboardVerticalOffset={keyboardPadding}>
         <ScrollView
           bounces="false"
-          overScrollMode="never"
           ref={_scrollToBottomY}
           onContentSizeChange={() => {
             _scrollToBottomY.current.scrollToEnd();
@@ -96,8 +100,10 @@ const ChattingScreen = props => {
               </TouchableByPlatform>
               <View
                 style={{
+                  marginVertical: 10,
+                  padding: 0,
                   backgroundColor: 'white',
-                  height: 32,
+                  height: 36,
                   width: deviceWidth * 0.72,
                 }}>
                 <Input
@@ -105,7 +111,7 @@ const ChattingScreen = props => {
                   color="#eeeeee"
                   style={styles.messageInput}
                   onFocus={() => {
-                    gotoBot;
+                    gotoBot();
                   }}
                 />
               </View>
@@ -156,6 +162,8 @@ const styles = StyleSheet.create({
     backgroundColor: palette.default_bg,
     flexDirection: 'column',
     justifyContent: 'space-between',
+    padding: 0,
+    margin: 0,
     flex: 1,
   },
   container: {
@@ -175,7 +183,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     backgroundColor: 'white',
-    height: 48,
+    height: 50,
+    marginTop: 10,
   },
   rightButtonViewSecond: {
     flexDirection: 'row',
@@ -187,6 +196,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'white',
   },
-  messageInput: {borderRadius: 10, backgroundColor: '#EEEEEE', fontSize: 14},
+  messageInput: {
+    borderRadius: 10,
+    backgroundColor: '#EEEEEE',
+    fontSize: 14,
+    padding: 0,
+    margin: 0,
+  },
 });
 export default ChattingScreen;
