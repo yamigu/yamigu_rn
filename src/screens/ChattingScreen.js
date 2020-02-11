@@ -25,6 +25,7 @@ import {} from 'react-native-gesture-handler';
 
 const deviceWidth = Dimensions.get('window').width;
 const buttonWidth = deviceWidth * 0.9;
+
 const ChattingScreen = props => {
   const [toggle, setToggle] = useState(0);
   const changeView = () => {
@@ -39,12 +40,16 @@ const ChattingScreen = props => {
     console.log('im  in');
     _scrollToBottomY.current.scrollToEnd();
   };
-
+  //behavior : position ###
   return (
     <SafeAreaView style={styles.root}>
-      <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
+      <KeyboardAvoidingView
+        style={styles.container}
+        behavior="position"
+        keyboardVerticalOffset={85}>
         <ScrollView
           bounces="false"
+          overScrollMode="never"
           ref={_scrollToBottomY}
           onContentSizeChange={() => {
             _scrollToBottomY.current.scrollToEnd();
@@ -118,7 +123,15 @@ const ChattingScreen = props => {
   );
 };
 ChattingScreen.navigationOptions = ({navigation}) => ({
-  headerLeft: () => <HeaderBackButton onPress={() => navigation.goBack()} />,
+  headerLeft: () => (
+    <HeaderBackButton
+      label=" "
+      tintColor="black"
+      onPress={() => {
+        navigation.goBack();
+      }}
+    />
+  ),
   headerTitle: () => <Text style={{alignSelf: 'center'}}>제이름은요</Text>,
   headerRight: () => (
     <TouchableByPlatform>
@@ -137,7 +150,6 @@ ChattingScreen.navigationOptions = ({navigation}) => ({
   },
   headerTitleAlign: 'center',
 });
-
 const styles = StyleSheet.create({
   root: {
     backgroundColor: '#F7F7F7',
@@ -146,8 +158,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   container: {
-    flex: 1,
     backgroundColor: palette.default_bg,
+    flex: 1,
   },
   bottomButton: {
     flexDirection: 'column',
