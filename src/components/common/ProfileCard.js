@@ -49,7 +49,6 @@ const ProfileCard = ({
         visible={modalVisible}
         onRequestClose={() => {
           Alert.alert('Modal has been closed.');
-          setModalVisible(!modalVisible);
         }}>
         <TouchableWithoutFeedback
           onPress={() => {
@@ -68,7 +67,6 @@ const ProfileCard = ({
                 style={styles.modalButtonMultiple}
                 onPress={() => {
                   Alert.alert('상대를 차단 하시겠슴미까?');
-                  setModalVisible(false);
                 }}>
                 <CustomTextRegular size={17} color={palette.red}>
                   차단
@@ -85,7 +83,6 @@ const ProfileCard = ({
                 style={styles.modalButtonMultiple}
                 onPress={() => {
                   Alert.alert('상대를 신고 하시겠슴미까?');
-                  setModalVisible(false);
                 }}>
                 <CustomTextRegular size={17} color={palette.black}>
                   신고

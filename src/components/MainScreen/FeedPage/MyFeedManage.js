@@ -1,11 +1,21 @@
-import {Image, View, StyleSheet, Dimensions, TextInput} from 'react-native';
+import {
+  Image,
+  View,
+  StyleSheet,
+  Dimensions,
+  TextInput,
+  ImageBackground,
+} from 'react-native';
 import React, {useState} from 'react';
 import ProfileCard from '~/components/common/ProfileCard';
 import palette from '~/lib/styles/palette';
-import {Thumbnail, Input} from 'native-base';
+import {Thumbnail, Input, Button} from 'native-base';
 import TouchableByPlatform from '~/components/common/TouchableByPlatform';
 import ImagePicker from 'react-native-image-picker';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
+import MaterialCommuniticons from 'react-native-vector-icons/MaterialCommunityIcons';
+import Feather from 'react-native-vector-icons/Feather';
+
 import {
   IndicatorViewPager,
   PagerDotIndicator,
@@ -17,6 +27,7 @@ import {
 } from '~/components/common/CustomText';
 
 const dw = Dimensions.get('window').width;
+const dh = Dimensions.get('window').height;
 
 const MyFeedManage = ({navigation}) => {
   const [imageSource, setImageSource] = useState(null);
@@ -90,6 +101,13 @@ const MyFeedManage = ({navigation}) => {
           onChange={() => {
             setToggle(true);
           }}
+          style={{marginLeft: 10}}
+        />
+        <Feather
+          name="upload"
+          size={25}
+          color={palette.orange}
+          style={{marginRight: 10}}
         />
         {/* <CustomTextRegular
           size={16}
@@ -123,13 +141,13 @@ const MyFeedManage = ({navigation}) => {
         <TouchableByPlatform onPress={showMy} style={styles.touchable}>
           <View style={styles.button}>
             <CustomTextRegular size={14} color="#898989">
-              내 피드
+              취소하기
             </CustomTextRegular>
             {toggle === true ? (
               <AntDesignIcon
                 name="caretup"
                 color={palette.orange}
-                size={12}
+                size={1}
                 style={{marginLeft: 5}}
               />
             ) : (
@@ -148,11 +166,26 @@ const MyFeedManage = ({navigation}) => {
           <IndicatorViewPager
             style={styles.viewPager}
             indicator={_renderDotIndicator()}>
-            <Image
+            <ImageBackground
               style={styles.viewPage}
               key="1"
-              source={require('~/images/test-user-profile-girl.png')}
-            />
+              source={require('~/images/test-user-profile-girl.png')}>
+              <View
+                style={{
+                  height: dh,
+                  width: dw,
+                  backgroundColor: 'rgba(0,0,0,0.6)',
+                  flexDirection: 'column',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <CustomTextRegular color="white" size={20} style={styles.feedT}>
+                  오늘 센치한 밤밤~~오늘 센치한 밤밤~~오늘 센치한 밤밤~~오늘
+                  센치한 밤밤~~오늘 센치한 밤밤~~오늘 센치한 밤밤~~오늘 센치한
+                  밤밤~~
+                </CustomTextRegular>
+              </View>
+            </ImageBackground>
             <Image
               style={styles.viewPage}
               key="2"
@@ -224,6 +257,9 @@ const styles = StyleSheet.create({
     height: 10,
   },
   viewPage: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
     resizeMode: 'cover',
   },
   viewPager: {
@@ -236,8 +272,9 @@ const styles = StyleSheet.create({
   indicator: {
     width: dw,
     position: 'absolute',
-    top: dw / 1.618 - 20,
+    top: dw / 1.618,
   },
+  feedT: {maxWidth: dw * 0.8},
 });
 
 export default MyFeedManage;
