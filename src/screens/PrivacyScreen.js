@@ -1,26 +1,52 @@
 /* eslint-disable react-native/no-inline-styles */
-import React from 'react';
-import {View, StyleSheet} from 'react-native';
+import React, {useState} from 'react';
+import {View, StyleSheet, Text, Platform} from 'react-native';
+import {Content} from 'native-base';
 import {HeaderBackButton} from 'react-navigation-stack';
-import {CustomTextRegular} from '~/components/common/CustomText';
+import {
+  CustomTextRegular,
+  CustomTextMedium,
+} from '~/components/common/CustomText';
 import palette from '~/lib/styles/palette';
+import * as RNFS from 'react-native-fs';
 
+const os = Platform.OS;
 const PrivacyScreen = () => {
+  const [termsAndroid, termsSetAndroid] = useState('');
+  const [termsIos, setTermsIos] = useState('');
+  const [termsIos2, setTermsIos2] = useState('');
+
+  let filePath = '';
+  if (os === 'ios') {
+    filePath = RNFS.MainBundlePath + '/Fonts/privacy.txt';
+    RNFS.readFile(filePath).then(res => {
+      setTermsIos(res.slice(0, 4490));
+      setTermsIos2(res.slice(4491, 8549));
+    });
+  } else {
+    filePath = 'data/privacy.txt';
+    RNFS.readFileAssets(filePath).then(res => {
+      termsSetAndroid(res);
+    });
+  }
+
   return (
-    <View style={{backgroundColor: palette.default_bg}}>
-      <View style={styles.bigView}>
-        <CustomTextRegular size={16}>
-          프라이버시 스크린 입니다.~~~프라이버시 스크린 입니다.~~~프라이버시
-          스크린 입니다.~~~프라이버시 스크린 입니다.~~~ 프라이버시 스크린
-          입니다.~~~프라이버시 스크린 입니다.~~~프라이버시 스크린 입니다.~~~
-          프라이버시 스크린 입니다.~~~프라이버시 스크린 입니다.~~~프라이버시
-          스크린 입니다.~~~프라이버시 스크린 입니다.~~~ 프라이버시 스크린
-          입니다.~~~프라이버시 스크린 입니다.~~~프라이버시 스크린
-          입니다.~~~프라이버시 스크린 입니다.~~~ 프라이버시 스크린
-          입니다.~~~프라이버시 스크린 입니다.~~~프라이버시 스크린 입니다.~~~
-        </CustomTextRegular>
-      </View>
-    </View>
+    <Content style={styles.bigView}>
+      {os === 'ios' ? (
+        <View>
+          <CustomTextMedium size={12} color={palette.black}>
+            {termsIos}
+          </CustomTextMedium>
+          <CustomTextMedium size={12} color={palette.black}>
+            {termsIos2}
+          </CustomTextMedium>
+        </View>
+      ) : (
+        <CustomTextMedium size={12} color={palette.black}>
+          {termsAndroid}}
+        </CustomTextMedium>
+      )}
+    </Content>
   );
 };
 
@@ -48,7 +74,7 @@ PrivacyScreen.navigationOptions = ({navigation}) => ({
 
 const styles = StyleSheet.create({
   bigView: {
-    borderRadius: 10,
+    borderRadius: 5,
     backgroundColor: 'white',
     flexDirection: 'column',
     margin: 16,

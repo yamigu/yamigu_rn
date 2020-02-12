@@ -3,6 +3,7 @@ import {Text, View, StyleSheet} from 'react-native';
 import palette from '~/lib/styles/palette';
 import ProfileCardList from './ProfileCardList';
 import LikeMatchingList from './LikeMatchingList';
+import MyFeedManage from './MyFeedManage';
 import {Content, Container} from 'native-base';
 
 const FeedPage = props => (
@@ -11,8 +12,8 @@ const FeedPage = props => (
       <Content
         contentContainerStyle={styles.innerView}
         showsVerticalScrollIndicator={false}>
+        <MyFeedManage />
         <LikeMatchingList />
-        <View style={styles.dividerLine} />
         <ProfileCardList navigation={props.navigation} />
         <View style={styles.lastScroll} />
       </Content>
@@ -24,8 +25,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   container: {
-    backgroundColor: palette.default_bg,
     flex: 1,
+    backgroundColor: palette.default_bg,
   },
   innerView: {
     flexDirection: 'column',

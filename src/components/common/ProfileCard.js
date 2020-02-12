@@ -64,10 +64,12 @@ const ProfileCard = ({
         style={{
           borderBottomWidth: 0,
           height: '100%',
+          flexDirection: 'row',
+          alignItems: 'center',
           justifyContent: 'center',
-          paddingBottom: 0,
+          paddingRight: 10,
         }}>
-        <View style={styles.bothLike}>{rightComponent}</View>
+        {rightComponent}
       </Right>
     </ListItem>
   </List>
@@ -81,6 +83,11 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
   },
   secondLine: {},
-  bothLike: {},
+  bothLike: {
+    alignSelf: 'center',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 });
 export default ProfileCard;

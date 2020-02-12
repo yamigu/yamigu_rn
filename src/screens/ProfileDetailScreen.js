@@ -115,7 +115,7 @@ const ProfileDetailScreen = props => {
               department="자유전공학부"
               location="서울"
             />
-            <MeetingSettingPane data={meeting_setting_data} />
+            {/* <MeetingSettingPane data={meeting_setting_data} /> */}
             <View style={styles.horizontalDivider} />
           </View>
           <View style={styles.actionView}>
@@ -228,7 +228,7 @@ ProfileDetailScreen.navigationOptions = ({navigation}) => ({
   headerLeft: () => (
     <HeaderBackButton
       label=" "
-      tintColor={palette.black}
+      tintColor="#FFFFFF"
       onPress={() => {
         navigation.goBack();
       }}

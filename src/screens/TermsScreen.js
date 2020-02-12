@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {useState} from 'react';
-import {View, StyleSheet, Text} from 'react-native';
+import {View, StyleSheet, Text, Platform} from 'react-native';
 import {Content} from 'native-base';
 import {HeaderBackButton} from 'react-navigation-stack';
 import {
@@ -10,26 +10,42 @@ import {
 import palette from '~/lib/styles/palette';
 import * as RNFS from 'react-native-fs';
 
+const os = Platform.OS;
 const TermsScreen = () => {
-  const [terms, setTerms] = useState('');
+  const [termsAndroid, termsSetAndroid] = useState('');
   const [termsIos, setTermsIos] = useState('');
   const [termsIos2, setTermsIos2] = useState('');
 
-  const filePath = RNFS.MainBundlePath + '/Fonts/privacy.txt';
-  RNFS.readFile(filePath).then(res => {
-    setTermsIos(res.slice(0, 4490));
-    setTermsIos2(res.slice(4491, 8549));
-
-    console.log(res.length);
-  });
+  let filePath = '';
+  if (os === 'ios') {
+    filePath = RNFS.MainBundlePath + '/Fonts/policy.txt';
+    RNFS.readFile(filePath).then(res => {
+      setTermsIos(res.slice(0, 4490));
+      setTermsIos2(res.slice(4491, 8549));
+    });
+  } else {
+    filePath = 'data/policy.txt';
+    RNFS.readFileAssets(filePath).then(res => {
+      termsSetAndroid(res);
+    });
+  }
 
   return (
-    <Content style={{flex: 1, backgroundColor: palette.default_bg}}>
-      <CustomTextMedium size={12} color={palette.gold}>
-        asdasd+
-      </CustomTextMedium>
-      <CustomTextMedium color={palette.blue}>{termsIos}</CustomTextMedium>
-      <CustomTextMedium color={palette.blue}>{termsIos2}</CustomTextMedium>
+    <Content style={styles.bigView}>
+      {os === 'ios' ? (
+        <View>
+          <CustomTextMedium size={12} color={palette.black}>
+            {termsIos}
+          </CustomTextMedium>
+          <CustomTextMedium size={12} color={palette.black}>
+            {termsIos2}
+          </CustomTextMedium>
+        </View>
+      ) : (
+        <CustomTextMedium size={12} color={palette.black}>
+          {termsAndroid}}
+        </CustomTextMedium>
+      )}
     </Content>
   );
 };

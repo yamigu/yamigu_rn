@@ -11,6 +11,7 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     marginRight: 12,
+    paddingTop: 12,
   },
   wrapper: {
     width: 66,

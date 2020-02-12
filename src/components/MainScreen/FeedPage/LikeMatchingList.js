@@ -38,16 +38,19 @@ const data = [
 const styles = StyleSheet.create({
   scrollView: {
     paddingLeft: 11,
+    flexDirection: 'row',
+    backgroundColor: 'white',
+    paddingBottom: 10,
   },
 });
 const LikeMatchingList = () => {
   return (
     <List>
-      <ListItem itemDivider>
+      {/* <ListItem itemDivider>
         <CustomTextMedium size={16} color={palette.black}>
           좋아요 매칭
         </CustomTextMedium>
-      </ListItem>
+      </ListItem> */}
       <ScrollView
         horizontal={true}
         showsHorizontalScrollIndicator={false}
@@ -56,7 +59,7 @@ const LikeMatchingList = () => {
         {data.map(user => {
           return (
             <UserProfileSmall
-              style={{marginRight: 12}}
+              style={{marginRight: 12, paddingTop: 13}}
               userName={user.name}
               imageSource={user.image}
               badgeComponent={user.isUnread === true ? <GoldBadge /> : null}

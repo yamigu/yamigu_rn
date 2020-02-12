@@ -79,7 +79,7 @@ const SideMenu = ({navigation}) => {
           </View>
         </View>
         <List style={styles.list}>
-          <TouchableByPlatform>
+          <TouchableByPlatform onPress={() => navigation.navigate('BV')}>
             <ListItem icon noIndent style={styles.listItem}>
               <Left style={styles.listItemLeft}>
                 <Anticon

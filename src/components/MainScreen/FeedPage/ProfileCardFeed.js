@@ -20,29 +20,29 @@ import LinearGradient from 'react-native-linear-gradient';
 import MeetingSettingPane from '~/components/common/MeetingSettingPane';
 import ProfileCard from '~/components/common/ProfileCard';
 
+import {Button} from 'native-base';
+
 const data = ['2:2 미팅', '3:3 미팅', '4:4 미팅', '날짜는 조율 가능해요'];
 
 const width = Dimensions.get('window').width;
 
 const styles = StyleSheet.create({
   container: {
-    width: width - 24,
+    width: width,
     justifyContent: 'center',
-    marginLeft: 12,
-    marginRight: 12,
     marginTop: 20,
     backgroundColor: 'white',
   },
   image: {
-    width: width - 24,
-    height: (width - 24) / 1.618,
+    width: width,
+    height: width / 1.618,
     resizeMode: 'cover',
     paddingLeft: 12,
     paddingTop: 14,
   },
   linearGradient: {
-    width: width - 24,
-    height: (width - 24) / 1.618 / 2,
+    width: width,
+    height: width / 1.618 / 2,
     position: 'absolute',
     top: 0,
   },
@@ -105,41 +105,47 @@ const styles = StyleSheet.create({
   cardView: {
     backgroundColor: 'white',
     padding: 12,
-    paddingBottom: 0,
+    paddingVertical: 10,
   },
 });
 const ProfileCardFeed = ({navigation}) => (
   <View style={styles.container}>
+    <View>
+      <View style={styles.cardView}>
+        <ProfileCard
+          size={50}
+          fontSizes={[14, 12, 12]}
+          nickname="또잉또잉또잉"
+          image={require('~/images/test-user-profile-1.png')}
+          age={24}
+          belong="서울대"
+          department="자유전공학부"
+          location="서울"
+          rightComponent={
+            <Ionicon name="ios-more" size={28} color={palette.black} />
+          }
+        />
+        {/* <MeetingSettingPane data={data} /> */}
+      </View>
+    </View>
     <TouchableByPlatform onPress={() => navigation.navigate('Profile')}>
       <ImageBackground
         style={styles.image}
         source={require('~/images/test-user-profile-5.png')}>
-        <LinearGradient
+        {/* <LinearGradient
           colors={['#333333ff', '#ffffff00']}
           style={styles.linearGradient}
-        />
-        <CustomTextMedium size={24} color="white">
+        /> */}
+        {/* <CustomTextMedium size={24} color="white">
           고려대랑 미팅할래요?
         </CustomTextMedium>
         <CustomTextRegular size={12} color="white">
           친구들과 새로운 친구들을 만나보세요
-        </CustomTextRegular>
+        </CustomTextRegular> */}
       </ImageBackground>
     </TouchableByPlatform>
-    <View style={styles.cardView}>
-      <ProfileCard
-        size={50}
-        fontSizes={[14, 12, 12]}
-        nickname="또잉또잉또잉"
-        image={require('~/images/test-user-profile-1.png')}
-        age={24}
-        belong="서울대"
-        department="자유전공학부"
-        location="서울"
-      />
-      <MeetingSettingPane data={data} />
-    </View>
-    <View style={styles.horizontalDivider} />
+
+    {/* <View style={styles.horizontalDivider} /> */}
     <View style={styles.actionDiv}>
       <TouchableByPlatform style={styles.touchable}>
         <View style={styles.button}>
