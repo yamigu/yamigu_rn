@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   Text,
   View,
@@ -11,12 +11,41 @@ import {Button} from 'native-base';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 import palette from '~/lib/styles/palette';
 import TouchableByPlatform from './TouchableByPlatform';
+import ImagePicker from 'react-native-image-picker';
+
 const deviceWidth = Dimensions.get('window').width;
 
 const ProfileImageAddView = ({image1}) => {
+  const [ImageSource, setImageSource] = useState(null);
+
+  const selectPhotoTapped = () => {
+    const options = {
+      quality: 1.0,
+      maxWidth: 500,
+      maxHeight: 500,
+      storageOptions: {
+        skipBackup: true,
+      },
+    };
+
+    ImagePicker.showImagePicker(options, response => {
+      console.log('Response = ', response);
+
+      if (response.didCancel) {
+        console.log('User cancelled photo picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else if (response.customButton) {
+        console.log('User tapped custom button: ', response.customButton);
+      } else {
+        let source = {uri: response.uri};
+        setImageSource(source);
+      }
+    });
+  };
   return (
     <View style={styles.buttonView}>
-      <Button style={styles.mainButton}>
+      <Button style={styles.mainButton} onPress={selectPhotoTapped}>
         {image1 ? (
           <TouchableByPlatform style={styles.mainButtonImageWrapper}>
             <Image
@@ -40,14 +69,14 @@ const ProfileImageAddView = ({image1}) => {
       </Button>
       <View style={styles.rightButtonView}>
         <View style={styles.rightButtonViewFirst}>
-          <Button style={styles.button}>
+          <Button style={styles.button} onPress={selectPhotoTapped}>
             <AntDesignIcon
               name="plus"
               size={((deviceWidth - 76) / 2) * 0.468 * 0.332}
               color={palette.orange[0]}
             />
           </Button>
-          <Button style={styles.button}>
+          <Button style={styles.button} onPress={selectPhotoTapped}>
             <AntDesignIcon
               name="plus"
               size={((deviceWidth - 76) / 2) * 0.468 * 0.332}
@@ -56,14 +85,14 @@ const ProfileImageAddView = ({image1}) => {
           </Button>
         </View>
         <View style={styles.rightButtonViewSecond}>
-          <Button style={styles.button}>
+          <Button style={styles.button} onPress={selectPhotoTapped}>
             <AntDesignIcon
               name="plus"
               size={((deviceWidth - 76) / 2) * 0.468 * 0.332}
               color={palette.orange[0]}
             />
           </Button>
-          <Button style={styles.button}>
+          <Button style={styles.button} onPress={selectPhotoTapped}>
             <AntDesignIcon
               name="plus"
               size={((deviceWidth - 76) / 2) * 0.468 * 0.332}

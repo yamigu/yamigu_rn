@@ -8,8 +8,6 @@ import {
   ScrollView,
   Platform,
 } from 'react-native';
-import AntDesignIcon from 'react-native-vector-icons/AntDesign';
-
 import {Container, Content, Icon, Text, List, Button, Input} from 'native-base';
 import Anticon from 'react-native-vector-icons/AntDesign';
 import palette from '~/lib/styles/palette';

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Text, View, StyleSheet} from 'react-native';
 import {HeaderBackButton} from 'react-navigation-stack';
 import {CustomTextMedium} from '~/components/common/CustomText';
@@ -7,16 +7,19 @@ import ImageView from '~/components/MyProfileScreen/ImageView';
 import FriendsView from '~/components/MyProfileScreen/FriendsView';
 import InfoView from '~/components/MyProfileScreen/InfoView';
 import {Content} from 'native-base';
+import ImagePicker from 'react-native-image-picker';
 
-const MyProfileScreen = ({navigation}) => (
-  <Content showsVerticalScrollIndicator={false} style={styles.root}>
-    <ImageView />
-    <View style={styles.divider} />
-    <FriendsView navigation={navigation} />
-    <View style={styles.divider} />
-    <InfoView />
-  </Content>
-);
+const MyProfileScreen = ({navigation}) => {
+  return (
+    <Content showsVerticalScrollIndicator={false} style={styles.root}>
+      <ImageView />
+      <View style={styles.divider} />
+      <FriendsView navigation={navigation} />
+      <View style={styles.divider} />
+      <InfoView />
+    </Content>
+  );
+};
 MyProfileScreen.navigationOptions = ({navigation}) => ({
   headerLeft: () => (
     <HeaderBackButton

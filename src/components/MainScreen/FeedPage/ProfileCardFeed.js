@@ -1,11 +1,15 @@
 /* eslint-disable react-native/no-inline-styles */
-import React from 'react';
+import React, {useState} from 'react';
 import {
   Image,
   View,
   StyleSheet,
   Dimensions,
   ImageBackground,
+  Modal,
+  Alert,
+  Button,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import {
   CustomTextMedium,
@@ -14,13 +18,9 @@ import {
 } from '~/components/common/CustomText';
 import Ionicon from 'react-native-vector-icons/Ionicons';
 import palette from '~/lib/styles/palette';
-import RoundBorderTextView from '~/components/common/RoundBorderTextView';
 import TouchableByPlatform from '~/components/common/TouchableByPlatform';
-import LinearGradient from 'react-native-linear-gradient';
-import MeetingSettingPane from '~/components/common/MeetingSettingPane';
 import ProfileCard from '~/components/common/ProfileCard';
 
-import {Button} from 'native-base';
 import {
   PagerDotIndicator,
   IndicatorViewPager,
@@ -29,6 +29,7 @@ import {
 // const data = ['2:2 미팅', '3:3 미팅', '4:4 미팅', '날짜는 조율 가능해요'];
 
 const width = Dimensions.get('window').width;
+const dh = Dimensions.get('window').height;
 
 const styles = StyleSheet.create({
   container: {
@@ -126,8 +127,17 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: width / 1.618 - 20,
   },
+  modalButton: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginBottom: 10,
+    marginHorizontal: 10,
+    borderRadius: 10,
+    backgroundColor: 'white',
+  },
 });
 const ProfileCardFeed = ({navigation}) => {
+  const [modalVisible, setModalVisible] = useState(false);
   const _renderDotIndicator = () => {
     return (
       <PagerDotIndicator
@@ -152,14 +162,18 @@ const ProfileCardFeed = ({navigation}) => {
             department="자유전공학부"
             location="서울"
             rightComponent={
-              <Ionicon name="ios-more" size={28} color={palette.black} />
+              <Ionicon name="ios-more" size={26} color={palette.black} />
             }
           />
           {/* <MeetingSettingPane data={data} /> */}
         </View>
       </View>
 
-      <TouchableByPlatform onPress={() => navigation.navigate('Profile')}>
+      <TouchableByPlatform
+        onPress={() => {
+          // navigation.setParams('3'); signup screen.js 참고해서 page수 넘겨주기
+          navigation.navigate('Profile');
+        }}>
         <IndicatorViewPager
           style={styles.viewPager}
           indicator={_renderDotIndicator()}>

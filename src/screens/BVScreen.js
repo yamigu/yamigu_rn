@@ -37,10 +37,6 @@ const BVScreen = ({params}) => {
         console.log('User tapped custom button: ', response.customButton);
       } else {
         let source = {uri: response.uri};
-
-        // You can also display the image using data:
-        // let source = { uri: 'data:image/jpeg;base64,' + response.data };
-
         setImageSource(source);
       }
     });
@@ -51,6 +47,7 @@ const BVScreen = ({params}) => {
   const [text2, setText2] = useState('');
   const [focus1, setFocus1] = useState(false);
   const [focus2, setFocus2] = useState(false);
+
   const clickButton = pos => {
     if (pos === toggle) {
       setToggle(0);
