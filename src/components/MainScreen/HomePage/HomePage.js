@@ -22,74 +22,33 @@ import LinearGradient from 'react-native-linear-gradient';
 import TouchableByPlatform from '~/components/common/TouchableByPlatform';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 import RoundBorderOrangeText from '~/components/MeetingSettingScreen/RoundBorderOrangeText';
+import MemberModal from './MemberModal';
+import DateModal from './DateModal';
+import AgeModal from './AgeModal';
 
 const dw = Dimensions.get('window').width;
 const dh = Dimensions.get('window').height;
 
 const HomePage = props => {
-  const [modalVisible, setModalVisible] = useState(false);
+  const [memberModalVisible, setMemberModalVisible] = useState(false);
+  const [dateModalVisible, setDateModalVisible] = useState(false);
+  const [ageModalVisible, setAgeModalVisible] = useState(false);
 
   return (
     <View style={styles.root}>
-      <Modal
-        animationType="none"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {
-          Alert.alert('Modal has been closed.');
-        }}>
-        <TouchableWithoutFeedback
-          onPress={() => {
-            setModalVisible(false);
-            console.log('aa');
-          }}>
-          <View
-            style={{
-              height: dh,
-              backgroundColor: 'rgba(0,0,0,0.7)',
-              flexDirection: 'column',
-              justifyContent: 'flex-end',
-            }}>
-            <View
-              style={{
-                height: 200,
-                width: dw,
-                backgroundColor: 'white',
-                borderTopRightRadius: 10,
-                borderTopLeftRadius: 10,
-              }}>
-              <View name="팀소개div" style={styles.grayBox}>
-                <CustomTextRegular size={13} color="#505050">
-                  인원 선택
-                </CustomTextRegular>
-                <CustomTextRegular
-                  style={{paddingLeft: 12}}
-                  size={12}
-                  color="#B1B1B1">
-                  (복수 선택 가능)
-                </CustomTextRegular>
-              </View>
-              <View name="인원선택list" style={styles.itemList}>
-                <View
-                  style={{
-                    backgroundColor: 'white',
-                    height: 35,
-                  }}>
-                  <RoundBorderOrangeText style={{backgroundColor: 'white'}}>
-                    2:2 미팅
-                  </RoundBorderOrangeText>
-                  <RoundBorderOrangeText style={{backgroundColor: 'white'}}>
-                    3:3 미팅
-                  </RoundBorderOrangeText>
-                  <RoundBorderOrangeText style={{backgroundColor: 'white'}}>
-                    4:4 미팅
-                  </RoundBorderOrangeText>
-                </View>
-              </View>
-            </View>
-          </View>
-        </TouchableWithoutFeedback>
-      </Modal>
+      <MemberModal
+        memberModalVisible={memberModalVisible}
+        setMemberModalVisible={setMemberModalVisible}
+      />
+      <DateModal
+        dateModalVisible={dateModalVisible}
+        setDateModalVisible={setDateModalVisible}
+      />
+      <AgeModal
+        ageModalVisible={ageModalVisible}
+        setAgeModalVisible={setAgeModalVisible}
+      />
+
       <View style={styles.topLayout}>
         <CustomTextBold size={24} color={palette.black}>
           미팅 주선
@@ -115,11 +74,13 @@ const HomePage = props => {
               width: 65,
               elevation: 0,
               height: 30,
-              flexDirection: 'column',
+              flexDirection: 'row',
               justifyContent: 'center',
               alignItems: 'center',
               borderColor: palette.orange,
               borderWidth: 1,
+              paddingTop: 0,
+              paddingBottom: 0,
             }}>
             <CustomTextMedium color={palette.orange} size={12}>
               이용 안내
@@ -137,7 +98,7 @@ const HomePage = props => {
           <TouchableByPlatform
             style={styles.touch}
             onPress={() => {
-              setModalVisible(true);
+              setMemberModalVisible(true);
               console.log('onpress');
             }}>
             <CustomTextMedium size={14} color={palette.black}>
@@ -156,7 +117,10 @@ const HomePage = props => {
           </CustomTextBold>
           <TouchableByPlatform
             style={styles.touch}
-            onPress={() => Alert.alert('날짜')}>
+            onPress={() => {
+              setDateModalVisible(true);
+              console.log('onpress');
+            }}>
             <CustomTextMedium size={14} color={palette.black}>
               날짜 상관 없음
             </CustomTextMedium>
@@ -173,7 +137,10 @@ const HomePage = props => {
           </CustomTextBold>
           <TouchableByPlatform
             style={styles.touch}
-            onPress={() => Alert.alert('선호 나이')}>
+            onPress={() => {
+              setAgeModalVisible(true);
+              console.log('onpress');
+            }}>
             <CustomTextMedium size={14} color={palette.black}>
               20 ~ 26
             </CustomTextMedium>
@@ -254,7 +221,6 @@ const styles = StyleSheet.create({
   },
   grayBox: {
     paddingLeft: 12,
-    marginHorizontal: 12,
     flexDirection: 'row',
     alignItems: 'center',
     height: 40,
