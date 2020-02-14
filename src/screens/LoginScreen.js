@@ -101,7 +101,7 @@ const LoginScreen = ({navigation}) => {
     );
   };
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.topContainer}>
         <IndicatorViewPager
           style={styles.viewPager}
@@ -150,7 +150,7 @@ const LoginScreen = ({navigation}) => {
           </CustomTextRegular>
         </View>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
