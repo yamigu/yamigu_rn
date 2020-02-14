@@ -121,7 +121,7 @@ const ProfileDetailScreen = props => {
           <View style={styles.actionView}>
             <TouchableByPlatform style={styles.touchable}>
               <View style={styles.button}>
-                <Ionicon name="ios-heart-empty" color="#898989" size={18} />
+                <Ionicon name="ios-heart-empty" size={18} />
                 <CustomTextMedium
                   size={14}
                   color={palette.sub}

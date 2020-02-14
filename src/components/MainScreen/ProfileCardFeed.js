@@ -143,7 +143,7 @@ const ProfileCardFeed = ({navigation}) => (
     <View style={styles.actionDiv}>
       <TouchableByPlatform style={styles.touchable}>
         <View style={styles.button}>
-          <Ionicon name="ios-heart-empty" color="#898989" size={18} />
+          <Ionicon name="ios-heart-empty" size={18} />
           <CustomTextMedium size={14} color="#898989" style={{marginLeft: 4}}>
             좋아요
           </CustomTextMedium>

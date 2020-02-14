@@ -1,7 +1,16 @@
+/* eslint-disable react/self-closing-comp */
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable prettier/prettier */
 import React, {useState} from 'react';
-import {Text, View, StyleSheet, Dimensions} from 'react-native';
+import {
+  Text,
+  View,
+  StyleSheet,
+  Dimensions,
+  Modal,
+  Alert,
+  TouchableWithoutFeedback,
+} from 'react-native';
 import palette from '~/lib/styles/palette';
 import {
   CustomTextBold,
@@ -12,11 +21,75 @@ import {Button, Row} from 'native-base';
 import LinearGradient from 'react-native-linear-gradient';
 import TouchableByPlatform from '~/components/common/TouchableByPlatform';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
+import RoundBorderOrangeText from '~/components/MeetingSettingScreen/RoundBorderOrangeText';
 
 const dw = Dimensions.get('window').width;
+const dh = Dimensions.get('window').height;
+
 const HomePage = props => {
+  const [modalVisible, setModalVisible] = useState(false);
+
   return (
     <View style={styles.root}>
+      <Modal
+        animationType="none"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          Alert.alert('Modal has been closed.');
+        }}>
+        <TouchableWithoutFeedback
+          onPress={() => {
+            setModalVisible(false);
+            console.log('aa');
+          }}>
+          <View
+            style={{
+              height: dh,
+              backgroundColor: 'rgba(0,0,0,0.7)',
+              flexDirection: 'column',
+              justifyContent: 'flex-end',
+            }}>
+            <View
+              style={{
+                height: 200,
+                width: dw,
+                backgroundColor: 'white',
+                borderTopRightRadius: 10,
+                borderTopLeftRadius: 10,
+              }}>
+              <View name="팀소개div" style={styles.grayBox}>
+                <CustomTextRegular size={13} color="#505050">
+                  인원 선택
+                </CustomTextRegular>
+                <CustomTextRegular
+                  style={{paddingLeft: 12}}
+                  size={12}
+                  color="#B1B1B1">
+                  (복수 선택 가능)
+                </CustomTextRegular>
+              </View>
+              <View name="인원선택list" style={styles.itemList}>
+                <View
+                  style={{
+                    backgroundColor: 'white',
+                    height: 35,
+                  }}>
+                  <RoundBorderOrangeText style={{backgroundColor: 'white'}}>
+                    2:2 미팅
+                  </RoundBorderOrangeText>
+                  <RoundBorderOrangeText style={{backgroundColor: 'white'}}>
+                    3:3 미팅
+                  </RoundBorderOrangeText>
+                  <RoundBorderOrangeText style={{backgroundColor: 'white'}}>
+                    4:4 미팅
+                  </RoundBorderOrangeText>
+                </View>
+              </View>
+            </View>
+          </View>
+        </TouchableWithoutFeedback>
+      </Modal>
       <View style={styles.topLayout}>
         <CustomTextBold size={24} color={palette.black}>
           미팅 주선
@@ -61,7 +134,12 @@ const HomePage = props => {
             style={{paddingLeft: 6}}>
             인원
           </CustomTextBold>
-          <TouchableByPlatform style={styles.touch}>
+          <TouchableByPlatform
+            style={styles.touch}
+            onPress={() => {
+              setModalVisible(true);
+              console.log('onpress');
+            }}>
             <CustomTextMedium size={14} color={palette.black}>
               인원 상관 없음
             </CustomTextMedium>
@@ -76,7 +154,9 @@ const HomePage = props => {
             style={{paddingLeft: 6}}>
             날짜
           </CustomTextBold>
-          <TouchableByPlatform style={styles.touch}>
+          <TouchableByPlatform
+            style={styles.touch}
+            onPress={() => Alert.alert('날짜')}>
             <CustomTextMedium size={14} color={palette.black}>
               날짜 상관 없음
             </CustomTextMedium>
@@ -91,7 +171,9 @@ const HomePage = props => {
             style={{paddingLeft: 6}}>
             선호 나이
           </CustomTextBold>
-          <TouchableByPlatform style={styles.touch}>
+          <TouchableByPlatform
+            style={styles.touch}
+            onPress={() => Alert.alert('선호 나이')}>
             <CustomTextMedium size={14} color={palette.black}>
               20 ~ 26
             </CustomTextMedium>
@@ -169,6 +251,22 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 20,
+  },
+  grayBox: {
+    paddingLeft: 12,
+    marginHorizontal: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
+    height: 40,
+    marginTop: 20,
+    backgroundColor: '#F3F2F2',
+  },
+  itemList: {
+    flexDirection: 'row',
+    width: dw * 0.93,
+    marginTop: 12,
+    height: 40,
+    backgroundColor: 'white',
   },
 });
 export default HomePage;

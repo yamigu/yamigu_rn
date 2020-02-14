@@ -5,6 +5,7 @@ import {
   Dimensions,
   TextInput,
   ImageBackground,
+  Alert,
 } from 'react-native';
 import React, {useState} from 'react';
 import ProfileCard from '~/components/common/ProfileCard';
@@ -31,7 +32,6 @@ const dh = Dimensions.get('window').height;
 
 const MyFeedManage = ({navigation}) => {
   const [imageSource, setImageSource] = useState(null);
-  const [feedText, setFeedText] = useState(null);
 
   const selectPhotoTapped = () => {
     const options = {
@@ -42,7 +42,6 @@ const MyFeedManage = ({navigation}) => {
         skipBackup: true,
       },
     };
-
     ImagePicker.showImagePicker(options, response => {
       if (response.didCancel) {
         console.log('User cancelled photo picker');
@@ -52,17 +51,15 @@ const MyFeedManage = ({navigation}) => {
         console.log('User tapped custom button: ', response.customButton);
       } else {
         let source = {uri: response.uri};
-        setToggle(true);
+        setFeedStatus(true);
+        setFeedDisplay(false);
         setImageSource(source);
       }
     });
-  };
+  }; // for uploading pictures
 
-  const [toggle, setToggle] = useState(0);
-  const showMy = () => {
-    console.log(toggle);
-    setToggle(!toggle);
-  };
+  const [feedDisplay, setFeedDisplay] = useState(false);
+  const [feedStatus, setFeedStatus] = useState(false);
 
   const _renderDotIndicator = () => {
     return (
@@ -73,7 +70,7 @@ const MyFeedManage = ({navigation}) => {
         style={styles.indicator}
       />
     );
-  };
+  }; // for viewpage indicator
 
   return (
     <View
@@ -83,53 +80,12 @@ const MyFeedManage = ({navigation}) => {
         alignItems: 'center',
         backgroundColor: 'white',
       }}>
-      <View style={styles.myfeed}>
-        <Thumbnail
-          style={{
-            alignSelf: 'center',
-            height: 50,
-            width: 50,
-            borderRadius: 50 / 2,
-          }}
-          source={require('~/images/user-default-profile.png')}
-        />
-        <Input
-          autoFocus="true"
-          placeholder=" 무슨 생각을 하고 계신가요"
-          color={palette.black}
-          size={16}
-          onChange={() => {
-            setToggle(true);
-          }}
-          style={{marginLeft: 10}}
-        />
-        <Feather
-          name="upload"
-          size={25}
-          color={palette.orange}
-          style={{marginRight: 10}}
-        />
-        {/* <CustomTextRegular
-          size={16}
-          color={palette.black}
-          style={{marginLeft: 10}}>
-          무슨 생각을 하고 계신가요?
-        </CustomTextRegular> */}
-      </View>
-
-      <View style={styles.horizontalDivider} />
-
       <View style={styles.actionDiv}>
         <TouchableByPlatform
           style={styles.touchable}
           onPress={selectPhotoTapped}>
           <View style={styles.button}>
-            <AntDesignIcon
-              name="picture"
-              color="#898989"
-              size={18}
-              style={{marginRight: 5}}
-            />
+            <AntDesignIcon name="picture" size={18} style={{marginRight: 5}} />
             <CustomTextRegular size={14} color="#898989">
               사진
             </CustomTextRegular>
@@ -138,30 +94,37 @@ const MyFeedManage = ({navigation}) => {
 
         <View style={styles.verticalDivider} />
 
-        <TouchableByPlatform onPress={showMy} style={styles.touchable}>
-          <View style={styles.button}>
+        <View style={styles.touchable}>
+          <TouchableByPlatform
+            style={styles.button}
+            onPress={() => setFeedDisplay(!feedDisplay)}>
             <CustomTextRegular size={14} color="#898989">
-              취소하기
+              내 피드
             </CustomTextRegular>
-            {toggle === true ? (
+            {feedDisplay === true ? (
               <AntDesignIcon
                 name="caretup"
                 color={palette.orange}
-                size={1}
-                style={{marginLeft: 5}}
+                size={12}
+                style={{marginLeft: 5, color: palette.orange}}
               />
             ) : (
               <AntDesignIcon
                 name="caretdown"
                 color="#898989"
                 size={12}
-                style={{marginLeft: 5}}
+                style={{marginLeft: 5, color: palette.orange}}
               />
             )}
-          </View>
-        </TouchableByPlatform>
+          </TouchableByPlatform>
+        </View>
       </View>
-      {toggle === true ? (
+
+      {feedStatus === true ? (
+        <Image style={styles.ImageContainer} source={imageSource} />
+      ) : null}
+
+      {feedDisplay === true ? (
         <TouchableByPlatform onPress={() => navigation.navigate('Profile')}>
           <IndicatorViewPager
             style={styles.viewPager}
@@ -170,21 +133,19 @@ const MyFeedManage = ({navigation}) => {
               style={styles.viewPage}
               key="1"
               source={require('~/images/test-user-profile-girl.png')}>
-              <View
-                style={{
-                  height: dh,
-                  width: dw,
-                  backgroundColor: 'rgba(0,0,0,0.6)',
-                  flexDirection: 'column',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}>
-                <CustomTextRegular color="white" size={20} style={styles.feedT}>
-                  오늘 센치한 밤밤~~오늘 센치한 밤밤~~오늘 센치한 밤밤~~오늘
-                  센치한 밤밤~~오늘 센치한 밤밤~~오늘 센치한 밤밤~~오늘 센치한
-                  밤밤~~
-                </CustomTextRegular>
-              </View>
+              {/* <View
+              style={{
+                height: dh,
+                width: dw,
+                backgroundColor: 'rgba(0,0,0,0.6)',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <CustomTextRegular color="white" size={20} style={styles.feedT}>
+                {feedText}
+              </CustomTextRegular>
+            </View> */}
             </ImageBackground>
             <Image
               style={styles.viewPage}
@@ -199,8 +160,14 @@ const MyFeedManage = ({navigation}) => {
           </IndicatorViewPager>
         </TouchableByPlatform>
       ) : (
-        <View style={{height: 0}} />
+        <View
+          style={{
+            width: 10,
+            height: 10,
+            backgroundColor: palette.black,
+          }}></View>
       )}
+
       <View style={styles.lastDivider} />
     </View>
   );
@@ -262,6 +229,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     resizeMode: 'cover',
   },
+  ImageContainer: {
+    width: dw,
+    height: dw / 1.618,
+  },
   viewPager: {
     width: dw,
     height: dw / 1.618,
@@ -272,7 +243,7 @@ const styles = StyleSheet.create({
   indicator: {
     width: dw,
     position: 'absolute',
-    top: dw / 1.618,
+    top: dw / 1.618 - 20,
   },
   feedT: {maxWidth: dw * 0.8},
 });

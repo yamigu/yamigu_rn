@@ -39,7 +39,7 @@ const SideMenu = ({navigation}) => {
     <SafeAreaView style={styles.root}>
       <Content showsVerticalScrollIndicator={false}>
         <View style={styles.profileView}>
-          <TouchableByPlatform onPress={() => navigation.navigate('Signup')}>
+          {/* <TouchableByPlatform onPress={() => navigation.navigate('Signup')}>
             <ImageBackground
               style={styles.profileBackground}
               source={require('~/images/profile-default-background.png')}>
@@ -51,7 +51,9 @@ const SideMenu = ({navigation}) => {
                 style={styles.icon}
               />
             </ImageBackground>
-          </TouchableByPlatform>
+          </TouchableByPlatform> */}
+          <View
+            style={{backgroundColor: palette.default_bg, height: 150}}></View>
           <View style={styles.thumbnailWrapper}>
             <TouchableByPlatform
               onPress={() => navigation.navigate('MyProfile')}>

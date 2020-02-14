@@ -10,6 +10,7 @@ import {
   Alert,
   Button,
   TouchableWithoutFeedback,
+  TouchableOpacity,
 } from 'react-native';
 import {
   CustomTextMedium,
@@ -169,7 +170,7 @@ const ProfileCardFeed = ({navigation}) => {
         </View>
       </View>
 
-      <TouchableByPlatform
+      <TouchableOpacity
         onPress={() => {
           // navigation.setParams('3'); signup screen.js 참고해서 page수 넘겨주기
           navigation.navigate('Profile');
@@ -207,13 +208,13 @@ const ProfileCardFeed = ({navigation}) => {
             친구들과 새로운 친구들을 만나보세요
           </CustomTextRegular>
         </ImageBackground> */}
-      </TouchableByPlatform>
+      </TouchableOpacity>
 
       {/* <View style={styles.horizontalDivider} /> */}
       <View style={styles.actionDiv}>
         <TouchableByPlatform style={styles.touchable}>
           <View style={styles.button}>
-            <Ionicon name="ios-heart-empty" color="#898989" size={18} />
+            <Ionicon name="ios-heart-empty" size={18} />
             <CustomTextMedium size={14} color="#898989" style={{marginLeft: 4}}>
               좋아요
             </CustomTextMedium>
