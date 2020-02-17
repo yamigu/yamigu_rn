@@ -2,7 +2,7 @@
 /* eslint-disable react/self-closing-comp */
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable prettier/prettier */
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   Text,
   View,
@@ -12,6 +12,8 @@ import {
   Alert,
   TouchableWithoutFeedback,
   TouchableOpacity,
+  Animated,
+  Easing,
 } from 'react-native';
 import palette from '~/lib/styles/palette';
 import {
@@ -25,11 +27,80 @@ import TouchableByPlatform from '~/components/common/TouchableByPlatform';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 import RoundBorderOrangeText from '~/components/MeetingSettingScreen/RoundBorderOrangeText';
 import Slider from '@react-native-community/slider';
+import MultiSlider from './MultiSlider';
+import CustomMarker from './CustomMarker';
+import Moment from 'moment';
+import Spinner from 'react-native-loading-spinner-overlay';
+import FadeinView from './FadeInView';
+
+// import CustomLabel from './CustomLabel';
 
 const dw = Dimensions.get('window').width;
 const dh = Dimensions.get('window').height;
 
+const logCallback = (log, callback) => {
+  console.log(log);
+  callback;
+};
+
 const HomePage = props => {
+  const requestMatching = () => {
+    logCallback('Login Start', setLoginLoading(true));
+    setTimeout(() => {
+      setLoginLoading(false);
+      setMatchRequested(!matchRequested);
+    }, 3000);
+  };
+
+  const [matchRequested, setMatchRequested] = useState(false);
+
+  let spinValue = new Animated.Value(0);
+  // First set up animation
+
+  Animated.loop(
+    Animated.timing(spinValue, {
+      toValue: 1,
+      duration: 3000,
+      easing: Easing.linear,
+    }),
+  ).start();
+  // Second interpolate beginning and end values (in this case 0 and 1)
+  let spin = spinValue.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['0deg', '360deg'],
+  });
+
+  useEffect(() => {
+    const today = new Date();
+    setNowTime(today);
+
+    const wow = [
+      Moment(today)
+        .add(1, 'days')
+        .format('MM월 DD일 (ddd)'),
+      Moment(today)
+        .add(2, 'days')
+        .format('MM월 DD일 (ddd)'),
+      Moment(today)
+        .add(3, 'days')
+        .format('MM월 DD일 (ddd)'),
+      Moment(today)
+        .add(4, 'days')
+        .format('MM월 DD일 (ddd)'),
+      Moment(today)
+        .add(5, 'days')
+        .format('MM월 DD일 (ddd)'),
+      Moment(today)
+        .add(6, 'days')
+        .format('MM월 DD일 (ddd)'),
+      '금요일만',
+      '토요일만',
+    ];
+    setDateList(wow);
+  }, []);
+
+  const [loginLoading, setLoginLoading] = useState(false);
+
   const [memberModalVisible, setMemberModalVisible] = useState(false);
   const [dateModalVisible, setDateModalVisible] = useState(false);
   const [ageModalVisible, setAgeModalVisible] = useState(false);
@@ -39,17 +110,20 @@ const HomePage = props => {
   const [memberText, setMemberText] = useState('');
   const [memberItemNo, setMemberItemNo] = useState(0);
   const [memberSelected, setMemberSelected] = useState([false, false, false]);
+  const [nowTime, setNowTime] = useState();
 
-  const dateList = [
-    '12월 17일 (수)',
-    '12월 17일 (수)',
-    '12월 17일 (수)',
-    '1월 17일 (수)',
-    '1월 17일 (수)',
-    '1월 17일 (수)',
-    '1월 17일 (수)',
-    '1월 3일 (수)',
-  ];
+  const [dateList, setDateList] = useState([
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+  ]);
+
   const [dateMainSelected, setDateMainSelected] = useState(true);
   const [dateText, setDateText] = useState('');
   const [dateItemNo, setDateItemNo] = useState(0);
@@ -65,16 +139,40 @@ const HomePage = props => {
     false,
   ]);
 
-  const ageList = ['2:2 미팅', '3:3 미팅', '4:4 미팅'];
-  const [ageMainSelected, setAgeMainSelected] = useState(true);
-  const [ageText, setAgeText] = useState('');
-  const [ageItemNo, setAgeItemNo] = useState(0);
-  const [ageSelected, setAgeSelected] = useState([false, false, false]);
-  const [ageLeftValue, setAgeLeftValue] = useState(20);
-  const [ageRightValue, setAgeRightValue] = useState(30);
+  const [ageSelected, setAgeSelected] = useState([
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+  ]);
+
+  const [sliderOneChanging, setSliderOneChanging] = useState(false);
+  const [multiSliderValue, setMultiSliderValue] = useState([20, 30]);
+  const [
+    nonCollidingMultiSliderValue,
+    setNonCollidingMultiSliderValue,
+  ] = useState([20, 30]);
+
+  const sliderOneValuesChangeStart = () => setSliderOneChanging(true);
+  let sliderOneValuesChangeFinish = () => setSliderOneChanging(false);
+
+  let multiSliderValuesChange = values => setMultiSliderValue(values);
+  let nonCollidingMultiSliderValuesChange = values =>
+    setNonCollidingMultiSliderValue(values);
 
   return (
     <View style={styles.root}>
+      <Spinner
+        visible={loginLoading}
+        textContent={'Loading...'}
+        textStyle={styles.spinnerTextStyle}
+      />
       <Modal
         animationType="none"
         transparent={true}
@@ -422,8 +520,6 @@ const HomePage = props => {
         <TouchableWithoutFeedback
           onPress={() => {
             setAgeModalVisible(false);
-            let tmpText = '';
-            setAgeText(tmpText);
             console.log('aa');
           }}>
           <View
@@ -461,8 +557,6 @@ const HomePage = props => {
               <TouchableByPlatform
                 onPress={() => {
                   setAgeModalVisible(false);
-                  let tmpText = '';
-                  setAgeText(tmpText);
                 }}>
                 <CustomTextMedium color={palette.orange} size={13}>
                   완료
@@ -470,28 +564,48 @@ const HomePage = props => {
               </TouchableByPlatform>
             </View>
 
-            <View name="나이선택list" style={styles.itemList}>
-              <TouchableByPlatform
-                onPress={() => {
-                  {
-                    setAgeSelected([false, false, false]);
-                  }
-                }}>
-                <CustomTextRegular>TBD </CustomTextRegular>
-              </TouchableByPlatform>
-
-              <View style={{flex: 1, backgroundColor: 'white'}}>
-                <Slider
-                  style={{width: 200, height: 40}}
-                  minimumValue={0}
-                  maximumValue={1}
-                  minimumTrackTintColor="#FFFFFF"
-                  maximumTrackTintColor="#000000"
-                />
+            <View style={styles.container}>
+              <MultiSlider
+                selectedStyle={{
+                  backgroundColor: palette.orange,
+                }}
+                unselectedStyle={{
+                  backgroundColor: 'silver',
+                }}
+                containerStyle={{
+                  height: 40,
+                }}
+                trackStyle={{
+                  height: 1,
+                }}
+                values={[multiSliderValue[0], multiSliderValue[1]]}
+                sliderLength={dw * 0.86}
+                onValuesChange={multiSliderValuesChange}
+                min={20}
+                max={30}
+                step={1}
+                allowOverlap
+                snapped
+                // customLabel={CustomLabel}
+                customMarker={CustomMarker}
+                onValuesChangeStart={sliderOneValuesChangeStart}
+                onValuesChangeFinish={sliderOneValuesChangeFinish}
+              />
+              <View style={styles.text}>
+                <CustomTextMedium
+                  size={12}
+                  style={{marginTop: 0, paddingTop: 0}}>
+                  {' ' + multiSliderValue[0]}
+                </CustomTextMedium>
+                <CustomTextMedium size={12}>
+                  {multiSliderValue[1] === 30
+                    ? '30+'
+                    : multiSliderValue[1] + ' '}
+                </CustomTextMedium>
               </View>
-
-              {/* end of age module  */}
             </View>
+
+            {/* end of age module  */}
           </View>
         </View>
       </Modal>
@@ -500,9 +614,16 @@ const HomePage = props => {
         <CustomTextBold size={24} color={palette.black}>
           미팅 주선
         </CustomTextBold>
-        <CustomTextRegular size={24} color="#646363">
-          매력적인 이성과의 미팅
-        </CustomTextRegular>
+        {matchRequested === false ? (
+          <Animated.Image
+            style={{transform: [{rotate: spin}]}}
+            source={require('~/images/rotating.png')}
+          />
+        ) : (
+          <CustomTextRegular size={20} color="#646363">
+            매력적인 이성과의 미팅
+          </CustomTextRegular>
+        )}
       </View>
 
       <View style={styles.bottomLayout}>
@@ -593,7 +714,8 @@ const HomePage = props => {
               console.log('onpress');
             }}>
             <CustomTextMedium size={14} color={palette.black}>
-              20 ~ 26
+              {multiSliderValue[0] + ' ~ '}
+              {multiSliderValue[1] === 30 ? '30+' : multiSliderValue[1]}
             </CustomTextMedium>
             <AntDesignIcon name="caretdown" size={12} color={palette.black} />
           </TouchableByPlatform>
@@ -602,7 +724,7 @@ const HomePage = props => {
         <LinearGradient
           colors={['#FFA022', '#FF6C2B']}
           style={styles.gradientLayout}>
-          <TouchableByPlatform style={styles.mainBtn}>
+          <TouchableByPlatform style={styles.mainBtn} onPress={requestMatching}>
             <CustomTextMedium size={16} color="white">
               미팅 주선 신청하기
             </CustomTextMedium>
@@ -779,6 +901,23 @@ const styles = StyleSheet.create({
     width: 92,
     flexDirection: 'column',
     justifyContent: 'center',
+  },
+  container: {
+    flex: 1,
+    width: dw * 0.86,
+    flexDirection: 'column',
+    alignSelf: 'center',
+    alignItems: 'center',
+  },
+  text: {
+    width: dw * 0.86,
+    marginTop: 0,
+    paddingTop: 0,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  spinnerTextStyle: {
+    color: '#FFF',
   },
 });
 export default HomePage;

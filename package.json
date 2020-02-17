@@ -10,6 +10,7 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "@ptomasroos/react-native-multi-slider": "1.0.0",
     "@react-native-community/masked-view": "^0.1.6",
     "@react-native-community/slider": "2.0.8",
     "@react-native-community/viewpager": "^3.3.0",
@@ -18,8 +19,10 @@
     "axios": "^0.19.1",
     "babel-plugin-root-import": "^6.4.1",
     "fs": "0.0.1-security",
+    "moment": "2.24.0",
     "native-base": "2.13.8",
     "react": "16.9.0",
+    "react-moment": "0.9.7",
     "react-native": "^0.61.5",
     "react-native-MultiSlider": "0.2.1",
     "react-native-action-button": "^2.8.5",
