@@ -5,6 +5,7 @@ import {CustomTextMedium} from '~/components/common/CustomText';
 import palette from '~/lib/styles/palette';
 import ImageView from '~/components/MyProfileScreen/ImageView';
 import FriendsView from '~/components/MyProfileScreen/FriendsView';
+import MyFeedView from '~/components/MyProfileScreen/MyFeedView';
 import InfoView from '~/components/MyProfileScreen/InfoView';
 import {Content} from 'native-base';
 import ImagePicker from 'react-native-image-picker';
@@ -14,6 +15,7 @@ const MyProfileScreen = ({navigation}) => {
     <Content showsVerticalScrollIndicator={false} style={styles.root}>
       <ImageView />
       <View style={styles.divider} />
+      <MyFeedView />
       <FriendsView navigation={navigation} />
       <View style={styles.divider} />
       <InfoView />

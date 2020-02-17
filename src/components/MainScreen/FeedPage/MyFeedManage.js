@@ -6,6 +6,7 @@ import {
   TextInput,
   ImageBackground,
   Alert,
+  TouchableOpacity,
 } from 'react-native';
 import React, {useState} from 'react';
 import ProfileCard from '~/components/common/ProfileCard';
@@ -86,7 +87,7 @@ const MyFeedManage = ({navigation}) => {
           onPress={selectPhotoTapped}>
           <View style={styles.button}>
             <AntDesignIcon name="picture" size={18} style={{marginRight: 5}} />
-            <CustomTextRegular size={14} color="#898989">
+            <CustomTextRegular size={14} color={palette.black}>
               사진
             </CustomTextRegular>
           </View>
@@ -95,10 +96,10 @@ const MyFeedManage = ({navigation}) => {
         <View style={styles.verticalDivider} />
 
         <View style={styles.touchable}>
-          <TouchableByPlatform
+          <TouchableOpacity
             style={styles.button}
             onPress={() => setFeedDisplay(!feedDisplay)}>
-            <CustomTextRegular size={14} color="#898989">
+            <CustomTextRegular size={14} color={palette.black}>
               내 피드
             </CustomTextRegular>
             {feedDisplay === true ? (
@@ -116,7 +117,7 @@ const MyFeedManage = ({navigation}) => {
                 style={{marginLeft: 5, color: palette.orange}}
               />
             )}
-          </TouchableByPlatform>
+          </TouchableOpacity>
         </View>
       </View>
 
@@ -125,7 +126,7 @@ const MyFeedManage = ({navigation}) => {
       ) : null}
 
       {feedDisplay === true ? (
-        <TouchableByPlatform onPress={() => navigation.navigate('Profile')}>
+        <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
           <IndicatorViewPager
             style={styles.viewPager}
             indicator={_renderDotIndicator()}>
@@ -158,15 +159,8 @@ const MyFeedManage = ({navigation}) => {
               source={require('~/images/test-user-profile-8.png')}
             />
           </IndicatorViewPager>
-        </TouchableByPlatform>
-      ) : (
-        <View
-          style={{
-            width: 10,
-            height: 10,
-            backgroundColor: palette.black,
-          }}></View>
-      )}
+        </TouchableOpacity>
+      ) : null}
 
       <View style={styles.lastDivider} />
     </View>

@@ -21,24 +21,9 @@ const dw = Dimensions.get('window').width;
 const dh = Dimensions.get('window').height;
 
 const MemberModal = props => {
-  const memberList = [
-    '2:2 미팅',
-    '3:3 미팅',
-    '4:4미팅',
-    '2:2 미팅',
-    '3:3 미팅',
-    '4:4미팅',
-    '2:2 미팅',
-    '3:3 미팅',
-    '4:4미팅',
-    '2:2 미팅',
-    '3:3 미팅',
-    '4:4미팅',
-    '2:2 미팅',
-    '3:3 미팅',
-    '4:4미팅',
-  ];
-  const [selected, setSelected] = useState([false, false, false]);
+  const memberList = ['2:2 미팅', '3:3 미팅', '4:4 미팅'];
+  const [selected, setSelected] = useState([true, true, true]);
+  const [tmpSelected, setTmpSelected] = useState([true, true, true]);
 
   return (
     <Modal
@@ -106,9 +91,22 @@ const MemberModal = props => {
                 flexWrap: 'wrap',
               }}>
               {memberList.map((wow, index) => {
-                console.log(selected[index]);
                 return (
-                  <TouchableByPlatform onPress={() => Alert.alert(wow)}>
+                  <TouchableByPlatform
+                    onPress={() => {
+                      console.log(index);
+
+                      tmpSelected[index] = !selected[index];
+                      setTmpSelected(tmpSelected);
+                      setSelected(tmpSelected);
+
+                      console.log('selected : ' + selected);
+                      console.log('tmpselected : ' + tmpSelected);
+
+                      // selected_copy.map(item =>
+                      //   item === index ? {...item, value: !item.value} : item,
+                      // );
+                    }}>
                     <CustomTextRegular
                       color={
                         selected[index] === false

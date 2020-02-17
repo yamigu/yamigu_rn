@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@react-native-community/masked-view": "^0.1.6",
+    "@react-native-community/slider": "2.0.8",
     "@react-native-community/viewpager": "^3.3.0",
     "@react-native-seoul/kakao-login": "^2.3.0",
     "@react-navigation/routers": "^5.0.0-alpha.31",
@@ -20,6 +21,7 @@
     "native-base": "2.13.8",
     "react": "16.9.0",
     "react-native": "^0.61.5",
+    "react-native-MultiSlider": "0.2.1",
     "react-native-action-button": "^2.8.5",
     "react-native-best-viewpager": "^1.0.2",
     "react-native-elements": "^1.2.7",
