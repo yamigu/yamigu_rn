@@ -301,7 +301,7 @@ const SideMenu = ({navigation}) => {
               정보
             </CustomTextMedium>
           </ListItem>
-          <TouchableByPlatform>
+          <TouchableByPlatform onPress={() => navigation.navigate('Signup')}>
             <ListItem noIndent style={styles.listItem}>
               <Body style={styles.listItemBody}>
                 <CustomTextRegular size={14} color={palette.black}>
