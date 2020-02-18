@@ -1,3 +1,5 @@
+/* eslint-disable react/self-closing-comp */
+/* eslint-disable prettier/prettier */
 /* eslint-disable react-native/no-inline-styles */
 import React, {useState} from 'react';
 import {
@@ -81,7 +83,11 @@ const SideMenu = ({navigation}) => {
           </View>
         </View>
         <List style={styles.list}>
-          <TouchableByPlatform onPress={() => navigation.navigate('BV')}>
+          <TouchableByPlatform
+            onPress={() => {
+              navigation.navigate('BV');
+              console.log('goto BV');
+            }}>
             <ListItem icon noIndent style={styles.listItem}>
               <Left style={styles.listItemLeft}>
                 <Anticon
@@ -97,7 +103,9 @@ const SideMenu = ({navigation}) => {
               </Body>
             </ListItem>
           </TouchableByPlatform>
-          <TouchableByPlatform onPress={() => navigation.navigate('MyProfile')}>
+          <TouchableByPlatform
+            navigation={navigation}
+            onPress={() => navigation.navigate('MyProfile')}>
             <ListItem icon noIndent style={styles.listItem}>
               <Left style={styles.listItemLeft}>
                 <Anticon

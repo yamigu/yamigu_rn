@@ -1,6 +1,9 @@
 import React from 'react';
-import {Platform, TouchableOpacity} from 'react-native';
-import {TouchableNativeFeedback} from 'react-native-gesture-handler';
+import {Platform} from 'react-native';
+import {
+  TouchableNativeFeedback,
+  TouchableOpacity,
+} from 'react-native-gesture-handler';
 
 const TouchableByPlatform = props => {
   if (Platform.OS === 'android') {
