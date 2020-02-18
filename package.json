@@ -10,6 +10,7 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "@invertase/react-native-apple-authentication": "0.1.1",
     "@ptomasroos/react-native-multi-slider": "1.0.0",
     "@react-native-community/masked-view": "^0.1.6",
     "@react-native-community/slider": "2.0.8",

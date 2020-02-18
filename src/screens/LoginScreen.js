@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   StyleSheet,
   Platform,
@@ -6,6 +6,7 @@ import {
   Image,
   Dimensions,
   ImageBackground,
+  Alert,
 } from 'react-native';
 import KakaoLoginButton from '~/components/LoginScreen/KakaoLoginButton';
 import AppleLoginButton from '~/components/LoginScreen/AppleLoginButton';
@@ -24,6 +25,17 @@ import {
 } from 'react-native-best-viewpager';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 
+import appleAuth, {
+  AppleButton,
+  AppleAuthRequestOperation,
+  AppleAuthRequestScope,
+  AppleAuthCredentialState,
+} from '@invertase/react-native-apple-authentication';
+import Navigation from '~/../Navigation';
+import {CommonActions} from '@react-navigation/native';
+const dw = Dimensions.get('window').width;
+const dh = Dimensions.get('window').height;
+
 const ButtonContainerAndroid = ({kakaoLogin}) => {
   return (
     <View style={styles.buttonContainer}>
@@ -31,17 +43,29 @@ const ButtonContainerAndroid = ({kakaoLogin}) => {
     </View>
   );
 };
-const ButtonContainerApple = ({kakaoLogin}) => {
+const ButtonContainerApple = ({kakaoLogin, onAppleButtonPress}) => {
   return (
     <View style={styles.buttonContainer}>
-      <AppleLoginButton />
+      <AppleButton
+        width={dw * 0.8}
+        height={50}
+        buttonStyle={AppleButton.Style.WHITE}
+        buttonType={AppleButton.Type.SIGN_IN}
+        onPress={onAppleButtonPress}
+      />
+      <AppleLoginButton onPress={onAppleButtonPress} />
       <KakaoLoginButton onPress={kakaoLogin} />
     </View>
   );
 };
 const ButtonContainerbyPlatform = Platform.select({
-  ios: ({kakaoLogin}) => {
-    return <ButtonContainerApple kakaoLogin={kakaoLogin} />;
+  ios: ({kakaoLogin, onAppleButtonPress}) => {
+    return (
+      <ButtonContainerApple
+        kakaoLogin={kakaoLogin}
+        onAppleButtonPress={onAppleButtonPress}
+      />
+    );
   },
   android: ({kakaoLogin}) => {
     return <ButtonContainerAndroid kakaoLogin={kakaoLogin} />;
@@ -60,6 +84,42 @@ const LoginScreen = ({navigation}) => {
   const [loginLoading, setLoginLoading] = useState(false);
   const [token, setToken] = useState(TOKEN_EMPTY);
 
+  const onAppleButtonPress = async () => {
+    console.log('onAppleButtonPress pressed');
+    // performs login request
+    const appleAuthRequestResponse = await appleAuth.performRequest({
+      requestedOperation: AppleAuthRequestOperation.LOGIN,
+      requestedScopes: [
+        AppleAuthRequestScope.EMAIL,
+        AppleAuthRequestScope.FULL_NAME,
+      ],
+    });
+
+    // get current authentication state for user
+    const credentialState = await appleAuth.getCredentialStateForUser(
+      appleAuthRequestResponse.user,
+      () => {
+        console.log('check credentialState');
+      },
+    );
+    console.log('holy shit');
+
+    // use credentialState response to ensure the user is authenticated
+    if (credentialState === AppleAuthCredentialState.AUTHORIZED) {
+      // user is authenticated
+      console.log(appleAuthRequestResponse.identityToken);
+      console.log(appleAuthRequestResponse);
+      console.log('user authed');
+      navigation.navigate('Main');
+      // async_navigate();
+      Alert.alert('authed!');
+    } else {
+      console.log('user not auth');
+    }
+  };
+  // const async_navigate = async () => {
+  //   var response = await navigation.navigate('App');
+  // };
   const kakaoLogin = () => {
     logCallback('Login Start', setLoginLoading(true));
     KakaoLogins.login()
@@ -79,6 +139,8 @@ const LoginScreen = ({navigation}) => {
           setLoginLoading(false),
         );
         navigation.navigate('App');
+        console.log('asd');
+        Alert.alert('asd');
       })
       .catch(err => {
         if (err.code === 'E_CANCELLED_OPERATION') {
@@ -91,37 +153,9 @@ const LoginScreen = ({navigation}) => {
         }
       });
   };
-  const _renderDotIndicator = () => {
-    return (
-      <PagerDotIndicator
-        pageCount={3}
-        dotStyle={styles.dot}
-        selectedDotStyle={styles.selectedDot}
-      />
-    );
-  };
   return (
     <View style={styles.container}>
       <View style={styles.topContainer}>
-        <IndicatorViewPager
-          style={styles.viewPager}
-          indicator={_renderDotIndicator()}>
-          <Image
-            style={styles.viewPage}
-            key="1"
-            source={require('~/images/onboarding-screen-1.png')}
-          />
-          <Image
-            style={styles.viewPage}
-            key="2"
-            source={require('~/images/onboarding-screen-2.png')}
-          />
-          <Image
-            style={styles.viewPage}
-            key="3"
-            source={require('~/images/onboarding-screen-3.png')}
-          />
-        </IndicatorViewPager>
         <Spinner
           visible={loginLoading}
           textContent={'Loading...'}
@@ -130,7 +164,10 @@ const LoginScreen = ({navigation}) => {
       </View>
       <View style={styles.bottomContainer}>
         <View style={styles.buttonContainerWrapper}>
-          <ButtonContainerbyPlatform kakaoLogin={kakaoLogin} />
+          <ButtonContainerbyPlatform
+            kakaoLogin={kakaoLogin}
+            onAppleButtonPress={onAppleButtonPress}
+          />
         </View>
         <View style={styles.policyContainer}>
           <CustomTextRegular size={10}>로그인시 </CustomTextRegular>
@@ -161,6 +198,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   topContainer: {
+    backgroundColor: palette.gray,
     flex: 1,
     justifyContent: 'flex-start',
   },
@@ -185,6 +223,7 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
   bottomContainer: {
+    backgroundColor: palette.gold,
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'column',

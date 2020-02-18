@@ -247,6 +247,8 @@ PODS:
     - React-cxxreact (= 0.61.5)
     - React-jsi (= 0.61.5)
     - ReactCommon/jscallinvoker (= 0.61.5)
+  - RNAppleAuthentication (0.1.1):
+    - React
   - RNCMaskedView (0.1.6):
     - React
   - RNFS (2.16.4):
@@ -297,6 +299,7 @@ DEPENDENCIES:
   - React-RCTVibration (from `../node_modules/react-native/Libraries/Vibration`)
   - ReactCommon/jscallinvoker (from `../node_modules/react-native/ReactCommon`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
+  - "RNAppleAuthentication (from `../node_modules/@invertase/react-native-apple-authentication`)"
   - "RNCMaskedView (from `../node_modules/@react-native-community/masked-view`)"
   - RNFS (from `../node_modules/react-native-fs`)
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
@@ -375,6 +378,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/Libraries/Vibration"
   ReactCommon:
     :path: "../node_modules/react-native/ReactCommon"
+  RNAppleAuthentication:
+    :path: "../node_modules/@invertase/react-native-apple-authentication"
   RNCMaskedView:
     :path: "../node_modules/@react-native-community/masked-view"
   RNFS:
@@ -425,6 +430,7 @@ SPEC CHECKSUMS:
   React-RCTText: 9ccc88273e9a3aacff5094d2175a605efa854dbe
   React-RCTVibration: a49a1f42bf8f5acf1c3e297097517c6b3af377ad
   ReactCommon: 198c7c8d3591f975e5431bec1b0b3b581aa1c5dd
+  RNAppleAuthentication: 9cca53676f5f010ffbf33eb99604383bfe0eb020
   RNCMaskedView: a88953beefbd347a29072d9eba90e42945fe291e
   RNFS: 90d1a32d3bc8f75cc7fc3dd2f67506049664346b
   RNGestureHandler: 911d3b110a7a233a34c4f800e7188a84b75319c6

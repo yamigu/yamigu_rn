@@ -12,10 +12,10 @@ import IonIcon from 'react-native-vector-icons/Ionicons';
 // Retrieve initial screen's width
 let screenWidth = Dimensions.get('window').width;
 
-const AppleLoginButton = () => {
+const AppleLoginButton = ({onPress}) => {
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.touchable}>
+      <TouchableOpacity style={styles.touchable} onPress={onPress}>
         <IonIcon name="logo-apple" style={styles.icon} size={16} />
         <Text
           style={{
