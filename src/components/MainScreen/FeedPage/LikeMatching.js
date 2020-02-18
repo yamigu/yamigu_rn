@@ -114,7 +114,10 @@ const LikeMatching = () => {
       <View style={styles.wrapper}>
         <TouchableByPlatform
           styles={styles.touchable}
-          onPress={() => setModalVisible(true)}>
+          onPress={() => {
+            Alert.alert('날 좋아하는사람 16명 너도 언능 눌러라');
+            console.log('inin');
+          }}>
           <ImageBackground
             source={require('~/images/gold-inner-circle.png')}
             style={styles.innerBackground}>

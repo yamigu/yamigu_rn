@@ -126,11 +126,11 @@ const MyFeedManage = ({navigation}) => {
       ) : null}
 
       {feedDisplay === true ? (
-        <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
-          <IndicatorViewPager
-            style={styles.viewPager}
-            indicator={_renderDotIndicator()}>
-            <ImageBackground
+        <IndicatorViewPager
+          style={styles.viewPager}
+          indicator={_renderDotIndicator()}>
+          <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
+            <Image
               style={styles.viewPage}
               key="1"
               source={require('~/images/test-user-profile-girl.png')}>
@@ -147,19 +147,19 @@ const MyFeedManage = ({navigation}) => {
                 {feedText}
               </CustomTextRegular>
             </View> */}
-            </ImageBackground>
-            <Image
-              style={styles.viewPage}
-              key="2"
-              source={require('~/images/test-user-profile-7.png')}
-            />
-            <Image
-              style={styles.viewPage}
-              key="3"
-              source={require('~/images/test-user-profile-8.png')}
-            />
-          </IndicatorViewPager>
-        </TouchableOpacity>
+            </Image>
+          </TouchableOpacity>
+          <Image
+            style={styles.viewPage}
+            key="2"
+            source={require('~/images/test-user-profile-7.png')}
+          />
+          <Image
+            style={styles.viewPage}
+            key="3"
+            source={require('~/images/test-user-profile-8.png')}
+          />
+        </IndicatorViewPager>
       ) : null}
 
       <View style={styles.lastDivider} />
@@ -218,10 +218,8 @@ const styles = StyleSheet.create({
     height: 10,
   },
   viewPage: {
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    resizeMode: 'cover',
+    width: '100%',
+    height: '100%',
   },
   ImageContainer: {
     width: dw,

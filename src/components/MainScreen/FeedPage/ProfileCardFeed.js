@@ -114,6 +114,8 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   viewPage: {
+    width: '100%',
+    height: '100%',
     resizeMode: 'cover',
   },
   viewPager: {
@@ -135,6 +137,10 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     borderRadius: 10,
     backgroundColor: 'white',
+  },
+  viewTouchable: {
+    width: 100,
+    height: 100,
   },
 });
 const ProfileCardFeed = ({navigation}) => {
@@ -170,31 +176,49 @@ const ProfileCardFeed = ({navigation}) => {
         </View>
       </View>
 
-      <TouchableOpacity
+      {/* <TouchableByPlatform
         onPress={() => {
           // navigation.setParams('3'); signup screen.js 참고해서 page수 넘겨주기
           navigation.navigate('Profile');
-        }}>
-        <IndicatorViewPager
-          style={styles.viewPager}
-          indicator={_renderDotIndicator()}>
+        }}> */}
+      <IndicatorViewPager
+        style={styles.viewPager}
+        indicator={_renderDotIndicator()}>
+        <TouchableOpacity
+          onPress={() => {
+            // navigation.setParams('3'); signup screen.js 참고해서 page수 넘겨주기
+            navigation.navigate('Profile');
+          }}>
           <Image
             style={styles.viewPage}
             key="1"
             source={require('~/images/test-user-profile-5.png')}
           />
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            // navigation.setParams('3'); signup screen.js 참고해서 page수 넘겨주기
+            navigation.navigate('Profile');
+          }}>
           <Image
             style={styles.viewPage}
             key="2"
             source={require('~/images/test-user-profile-7.png')}
           />
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            // navigation.setParams('3'); signup screen.js 참고해서 page수 넘겨주기
+            navigation.navigate('Profile');
+          }}>
           <Image
             style={styles.viewPage}
             key="3"
             source={require('~/images/test-user-profile-8.png')}
           />
-        </IndicatorViewPager>
-        {/* <ImageBackground
+        </TouchableOpacity>
+      </IndicatorViewPager>
+      {/* <ImageBackground
           style={styles.image}
           source={require('~/images/test-user-profile-5.png')}>
           <LinearGradient
@@ -208,7 +232,7 @@ const ProfileCardFeed = ({navigation}) => {
             친구들과 새로운 친구들을 만나보세요
           </CustomTextRegular>
         </ImageBackground> */}
-      </TouchableOpacity>
+      {/* </TouchableByPlatform> */}
 
       {/* <View style={styles.horizontalDivider} /> */}
       <View style={styles.actionDiv}>

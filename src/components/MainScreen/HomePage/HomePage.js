@@ -53,7 +53,7 @@ const HomePage = props => {
     }, 3000);
   };
 
-  const [matchRequested, setMatchRequested] = useState(false);
+  const [matchRequested, setMatchRequested] = useState(true);
 
   let spinValue = new Animated.Value(0);
   // First set up animation
