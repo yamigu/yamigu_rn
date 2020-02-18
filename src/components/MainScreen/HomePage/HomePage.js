@@ -30,6 +30,7 @@ import Slider from '@react-native-community/slider';
 import MultiSlider from './MultiSlider';
 import CustomMarker from './CustomMarker';
 import Moment from 'moment';
+import 'moment/locale/ko';
 import Spinner from 'react-native-loading-spinner-overlay';
 import FadeinView from './FadeInView';
 
@@ -60,7 +61,7 @@ const HomePage = props => {
   Animated.loop(
     Animated.timing(spinValue, {
       toValue: 1,
-      duration: 3000,
+      duration: 2000,
       easing: Easing.linear,
     }),
   ).start();
@@ -186,13 +187,14 @@ const HomePage = props => {
             let tmpText = '';
             memberSelected.map((item, index) => {
               if (memberSelected[index] === true) {
-                tmpText = tmpText + memberList[index] + ' ';
-              }
-              if (tmpText.length > 20) {
-                tmpText.substring(0, 20);
-                tmpText = tmpText + ' ...';
+                tmpText = tmpText + memberList[index] + ', ';
               }
             });
+            tmpText = tmpText.substring(0, tmpText.length - 2);
+            if (tmpText.length > 20) {
+              tmpText = tmpText.substring(0, 20);
+              tmpText = tmpText + ' ...';
+            }
             setMemberText(tmpText);
             console.log('aa');
           }}>
@@ -240,11 +242,12 @@ const HomePage = props => {
                   let tmpText = '';
                   memberSelected.map((item, index) => {
                     if (memberSelected[index] === true) {
-                      tmpText = tmpText + memberList[index] + ' ';
+                      tmpText = tmpText + memberList[index] + ', ';
                     }
                   });
+                  tmpText = tmpText.substring(0, tmpText.length - 2);
                   if (tmpText.length > 20) {
-                    tmpText.substring(0, 20);
+                    tmpText = tmpText.substring(0, 20);
                     tmpText = tmpText + ' ...';
                   }
                   setMemberText(tmpText);
@@ -350,9 +353,10 @@ const HomePage = props => {
             let tmpText = '';
             dateSelected.map((item, index) => {
               if (dateSelected[index] === true) {
-                tmpText = tmpText + dateList[index] + ' ';
+                tmpText = tmpText + dateList[index] + ', ';
               }
             });
+            tmpText = tmpText.substring(0, tmpText.length - 2);
             if (tmpText.length > 20) {
               tmpText = tmpText.substring(0, 20);
               tmpText = tmpText + ' ...';
@@ -404,9 +408,10 @@ const HomePage = props => {
                   let tmpText = '';
                   dateSelected.map((item, index) => {
                     if (dateSelected[index] === true) {
-                      tmpText = tmpText + dateList[index] + ' ';
+                      tmpText = tmpText + dateList[index] + ', ';
                     }
                   });
+                  tmpText = tmpText.substring(0, tmpText.length - 2);
                   if (tmpText.length > 20) {
                     tmpText = tmpText.substring(0, 20);
                     tmpText = tmpText + ' ...';
@@ -616,7 +621,12 @@ const HomePage = props => {
         </CustomTextBold>
         {matchRequested === false ? (
           <Animated.Image
-            style={{transform: [{rotate: spin}]}}
+            style={{
+              transform: [{rotate: spin}],
+              marginTop: 20,
+              width: 50,
+              height: 60,
+            }}
             source={require('~/images/rotating.png')}
           />
         ) : (
@@ -666,9 +676,17 @@ const HomePage = props => {
           <TouchableByPlatform
             style={styles.touch}
             onPress={() => {
-              setMemberModalVisible(true);
-              setMemberText('선택중 ...');
-              console.log('onpress');
+              {
+                if (matchRequested === false) {
+                  Alert.alert(
+                    '이미 주선이 진행중입니다! 변경을 원하시면 현재 조건의 주선을 취소해주세요!',
+                  );
+                } else {
+                  setMemberModalVisible(true);
+                  setMemberText('선택중 ...');
+                  console.log('onpress');
+                }
+              }
             }}>
             <CustomTextMedium size={14} color={palette.black}>
               {memberMainSelected === true ? '인원 상관 없음' : memberText}
@@ -688,9 +706,17 @@ const HomePage = props => {
           <TouchableByPlatform
             style={styles.touch}
             onPress={() => {
-              setDateModalVisible(true);
-              setDateText('선택중 ...');
-              console.log('onpress');
+              {
+                if (matchRequested === false) {
+                  Alert.alert(
+                    '이미 주선이 진행중입니다! 변경을 원하시면 현재 조건의 주선을 취소해주세요!',
+                  );
+                } else {
+                  setDateModalVisible(true);
+                  setDateText('선택중 ...');
+                  console.log('onpress');
+                }
+              }
             }}>
             <CustomTextMedium size={14} color={palette.black}>
               {dateMainSelected === true ? '날짜 상관 없음' : dateText}
@@ -710,8 +736,16 @@ const HomePage = props => {
           <TouchableByPlatform
             style={styles.touch}
             onPress={() => {
-              setAgeModalVisible(true);
-              console.log('onpress');
+              {
+                if (matchRequested === false) {
+                  Alert.alert(
+                    '이미 주선이 진행중입니다! 변경을 원하시면 현재 조건의 주선을 취소해주세요!',
+                  );
+                } else {
+                  setAgeModalVisible(true);
+                  console.log('onpress');
+                }
+              }
             }}>
             <CustomTextMedium size={14} color={palette.black}>
               {multiSliderValue[0] + ' ~ '}
@@ -724,14 +758,26 @@ const HomePage = props => {
         <LinearGradient
           colors={['#FFA022', '#FF6C2B']}
           style={styles.gradientLayout}>
-          <TouchableByPlatform style={styles.mainBtn} onPress={requestMatching}>
-            <CustomTextMedium size={16} color="white">
-              미팅 주선 신청하기
-            </CustomTextMedium>
-            <CustomTextMedium size={16} color="white">
-              무료 1회
-            </CustomTextMedium>
-          </TouchableByPlatform>
+          {matchRequested === true ? (
+            <TouchableByPlatform
+              style={styles.mainBtn}
+              onPress={requestMatching}>
+              <CustomTextMedium size={16} color="white">
+                미팅 주선 신청하기
+              </CustomTextMedium>
+              <CustomTextMedium size={16} color="white">
+                무료 1회
+              </CustomTextMedium>
+            </TouchableByPlatform>
+          ) : (
+            <TouchableByPlatform
+              style={styles.mainBtnCancel}
+              onPress={requestMatching}>
+              <CustomTextMedium size={16} color="white">
+                미팅 주선 취소 하기
+              </CustomTextMedium>
+            </TouchableByPlatform>
+          )}
         </LinearGradient>
       </View>
     </View>
@@ -789,6 +835,14 @@ const styles = StyleSheet.create({
     height: 56,
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+  },
+  mainBtnCancel: {
+    width: dw * 0.9,
+    height: 56,
+    flexDirection: 'row',
+    justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 20,
   },
