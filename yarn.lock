@@ -5659,6 +5659,11 @@ react-native-webview@8.0.6:
     escape-string-regexp "2.0.0"
     invariant "2.2.4"
 
+react-native-wheel-picker@1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/react-native-wheel-picker/-/react-native-wheel-picker-1.2.0.tgz#0503e37b3326856724501679bdf5697e0dd247a6"
+  integrity sha1-BQPjezMmhWckUBZ5vfVpfg3SR6Y=
+
 react-native@^0.61.5:
   version "0.61.5"
   resolved "https://registry.yarnpkg.com/react-native/-/react-native-0.61.5.tgz#6e21acb56cbd75a3baeb1f70201a66f42600bba8"

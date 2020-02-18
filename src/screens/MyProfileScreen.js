@@ -18,7 +18,7 @@ const MyProfileScreen = ({navigation}) => {
       <MyFeedView />
       <FriendsView navigation={navigation} />
       <View style={styles.divider} />
-      <InfoView />
+      <InfoView navigation={navigation} />
     </Content>
   );
 };

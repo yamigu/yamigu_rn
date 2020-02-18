@@ -1,4 +1,5 @@
-import React from 'react';
+/* eslint-disable react-native/no-inline-styles */
+import React, {useState} from 'react';
 import {
   View,
   StyleSheet,
@@ -7,15 +8,41 @@ import {
   Image,
   ImageBackground,
 } from 'react-native';
-import {CustomTextMedium} from '../common/CustomText';
+import {CustomTextMedium, CustomTextRegular} from '../common/CustomText';
 import palette from '~/lib/styles/palette';
 import {
   PagerDotIndicator,
   IndicatorViewPager,
 } from 'react-native-best-viewpager';
 import TouchableByPlatform from '../common/TouchableByPlatform';
+import ImagePicker from 'react-native-image-picker';
 
 const MyFeedView = ({navigation}) => {
+  const [imageSource, setImageSource] = useState(null);
+
+  const selectPhotoTapped = () => {
+    const options = {
+      quality: 1.0,
+      maxWidth: 500,
+      maxHeight: 500,
+      storageOptions: {
+        skipBackup: true,
+      },
+    };
+    ImagePicker.showImagePicker(options, response => {
+      if (response.didCancel) {
+        console.log('User cancelled photo picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else if (response.customButton) {
+        console.log('User tapped custom button: ', response.customButton);
+      } else {
+        let source = {uri: response.uri};
+        setImageSource(source);
+      }
+    });
+  }; // for uploading pictures
+
   const _renderDotIndicator = () => {
     return (
       <PagerDotIndicator
@@ -38,9 +65,32 @@ const MyFeedView = ({navigation}) => {
       <IndicatorViewPager
         style={styles.viewPager}
         indicator={_renderDotIndicator()}>
-        <Image
+        <ImageBackground
           style={styles.viewPage}
           key="1"
+          source={require('~/images/addFeedExample.png')}>
+          <TouchableByPlatform onPress={selectPhotoTapped}>
+            <View
+              style={{
+                width: '100%',
+                height: '100%',
+                backgroundColor: 'rgba(0,0,0,0.6)',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <CustomTextRegular color="white" size={40} style={styles.feedT}>
+                +
+              </CustomTextRegular>
+              <CustomTextRegular color="white" size={20} style={styles.feedT}>
+                내 피드 추가하기
+              </CustomTextRegular>
+            </View>
+          </TouchableByPlatform>
+        </ImageBackground>
+        <Image
+          style={styles.viewPage}
+          key="2"
           source={require('~/images/test-user-profile-girl.png')}>
           {/* <View
               style={{
@@ -58,13 +108,8 @@ const MyFeedView = ({navigation}) => {
         </Image>
         <Image
           style={styles.viewPage}
-          key="2"
-          source={require('~/images/test-user-profile-7.png')}
-        />
-        <Image
-          style={styles.viewPage}
           key="3"
-          source={require('~/images/test-user-profile-8.png')}
+          source={require('~/images/test-user-profile-7.png')}
         />
       </IndicatorViewPager>
     </View>

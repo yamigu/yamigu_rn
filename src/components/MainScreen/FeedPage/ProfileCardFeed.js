@@ -144,7 +144,9 @@ const styles = StyleSheet.create({
   },
 });
 const ProfileCardFeed = ({navigation}) => {
-  const [modalVisible, setModalVisible] = useState(false);
+  const [liked, setLiked] = useState(false);
+  const [hasChatting, setHasChatting] = useState(false);
+
   const _renderDotIndicator = () => {
     return (
       <PagerDotIndicator
@@ -236,16 +238,27 @@ const ProfileCardFeed = ({navigation}) => {
 
       {/* <View style={styles.horizontalDivider} /> */}
       <View style={styles.actionDiv}>
-        <TouchableByPlatform style={styles.touchable}>
+        <TouchableByPlatform
+          style={styles.touchable}
+          onPress={() => setLiked(!liked)}>
           <View style={styles.button}>
-            <Ionicon name="ios-heart-empty" size={18} />
-            <CustomTextMedium size={14} color="#898989" style={{marginLeft: 4}}>
+            <Ionicon
+              name="ios-heart-empty"
+              size={18}
+              color={liked === false ? '#898989' : palette.orange}
+            />
+            <CustomTextMedium
+              size={14}
+              color={liked === false ? '#898989' : palette.orange}
+              style={{marginLeft: 4}}>
               좋아요
             </CustomTextMedium>
           </View>
         </TouchableByPlatform>
         <View style={styles.verticalDivider} />
-        <TouchableByPlatform style={styles.touchable}>
+        <TouchableByPlatform
+          style={styles.touchable}
+          onPress={() => Alert.alert('대화 신청에는 야미3개가 소비됩니다! ')}>
           <View style={styles.button}>
             <Image
               source={require('~/images/chat-bubble2-outline.png')}

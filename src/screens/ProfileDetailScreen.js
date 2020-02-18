@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
-import React from 'react';
-import {Text, View, Image, StyleSheet, Dimensions} from 'react-native';
+import React, {useState} from 'react';
+import {Text, View, Image, StyleSheet, Dimensions, Alert} from 'react-native';
 import TouchableByPlatform from '~/components/common/TouchableByPlatform';
 import {
   Icon,
@@ -68,7 +68,10 @@ const frineds_list_data = [
     image: require('~/images/test-user-profile-6.png'),
   },
 ];
-const ProfileDetailScreen = props => {
+const ProfileDetailScreen = ({navigation}) => {
+  const [liked, setLiked] = useState(false);
+  const [hasChatting, setHasChatting] = useState(false);
+
   const _renderDotIndicator = () => {
     return (
       <PagerDotIndicator
@@ -119,19 +122,29 @@ const ProfileDetailScreen = props => {
             <View style={styles.horizontalDivider} />
           </View>
           <View style={styles.actionView}>
-            <TouchableByPlatform style={styles.touchable}>
+            <TouchableByPlatform
+              style={styles.touchable}
+              onPress={() => setLiked(!liked)}>
               <View style={styles.button}>
-                <Ionicon name="ios-heart-empty" size={18} />
+                <Ionicon
+                  name="ios-heart-empty"
+                  size={18}
+                  color={liked === false ? '#898989' : palette.orange}
+                />
                 <CustomTextMedium
                   size={14}
-                  color={palette.sub}
+                  color={liked === false ? '#898989' : palette.orange}
                   style={{marginLeft: 4}}>
                   좋아요
                 </CustomTextMedium>
               </View>
             </TouchableByPlatform>
             <View style={styles.verticalDivider} />
-            <TouchableByPlatform style={styles.touchable}>
+            <TouchableByPlatform
+              style={styles.touchable}
+              onPress={() =>
+                Alert.alert('대화 신청에는 야미3개가 소비됩니다! ')
+              }>
               <View style={styles.button}>
                 <Image
                   source={require('~/images/chat-bubble2-outline.png')}

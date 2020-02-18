@@ -18,7 +18,7 @@ const TermsScreen = () => {
 
   let filePath = '';
   if (os === 'ios') {
-    filePath = RNFS.MainBundlePath + '/Fonts/policy.txt';
+    filePath = RNFS.MainBundlePath + '/Fonts/terms.txt';
     RNFS.readFile(filePath).then(res => {
       setTermsIos(res.slice(0, 4490));
       setTermsIos2(res.slice(4491, 8549));

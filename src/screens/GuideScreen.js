@@ -37,9 +37,9 @@ const NoticeScreen = () => {
           style={{marginBottom: 10}}>
           먼저 기본 설정을 해보세요!
         </CustomTextBold>
-        <RoundBorderTextView size={12} color={palette.black}>
+        {/* <RoundBorderTextView size={12} color={palette.black}>
           # 배경사진, 기본정보
-        </RoundBorderTextView>
+        </RoundBorderTextView> */}
         <CustomTextRegular size={16} color={palette.black}>
           배경은 친구들 사진, 내가 잘나온 사진, 내가 올리고 싶은 모든 사진
           상관없어요! 지역과 키도 설정하세요!
@@ -53,15 +53,15 @@ const NoticeScreen = () => {
           style={{marginBottom: 10}}>
           좋아요를 눌러보세요!
         </CustomTextBold>
-        <RoundBorderTextView size={12} color={palette.black}>
+        {/* <RoundBorderTextView size={12} color={palette.black}>
           # 무한 좋아요
-        </RoundBorderTextView>
+        </RoundBorderTextView> */}
         <CustomTextRegular size={16} color={palette.black}>
           "음 괜찮은데?"라 생각되면 부담없이 좋아요를 눌러보세요! 걱정마세요
           상대는 누가 좋아요했는지 몰라요!
         </CustomTextRegular>
       </View>
-
+      {/* 
       <View style={styles.bigView}>
         <CustomTextBold
           size={20}
@@ -92,7 +92,7 @@ const NoticeScreen = () => {
           배경은 친구들 사진, 내가 잘나온 사진, 내가 올리고 싶은 모든 사진
           상관없어요! 지역과 키도 설정하세요!
         </CustomTextRegular>
-      </View>
+      </View> */}
     </Container>
   );
 };

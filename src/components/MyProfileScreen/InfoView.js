@@ -6,7 +6,10 @@ import {List, ListItem, Left, Right} from 'native-base';
 import Anticon from 'react-native-vector-icons/AntDesign';
 import TouchableByPlatform from '../common/TouchableByPlatform';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-const InfoView = ({params}) => (
+import Picker from 'react-native-wheel-picker';
+let PickerItem = Picker.Item;
+
+const InfoView = ({navigation}) => (
   <View style={styles.container}>
     <CustomTextMedium size={18} color={palette.black} style={{marginLeft: 21}}>
       기본 정보
@@ -55,7 +58,9 @@ const InfoView = ({params}) => (
           </CustomTextRegular>
         </Left>
         <Right>
-          <TouchableOpacity style={styles.listItemRight}>
+          <TouchableOpacity
+            style={styles.listItemRight}
+            onPress={() => navigation.navigate('BV')}>
             <CustomTextRegular size={16} color={palette.red}>
               인증하기
             </CustomTextRegular>
@@ -67,7 +72,7 @@ const InfoView = ({params}) => (
           </TouchableOpacity>
         </Right>
       </ListItem>
-      <ListItem noIndent style={styles.listItem}>
+      {/* <ListItem noIndent style={styles.listItem}>
         <Left>
           <CustomTextRegular size={16} color={palette.black}>
             지역
@@ -104,7 +109,7 @@ const InfoView = ({params}) => (
             />
           </TouchableOpacity>
         </Right>
-      </ListItem>
+      </ListItem> */}
     </List>
   </View>
 );
