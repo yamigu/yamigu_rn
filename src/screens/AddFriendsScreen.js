@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {useState} from 'react';
-import {Text, View, StyleSheet} from 'react-native';
+import {Text, View, StyleSheet, Alert} from 'react-native';
 import {HeaderBackButton} from 'react-navigation-stack';
 import {
   CustomTextMedium,
@@ -9,10 +9,12 @@ import {
 } from '~/components/common/CustomText';
 import palette from '~/lib/styles/palette';
 import Octionicon from 'react-native-vector-icons/Octicons';
-import {List, ListItem, Body, Right, Button, Content} from 'native-base';
+import {List, ListItem, Body, Right, Button, Content, Input} from 'native-base';
 import ProfileCard from '~/components/common/ProfileCard';
 
 const AddFriendsScreen = ({navigation}) => {
+  const [inputValue, setInputValue] = useState('');
+
   const [numOfFriends, setNumOfFriends] = useState(1);
   return (
     <Content style={styles.container} showsVerticalScrollIndicator={false}>
@@ -33,7 +35,19 @@ const AddFriendsScreen = ({navigation}) => {
           실제 친구 등록을 위해 연락처를 사용하고 있어요.
         </CustomTextRegular>
       </View>
-      <Button style={styles.button}>
+      <Input
+        placeholder=" 친구 번호를 등록 해 주세요"
+        color="#eeeeee"
+        style={styles.messageInput}
+        value={inputValue}
+        onChange={item => setInputValue(item)}
+      />
+      <Button
+        style={styles.button}
+        onPress={() => {
+          Alert.alert('친구 신청이 완료되었습니다!');
+          setInputValue('');
+        }}>
         <CustomTextMedium size={14} color="white">
           친구 등록하기
         </CustomTextMedium>
@@ -163,6 +177,13 @@ const styles = StyleSheet.create({
     paddingTop: 0,
     paddingBottom: 0,
     elevation: 0,
+  },
+  messageInput: {
+    borderRadius: 10,
+    backgroundColor: 'white',
+    fontSize: 14,
+    padding: 0,
+    margin: 0,
   },
 });
 
