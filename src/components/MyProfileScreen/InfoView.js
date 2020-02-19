@@ -6,8 +6,6 @@ import {List, ListItem, Left, Right} from 'native-base';
 import Anticon from 'react-native-vector-icons/AntDesign';
 import TouchableByPlatform from '../common/TouchableByPlatform';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import Picker from 'react-native-wheel-picker';
-let PickerItem = Picker.Item;
 
 const InfoView = ({navigation}) => (
   <View style={styles.container}>
