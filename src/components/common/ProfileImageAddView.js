@@ -140,14 +140,11 @@ const ProfileImageAddView = ({image1, image2, image3, image4, image5}) => {
             <Button style={styles.button} onPress={selectPhotoTapped}>
               {profileImageNum > 1 ? (
                 <Image
-                  style={{width: '100%', height: '100%'}}
+                  style={styles.fill}
                   source={require('~/images/test-user-profile-girl.png')}
                 />
               ) : profileImageNum === 1 && imageSource !== null ? (
-                <Image
-                  style={{width: '100%', height: '100%'}}
-                  source={imageSource}
-                />
+                <Image style={styles.fill} source={imageSource} />
               ) : (
                 <AntDesignIcon
                   name="plus"
@@ -159,14 +156,11 @@ const ProfileImageAddView = ({image1, image2, image3, image4, image5}) => {
             <Button style={styles.button} onPress={selectPhotoTapped}>
               {profileImageNum > 2 ? (
                 <Image
-                  style={{width: '100%', height: '100%'}}
+                  style={styles.fill}
                   source={require('~/images/test-user-profile-girl.png')}
                 />
               ) : profileImageNum === 2 && imageSource !== null ? (
-                <Image
-                  style={{width: '100%', height: '100%'}}
-                  source={imageSource}
-                />
+                <Image style={styles.fill} source={imageSource} />
               ) : (
                 <AntDesignIcon
                   name="plus"
@@ -180,14 +174,11 @@ const ProfileImageAddView = ({image1, image2, image3, image4, image5}) => {
             <Button style={styles.button} onPress={selectPhotoTapped}>
               {profileImageNum > 3 ? (
                 <Image
-                  style={{width: '100%', height: '100%'}}
+                  style={styles.fill}
                   source={require('~/images/test-user-profile-girl.png')}
                 />
               ) : profileImageNum === 3 && imageSource !== null ? (
-                <Image
-                  style={{width: '100%', height: '100%'}}
-                  source={imageSource}
-                />
+                <Image style={styles.fill} source={imageSource} />
               ) : (
                 <AntDesignIcon
                   name="plus"
@@ -199,14 +190,11 @@ const ProfileImageAddView = ({image1, image2, image3, image4, image5}) => {
             <Button style={styles.button} onPress={selectPhotoTapped}>
               {profileImageNum > 4 ? (
                 <Image
-                  style={{width: '100%', height: '100%'}}
+                  style={styles.fill}
                   source={require('~/images/test-user-profile-girl.png')}
                 />
               ) : profileImageNum === 4 && imageSource !== null ? (
-                <Image
-                  style={{width: '100%', height: '100%'}}
-                  source={imageSource}
-                />
+                <Image style={styles.fill} source={imageSource} />
               ) : (
                 <AntDesignIcon
                   name="plus"
@@ -290,6 +278,8 @@ const styles = StyleSheet.create({
     height: ((deviceWidth - 76) / 2) * 0.468,
     justifyContent: 'center',
     alignItems: 'center',
+    paddingTop: 0,
+    paddingBottom: 0,
     backgroundColor: '#ffffff00',
     borderColor: palette.orange[0],
     borderWidth: 0.5,
@@ -319,6 +309,10 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginHorizontal: 10,
     marginBottom: 10,
+  },
+  fill: {
+    width: '100%',
+    height: '100%',
   },
 });
 export default ProfileImageAddView;
