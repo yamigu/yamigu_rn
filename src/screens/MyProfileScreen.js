@@ -1,14 +1,30 @@
+/* eslint-disable react-native/no-inline-styles */
 import React, {useState} from 'react';
-import {Text, View, StyleSheet} from 'react-native';
+import {
+  Text,
+  View,
+  StyleSheet,
+  Modal,
+  Alert,
+  TouchableWithoutFeedback,
+  Dimensions,
+} from 'react-native';
 import {HeaderBackButton} from 'react-navigation-stack';
-import {CustomTextMedium} from '~/components/common/CustomText';
+import {
+  CustomTextMedium,
+  CustomTextRegular,
+  CustomTextBold,
+} from '~/components/common/CustomText';
 import palette from '~/lib/styles/palette';
 import ImageView from '~/components/MyProfileScreen/ImageView';
 import FriendsView from '~/components/MyProfileScreen/FriendsView';
 import MyFeedView from '~/components/MyProfileScreen/MyFeedView';
 import InfoView from '~/components/MyProfileScreen/InfoView';
-import {Content} from 'native-base';
+import {Content, Button} from 'native-base';
 import ImagePicker from 'react-native-image-picker';
+
+const dw = Dimensions.get('window').width;
+const dh = Dimensions.get('window').height;
 
 const MyProfileScreen = ({navigation}) => {
   return (
