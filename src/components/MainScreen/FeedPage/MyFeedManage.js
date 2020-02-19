@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import {
   Image,
   View,
@@ -6,6 +7,7 @@ import {
   TextInput,
   ImageBackground,
   Alert,
+  Modal,
   TouchableOpacity,
 } from 'react-native';
 import React, {useState} from 'react';
@@ -26,6 +28,7 @@ import {
 import {
   CustomTextRegular,
   CustomTextMedium,
+  CustomTextBold,
 } from '~/components/common/CustomText';
 
 const dw = Dimensions.get('window').width;
@@ -33,6 +36,7 @@ const dh = Dimensions.get('window').height;
 
 const MyFeedManage = ({navigation}) => {
   const [imageSource, setImageSource] = useState(null);
+  const [modalVisible, setModalVisible] = useState(false);
 
   const selectPhotoTapped = () => {
     const options = {
@@ -52,15 +56,14 @@ const MyFeedManage = ({navigation}) => {
         console.log('User tapped custom button: ', response.customButton);
       } else {
         let source = {uri: response.uri};
-        setFeedStatus(true);
-        setFeedDisplay(false);
+        setFeedDisplay(true);
         setImageSource(source);
+        setModalVisible(true);
       }
     });
   }; // for uploading pictures
 
   const [feedDisplay, setFeedDisplay] = useState(false);
-  const [feedStatus, setFeedStatus] = useState(false);
 
   const _renderDotIndicator = () => {
     return (
@@ -81,6 +84,59 @@ const MyFeedManage = ({navigation}) => {
         alignItems: 'center',
         backgroundColor: 'white',
       }}>
+      <Modal
+        animationType="none"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          Alert.alert('Modal has been closed.');
+        }}>
+        <View
+          style={{
+            height: dh,
+            backgroundColor: 'rgba(0,0,0,0.5)',
+            flexDirection: 'column',
+            justifyContent: 'flex-end',
+          }}>
+          <View style={styles.modalBtnContainer}>
+            <Button
+              style={styles.modalButtonMultiple}
+              onPress={() => {
+                setImageSource(null);
+                setModalVisible(false);
+                Alert.alert('이때 서버 보내기');
+                // Alert.alert(
+                //   'Alert Title',
+                //   'My Alert Msg',
+                //   [{text: 'OK', onPress: () => setModalVisible(false)}],
+                //   {cancelable: false},
+                // );
+              }}>
+              <CustomTextRegular size={17} color={palette.red}>
+                완료
+              </CustomTextRegular>
+            </Button>
+            <View
+              style={{
+                height: 1,
+                width: dw - 20,
+                backgroundColor: palette.black,
+              }}
+            />
+          </View>
+
+          <Button
+            style={styles.modalButtonCancle}
+            onPress={() => {
+              setModalVisible(false);
+              setImageSource(null);
+            }}>
+            <CustomTextBold size={17} color={palette.black}>
+              취소
+            </CustomTextBold>
+          </Button>
+        </View>
+      </Modal>
       <View style={styles.actionDiv}>
         <TouchableByPlatform
           style={styles.touchable}
@@ -121,20 +177,19 @@ const MyFeedManage = ({navigation}) => {
         </View>
       </View>
 
-      {feedStatus === true ? (
-        <Image style={styles.ImageContainer} source={imageSource} />
-      ) : null}
-
       {feedDisplay === true ? (
         <IndicatorViewPager
           style={styles.viewPager}
           indicator={_renderDotIndicator()}>
-          <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
-            <Image
-              style={styles.viewPage}
-              key="1"
-              source={require('~/images/test-user-profile-girl.png')}>
-              {/* <View
+          {imageSource !== null ? (
+            <Image style={styles.viewPage} source={imageSource} />
+          ) : (
+            <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
+              <Image
+                style={styles.viewPage}
+                key="1"
+                source={require('~/images/test-user-profile-girl.png')}>
+                {/* <View
               style={{
                 height: dh,
                 width: dw,
@@ -147,8 +202,9 @@ const MyFeedManage = ({navigation}) => {
                 {feedText}
               </CustomTextRegular>
             </View> */}
-            </Image>
-          </TouchableOpacity>
+              </Image>
+            </TouchableOpacity>
+          )}
           <Image
             style={styles.viewPage}
             key="2"
@@ -238,6 +294,30 @@ const styles = StyleSheet.create({
     top: dw / 1.618 - 20,
   },
   feedT: {maxWidth: dw * 0.8},
+
+  modalButtonCancle: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginBottom: 10,
+    marginHorizontal: 10,
+    borderRadius: 10,
+    backgroundColor: 'white',
+    height: 52,
+  },
+  modalButtonMultiple: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    borderRadius: 10,
+    backgroundColor: 'white',
+    elevation: 0,
+    height: 52,
+  },
+  modalBtnContainer: {
+    backgroundColor: 'white',
+    borderRadius: 10,
+    marginHorizontal: 10,
+    marginBottom: 10,
+  },
 });
 
 export default MyFeedManage;
