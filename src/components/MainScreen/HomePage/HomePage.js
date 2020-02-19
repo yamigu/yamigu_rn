@@ -768,8 +768,8 @@ const HomePage = props => {
           {matchRequested === true ? (
             <TouchableByPlatform
               style={styles.mainBtn}
-              // onPress={requestMatching}>
-              onPress={() => gotoChat()}>
+              onPress={requestMatching}>
+              {/* onPress={() => gotoChat()}> */}
               <CustomTextMedium size={16} color="white">
                 미팅 주선 신청하기
               </CustomTextMedium>

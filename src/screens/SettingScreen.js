@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Text, View, StyleSheet, Switch} from 'react-native';
+import {Text, View, StyleSheet, Switch, Alert} from 'react-native';
 import {HeaderBackButton} from 'react-navigation-stack';
 import {
   CustomTextMedium,
@@ -7,6 +7,7 @@ import {
 } from '~/components/common/CustomText';
 import palette from '~/lib/styles/palette';
 import {Content, List, ListItem, Body, Right} from 'native-base';
+import TouchableByPlatform from '~/components/common/TouchableByPlatform';
 
 const SettingScreen = ({params}) => {
   const [toggleLike, setToggleLike] = useState(true);
@@ -136,16 +137,56 @@ const SettingScreen = ({params}) => {
         </ListItem>
         <ListItem noIndent button style={styles.listItem}>
           <Body style={styles.listItemBody}>
-            <CustomTextRegular size={14} color={palette.black}>
-              로그아웃
-            </CustomTextRegular>
+            <TouchableByPlatform
+              onPress={() =>
+                Alert.alert(
+                  '정말 로그아웃 하시겠습니까?',
+                  '',
+                  [
+                    {
+                      text: '아니오',
+                      onPress: () => console.log('NOPE'),
+                    },
+                    {
+                      text: '네',
+                      onPress: () => console.log('YES LOGOUT'),
+                      style: 'cancel',
+                    },
+                  ],
+                  {cancelable: false},
+                )
+              }>
+              <CustomTextRegular size={14} color={palette.black}>
+                로그아웃
+              </CustomTextRegular>
+            </TouchableByPlatform>
           </Body>
         </ListItem>
         <ListItem noIndent button style={styles.listItem}>
           <Body style={styles.listItemBody}>
-            <CustomTextRegular size={14} color={palette.black}>
-              계정 탈퇴
-            </CustomTextRegular>
+            <TouchableByPlatform
+              onPress={() =>
+                Alert.alert(
+                  '정말 탈퇴.. 하시겠습니까?',
+                  '',
+                  [
+                    {
+                      text: '아니오',
+                      onPress: () => console.log('NOPE'),
+                    },
+                    {
+                      text: '네',
+                      onPress: () => console.log('YES TALTAE'),
+                      style: 'cancel',
+                    },
+                  ],
+                  {cancelable: false},
+                )
+              }>
+              <CustomTextRegular size={14} color={palette.black}>
+                계정 탈퇴
+              </CustomTextRegular>
+            </TouchableByPlatform>
           </Body>
         </ListItem>
       </List>
