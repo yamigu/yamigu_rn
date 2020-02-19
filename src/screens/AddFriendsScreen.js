@@ -64,6 +64,7 @@ const AddFriendsScreen = ({navigation}) => {
         style={styles.button}
         onPress={() => {
           logCallback('friend request started', setLoginLoading(true));
+          //api 기기
           setTimeout(() => {
             setLoginLoading(false);
             Alert.alert('친구 신청이 완료되었습니다!');

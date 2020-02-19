@@ -23,9 +23,6 @@ import InfoView from '~/components/MyProfileScreen/InfoView';
 import {Content, Button} from 'native-base';
 import ImagePicker from 'react-native-image-picker';
 
-const dw = Dimensions.get('window').width;
-const dh = Dimensions.get('window').height;
-
 const MyProfileScreen = ({navigation}) => {
   return (
     <Content showsVerticalScrollIndicator={false} style={styles.root}>

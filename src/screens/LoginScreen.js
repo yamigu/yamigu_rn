@@ -35,6 +35,8 @@ import appleAuth, {
 import Navigation from '~/../Navigation';
 import {CommonActions} from '@react-navigation/native';
 import {HeaderBackButton} from 'react-navigation-stack';
+
+const majorVersionIOS = parseInt(Platform.Version, 10);
 const dw = Dimensions.get('window').width;
 const dh = Dimensions.get('window').height;
 
@@ -55,8 +57,9 @@ const ButtonContainerApple = ({kakaoLogin, onAppleButtonPress}) => {
         buttonType={AppleButton.Type.SIGN_IN}
         onPress={onAppleButtonPress}
       /> */}
-
-      <AppleLoginButton onPress={onAppleButtonPress} />
+      {majorVersionIOS > 12 ? (
+        <AppleLoginButton onPress={onAppleButtonPress} />
+      ) : null}
       <KakaoLoginButton onPress={kakaoLogin} />
     </View>
   );
