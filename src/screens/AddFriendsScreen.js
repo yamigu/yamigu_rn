@@ -51,7 +51,14 @@ const AddFriendsScreen = ({navigation}) => {
         color="#eeeeee"
         style={styles.messageInput}
         value={inputValue}
-        onChange={item => setInputValue(item)}
+        onChange={item => {
+          if (isNaN(item.nativeEvent.text)) {
+            Alert.alert('no string man');
+            setInputValue('');
+          } else {
+            setInputValue(item);
+          }
+        }}
       />
       <Button
         style={styles.button}
