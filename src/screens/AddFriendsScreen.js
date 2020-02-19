@@ -11,13 +11,24 @@ import palette from '~/lib/styles/palette';
 import Octionicon from 'react-native-vector-icons/Octicons';
 import {List, ListItem, Body, Right, Button, Content, Input} from 'native-base';
 import ProfileCard from '~/components/common/ProfileCard';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 const AddFriendsScreen = ({navigation}) => {
   const [inputValue, setInputValue] = useState('');
+  const [loginLoading, setLoginLoading] = useState(false);
+  const logCallback = (log, callback) => {
+    console.log(log);
+    callback;
+  };
 
   const [numOfFriends, setNumOfFriends] = useState(1);
   return (
     <Content style={styles.container} showsVerticalScrollIndicator={false}>
+      <Spinner
+        visible={loginLoading}
+        textContent={'Loading...'}
+        textStyle={styles.spinnerTextStyle}
+      />
       <CustomTextMedium size={18} color={palette.black}>
         친구를 등록해서
       </CustomTextMedium>
@@ -45,8 +56,12 @@ const AddFriendsScreen = ({navigation}) => {
       <Button
         style={styles.button}
         onPress={() => {
-          Alert.alert('친구 신청이 완료되었습니다!');
-          setInputValue('');
+          logCallback('friend request started', setLoginLoading(true));
+          setTimeout(() => {
+            setLoginLoading(false);
+            Alert.alert('친구 신청이 완료되었습니다!');
+            setInputValue('');
+          }, 3000);
         }}>
         <CustomTextMedium size={14} color="white">
           친구 등록하기
@@ -184,6 +199,9 @@ const styles = StyleSheet.create({
     fontSize: 14,
     padding: 0,
     margin: 0,
+  },
+  spinnerTextStyle: {
+    color: '#FFF',
   },
 });
 

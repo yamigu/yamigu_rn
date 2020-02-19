@@ -114,7 +114,7 @@ const AuthStack = createStackNavigator({
   Login: {
     screen: LoginScreen,
     navigationOptions: {
-      headerShown: false,
+      headerShown: true,
     },
   },
   IV: {

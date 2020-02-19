@@ -24,6 +24,7 @@ import {
   PagerDotIndicator,
 } from 'react-native-best-viewpager';
 import {TouchableOpacity} from 'react-native-gesture-handler';
+import {SafeAreaView} from 'react-navigation';
 
 import appleAuth, {
   AppleButton,
@@ -33,6 +34,7 @@ import appleAuth, {
 } from '@invertase/react-native-apple-authentication';
 import Navigation from '~/../Navigation';
 import {CommonActions} from '@react-navigation/native';
+import {HeaderBackButton} from 'react-navigation-stack';
 const dw = Dimensions.get('window').width;
 const dh = Dimensions.get('window').height;
 
@@ -46,13 +48,14 @@ const ButtonContainerAndroid = ({kakaoLogin}) => {
 const ButtonContainerApple = ({kakaoLogin, onAppleButtonPress}) => {
   return (
     <View style={styles.buttonContainer}>
-      <AppleButton
+      {/* <AppleButton
         width={dw * 0.8}
         height={50}
         buttonStyle={AppleButton.Style.WHITE}
         buttonType={AppleButton.Type.SIGN_IN}
         onPress={onAppleButtonPress}
-      />
+      /> */}
+
       <AppleLoginButton onPress={onAppleButtonPress} />
       <KakaoLoginButton onPress={kakaoLogin} />
     </View>
@@ -154,42 +157,70 @@ const LoginScreen = ({navigation}) => {
       });
   };
   return (
-    <View style={styles.container}>
-      <View style={styles.topContainer}>
-        <Spinner
-          visible={loginLoading}
-          textContent={'Loading...'}
-          textStyle={styles.spinnerTextStyle}
-        />
-      </View>
-      <View style={styles.bottomContainer}>
-        <View style={styles.buttonContainerWrapper}>
-          <ButtonContainerbyPlatform
-            kakaoLogin={kakaoLogin}
-            onAppleButtonPress={onAppleButtonPress}
+    <SafeAreaView style={styles.root}>
+      <View style={styles.container}>
+        <View style={styles.topContainer}>
+          <CustomTextMedium size={20} color={palette.black}>
+            안녕하세요
+          </CustomTextMedium>
+          <CustomTextMedium size={20} color={palette.black}>
+            야미구 이용에 로그인이 필요합니다
+          </CustomTextMedium>
+
+          <Spinner
+            visible={loginLoading}
+            textContent={'Loading...'}
+            textStyle={styles.spinnerTextStyle}
           />
         </View>
-        <View style={styles.policyContainer}>
-          <CustomTextRegular size={10}>로그인시 </CustomTextRegular>
-          <TouchableOpacity>
-            <CustomTextBold decoLine="underline" size={10}>
-              이용약관
-            </CustomTextBold>
-          </TouchableOpacity>
-          <CustomTextRegular size={10}> & </CustomTextRegular>
-          <TouchableOpacity>
-            <CustomTextBold decoLine="underline" size={10}>
-              개인정보 취급방침
-            </CustomTextBold>
-          </TouchableOpacity>
-          <CustomTextRegular size={10}>
-            에 동의한 것으로 간주합니다
-          </CustomTextRegular>
+        <View style={styles.bottomContainer}>
+          <View style={styles.buttonContainerWrapper}>
+            <ButtonContainerbyPlatform
+              kakaoLogin={kakaoLogin}
+              onAppleButtonPress={onAppleButtonPress}
+            />
+          </View>
+          <View style={styles.policyContainer}>
+            <CustomTextRegular size={10}>로그인시 </CustomTextRegular>
+            <TouchableOpacity>
+              <CustomTextBold decoLine="underline" size={10}>
+                이용약관
+              </CustomTextBold>
+            </TouchableOpacity>
+            <CustomTextRegular size={10}> & </CustomTextRegular>
+            <TouchableOpacity>
+              <CustomTextBold decoLine="underline" size={10}>
+                개인정보 취급방침
+              </CustomTextBold>
+            </TouchableOpacity>
+            <CustomTextRegular size={10}>
+              에 동의한 것으로 간주합니다
+            </CustomTextRegular>
+          </View>
         </View>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
+
+LoginScreen.navigationOptions = ({navigation}) => ({
+  headerLeft: () => (
+    <HeaderBackButton
+      onPress={() => {
+        navigation.goBack();
+      }}
+    />
+  ),
+  headerTitle: () => (
+    <CustomTextMedium size={16} color={palette.black}>
+      로그인
+    </CustomTextMedium>
+  ),
+  headerStyle: {
+    backgroundColor: 'white',
+  },
+  headerTitleAlign: 'center',
+});
 
 const styles = StyleSheet.create({
   container: {
@@ -198,9 +229,10 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   topContainer: {
-    backgroundColor: palette.gray,
     flex: 1,
     justifyContent: 'flex-start',
+    marginTop: 30,
+    marginLeft: 18,
   },
   viewPager: {
     marginTop: 15,
@@ -223,7 +255,6 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
   bottomContainer: {
-    backgroundColor: palette.gold,
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'column',
@@ -241,6 +272,11 @@ const styles = StyleSheet.create({
   },
   spinnerTextStyle: {
     color: '#FFF',
+  },
+  root: {
+    flex: 1,
+    backgroundColor: palette.default_bg,
+    justifyContent: 'space-between',
   },
 });
 export default LoginScreen;
