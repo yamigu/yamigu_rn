@@ -1,4 +1,9 @@
 PODS:
+  - ARNKakaoChannel (1.0.1):
+    - ARNKakaoSDK
+    - React
+  - ARNKakaoSDK (1.3.6):
+    - React
   - boost-for-react-native (1.63.0)
   - BVLinearGradient (2.5.6):
     - React
@@ -264,6 +269,8 @@ PODS:
   - Yoga (1.14.0)
 
 DEPENDENCIES:
+  - "ARNKakaoChannel (from `../node_modules/@actbase/react-native-kakao-channel`)"
+  - "ARNKakaoSDK (from `../node_modules/@actbase/react-native-kakaosdk`)"
   - BVLinearGradient (from `../node_modules/react-native-linear-gradient`)
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
@@ -314,6 +321,10 @@ SPEC REPOS:
     - KakaoOpenSDK
 
 EXTERNAL SOURCES:
+  ARNKakaoChannel:
+    :path: "../node_modules/@actbase/react-native-kakao-channel"
+  ARNKakaoSDK:
+    :path: "../node_modules/@actbase/react-native-kakaosdk"
   BVLinearGradient:
     :path: "../node_modules/react-native-linear-gradient"
   DoubleConversion:
@@ -396,6 +407,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
 SPEC CHECKSUMS:
+  ARNKakaoChannel: 001e34998cc3e22356c8522f70f2e1fbc813b44e
+  ARNKakaoSDK: abee211f0975ccf434b510c24e1b29b40ea9e882
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
   BVLinearGradient: e3aad03778a456d77928f594a649e96995f1c872
   DoubleConversion: 5805e889d232975c086db112ece9ed034df7a0b2

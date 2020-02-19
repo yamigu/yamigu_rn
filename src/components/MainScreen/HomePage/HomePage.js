@@ -32,7 +32,7 @@ import CustomMarker from './CustomMarker';
 import Moment from 'moment';
 import 'moment/locale/ko';
 import Spinner from 'react-native-loading-spinner-overlay';
-import FadeinView from './FadeInView';
+import KakaoSDK from '@actbase/react-native-kakaosdk';
 
 // import CustomLabel from './CustomLabel';
 
@@ -45,6 +45,13 @@ const logCallback = (log, callback) => {
 };
 
 const HomePage = props => {
+  const gotoChat = () => {
+    console.log('sdk : ' + KakaoSDK.Channel.chat);
+    KakaoSDK.Channel.chat('_xjxamkT')
+      .then(res => console.log(res))
+      .catch(e => console.log(e));
+  };
+
   const requestMatching = () => {
     logCallback('Login Start', setLoginLoading(true));
     setTimeout(() => {
@@ -761,7 +768,8 @@ const HomePage = props => {
           {matchRequested === true ? (
             <TouchableByPlatform
               style={styles.mainBtn}
-              onPress={requestMatching}>
+              // onPress={requestMatching}>
+              onPress={() => gotoChat()}>
               <CustomTextMedium size={16} color="white">
                 미팅 주선 신청하기
               </CustomTextMedium>
