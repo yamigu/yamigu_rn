@@ -86,7 +86,7 @@ const SignupScreen = ({navigation}) => {
               거짓된 정보 및 중복 가입을 방지 하기 위한 인증입니다.
             </CustomTextMedium>
 
-            <Button
+            {/* <Button
               onPress={() => {
                 navigation.navigate('Main');
                 go(0);
@@ -95,7 +95,7 @@ const SignupScreen = ({navigation}) => {
               <CustomTextRegular size={14} color="white">
                 야미구 시작하기
               </CustomTextRegular>
-            </Button>
+            </Button> */}
           </View>
         )}
       </View>
@@ -107,6 +107,8 @@ SignupScreen.navigationOptions = ({navigation}) => ({
   headerLeft: () =>
     navigation.getParam('page', 0) > 0 ? (
       <HeaderBackButton
+        label=" "
+        tintColor={palette.black}
         onPress={() => {
           const page = navigation.getParam('page', 0);
           global_viewPager.current.setPage(page - 1);

@@ -206,6 +206,8 @@ const LoginScreen = ({navigation}) => {
 LoginScreen.navigationOptions = ({navigation}) => ({
   headerLeft: () => (
     <HeaderBackButton
+      label=" "
+      tintColor={palette.black}
       onPress={() => {
         navigation.goBack();
       }}
