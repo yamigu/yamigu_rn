@@ -216,6 +216,7 @@ const styles = StyleSheet.create({
     backgroundColor: palette.orange,
     justifyContent: 'center',
     alignSelf: 'center',
+    borderRadius: 5,
   },
   friendsListItem: {
     paddingHorizontal: 22,
