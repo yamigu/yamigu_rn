@@ -10,7 +10,7 @@ import {
   Modal,
   TouchableOpacity,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useState, useReducer, useEffect} from 'react';
 import ProfileCard from '~/components/common/ProfileCard';
 import palette from '~/lib/styles/palette';
 import {Thumbnail, Input, Button} from 'native-base';
@@ -19,6 +19,7 @@ import ImagePicker from 'react-native-image-picker';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 import MaterialCommuniticons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Feather from 'react-native-vector-icons/Feather';
+import axios from 'axios';
 
 import {
   IndicatorViewPager,
@@ -33,8 +34,45 @@ import {
 
 const dw = Dimensions.get('window').width;
 const dh = Dimensions.get('window').height;
-
+const nowYear = 20200000;
 const MyFeedManage = ({navigation}) => {
+  useEffect(() => {
+    let tmpUrl;
+    axios
+      .get('http://13.124.126.30:8000/authorization/user/info/')
+      .then(result => {
+        setMyUid(result.data.uid);
+        setNickname(result.data.nickname);
+        setAvata(result.data.avata);
+        setAge(result.data.age);
+        setBelong(result.data.belong);
+        setDepartment(result.data.department);
+        tmpUrl = 'http://13.124.126.30:8000/core/feed/' + result.data.uid + '/';
+        return tmpUrl;
+      })
+      .then(url =>
+        axios.get(url).then(result => {
+          console.log('myfeedmanage 1st axios done');
+          console.log(result.data);
+          let tmpFeed = [];
+          let count = 0;
+          result.data.map(item => {
+            tmpFeed[count] = item;
+            count++;
+          });
+          setFeed_list(tmpFeed);
+        }),
+      );
+  }, []);
+
+  const [uid, setMyUid] = useState('');
+  const [nickname, setNickname] = useState('');
+  const [avata, setAvata] = useState('');
+  const [age, setAge] = useState(0);
+  const [belong, setBelong] = useState('');
+  const [department, setDepartment] = useState('');
+
+  const [feed_list, setFeed_list] = useState([]);
   const [imageSource, setImageSource] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -68,7 +106,7 @@ const MyFeedManage = ({navigation}) => {
   const _renderDotIndicator = () => {
     return (
       <PagerDotIndicator
-        pageCount={3}
+        pageCount={feed_list.length}
         dotStyle={styles.dot}
         selectedDotStyle={styles.selectedDot}
         style={styles.indicator}
@@ -137,6 +175,7 @@ const MyFeedManage = ({navigation}) => {
           </Button>
         </View>
       </Modal>
+
       <View style={styles.actionDiv}>
         <TouchableByPlatform
           style={styles.touchable}
@@ -181,43 +220,37 @@ const MyFeedManage = ({navigation}) => {
         <IndicatorViewPager
           style={styles.viewPager}
           indicator={_renderDotIndicator()}>
-          {imageSource !== null ? (
-            <Image style={styles.viewPage} source={imageSource} />
-          ) : (
-            <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
-              <Image
-                style={styles.viewPage}
-                key="1"
-                source={require('~/images/test-user-profile-girl.png')}>
-                {/* <View
-              style={{
-                height: dh,
-                width: dw,
-                backgroundColor: 'rgba(0,0,0,0.6)',
-                flexDirection: 'column',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <CustomTextRegular color="white" size={20} style={styles.feedT}>
-                {feedText}
-              </CustomTextRegular>
-            </View> */}
-              </Image>
-            </TouchableOpacity>
-          )}
-          <Image
-            style={styles.viewPage}
-            key="2"
-            source={require('~/images/test-user-profile-7.png')}
-          />
-          <Image
-            style={styles.viewPage}
-            key="3"
-            source={require('~/images/test-user-profile-8.png')}
-          />
+          {feed_list.map(item => {
+            if (imageSource !== null) {
+              return <Image style={styles.viewPage} source={imageSource} />;
+            }
+            return (
+              <TouchableOpacity
+                onPress={
+                  item.img_src === null
+                    ? null
+                    : () => {
+                        navigation.navigate('Profile', {
+                          uid,
+                          nickname,
+                          avata,
+                          age,
+                          belong,
+                          department,
+                          feed_list,
+                        });
+                      }
+                }>
+                <Image
+                  style={styles.viewPage}
+                  key="1"
+                  source={item.img_src === null ? null : {url: item.img_src}}
+                />
+              </TouchableOpacity>
+            );
+          })}
         </IndicatorViewPager>
       ) : null}
-
       <View style={styles.lastDivider} />
     </View>
   );

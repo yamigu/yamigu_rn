@@ -33,8 +33,17 @@ import {CustomSwitch} from '../common/CustomSwtich';
 import TouchableByPlatform from '../common/TouchableByPlatform';
 import Navigation from '~/../Navigation';
 import {TouchableOpacity} from 'react-native-gesture-handler';
+import KakaoSDK from '@actbase/react-native-kakaosdk';
+
 const deviceWidth = Dimensions.get('window').width;
 const SideMenu = ({navigation}) => {
+  const gotoChat = () => {
+    console.log('sdk : ' + KakaoSDK.Channel.chat);
+    KakaoSDK.Channel.chat('_xjxamkT')
+      .then(res => console.log(res))
+      .catch(e => console.log(e));
+  };
+
   const [toggle, setToggle] = useState(false);
   const [numOfFreinds, setNumOfFriends] = useState(0);
   return (
@@ -171,7 +180,7 @@ const SideMenu = ({navigation}) => {
               )}
             </Body>
           </ListItem>
-          <TouchableByPlatform onPress={() => navigation.navigate('Store')}>
+          {/* <TouchableByPlatform onPress={() => navigation.navigate('Store')}>
             <ListItem icon noIndent style={styles.listItem}>
               <Left style={styles.listItemLeft}>
                 <Materialicon
@@ -195,7 +204,7 @@ const SideMenu = ({navigation}) => {
                 </CustomTextRegular>
               </Right>
             </ListItem>
-          </TouchableByPlatform>
+          </TouchableByPlatform> */}
           {/* <TouchableByPlatform onPress={() => navigation.navigate('Shield')}>
             <ListItem icon noIndent style={styles.listItem}>
               <Left style={styles.listItemLeft}>
@@ -262,11 +271,26 @@ const SideMenu = ({navigation}) => {
               </Body>
             </ListItem>
           </TouchableByPlatform>
-          <TouchableByPlatform onPress={() => navigation.navigate('IV')}>
+          <TouchableByPlatform onPress={() => gotoChat()}>
             <ListItem noIndent style={styles.listItem}>
               <Body style={styles.listItemBody}>
                 <CustomTextRegular size={14} color={palette.black}>
                   1:1 질문하기
+                </CustomTextRegular>
+              </Body>
+              <Right style={styles.listItemRight}>
+                <Image
+                  style={styles.iconKakao}
+                  source={require('~/images/icon-kakao-with-bg.png')}
+                />
+              </Right>
+            </ListItem>
+          </TouchableByPlatform>
+          <TouchableByPlatform onPress={() => navigation.navigate('Login')}>
+            <ListItem noIndent style={styles.listItem}>
+              <Body style={styles.listItemBody}>
+                <CustomTextRegular size={14} color={palette.black}>
+                  로그인화면
                 </CustomTextRegular>
               </Body>
               <Right style={styles.listItemRight}>
@@ -305,7 +329,7 @@ const SideMenu = ({navigation}) => {
             <ListItem noIndent style={styles.listItem}>
               <Body style={styles.listItemBody}>
                 <CustomTextRegular size={14} color={palette.black}>
-                  앱 버전
+                  앱 버전(임시 : 회원가입 스크린)
                 </CustomTextRegular>
               </Body>
               <Right style={styles.listItemRight}>
