@@ -14,7 +14,7 @@ const ProfileCardList = ({navigation}) => {
       let tmp = [];
       let count = 0;
       result.data.map((item, index) => {
-        if (item.feed_list === null) {
+        if (item.feed_list.length === 0) {
           console.log('no feed : ' + item.nickname);
         } else {
           console.log('yes feed : ' + item.profile.nickname);

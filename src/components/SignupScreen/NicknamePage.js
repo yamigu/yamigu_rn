@@ -8,6 +8,7 @@ const deviceWidth = Dimensions.get('window').width;
 const NicknamePage = ({params}) => {
   const [text, setText] = useState('');
   const [focus, setFocus] = useState(false);
+
   return (
     <View style={styles.root}>
       <CustomTextMedium size={20} color={palette.black}>

@@ -44,9 +44,8 @@ const SignupScreen = ({navigation}) => {
         <NicknamePage />
         <BelongPage />
         <IVScreen />
-        {/* <BelongPage /> */}
-        {/* <ImagePage /> */}
       </ViewPager>
+
       <View style={styles.bottomView}>
         <View style={styles.indicator}>
           <CustomTextRegular
@@ -61,43 +60,27 @@ const SignupScreen = ({navigation}) => {
             />
           </View>
         </View>
-        {page < 2 ? (
-          <Button onPress={() => move(1)} style={styles.button}>
+
+        <Button
+          onPress={() => {
+            if (page === 2) {
+              gotoWebView();
+              go(0);
+              setPage(0);
+            }
+            move(1);
+          }}
+          style={styles.button}>
+          {page !== 2 ? (
             <CustomTextRegular size={14} color="white">
               다음
             </CustomTextRegular>
-          </Button>
-        ) : (
-          <View>
-            <Button
-              style={styles.button}
-              onPress={() => {
-                gotoWebView();
-                go(0);
-              }}>
-              <CustomTextMedium size={16} color="white">
-                본인인증 진행하기
-              </CustomTextMedium>
-            </Button>
-            <CustomTextMedium
-              size={12}
-              color={palette.gray}
-              style={styles.center}>
-              거짓된 정보 및 중복 가입을 방지 하기 위한 인증입니다.
+          ) : (
+            <CustomTextMedium size={16} color="white">
+              본인인증 하고 야미구 시작하기!
             </CustomTextMedium>
-
-            {/* <Button
-              onPress={() => {
-                navigation.navigate('Main');
-                go(0);
-              }}
-              style={styles.button}>
-              <CustomTextRegular size={14} color="white">
-                야미구 시작하기
-              </CustomTextRegular>
-            </Button> */}
-          </View>
-        )}
+          )}
+        </Button>
       </View>
     </SafeAreaView>
   );
@@ -118,7 +101,15 @@ SignupScreen.navigationOptions = ({navigation}) => ({
           });
         }}
       />
-    ) : null,
+    ) : (
+      <HeaderBackButton
+        label=" "
+        tintColor={palette.black}
+        onPress={() => {
+          navigation.goBack();
+        }}
+      />
+    ),
   headerTitle: () => (
     <CustomTextMedium size={16} color={palette.black}>
       회원가입

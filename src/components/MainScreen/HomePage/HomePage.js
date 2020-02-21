@@ -50,84 +50,194 @@ const logCallback = (log, callback) => {
   callback;
 };
 
-let initValue = [
-  {
-    token: 'token',
-    uid: 'uid',
-    nickname: 'nickname',
-    avata: 'avata',
-    birhdate: 'birhdate',
-    belong: 'belong',
-    department: 'department',
-    profile_list: 'profile_list',
-    feed_list: 'feed_list',
-    friend_list: 'friend_list',
-    yami_number: 'yami_number',
-  },
+let initUserValue = [
+  'token',
+  'uid',
+  'nickname',
+  'avata',
+  'birhdate',
+  'belong',
+  'department',
+  'profile_list',
+  'feed_list',
+  'friend_list',
+  'yami_number',
 ];
 
-const HomePage = props => {
+const HomePage = ({navigation}) => {
   const [asyncValue, setAsyncValue] = useState([]);
-  const [header, setHeader] = useState('');
+  const [tmpSt, setTmpSt] = useState('');
 
   const _retrieveData = async () => {
-    try {
-      const value = await AsyncStorage.getItem('userInfo');
-      const jValue = JSON.parse(value);
-      setAsyncValue(jValue);
-      console.log('hererererer');
+    // axios.defaults.headers.common['Authorization'] = '';
+    // AsyncStorage.setItem('userValue', JSON.stringify(initUserValue));
 
-      if (value !== null) {
-        axios.defaults.headers.common['Authorization'] = 'Token ' + jValue[0];
-        setHeader('Token ' + jValue[0]);
+    try {
+      const userValue = await AsyncStorage.getItem('userValue');
+      const jUserValue = JSON.parse(userValue);
+      if (userValue !== null) {
+        setAsyncValue(jUserValue);
+        console.log('uservalue not null');
+        if (userValue.token === 'token') {
+          console.log('token not set yet.');
+        } else {
+          console.log('token is set' + jUserValue[0]);
+          axios.defaults.headers.common['Authorization'] =
+            'Token ' + jUserValue[0];
+          // nickname,  등 userinfo 불러와서 async에 저장하기, null이면 안하고
+        }
+      } else {
+        console.log('first user, async init');
       }
+      console.log(jUserValue);
+
+      // const value = await AsyncStorage.getItem('');
+      // const jValue = JSON.parse(value);
+      // setAsyncValue(jValue);
+      // // console.log('hererererer');
+
+      // if (value !== null) {
+      //   axios.defaults.headers.common['Authorization'] = 'Token ' + jValue[0];
+      //   setHeader('Token ' + jValue[0]);
+      // } else {
+      //   console.log('can detect');
+      // }
     } catch (error) {
+      console.log('error');
       // Error retrieving data
     }
   };
 
   useEffect(() => {
+    navigation.addListener(
+      'didFocus',
+      () => {
+        _retrieveData().then(() => console.log('willfocus'));
+      },
+      // run function that updates the data on entering the screen
+    );
     _retrieveData().then(() => {
       axios
         .get('http://13.124.126.30:8000/core/match_request/')
         .then(result => {
-          console.log('homepage useEffect match_request');
+          // console.log('homepage useEffect match_request');
           if (result.data.user === null) {
             setMatchRequested(false);
           } else {
             setMatchRequested(true);
-            //저거 미팅 설정에 인원,날짜,선호나이 설정해서 뿌려주기, 보여주기
+            // result.data.personnel_select 처리 후 memberSelected에 넣기, memberText설정
+            let tmpMemInt = result.data.personnel_selected;
+            let tmpMemSelected = [];
+            for (let i = 0; i < 4; i++) {
+              tmpMemSelected[i] = Math.floor(tmpMemInt % 2);
+              tmpMemInt /= 2;
+            }
+            // console.log(tmpMemSelected);
+            // setText when ongoing
+            let tmpMemText = '';
+            if (tmpMemSelected[0] === 1) tmpMemText = '인원 상관 없음';
+            else {
+              tmpMemSelected.map((item, index) => {
+                if (tmpMemSelected[index] === 1) {
+                  tmpMemText = tmpMemText + memberList[index - 1] + ', ';
+                }
+              });
+              tmpMemText = tmpMemText.substring(0, tmpMemText.length - 2);
+              if (tmpMemText.length > 20) {
+                tmpMemText = tmpMemText.substring(0, 20);
+                tmpMemText = tmpMemText + ' ...';
+              }
+            }
+            setOnMemText(tmpMemText);
+
+            // result.data.date_select 처리 후 memberSelected에 넣기, dateText설정
+            let tmpDateInt = result.data.date_selected;
+            let tmpDateSelected = [];
+            for (let i = 0; i < 8; i++) {
+              tmpDateSelected[i] = Math.floor(tmpDateInt % 2);
+              tmpDateInt /= 2;
+            }
+            // console.log(tmpDateSelected);
+            //setText when ongoing
+            let tmpDateText = '';
+            if (tmpDateSelected[0] === 1) tmpDateText = '날짜 상관 없음';
+            else {
+              tmpDateSelected.map((item, index) => {
+                if (tmpDateSelected[index] === 1) {
+                  tmpDateText = tmpDateText + dateList[index - 1] + ', ';
+                }
+              });
+              tmpDateText = tmpDateText.substring(0, tmpDateText.length - 2);
+              if (tmpDateText.length > 20) {
+                tmpDateText = tmpDateText.substring(0, 20);
+                tmpDateText = tmpDateText + ' ...';
+              }
+            }
+            setOnDateText(tmpDateText);
+            // console.log(tmpDateText);
+
+            // result.date.max,min처리
+            let tmpAge = [result.data.min_age, result.data.max_age];
+            setMultiSliderValue(tmpAge);
           }
+          return result.data;
         });
+      // .then(data => console.log(data));
     });
-  }, []);
+  }, [navigation]);
 
   const requestMatching = () => {
-    logCallback('Login Start', setLoginLoading(true));
-
-    if (matchRequested === true) {
-      //이미 매칭중인데 누르면 취소니까
-      setMatchRequested(!matchRequested);
-      axios
-        .post() //매치 했던거 취소
-        .then(() => {
-          setLoginLoading(false);
-        });
+    // logCallback('Login Start', setLoginLoading(true));
+    console.log('matching sddaddo');
+    // 'token',     'uid',        'nickname',   'avata',
+    // 'birhdate',  'belong',     'department', 'profile_list',
+    // 'feed_list', 'friend_list','yami_number',
+    if (asyncValue[0] === 'token') {
+      navigation.navigate('Login');
+    } else if (asyncValue[2] === 'nickname') {
+      navigation.navigate('Signup');
+      //navigate to loginscreen
+    } else if (asyncValue[4] === 'birthdate') {
+      navigation.navigate('IV');
     } else {
-      //아직 매칭 안한거고, 이제 보내야지
-      //날짜, 멤버, 나이 계산해서 아래 형식에 맞게 넣어주기
-      axios
-        .post('http://13.124.126.30:8000/core/match_request/', {
-          personnel_selected: 0,
-          date_selected: 0,
-          min_age: 0,
-          max_age: 0,
-        })
-        .then(result => {
-          console.log(result.data);
-          setMatchRequested(!matchRequested);
-        })
-        .then(setLoginLoading(false));
+      if (matchRequested === true) {
+        console.log('came true');
+        logCallback('match request', setLoginLoading(false));
+        setMatchRequested(false);
+
+        //이미 매칭중인데 누르면 취소니까
+        // axios
+        //   .post() //매치 했던거 취소
+        //   .then(() => {
+        //    setMatchRequested(!matchRequested);
+        //     setLoginLoading(false);
+        //   });
+      } else {
+        //아직 매칭 안한거고, 이제 보내야지
+        //날짜, 멤버, 나이 계산해서 아래 형식에 맞게 넣어주기
+        let memInt = 0;
+        memInt += memberSelected.map((item, index) => {
+          if (item === true) Math.pow(2, index);
+        });
+        let dateInt = 0;
+        dateInt = dateSelected.map((item, index) => {
+          if (item === true) Math.pow(2, index);
+        });
+        let min_age = multiSliderValue[0];
+        let max_age = multiSliderValue[1];
+        axios
+          .post('http://13.124.126.30:8000/core/match_request/', {
+            personnel_selected: memInt,
+            date_selected: dateInt,
+            min_age: min_age,
+            max_age: max_age,
+          })
+          .then(result => {
+            console.log(result.data);
+            setMatchRequested(!matchRequested);
+          })
+          .then(setLoginLoading(false));
+      }
     }
   };
 
@@ -187,8 +297,10 @@ const HomePage = props => {
   const memberList = ['2:2 미팅', '3:3 미팅', '4:4 미팅'];
   const [memberMainSelected, setMemberMainSelected] = useState(true);
   const [memberText, setMemberText] = useState('');
+  const [onMemText, setOnMemText] = useState('');
   const [memberItemNo, setMemberItemNo] = useState(0);
   const [memberSelected, setMemberSelected] = useState([false, false, false]);
+
   const [nowTime, setNowTime] = useState();
 
   const [dateList, setDateList] = useState([
@@ -205,6 +317,7 @@ const HomePage = props => {
 
   const [dateMainSelected, setDateMainSelected] = useState(true);
   const [dateText, setDateText] = useState('');
+  const [onDateText, setOnDateText] = useState('');
   const [dateItemNo, setDateItemNo] = useState(0);
   const [dateSelected, setDateSelected] = useState([
     false,
@@ -461,6 +574,7 @@ const HomePage = props => {
                 tmpText = tmpText.substring(0, 20);
                 tmpText = tmpText + ' ...';
               }
+
               setDateText(tmpText);
               console.log('aa');
             }}>
@@ -800,7 +914,11 @@ const HomePage = props => {
               }
             }}>
             <CustomTextMedium size={14} color={palette.black}>
-              {memberMainSelected === true ? '인원 상관 없음' : memberText}
+              {matchRequested === true
+                ? onMemText
+                : memberMainSelected === true
+                ? '인원 상관 없음'
+                : memberText}
             </CustomTextMedium>
 
             <AntDesignIcon name="caretdown" size={12} color={palette.black} />
@@ -830,7 +948,11 @@ const HomePage = props => {
               }
             }}>
             <CustomTextMedium size={14} color={palette.black}>
-              {dateMainSelected === true ? '날짜 상관 없음' : dateText}
+              {matchRequested === true
+                ? onDateText
+                : dateMainSelected === true
+                ? '인원 상관 없음'
+                : dateText}
             </CustomTextMedium>
 
             <AntDesignIcon name="caretdown" size={12} color={palette.black} />
@@ -986,7 +1108,6 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-    elevation: 0,
   },
   memberMainBtnUnselected: {
     elevation: 0,
@@ -998,7 +1119,6 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-    elevation: 0,
   },
   dateMainBtnSelected: {
     elevation: 0,
@@ -1036,7 +1156,6 @@ const styles = StyleSheet.create({
     width: 74,
     flexDirection: 'column',
     justifyContent: 'center',
-    elevation: 0,
   },
   memeberListBtnUnselected: {
     elevation: 0,
@@ -1050,7 +1169,6 @@ const styles = StyleSheet.create({
     width: 74,
     flexDirection: 'column',
     justifyContent: 'center',
-    elevation: 0,
   },
   dateListBtnSelected: {
     elevation: 0,
