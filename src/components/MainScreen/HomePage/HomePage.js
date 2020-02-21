@@ -50,47 +50,88 @@ const logCallback = (log, callback) => {
   callback;
 };
 
-const _retrieveData = async () => {
-  try {
-    const value = await AsyncStorage.getItem('userInfo');
-    const jValue = JSON.parse(value);
-    console.log(jValue);
-    console.log(jValue[0]);
-
-    if (value !== null) {
-      axios.defaults.headers.common['Authorization'] = 'Token ' + jValue[0];
-    }
-  } catch (error) {
-    // Error retrieving data
-  }
-};
+let initValue = [
+  {
+    token: 'token',
+    uid: 'uid',
+    nickname: 'nickname',
+    avata: 'avata',
+    birhdate: 'birhdate',
+    belong: 'belong',
+    department: 'department',
+    profile_list: 'profile_list',
+    feed_list: 'feed_list',
+    friend_list: 'friend_list',
+    yami_number: 'yami_number',
+  },
+];
 
 const HomePage = props => {
   const [asyncValue, setAsyncValue] = useState([]);
+  const [header, setHeader] = useState('');
+
+  const _retrieveData = async () => {
+    try {
+      const value = await AsyncStorage.getItem('userInfo');
+      const jValue = JSON.parse(value);
+      setAsyncValue(jValue);
+      console.log('hererererer');
+
+      if (value !== null) {
+        axios.defaults.headers.common['Authorization'] = 'Token ' + jValue[0];
+        setHeader('Token ' + jValue[0]);
+      }
+    } catch (error) {
+      // Error retrieving data
+    }
+  };
 
   useEffect(() => {
-    _retrieveData();
-    // console.log(asyncValue);
-
-    // axios.get('http://13.124.126.30:8000/core/match_request/').then(result => {
-    //   console.log('homepage useEffect match_request');
-    //   setMatchRequested(result.data.matched_on);
-    // });
+    _retrieveData().then(() => {
+      axios
+        .get('http://13.124.126.30:8000/core/match_request/')
+        .then(result => {
+          console.log('homepage useEffect match_request');
+          if (result.data.user === null) {
+            setMatchRequested(false);
+          } else {
+            setMatchRequested(true);
+            //저거 미팅 설정에 인원,날짜,선호나이 설정해서 뿌려주기, 보여주기
+          }
+        });
+    });
   }, []);
 
   const requestMatching = () => {
     logCallback('Login Start', setLoginLoading(true));
 
-    axios.get('http://13.124.126.30:8000/core/match_request/');
-    // .then(result => console.log(result.data));
-
-    setTimeout(() => {
-      setLoginLoading(false);
+    if (matchRequested === true) {
+      //이미 매칭중인데 누르면 취소니까
       setMatchRequested(!matchRequested);
-    }, 3000);
+      axios
+        .post() //매치 했던거 취소
+        .then(() => {
+          setLoginLoading(false);
+        });
+    } else {
+      //아직 매칭 안한거고, 이제 보내야지
+      //날짜, 멤버, 나이 계산해서 아래 형식에 맞게 넣어주기
+      axios
+        .post('http://13.124.126.30:8000/core/match_request/', {
+          personnel_selected: 0,
+          date_selected: 0,
+          min_age: 0,
+          max_age: 0,
+        })
+        .then(result => {
+          console.log(result.data);
+          setMatchRequested(!matchRequested);
+        })
+        .then(setLoginLoading(false));
+    }
   };
 
-  const [matchRequested, setMatchRequested] = useState(true);
+  const [matchRequested, setMatchRequested] = useState(false);
 
   let spinValue = new Animated.Value(0);
   // First set up animation
@@ -689,7 +730,7 @@ const HomePage = props => {
           미팅 주선
         </CustomTextBold>
 
-        {matchRequested === false ? (
+        {matchRequested === true ? (
           <Animated.Image
             style={{
               transform: [{rotate: spin}],
@@ -747,7 +788,7 @@ const HomePage = props => {
             style={styles.touch}
             onPress={() => {
               {
-                if (matchRequested === false) {
+                if (matchRequested === true) {
                   Alert.alert(
                     '이미 주선이 진행중입니다! 변경을 원하시면 현재 조건의 주선을 취소해주세요!',
                   );
@@ -777,7 +818,7 @@ const HomePage = props => {
             style={styles.touch}
             onPress={() => {
               {
-                if (matchRequested === false) {
+                if (matchRequested === true) {
                   Alert.alert(
                     '이미 주선이 진행중입니다! 변경을 원하시면 현재 조건의 주선을 취소해주세요!',
                   );
@@ -807,7 +848,7 @@ const HomePage = props => {
             style={styles.touch}
             onPress={() => {
               {
-                if (matchRequested === false) {
+                if (matchRequested === true) {
                   Alert.alert(
                     '이미 주선이 진행중입니다! 변경을 원하시면 현재 조건의 주선을 취소해주세요!',
                   );
@@ -828,7 +869,7 @@ const HomePage = props => {
         <LinearGradient
           colors={['#FFA022', '#FF6C2B']}
           style={styles.gradientLayout}>
-          {matchRequested === true ? (
+          {matchRequested === false ? (
             <TouchableByPlatform
               style={styles.mainBtn}
               onPress={requestMatching}>

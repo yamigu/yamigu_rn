@@ -169,7 +169,7 @@ const ProfileCardFeed = ({
           size={50}
           fontSizes={[14, 12, 12]}
           nickname={nickname}
-          avata={avata === null ? null : {url: avata}}
+          avata={avata === null ? null : {uri: avata}}
           age={age}
           belong={belong}
           department={department}
@@ -206,7 +206,7 @@ const ProfileCardFeed = ({
               <Image
                 style={styles.viewPage}
                 key={index}
-                source={item.img_src === null ? null : {url: item.img_src}}
+                source={item.img_src === null ? null : {uri: item.img_src}}
               />
             </TouchableOpacity>
           );

@@ -116,7 +116,7 @@ const ProfileDetailScreen = ({navigation}) => {
                 <Image
                   style={styles.viewPage}
                   key="1"
-                  source={{url: item.img_src}}
+                  source={{uri: item.img_src}}
                 />
               );
             })}
@@ -127,7 +127,7 @@ const ProfileDetailScreen = ({navigation}) => {
               size={66}
               fontSizes={[16, 14, 14]}
               nickname={nickname}
-              image={{url: avata}}
+              image={{uri: avata}}
               age={age}
               belong={belong}
               department={department}
