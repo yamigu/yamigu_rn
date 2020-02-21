@@ -33,11 +33,27 @@ import {CommonActions} from '@react-navigation/native';
 import {HeaderBackButton} from 'react-navigation-stack';
 import utf8 from 'utf8';
 import {SampleConsumer} from '~/Context/Sample';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const majorVersionIOS = parseInt(Platform.Version, 10);
 const dw = Dimensions.get('window').width;
 const dh = Dimensions.get('window').height;
-
+let tmpValue = ['new', 'ls', 'ls', 'ls', 'ls', 'ls', 'ls', 'ls', 'ls'];
+let originValue = [];
+const _retrieveData = async () => {
+  try {
+    const value = await AsyncStorage.getItem('userInfo');
+    if (value !== null) {
+      // AsyncStorage.setItem('userInfo', JSON.stringify(tmpValue));
+      for (let i = 0; i < 9; i++) {
+        originValue[i] = value[i];
+      }
+      console.log(value);
+    }
+  } catch (error) {
+    // Error retrieving data
+  }
+};
 const ButtonContainerAndroid = ({kakaoLogin}) => {
   return (
     <View style={styles.buttonContainer}>
@@ -85,6 +101,11 @@ const logCallback = (log, callback) => {
 const deviceWidth = Dimensions.get('window').width;
 
 const LoginScreen = ({navigation}) => {
+  useEffect(() => {
+    _retrieveData();
+    axios.defaults.headers.common['Authorization'] = '';
+    console.log(originValue);
+  }, []);
   const [loginLoading, setLoginLoading] = useState(false);
   const [loginToken, setLoginToken] = useState(TOKEN_EMPTY);
 
@@ -123,8 +144,13 @@ const LoginScreen = ({navigation}) => {
           setLoginToken(result.data.key);
           axios.defaults.headers.common['Authorization'] =
             'Token ' + result.data.key;
+          return result.data.key;
         })
-        .then(() => navigation.navigate('Main'));
+        .then(key => {
+          tmpValue[0] = key;
+          AsyncStorage.setItem('userInfo', JSON.stringify(tmpValue));
+          navigation.navigate('Main');
+        });
 
       console.log(appleAuthRequestResponse);
       // navigation.navigate('Main');
@@ -157,8 +183,13 @@ const LoginScreen = ({navigation}) => {
           `Login Finished, Token is ${JSON.stringify(result.data.key)}`,
           setLoginLoading(false),
         );
+        return result.data.key;
       })
-      .then(() => navigation.navigate('Main'))
+      .then(key => {
+        tmpValue[0] = key;
+        AsyncStorage.setItem('userInfo', JSON.stringify(tmpValue));
+        navigation.navigate('Main');
+      })
       .catch(err => {
         if (err.code === 'E_CANCELLED_OPERATION') {
           logCallback(`Login Cancelled:${err.message}`, setLoginLoading(false));

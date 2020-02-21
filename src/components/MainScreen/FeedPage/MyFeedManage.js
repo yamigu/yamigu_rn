@@ -51,8 +51,9 @@ const MyFeedManage = ({navigation}) => {
         return tmpUrl;
       })
       .then(url =>
-        // () => console.log(feedCalling),
         axios.get(url).then(result => {
+          console.log('myfeedmanage 1st axios done');
+          console.log(result.data);
           let tmpFeed = [];
           let count = 0;
           result.data.map(item => {
@@ -225,21 +226,25 @@ const MyFeedManage = ({navigation}) => {
             }
             return (
               <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate('Profile', {
-                    uid,
-                    nickname,
-                    avata,
-                    age,
-                    belong,
-                    department,
-                    feed_list,
-                  });
-                }}>
+                onPress={
+                  item.img_src === null
+                    ? null
+                    : () => {
+                        navigation.navigate('Profile', {
+                          uid,
+                          nickname,
+                          avata,
+                          age,
+                          belong,
+                          department,
+                          feed_list,
+                        });
+                      }
+                }>
                 <Image
                   style={styles.viewPage}
                   key="1"
-                  source={{url: item.img_src}}
+                  source={item.img_src === null ? null : {url: item.img_src}}
                 />
               </TouchableOpacity>
             );

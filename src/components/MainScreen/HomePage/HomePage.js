@@ -14,6 +14,9 @@ import {
   TouchableOpacity,
   Animated,
   Easing,
+  TouchableHighlight,
+  TouchableNativeFeedbackComponent,
+  SafeAreaView,
 } from 'react-native';
 import palette from '~/lib/styles/palette';
 import {
@@ -35,6 +38,7 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import {UserContextConsumer, UserContextProvider} from '~/Context/UserContext';
 import axios from 'axios';
 import AsyncStorage from '@react-native-community/async-storage';
+import {TouchableNativeFeedback} from 'react-native-gesture-handler';
 
 // import CustomLabel from './CustomLabel';
 
@@ -52,11 +56,10 @@ const _retrieveData = async () => {
   try {
     const value = await AsyncStorage.getItem('userInfo');
     if (value !== null) {
-      AsyncStorage.setItem('userInfo', JSON.stringify(newValue));
       for (let i = 0; i < 9; i++) {
         newValue[i] = value[i];
       }
-      // We have data!!
+      // axios.defaults.headers.common['Authorization'] = 'Token ' + newValue[0];
       console.log(value);
     }
   } catch (error) {
@@ -67,10 +70,8 @@ const _retrieveData = async () => {
 const HomePage = props => {
   useEffect(() => {
     _retrieveData();
-
     axios.get('http://13.124.126.30:8000/core/match_request/').then(result => {
-      console.log('here');
-      console.log(result.data);
+      console.log('homepage useEffect match_request');
       setMatchRequested(result.data.matched_on);
     });
   }, []);
@@ -78,9 +79,9 @@ const HomePage = props => {
   const requestMatching = () => {
     logCallback('Login Start', setLoginLoading(true));
 
-    // axios
-    //   .get('http://13.124.126.30:8000/core/match_request/', {})
-    //   .then(result => console.log(result.data));
+    axios
+      .get('http://13.124.126.30:8000/core/match_request/')
+      .then(result => console.log(result.data));
     setTimeout(() => {
       setLoginLoading(false);
       setMatchRequested(!matchRequested);
@@ -200,41 +201,55 @@ const HomePage = props => {
         transparent={true}
         visible={memberModalVisible}
         onRequestClose={() => {
-          Alert.alert('Modal has been closed.');
-        }}>
-        <TouchableWithoutFeedback
-          onPress={() => {
-            setMemberModalVisible(false);
-            let tmpText = '';
-            memberSelected.map((item, index) => {
-              if (memberSelected[index] === true) {
-                tmpText = tmpText + memberList[index] + ', ';
-              }
-            });
-            tmpText = tmpText.substring(0, tmpText.length - 2);
-            if (tmpText.length > 20) {
-              tmpText = tmpText.substring(0, 20);
-              tmpText = tmpText + ' ...';
+          let tmpText = '';
+          memberSelected.map((item, index) => {
+            if (memberSelected[index] === true) {
+              tmpText = tmpText + memberList[index] + ', ';
             }
-            setMemberText(tmpText);
-            console.log('aa');
-          }}>
-          <View
-            style={{
-              height: dh - 200,
-              backgroundColor: 'rgba(0,0,0,0.7)',
-              flexDirection: 'column',
-              justifyContent: 'flex-start',
-            }}
-          />
-        </TouchableWithoutFeedback>
-        <View
+          });
+          tmpText = tmpText.substring(0, tmpText.length - 2);
+          if (tmpText.length > 20) {
+            tmpText = tmpText.substring(0, 20);
+            tmpText = tmpText + ' ...';
+          }
+          setMemberText(tmpText);
+          setMemberModalVisible(false);
+        }}>
+        <SafeAreaView>
+          <TouchableWithoutFeedback
+            onPress={() => {
+              setMemberModalVisible(false);
+              let tmpText = '';
+              memberSelected.map((item, index) => {
+                if (memberSelected[index] === true) {
+                  tmpText = tmpText + memberList[index] + ', ';
+                }
+              });
+              tmpText = tmpText.substring(0, tmpText.length - 2);
+              if (tmpText.length > 20) {
+                tmpText = tmpText.substring(0, 20);
+                tmpText = tmpText + ' ...';
+              }
+              setMemberText(tmpText);
+              console.log('aa');
+            }}>
+            <View
+              style={{
+                height: dh - 200,
+                backgroundColor: 'rgba(0,0,0,0.7)',
+                flexDirection: 'column',
+                justifyContent: 'flex-start',
+              }}
+            />
+          </TouchableWithoutFeedback>
+
+          {/* <View
           style={{
             height: 200,
             backgroundColor: 'rgba(0,0,0,0.7)',
             flexDirection: 'column',
             justifyContent: 'flex-start',
-          }}>
+          }}> */}
           <View
             style={{
               height: 200,
@@ -257,8 +272,14 @@ const HomePage = props => {
                   (복수 선택 가능)
                 </CustomTextRegular>
               </View>
-              <TouchableByPlatform
+              <Button
+                style={{
+                  height: 30,
+                  backgroundColor: '#F3F2F2',
+                  elevation: 0,
+                }}
                 onPress={() => {
+                  console.log('완료눌림');
                   setMemberModalVisible(false);
                   let tmpText = '';
                   memberSelected.map((item, index) => {
@@ -276,49 +297,52 @@ const HomePage = props => {
                 <CustomTextMedium color={palette.orange} size={13}>
                   완료
                 </CustomTextMedium>
-              </TouchableByPlatform>
+              </Button>
             </View>
 
-            <View name="인원선택list" style={styles.itemList}>
-              <TouchableByPlatform
+            <View name="택list" style={styles.itemList}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                }}></View>
+              <Button
                 onPress={() => {
                   {
                     if (memberMainSelected === false) {
                       setMemberMainSelected(!memberMainSelected);
                       setMemberItemNo(0);
                       setMemberSelected([false, false, false]);
-                    } else null;
+                    } else {
+                      console.log('인원상관없음 눌림');
+                    }
                   }
-                }}>
-                <Button
-                  style={
-                    memberMainSelected === true
-                      ? styles.memberMainBtnSelected
-                      : styles.memberMainBtnUnselected
+                }}
+                style={
+                  memberMainSelected === true
+                    ? styles.memberMainBtnSelected
+                    : styles.memberMainBtnUnselected
+                }>
+                <CustomTextRegular
+                  size={12}
+                  color={
+                    memberMainSelected === true ? palette.orange : palette.black
                   }>
-                  <CustomTextRegular
-                    size={12}
-                    color={
-                      memberMainSelected === true
-                        ? palette.orange
-                        : palette.black
-                    }>
-                    인원 상관 없음
-                  </CustomTextRegular>
-                </Button>
-              </TouchableByPlatform>
+                  인원 상관 없음
+                </CustomTextRegular>
+              </Button>
 
               <View
                 style={{
-                  backgroundColor: 'white',
                   height: 35,
                   flexDirection: 'row',
                   flexWrap: 'wrap',
                 }}>
                 {memberList.map((item, index) => {
                   return (
-                    <TouchableByPlatform
+                    <Button
                       onPress={() => {
+                        console.log('pressed');
                         let tmpNo = memberItemNo;
                         let tmp;
                         if (memberSelected[index] === false) {
@@ -335,30 +359,28 @@ const HomePage = props => {
                         tmp = memberSelected.slice();
                         tmp[index] = !memberSelected[index];
                         setMemberSelected(tmp);
-                      }}>
-                      <Button
-                        style={
+                      }}
+                      style={
+                        memberSelected[index] === true
+                          ? styles.memeberListBtnSelected
+                          : styles.memeberListBtnUnselected
+                      }>
+                      <CustomTextRegular
+                        size={12}
+                        color={
                           memberSelected[index] === true
-                            ? styles.memeberListBtnSelected
-                            : styles.memeberListBtnUnselected
+                            ? palette.orange
+                            : palette.black
                         }>
-                        <CustomTextRegular
-                          size={12}
-                          color={
-                            memberSelected[index] === true
-                              ? palette.orange
-                              : palette.black
-                          }>
-                          {item}
-                        </CustomTextRegular>
-                      </Button>
-                    </TouchableByPlatform>
+                        {item}
+                      </CustomTextRegular>
+                    </Button>
                   );
                 })}
               </View>
             </View>
           </View>
-        </View>
+        </SafeAreaView>
       </Modal>
 
       <Modal
@@ -366,106 +388,123 @@ const HomePage = props => {
         transparent={true}
         visible={dateModalVisible}
         onRequestClose={() => {
-          Alert.alert('Modal has been closed.');
-        }}>
-        <TouchableWithoutFeedback
-          onPress={() => {
-            setDateModalVisible(false);
-            let tmpText = '';
-            dateSelected.map((item, index) => {
-              if (dateSelected[index] === true) {
-                tmpText = tmpText + dateList[index] + ', ';
-              }
-            });
-            tmpText = tmpText.substring(0, tmpText.length - 2);
-            if (tmpText.length > 20) {
-              tmpText = tmpText.substring(0, 20);
-              tmpText = tmpText + ' ...';
+          let tmpText = '';
+          dateSelected.map((item, index) => {
+            if (memberSelected[index] === true) {
+              tmpText = tmpText + dateList[index] + ', ';
             }
-            setDateText(tmpText);
-            console.log('aa');
-          }}>
-          <View
-            style={{
-              height: dh - 300,
-              backgroundColor: 'rgba(0,0,0,0.7)',
-              flexDirection: 'column',
-              justifyContent: 'flex-start',
-            }}
-          />
-        </TouchableWithoutFeedback>
-        <View
-          style={{
-            height: 300,
-            backgroundColor: 'rgba(0,0,0,0.7)',
-            flexDirection: 'column',
-            justifyContent: 'flex-start',
-          }}>
+          });
+          tmpText = tmpText.substring(0, tmpText.length - 2);
+          if (tmpText.length > 20) {
+            tmpText = tmpText.substring(0, 20);
+            tmpText = tmpText + ' ...';
+          }
+          setDateText(tmpText);
+          setDateModalVisible(false);
+        }}>
+        <SafeAreaView>
+          <TouchableWithoutFeedback
+            onPress={() => {
+              setDateModalVisible(false);
+              let tmpText = '';
+              dateSelected.map((item, index) => {
+                if (dateSelected[index] === true) {
+                  tmpText = tmpText + dateList[index] + ', ';
+                }
+              });
+              tmpText = tmpText.substring(0, tmpText.length - 2);
+              if (tmpText.length > 20) {
+                tmpText = tmpText.substring(0, 20);
+                tmpText = tmpText + ' ...';
+              }
+              setDateText(tmpText);
+              console.log('aa');
+            }}>
+            <View
+              style={{
+                height: dh - 300,
+                backgroundColor: 'rgba(0,0,0,0.7)',
+                flexDirection: 'column',
+                justifyContent: 'flex-start',
+              }}
+            />
+          </TouchableWithoutFeedback>
           <View
             style={{
               height: 300,
-              width: dw,
-              backgroundColor: 'white',
-              borderTopRightRadius: 10,
-              borderTopLeftRadius: 10,
-              paddingRight: 12,
-              paddingLeft: 12,
+              backgroundColor: 'rgba(0,0,0,0.7)',
+              flexDirection: 'column',
+              justifyContent: 'flex-start',
             }}>
-            <View name="팀소개div" style={styles.grayBox}>
-              <View style={{flexDirection: 'row'}}>
-                <CustomTextRegular size={13} color="#505050">
-                  날짜 선택
-                </CustomTextRegular>
-                <CustomTextRegular
-                  style={{paddingLeft: 12}}
-                  size={12}
-                  color="#B1B1B1">
-                  (복수 선택 가능)
-                </CustomTextRegular>
-              </View>
-              <TouchableByPlatform
-                onPress={() => {
-                  setDateModalVisible(false);
-                  let tmpText = '';
-                  dateSelected.map((item, index) => {
-                    if (dateSelected[index] === true) {
-                      tmpText = tmpText + dateList[index] + ', ';
-                    }
-                  });
-                  tmpText = tmpText.substring(0, tmpText.length - 2);
-                  if (tmpText.length > 20) {
-                    tmpText = tmpText.substring(0, 20);
-                    tmpText = tmpText + ' ...';
-                  }
-                  setDateText(tmpText);
-                }}>
-                <CustomTextMedium color={palette.orange} size={13}>
-                  완료
-                </CustomTextMedium>
-              </TouchableByPlatform>
-            </View>
-
-            <View name="인원선택list" style={styles.itemList}>
-              <TouchableByPlatform
-                onPress={() => {
-                  {
-                    if (dateMainSelected === false) {
-                      setDateMainSelected(!dateMainSelected);
-                      setDateItemNo(0);
-                      setDateSelected([
-                        false,
-                        false,
-                        false,
-                        false,
-                        false,
-                        false,
-                        false,
-                        false,
-                      ]);
-                    } else null;
-                  }
-                }}>
+            <View
+              style={{
+                height: 300,
+                width: dw,
+                backgroundColor: 'white',
+                borderTopRightRadius: 10,
+                borderTopLeftRadius: 10,
+                paddingRight: 12,
+                paddingLeft: 12,
+              }}>
+              <View name="팀소개div" style={styles.grayBox}>
+                <View style={{flexDirection: 'row'}}>
+                  <CustomTextRegular size={13} color="#505050">
+                    날짜 선택
+                  </CustomTextRegular>
+                  <CustomTextRegular
+                    style={{paddingLeft: 12}}
+                    size={12}
+                    color="#B1B1B1">
+                    (복수 선택 가능)
+                  </CustomTextRegular>
+                </View>
                 <Button
+                  style={{
+                    height: 30,
+                    backgroundColor: '#F3F2F2',
+                    elevation: 0,
+                  }}
+                  onPress={() => {
+                    setDateModalVisible(false);
+                    let tmpText = '';
+                    dateSelected.map((item, index) => {
+                      if (dateSelected[index] === true) {
+                        tmpText = tmpText + dateList[index] + ', ';
+                      }
+                    });
+                    tmpText = tmpText.substring(0, tmpText.length - 2);
+                    if (tmpText.length > 20) {
+                      tmpText = tmpText.substring(0, 20);
+                      tmpText = tmpText + ' ...';
+                    }
+                    setDateText(tmpText);
+                  }}>
+                  <CustomTextMedium color={palette.orange} size={13}>
+                    완료
+                  </CustomTextMedium>
+                </Button>
+              </View>
+
+              <View name="인원선택list" style={styles.itemList}>
+                <Button
+                  onPress={() => {
+                    {
+                      if (dateMainSelected === false) {
+                        setDateMainSelected(!dateMainSelected);
+                        setDateItemNo(0);
+                        setDateSelected([
+                          false,
+                          false,
+                          false,
+                          false,
+                          false,
+                          false,
+                          false,
+                          false,
+                        ]);
+                      } else null;
+                    }
+                  }}
                   style={
                     dateMainSelected === true
                       ? styles.dateMainBtnSelected
@@ -479,39 +518,37 @@ const HomePage = props => {
                     날짜 상관 없음
                   </CustomTextRegular>
                 </Button>
-              </TouchableByPlatform>
 
-              <View
-                style={{
-                  backgroundColor: 'white',
-                  height: 35,
-                  flexDirection: 'row',
-                  flexWrap: 'wrap',
-                }}>
-                {dateList.map((item, index) => {
-                  return (
-                    <TouchableByPlatform
-                      onPress={() => {
-                        let tmpNo = dateItemNo;
-                        let tmp;
-                        console.log(dateItemNo);
-                        console.log(tmpNo);
-                        if (dateSelected[index] === false) {
-                          setDateItemNo(tmpNo + 1);
-                          if (tmpNo + 1 === 1) {
-                            setDateMainSelected(false);
-                          }
-                        } else {
-                          setDateItemNo(tmpNo - 1);
-                          if (tmpNo - 1 === 0) {
-                            setDateMainSelected(true);
-                          }
-                        }
-                        tmp = dateSelected.slice();
-                        tmp[index] = !dateSelected[index];
-                        setDateSelected(tmp);
-                      }}>
+                <View
+                  style={{
+                    backgroundColor: 'white',
+                    height: 200,
+                    flexDirection: 'row',
+                    flexWrap: 'wrap',
+                  }}>
+                  {dateList.map((item, index) => {
+                    return (
                       <Button
+                        onPress={() => {
+                          let tmpNo = dateItemNo;
+                          let tmp;
+                          console.log(dateItemNo);
+                          console.log(tmpNo);
+                          if (dateSelected[index] === false) {
+                            setDateItemNo(tmpNo + 1);
+                            if (tmpNo + 1 === 1) {
+                              setDateMainSelected(false);
+                            }
+                          } else {
+                            setDateItemNo(tmpNo - 1);
+                            if (tmpNo - 1 === 0) {
+                              setDateMainSelected(true);
+                            }
+                          }
+                          tmp = dateSelected.slice();
+                          tmp[index] = !dateSelected[index];
+                          setDateSelected(tmp);
+                        }}
                         style={
                           dateSelected[index] === true
                             ? styles.dateListBtnSelected
@@ -527,13 +564,13 @@ const HomePage = props => {
                           {item}
                         </CustomTextRegular>
                       </Button>
-                    </TouchableByPlatform>
-                  );
-                })}
+                    );
+                  })}
+                </View>
               </View>
             </View>
           </View>
-        </View>
+        </SafeAreaView>
       </Modal>
 
       <Modal
@@ -541,99 +578,106 @@ const HomePage = props => {
         transparent={true}
         visible={ageModalVisible}
         onRequestClose={() => {
-          Alert.alert('Modal has been closed.');
+          setAgeModalVisible(false);
         }}>
-        <TouchableWithoutFeedback
-          onPress={() => {
-            setAgeModalVisible(false);
-            console.log('aa');
-          }}>
-          <View
-            style={{
-              height: dh - 146,
-              backgroundColor: 'rgba(0,0,0,0.7)',
-              flexDirection: 'column',
-              justifyContent: 'flex-start',
-            }}
-          />
-        </TouchableWithoutFeedback>
-        <View
-          style={{
-            height: 146,
-            backgroundColor: 'rgba(0,0,0,0.7)',
-            flexDirection: 'column',
-            justifyContent: 'flex-start',
-          }}>
+        <SafeAreaView>
+          <TouchableWithoutFeedback
+            onPress={() => {
+              setAgeModalVisible(false);
+              console.log('aa');
+            }}>
+            <View
+              style={{
+                height: dh - 146,
+                backgroundColor: 'rgba(0,0,0,0.7)',
+                flexDirection: 'column',
+                justifyContent: 'flex-start',
+              }}
+            />
+          </TouchableWithoutFeedback>
           <View
             style={{
               height: 146,
-              width: dw,
-              backgroundColor: 'white',
-              borderTopRightRadius: 10,
-              borderTopLeftRadius: 10,
-              paddingRight: 12,
-              paddingLeft: 12,
+              backgroundColor: 'rgba(0,0,0,0.7)',
+              flexDirection: 'column',
+              justifyContent: 'flex-start',
             }}>
-            <View name="나이설정div" style={styles.grayBox}>
-              <View style={{flexDirection: 'row'}}>
-                <CustomTextRegular size={13} color="#505050">
-                  선호 나이 선택
-                </CustomTextRegular>
+            <View
+              style={{
+                height: 146,
+                width: dw,
+                backgroundColor: 'white',
+                borderTopRightRadius: 10,
+                borderTopLeftRadius: 10,
+                paddingRight: 12,
+                paddingLeft: 12,
+              }}>
+              <View name="나이설정div" style={styles.grayBox}>
+                <View style={{flexDirection: 'row'}}>
+                  <CustomTextRegular size={13} color="#505050">
+                    선호 나이 선택
+                  </CustomTextRegular>
+                </View>
+                <Button
+                  style={{
+                    height: 30,
+                    backgroundColor: '#F3F2F2',
+                    elevation: 0,
+                  }}
+                  onPress={() => {
+                    setAgeModalVisible(false);
+                  }}>
+                  <CustomTextMedium color={palette.orange} size={13}>
+                    완료
+                  </CustomTextMedium>
+                </Button>
               </View>
-              <TouchableByPlatform
-                onPress={() => {
-                  setAgeModalVisible(false);
-                }}>
-                <CustomTextMedium color={palette.orange} size={13}>
-                  완료
-                </CustomTextMedium>
-              </TouchableByPlatform>
-            </View>
 
-            <View style={styles.container}>
-              <MultiSlider
-                selectedStyle={{
-                  backgroundColor: palette.orange,
-                }}
-                unselectedStyle={{
-                  backgroundColor: 'silver',
-                }}
-                containerStyle={{
-                  height: 40,
-                }}
-                trackStyle={{
-                  height: 1,
-                }}
-                values={[multiSliderValue[0], multiSliderValue[1]]}
-                sliderLength={dw * 0.86}
-                onValuesChange={multiSliderValuesChange}
-                min={20}
-                max={30}
-                step={1}
-                allowOverlap
-                snapped
-                // customLabel={CustomLabel}
-                customMarker={CustomMarker}
-                onValuesChangeStart={sliderOneValuesChangeStart}
-                onValuesChangeFinish={sliderOneValuesChangeFinish}
-              />
-              <View style={styles.text}>
-                <CustomTextMedium
-                  size={12}
-                  style={{marginTop: 0, paddingTop: 0}}>
-                  {' ' + multiSliderValue[0]}
-                </CustomTextMedium>
-                <CustomTextMedium size={12}>
-                  {multiSliderValue[1] === 30
-                    ? '30+'
-                    : multiSliderValue[1] + ' '}
-                </CustomTextMedium>
+              <View style={styles.container}>
+                <MultiSlider
+                  selectedStyle={{
+                    backgroundColor: palette.orange,
+                  }}
+                  unselectedStyle={{
+                    backgroundColor: 'silver',
+                  }}
+                  containerStyle={{
+                    height: 40,
+                  }}
+                  trackStyle={{
+                    height: 1,
+                  }}
+                  values={[multiSliderValue[0], multiSliderValue[1]]}
+                  sliderLength={dw * 0.86}
+                  onValuesChange={multiSliderValuesChange}
+                  min={20}
+                  max={30}
+                  step={1}
+                  allowOverlap
+                  snapped
+                  // customLabel={CustomLabel}
+                  customMarker={CustomMarker}
+                  onValuesChangeStart={sliderOneValuesChangeStart}
+                  onValuesChangeFinish={sliderOneValuesChangeFinish}
+                />
+                <View style={styles.text}>
+                  <CustomTextMedium
+                    size={12}
+                    style={{marginTop: 0, paddingTop: 0}}>
+                    {' ' + multiSliderValue[0]}
+                  </CustomTextMedium>
+                  <CustomTextMedium size={12}>
+                    {multiSliderValue[1] === 30
+                      ? '30+'
+                      : multiSliderValue[1] + ' '}
+                  </CustomTextMedium>
+                </View>
               </View>
-            </View>
 
-            {/* end of age module  */}
+              {/* end of age module  */}
+            </View>
           </View>
-        </View>
+        </SafeAreaView>
       </Modal>
 
       <View style={styles.topLayout}>
@@ -883,10 +927,11 @@ const styles = StyleSheet.create({
     margin: 0,
     flexDirection: 'column',
     width: dw * 0.93,
-    height: 40,
+    height: 500,
     backgroundColor: 'white',
   },
   memberMainBtnSelected: {
+    elevation: 0,
     paddingHorizontal: 16,
     paddingVertical: 8,
     marginTop: 12,
@@ -894,12 +939,12 @@ const styles = StyleSheet.create({
     borderColor: palette.orange,
     borderRadius: 20,
     backgroundColor: 'white',
-
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
   },
   memberMainBtnUnselected: {
+    elevation: 0,
     marginTop: 12,
     borderWidth: 1,
     borderColor: palette.black,
@@ -910,6 +955,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   dateMainBtnSelected: {
+    elevation: 0,
     paddingHorizontal: 16,
     paddingVertical: 8,
     marginTop: 12,
@@ -917,12 +963,12 @@ const styles = StyleSheet.create({
     borderColor: palette.orange,
     borderRadius: 20,
     backgroundColor: 'white',
-
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
   },
   dateMainBtnUnselected: {
+    elevation: 0,
     marginTop: 12,
     borderWidth: 1,
     borderColor: palette.black,
@@ -933,6 +979,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   memeberListBtnSelected: {
+    elevation: 0,
     marginRight: 12,
     marginTop: 12,
     borderWidth: 1,
@@ -945,6 +992,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   memeberListBtnUnselected: {
+    elevation: 0,
     marginRight: 12,
     marginTop: 12,
     borderWidth: 1,
@@ -957,6 +1005,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   dateListBtnSelected: {
+    elevation: 0,
     marginRight: 12,
     marginTop: 12,
     borderWidth: 1,
@@ -969,6 +1018,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   dateListBtnUnselected: {
+    elevation: 0,
     marginRight: 12,
     marginTop: 12,
     borderWidth: 1,
