@@ -38,7 +38,19 @@ import AsyncStorage from '@react-native-community/async-storage';
 const majorVersionIOS = parseInt(Platform.Version, 10);
 const dw = Dimensions.get('window').width;
 const dh = Dimensions.get('window').height;
-let tmpValue = ['new', 'ls', 'ls', 'ls', 'ls', 'ls', 'ls', 'ls', 'ls'];
+let tmpValue = [
+  'new',
+  'ls',
+  'ls',
+  'ls',
+  'ls',
+  'ls',
+  'ls',
+  'ls',
+  'ls',
+  'ls',
+  'ls',
+];
 let originValue = [];
 const _retrieveData = async () => {
   try {
@@ -163,7 +175,7 @@ const LoginScreen = ({navigation}) => {
   //   var response = await navigation.navigate('App');
   // };
   const kakaoLogin = () => {
-    logCallback('Login Start', setLoginLoading(true));
+    // logCallback('Login Start', setLoginLoading(true));
     KakaoLogins.login()
       .then(result => {
         logCallback(`Access Token is ${result.accessToken}`, null);

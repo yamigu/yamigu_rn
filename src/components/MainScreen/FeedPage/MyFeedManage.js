@@ -244,7 +244,7 @@ const MyFeedManage = ({navigation}) => {
                 <Image
                   style={styles.viewPage}
                   key="1"
-                  source={item.img_src === null ? null : {url: item.img_src}}
+                  source={item.img_src === null ? null : {uri: item.img_src}}
                 />
               </TouchableOpacity>
             );
