@@ -200,14 +200,12 @@ const MyFeedManage = ({navigation}) => {
             {feedDisplay === true ? (
               <AntDesignIcon
                 name="caretup"
-                color={palette.orange}
                 size={12}
                 style={{marginLeft: 5, color: palette.orange}}
               />
             ) : (
               <AntDesignIcon
                 name="caretdown"
-                color="#898989"
                 size={12}
                 style={{marginLeft: 5, color: palette.orange}}
               />

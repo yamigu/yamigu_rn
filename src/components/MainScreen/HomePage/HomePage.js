@@ -316,6 +316,7 @@ const HomePage = props => {
                 </CustomTextRegular>
               </View>
               <Button
+                transparent={true}
                 style={{
                   height: 30,
                   backgroundColor: '#F3F2F2',
@@ -985,6 +986,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
+    elevation: 0,
   },
   memberMainBtnUnselected: {
     elevation: 0,
@@ -996,6 +998,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
+    elevation: 0,
   },
   dateMainBtnSelected: {
     elevation: 0,
@@ -1033,6 +1036,7 @@ const styles = StyleSheet.create({
     width: 74,
     flexDirection: 'column',
     justifyContent: 'center',
+    elevation: 0,
   },
   memeberListBtnUnselected: {
     elevation: 0,
@@ -1046,6 +1050,7 @@ const styles = StyleSheet.create({
     width: 74,
     flexDirection: 'column',
     justifyContent: 'center',
+    elevation: 0,
   },
   dateListBtnSelected: {
     elevation: 0,

@@ -10,6 +10,7 @@ import {
   Modal,
   Alert,
   TouchableWithoutFeedback,
+  SafeAreaView,
 } from 'react-native';
 import {Button} from 'native-base';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
@@ -17,8 +18,8 @@ import palette from '~/lib/styles/palette';
 import TouchableByPlatform from './TouchableByPlatform';
 import ImagePicker from 'react-native-image-picker';
 import {CustomTextBold, CustomTextRegular} from './CustomText';
+import file_upload from '~/lib/utils/file_upload';
 import axios from 'axios';
-import {SafeAreaView} from 'react-navigation';
 
 const deviceWidth = Dimensions.get('window').width;
 const dw = Dimensions.get('window').width;
@@ -64,7 +65,11 @@ const ProfileImageAddView = ({image1, image2, image3, image4, image5}) => {
       } else if (response.customButton) {
         console.log('User tapped custom button: ', response.customButton);
       } else {
-        let source = {uri: response.uri};
+        let source = {
+          uri: response.uri,
+          name: response.fileName,
+          type: response.type,
+        };
         setImageSource(source);
         setModalVisible(true);
       }
@@ -83,7 +88,8 @@ const ProfileImageAddView = ({image1, image2, image3, image4, image5}) => {
         <SafeAreaView
           style={{
             height: '100%',
-            backgroundColor: 'rgba(0,0,0,0.5)',
+
+            backgroundColor: 'rgba(0,0,0,0.7)',
             flexDirection: 'column',
             justifyContent: 'flex-end',
           }}>
@@ -91,28 +97,32 @@ const ProfileImageAddView = ({image1, image2, image3, image4, image5}) => {
             <Button
               style={styles.modalButtonMultiple}
               onPress={() => {
-                setImageSource(null);
-                setModalVisible(false);
-                setProfileImageNum(profileImageNum + 1);
-
-                // Alert.alert(
-                //   'Alert Title',
-                //   'My Alert Msg',
-                //   [{text: 'OK', onPress: () => setModalVisible(false)}],
-                //   {cancelable: false},
-                // );
+                const formData = new FormData();
+                formData.append('image', {
+                  uri: imageSource.uri,
+                  type: imageSource.type,
+                  name: imageSource.name,
+                });
+                formData.append('number', '1');
+                file_upload(
+                  formData,
+                  'http://192.168.0.6:8000/authorization/user/profile_image/',
+                ).then(result => {
+                  setImageSource(null);
+                  setModalVisible(false);
+                  setProfileImageNum(profileImageNum + 1);
+                  // Alert.alert(
+                  //   'Alert Title',
+                  //   'My Alert Msg',
+                  //   [{text: 'OK', onPress: () => setModalVisible(false)}],
+                  //   {cancelable: false},
+                  // );
+                });
               }}>
               <CustomTextRegular size={17} color={palette.red}>
                 완료
               </CustomTextRegular>
             </Button>
-            <View
-              style={{
-                height: 1,
-                width: dw - 20,
-                backgroundColor: palette.black,
-              }}
-            />
           </View>
 
           <Button

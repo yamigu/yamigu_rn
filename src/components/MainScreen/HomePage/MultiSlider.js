@@ -12,7 +12,11 @@ import {
 
 // import DefaultMarker from './DefaultMarker';
 // import DefaultLabel from './DefaultLabel';
-import {createArray, valueToPosition, positionToValue} from './converters';
+import {
+  createArray,
+  valueToPosition,
+  positionToValue,
+} from '~/lib/utils/converters';
 
 export default class MultiSlider extends React.Component {
   static defaultProps = {

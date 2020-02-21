@@ -256,7 +256,7 @@ ProfileDetailScreen.navigationOptions = ({navigation}) => ({
   headerLeft: () => (
     <HeaderBackButton
       label=" "
-      tintColor="#FFFFFF"
+      tintColor="white"
       onPress={() => {
         navigation.goBack();
       }}
