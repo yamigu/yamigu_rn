@@ -56,7 +56,7 @@ const ProfileCard = ({
           }}>
           <View
             style={{
-              height: dh,
+              height: '100%',
               backgroundColor: 'rgba(0,0,0,0.7)',
               flexDirection: 'column',
               justifyContent: 'flex-end',
