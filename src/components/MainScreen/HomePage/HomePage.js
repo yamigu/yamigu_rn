@@ -275,15 +275,12 @@ const HomePage = props => {
                 </CustomTextRegular>
               </View>
               <Button
-<<<<<<< HEAD
                 transparent={true}
-=======
                 style={{
                   height: 30,
                   backgroundColor: '#F3F2F2',
                   elevation: 0,
                 }}
->>>>>>> 05b3c7d24149df04e48f05dbd9d07128a21fb9d8
                 onPress={() => {
                   console.log('완료눌림');
                   setMemberModalVisible(false);
@@ -306,15 +303,6 @@ const HomePage = props => {
               </Button>
             </View>
 
-<<<<<<< HEAD
-            <View name="인원선택list" style={styles.itemList}>
-              <Button
-                style={
-                  memberMainSelected === true
-                    ? styles.memberMainBtnSelected
-                    : styles.memberMainBtnUnselected
-                }
-=======
             <View name="택list" style={styles.itemList}>
               <View
                 style={{
@@ -322,7 +310,6 @@ const HomePage = props => {
                   justifyContent: 'space-between',
                 }}></View>
               <Button
->>>>>>> 05b3c7d24149df04e48f05dbd9d07128a21fb9d8
                 onPress={() => {
                   {
                     if (memberMainSelected === false) {
@@ -333,16 +320,12 @@ const HomePage = props => {
                       console.log('인원상관없음 눌림');
                     }
                   }
-<<<<<<< HEAD
-                }}>
-=======
                 }}
                 style={
                   memberMainSelected === true
                     ? styles.memberMainBtnSelected
                     : styles.memberMainBtnUnselected
                 }>
->>>>>>> 05b3c7d24149df04e48f05dbd9d07128a21fb9d8
                 <CustomTextRegular
                   size={12}
                   color={
@@ -361,14 +344,6 @@ const HomePage = props => {
                 {memberList.map((item, index) => {
                   return (
                     <Button
-<<<<<<< HEAD
-                      style={
-                        memberSelected[index] === true
-                          ? styles.memeberListBtnSelected
-                          : styles.memeberListBtnUnselected
-                      }
-=======
->>>>>>> 05b3c7d24149df04e48f05dbd9d07128a21fb9d8
                       onPress={() => {
                         console.log('pressed');
                         let tmpNo = memberItemNo;
@@ -387,16 +362,12 @@ const HomePage = props => {
                         tmp = memberSelected.slice();
                         tmp[index] = !memberSelected[index];
                         setMemberSelected(tmp);
-<<<<<<< HEAD
-                      }}>
-=======
                       }}
                       style={
                         memberSelected[index] === true
                           ? styles.memeberListBtnSelected
                           : styles.memeberListBtnUnselected
                       }>
->>>>>>> 05b3c7d24149df04e48f05dbd9d07128a21fb9d8
                       <CustomTextRegular
                         size={12}
                         color={

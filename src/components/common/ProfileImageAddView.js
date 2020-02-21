@@ -25,7 +25,7 @@ const dw = Dimensions.get('window').width;
 const dh = Dimensions.get('window').height;
 
 const ProfileImageAddView = ({image1, image2, image3, image4, image5}) => {
-  const [imageSource, setImageSource] = useState({});
+  const [imageSource, setImageSource] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [profileImageNum, setProfileImageNum] = useState(1);
 
