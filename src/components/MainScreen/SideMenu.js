@@ -180,7 +180,7 @@ const SideMenu = ({navigation}) => {
               )}
             </Body>
           </ListItem>
-          <TouchableByPlatform onPress={() => navigation.navigate('Store')}>
+          {/* <TouchableByPlatform onPress={() => navigation.navigate('Store')}>
             <ListItem icon noIndent style={styles.listItem}>
               <Left style={styles.listItemLeft}>
                 <Materialicon
@@ -204,7 +204,7 @@ const SideMenu = ({navigation}) => {
                 </CustomTextRegular>
               </Right>
             </ListItem>
-          </TouchableByPlatform>
+          </TouchableByPlatform> */}
           {/* <TouchableByPlatform onPress={() => navigation.navigate('Shield')}>
             <ListItem icon noIndent style={styles.listItem}>
               <Left style={styles.listItemLeft}>
@@ -276,6 +276,21 @@ const SideMenu = ({navigation}) => {
               <Body style={styles.listItemBody}>
                 <CustomTextRegular size={14} color={palette.black}>
                   1:1 질문하기
+                </CustomTextRegular>
+              </Body>
+              <Right style={styles.listItemRight}>
+                <Image
+                  style={styles.iconKakao}
+                  source={require('~/images/icon-kakao-with-bg.png')}
+                />
+              </Right>
+            </ListItem>
+          </TouchableByPlatform>
+          <TouchableByPlatform onPress={() => navigation.navigate('Login')}>
+            <ListItem noIndent style={styles.listItem}>
+              <Body style={styles.listItemBody}>
+                <CustomTextRegular size={14} color={palette.black}>
+                  로그인화면
                 </CustomTextRegular>
               </Body>
               <Right style={styles.listItemRight}>

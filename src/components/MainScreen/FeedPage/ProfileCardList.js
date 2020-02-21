@@ -1,45 +1,50 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {View} from 'react-native';
 import ProfileCardFeed from './ProfileCardFeed';
-const data = [
-  {
-    name: '또잉',
-    image: require('~/images/test-user-profile-1.png'),
-    background: require('~/images/test-user-profile-4.png'),
-    isUnread: true,
-  },
-  {
-    name: '뚜루뚜막뚜',
-    image: require('~/images/test-user-profile-2.png'),
-    background: require('~/images/test-user-profile-4.png'),
-    isUnread: true,
-  },
-  {
-    name: '꿈발라',
-    image: require('~/images/test-user-profile-3.png'),
-    background: require('~/images/test-user-profile-4.png'),
-    isUnread: false,
-  },
-  {
-    name: '요잇',
-    image: require('~/images/test-user-profile-4.png'),
-    background: require('~/images/test-user-profile-4.png'),
-    isUnread: false,
-  },
-  {
-    name: '요잇',
-    image: require('~/images/test-user-profile-4.png'),
-    background: require('~/images/test-user-profile-4.png'),
-    isUnread: false,
-  },
-];
+import axios from 'axios';
+import palette from '~/lib/styles/palette';
+import {CustomTextBold} from '~/components/common/CustomText';
 
-const ProfileCardList = ({navigation}) => (
-  <View>
-    {data.map(item => {
-      return <ProfileCardFeed navigation={navigation} />;
-    })}
-  </View>
-);
+const ProfileCardList = ({navigation}) => {
+  const [feedList, setFeedList] = useState([]);
+
+  let nowYear = 20200000;
+  useEffect(() => {
+    axios.get('http://13.124.126.30:8000/core/feeds/').then(result => {
+      let tmp = [];
+      let count = 0;
+      result.data.map((item, index) => {
+        if (item.feed_list === null) {
+          console.log('no feed : ' + item.nickname);
+        } else {
+          console.log('yes feed : ' + item.profile.nickname);
+          tmp[count] = item;
+          count++;
+        }
+      });
+      setFeedList(tmp);
+    });
+  }, []);
+  return (
+    <View>
+      {feedList.map(item => {
+        return (
+          <ProfileCardFeed
+            navigation={navigation}
+            uid={item.profile.uid}
+            nickname={item.profile.nickname}
+            avata={item.profile.avata}
+            age={Math.floor(
+              (nowYear - parseInt(item.profile.birthdate) + 20000) / 10000,
+            )}
+            belong={item.profile.belong}
+            department={item.profile.department}
+            feed_list={item.feed_list}
+          />
+        );
+      })}
+    </View>
+  );
+};
 
 export default ProfileCardList;

@@ -5,11 +5,7 @@ import {
   View,
   StyleSheet,
   Dimensions,
-  ImageBackground,
-  Modal,
   Alert,
-  Button,
-  TouchableWithoutFeedback,
   TouchableOpacity,
 } from 'react-native';
 import {
@@ -143,14 +139,23 @@ const styles = StyleSheet.create({
     height: 100,
   },
 });
-const ProfileCardFeed = ({navigation}) => {
+const ProfileCardFeed = ({
+  navigation,
+  uid,
+  nickname,
+  avata,
+  age,
+  belong,
+  department,
+  feed_list,
+}) => {
   const [liked, setLiked] = useState(false);
   const [hasChatting, setHasChatting] = useState(false);
 
   const _renderDotIndicator = () => {
     return (
       <PagerDotIndicator
-        pageCount={3}
+        pageCount={feed_list.length}
         dotStyle={styles.dot}
         selectedDotStyle={styles.selectedDot}
         style={styles.indicator}
@@ -159,25 +164,20 @@ const ProfileCardFeed = ({navigation}) => {
   };
   return (
     <View style={styles.container}>
-      <View>
-        <View style={styles.cardView}>
-          <ProfileCard
-            size={50}
-            fontSizes={[14, 12, 12]}
-            nickname="또잉또잉또잉"
-            image={require('~/images/test-user-profile-1.png')}
-            age={24}
-            belong="서울대"
-            department="자유전공학부"
-            location="서울"
-            rightComponent={
-              <Ionicon name="ios-more" size={26} color={palette.black} />
-            }
-          />
-          {/* <MeetingSettingPane data={data} /> */}
-        </View>
+      <View style={styles.cardView}>
+        <ProfileCard
+          size={50}
+          fontSizes={[14, 12, 12]}
+          nickname={nickname}
+          avata={avata === null ? null : {url: avata}}
+          age={age}
+          belong={belong}
+          department={department}
+          rightComponent={
+            <Ionicon name="ios-more" size={26} color={palette.black} />
+          }
+        />
       </View>
-
       {/* <TouchableByPlatform
         onPress={() => {
           // navigation.setParams('3'); signup screen.js 참고해서 page수 넘겨주기
@@ -186,17 +186,34 @@ const ProfileCardFeed = ({navigation}) => {
       <IndicatorViewPager
         style={styles.viewPager}
         indicator={_renderDotIndicator()}>
-        <TouchableOpacity
-          onPress={() => {
-            // navigation.setParams('3'); signup screen.js 참고해서 page수 넘겨주기
-            navigation.navigate('Profile');
-          }}>
-          <Image
-            style={styles.viewPage}
-            key="1"
-            source={require('~/images/test-user-profile-5.png')}
-          />
-        </TouchableOpacity>
+        {feed_list.map((item, index) => {
+          return (
+            <TouchableOpacity
+              onPress={() => {
+                // navigation.setParams({
+                //   nickname: nickname,
+                // });
+                navigation.navigate('Profile', {
+                  uid,
+                  nickname,
+                  avata,
+                  age,
+                  belong,
+                  department,
+                  feed_list,
+                });
+              }}>
+              <Image
+                style={styles.viewPage}
+                key={index}
+                source={item.img_src === null ? null : {url: item.img_src}}
+              />
+            </TouchableOpacity>
+          );
+        })}
+      </IndicatorViewPager>
+
+      {/* 
         <TouchableOpacity
           onPress={() => {
             // navigation.setParams('3'); signup screen.js 참고해서 page수 넘겨주기
@@ -205,7 +222,7 @@ const ProfileCardFeed = ({navigation}) => {
           <Image
             style={styles.viewPage}
             key="2"
-            source={require('~/images/test-user-profile-7.png')}
+            source={require('~/images/test-user-profile-girl.png')}
           />
         </TouchableOpacity>
         <TouchableOpacity
@@ -218,8 +235,7 @@ const ProfileCardFeed = ({navigation}) => {
             key="3"
             source={require('~/images/test-user-profile-8.png')}
           />
-        </TouchableOpacity>
-      </IndicatorViewPager>
+        </TouchableOpacity> */}
       {/* <ImageBackground
           style={styles.image}
           source={require('~/images/test-user-profile-5.png')}>
@@ -235,7 +251,6 @@ const ProfileCardFeed = ({navigation}) => {
           </CustomTextRegular>
         </ImageBackground> */}
       {/* </TouchableByPlatform> */}
-
       {/* <View style={styles.horizontalDivider} /> */}
       <View style={styles.actionDiv}>
         <TouchableByPlatform
@@ -258,7 +273,7 @@ const ProfileCardFeed = ({navigation}) => {
         <View style={styles.verticalDivider} />
         <TouchableByPlatform
           style={styles.touchable}
-          onPress={() => Alert.alert('대화 신청에는 야미3개가 소비됩니다! ')}>
+          onPress={() => Alert.alert('대화 서비스는 아직 준비중입니다! ')}>
           <View style={styles.button}>
             <Image
               source={require('~/images/chat-bubble2-outline.png')}

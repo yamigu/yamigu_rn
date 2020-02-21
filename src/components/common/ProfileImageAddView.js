@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   Text,
   View,
@@ -17,6 +17,7 @@ import palette from '~/lib/styles/palette';
 import TouchableByPlatform from './TouchableByPlatform';
 import ImagePicker from 'react-native-image-picker';
 import {CustomTextBold, CustomTextRegular} from './CustomText';
+import axios from 'axios';
 
 const deviceWidth = Dimensions.get('window').width;
 const dw = Dimensions.get('window').width;
@@ -27,6 +28,20 @@ const ProfileImageAddView = ({image1, image2, image3, image4, image5}) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [profileImageNum, setProfileImageNum] = useState(1);
 
+  useEffect(() => {
+    axios
+      .get('http://13.124.126.30:8000/authorization/user/profile_image/')
+      .then(result => {
+        let tmp = ['', '', '', '', ''];
+        result.data.map((item, index) => {
+          tmp[index] = item.src;
+        });
+        setPfImageList(tmp);
+        setProfileImageNum(result.data.length);
+      });
+  }, []);
+  const [pfImageList, setPfImageList] = useState([]);
+
   const selectPhotoTapped = () => {
     const options = {
       quality: 1.0,
@@ -36,6 +51,7 @@ const ProfileImageAddView = ({image1, image2, image3, image4, image5}) => {
         skipBackup: true,
       },
     };
+    console.log(pfImageList[0]);
 
     ImagePicker.showImagePicker(options, response => {
       console.log('Response = ', response);
@@ -114,11 +130,11 @@ const ProfileImageAddView = ({image1, image2, image3, image4, image5}) => {
 
       <View style={styles.buttonView}>
         <Button style={styles.mainButton} onPress={selectPhotoTapped}>
-          {image1 ? (
+          {pfImageList[0] ? (
             <TouchableByPlatform style={styles.mainButtonImageWrapper}>
               <Image
                 style={styles.mainButtonImage}
-                source={require('~/images/test-user-profile-5.png')}
+                source={{url: pfImageList[0]}}
               />
             </TouchableByPlatform>
           ) : (
@@ -139,10 +155,7 @@ const ProfileImageAddView = ({image1, image2, image3, image4, image5}) => {
           <View style={styles.rightButtonViewFirst}>
             <Button style={styles.button} onPress={selectPhotoTapped}>
               {profileImageNum > 1 ? (
-                <Image
-                  style={styles.fill}
-                  source={require('~/images/test-user-profile-girl.png')}
-                />
+                <Image style={styles.fill} source={{url: pfImageList[1]}} />
               ) : profileImageNum === 1 && imageSource !== null ? (
                 <Image style={styles.fill} source={imageSource} />
               ) : (
@@ -155,10 +168,7 @@ const ProfileImageAddView = ({image1, image2, image3, image4, image5}) => {
             </Button>
             <Button style={styles.button} onPress={selectPhotoTapped}>
               {profileImageNum > 2 ? (
-                <Image
-                  style={styles.fill}
-                  source={require('~/images/test-user-profile-girl.png')}
-                />
+                <Image style={styles.fill} source={{url: pfImageList[2]}} />
               ) : profileImageNum === 2 && imageSource !== null ? (
                 <Image style={styles.fill} source={imageSource} />
               ) : (
@@ -173,10 +183,7 @@ const ProfileImageAddView = ({image1, image2, image3, image4, image5}) => {
           <View style={styles.rightButtonViewSecond}>
             <Button style={styles.button} onPress={selectPhotoTapped}>
               {profileImageNum > 3 ? (
-                <Image
-                  style={styles.fill}
-                  source={require('~/images/test-user-profile-girl.png')}
-                />
+                <Image style={styles.fill} source={{url: pfImageList[3]}} />
               ) : profileImageNum === 3 && imageSource !== null ? (
                 <Image style={styles.fill} source={imageSource} />
               ) : (
@@ -194,7 +201,7 @@ const ProfileImageAddView = ({image1, image2, image3, image4, image5}) => {
                   source={require('~/images/test-user-profile-girl.png')}
                 />
               ) : profileImageNum === 4 && imageSource !== null ? (
-                <Image style={styles.fill} source={imageSource} />
+                <Image style={styles.fill} source={{url: pfImageList[4]}} />
               ) : (
                 <AntDesignIcon
                   name="plus"

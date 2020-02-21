@@ -19,10 +19,6 @@ import {
   CustomTextMedium,
 } from '~/components/common/CustomText';
 import palette from '~/lib/styles/palette';
-import {
-  IndicatorViewPager,
-  PagerDotIndicator,
-} from 'react-native-best-viewpager';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {SafeAreaView} from 'react-navigation';
 
@@ -35,6 +31,8 @@ import appleAuth, {
 import Navigation from '~/../Navigation';
 import {CommonActions} from '@react-navigation/native';
 import {HeaderBackButton} from 'react-navigation-stack';
+import utf8 from 'utf8';
+import {SampleConsumer} from '~/Context/Sample';
 
 const majorVersionIOS = parseInt(Platform.Version, 10);
 const dw = Dimensions.get('window').width;
@@ -88,7 +86,7 @@ const deviceWidth = Dimensions.get('window').width;
 
 const LoginScreen = ({navigation}) => {
   const [loginLoading, setLoginLoading] = useState(false);
-  const [token, setToken] = useState(TOKEN_EMPTY);
+  const [loginToken, setLoginToken] = useState(TOKEN_EMPTY);
 
   const onAppleButtonPress = async () => {
     console.log('onAppleButtonPress pressed');
@@ -113,11 +111,23 @@ const LoginScreen = ({navigation}) => {
     // use credentialState response to ensure the user is authenticated
     if (credentialState === AppleAuthCredentialState.AUTHORIZED) {
       // user is authenticated
-      console.log(appleAuthRequestResponse.identityToken);
+
+      axios
+        .post('http://13.124.126.30:8000/authorization/oauth/apple/', {
+          access_token: appleAuthRequestResponse.authorizationCode,
+          id_token: appleAuthRequestResponse.identityToken,
+        })
+        .then(result => {
+          console.log('data:::::::');
+          console.log(result.data);
+          setLoginToken(result.data.key);
+          axios.defaults.headers.common['Authorization'] =
+            'Token ' + result.data.key;
+        })
+        .then(() => navigation.navigate('Main'));
+
       console.log(appleAuthRequestResponse);
-      console.log('user authed');
-      navigation.navigate('Main');
-      // async_navigate();
+      // navigation.navigate('Main');
       Alert.alert('authed!');
     } else {
       console.log('user not auth');
@@ -132,22 +142,23 @@ const LoginScreen = ({navigation}) => {
       .then(result => {
         logCallback(`Access Token is ${result.accessToken}`, null);
         return axios.post(
-          'http://192.168.0.4:8000/authorization/oauth/kakao/',
+          'http://13.124.126.30:8000/authorization/oauth/kakao/',
           {
             access_token: result.accessToken,
           },
         );
       })
       .then(result => {
-        setToken(result.data.key);
+        setLoginToken(result.data.key);
+        axios.defaults.headers.common['Authorization'] =
+          'Token ' + result.data.key;
+        console.log('token : ' + result.data.key);
         logCallback(
           `Login Finished, Token is ${JSON.stringify(result.data.key)}`,
           setLoginLoading(false),
         );
-        navigation.navigate('App');
-        console.log('asd');
-        Alert.alert('asd');
       })
+      .then(() => navigation.navigate('Main'))
       .catch(err => {
         if (err.code === 'E_CANCELLED_OPERATION') {
           logCallback(`Login Cancelled:${err.message}`, setLoginLoading(false));

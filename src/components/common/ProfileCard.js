@@ -33,11 +33,10 @@ const ProfileCard = ({
   size,
   fontSizes,
   nickname,
-  image,
+  avata,
   age,
   belong,
   department,
-  location,
   rightComponent,
 }) => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -111,7 +110,7 @@ const ProfileCard = ({
               borderRadius: size / 2,
             }}
             source={
-              image ? image : require('~/images/user-default-profile.png')
+              avata ? avata : require('~/images/user-default-profile.png')
             }
           />
         </Left>
@@ -137,12 +136,12 @@ const ProfileCard = ({
             </View>
             <View style={styles.secondLine}>
               <CustomTextRegular size={fontSizes[2]} color={palette.sub}>
-                {belong} {department}, {location}
+                {belong} {department}
               </CustomTextRegular>
             </View>
           </View>
         </Body>
-        <Right
+        {/* <Right
           style={{
             borderBottomWidth: 0,
             height: '100%',
@@ -154,7 +153,7 @@ const ProfileCard = ({
           <TouchableByPlatform onPress={() => setModalVisible(true)}>
             {rightComponent}
           </TouchableByPlatform>
-        </Right>
+        </Right> */}
       </ListItem>
     </List>
   );

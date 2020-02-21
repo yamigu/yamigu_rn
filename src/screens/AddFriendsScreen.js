@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {Text, View, StyleSheet, Alert} from 'react-native';
 import {HeaderBackButton} from 'react-navigation-stack';
 import {
@@ -12,6 +12,7 @@ import Octionicon from 'react-native-vector-icons/Octicons';
 import {List, ListItem, Body, Right, Button, Content, Input} from 'native-base';
 import ProfileCard from '~/components/common/ProfileCard';
 import Spinner from 'react-native-loading-spinner-overlay';
+import axios from 'axios';
 
 const AddFriendsScreen = ({navigation}) => {
   const [inputValue, setInputValue] = useState('');
@@ -20,6 +21,16 @@ const AddFriendsScreen = ({navigation}) => {
     console.log(log);
     callback;
   };
+  useEffect(() => {
+    axios.get('http://13.124.126.30:8000/core/friend/').then(result => {
+      console.log(result.data);
+      setFriendList(result.data);
+    });
+  }, []);
+  const [friendList, setFriendList] = useState([]);
+
+  const nowYear = 20200000;
+  let tmpAge = 0;
 
   const [numOfFriends, setNumOfFriends] = useState(1);
   return (
@@ -64,12 +75,21 @@ const AddFriendsScreen = ({navigation}) => {
         style={styles.button}
         onPress={() => {
           logCallback('friend request started', setLoginLoading(true));
-          //api 기기
-          setTimeout(() => {
-            setLoginLoading(false);
-            Alert.alert('친구 신청이 완료되었습니다!');
-            setInputValue('');
-          }, 3000);
+          axios
+            .post('http://13.124.126.30:8000/core/friend/', {
+              phoneno: inputValue,
+            })
+            .then(result => {
+              if (result.data === 'successfully requested') {
+                setLoginLoading(false);
+                Alert.alert(
+                  '친구 신청이 완료되었습니다! 상대방이 수락을 하면 친구목록에 추가됩니다!',
+                );
+              } else {
+                console.log('오류로인해 실패하였습니다.');
+              }
+              setInputValue('');
+            });
         }}>
         <CustomTextMedium size={14} color="white">
           친구 등록하기
@@ -77,24 +97,51 @@ const AddFriendsScreen = ({navigation}) => {
       </Button>
       {numOfFriends > 0 ? (
         <List>
-          {frineds_list_data.map(friend => (
+          {friendList.map(friend => (
             <ListItem noIndent style={styles.friendsListItem}>
               <Body>
-                <ProfileCard
-                  size={50}
-                  fontSizes={[14, 12, 12]}
-                  nickname={friend.name}
-                  image={friend.image}
-                  age={friend.age}
-                  belong={friend.belong}
-                  department={friend.department}
-                  location={friend.location}
-                />
+                {friend.user_info === null ? (
+                  <ProfileCard
+                    size={50}
+                    fontSizes={[12, 0.1, 10]}
+                    nickname="친구 수락을 기다리는 중입니다."
+                    image=""
+                    age=""
+                    belong={friend.phoneno}
+                    department=""
+                  />
+                ) : friend.approved === false ? (
+                  <ProfileCard
+                    size={50}
+                    fontSizes={[14, 12, 12]}
+                    nickname={friend.user_info.nickname}
+                    image={friend.user_info.avata}
+                    age={Math.floor(
+                      (nowYear - parseInt(friend.user_info.birthdate) + 20000) /
+                        10000,
+                    )}
+                    belong={friend.user_info.belong}
+                    department={friend.user_info.department}
+                  />
+                ) : (
+                  <ProfileCard
+                    size={10}
+                    fontSizes={[14, 12, 12]}
+                    nickname="친구가 맞나요??"
+                    image={friend.user_info.avata}
+                    age={Math.floor(
+                      (nowYear - parseInt(friend.user_info.birthdate) + 20000) /
+                        10000,
+                    )}
+                    belong={friend.user_info.belong}
+                    department={friend.user_info.department}
+                  />
+                )}
               </Body>
               <Right>
-                {friend.accepted ? (
+                {friend.user_info === null ? (
                   <Octionicon name="x" style={styles.iconX} />
-                ) : (
+                ) : friend.you_sent !== true ? (
                   <View style={styles.notAccetedView}>
                     <Button style={styles.declineButton}>
                       <CustomTextRegular size={18} color={palette.gray}>
@@ -107,6 +154,8 @@ const AddFriendsScreen = ({navigation}) => {
                       </CustomTextRegular>
                     </Button>
                   </View>
+                ) : (
+                  <Octionicon name="x" style={styles.iconX} />
                 )}
               </Right>
             </ListItem>

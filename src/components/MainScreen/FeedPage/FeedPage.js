@@ -13,7 +13,7 @@ const FeedPage = props => (
         contentContainerStyle={styles.innerView}
         showsVerticalScrollIndicator={false}>
         <MyFeedManage navigation={props.navigation} />
-        <LikeMatchingList />
+        <LikeMatchingList navigation={props.navigation} />
         <ProfileCardList navigation={props.navigation} />
         <View style={styles.lastScroll} />
       </Content>

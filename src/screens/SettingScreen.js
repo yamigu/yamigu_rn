@@ -9,7 +9,33 @@ import palette from '~/lib/styles/palette';
 import {Content, List, ListItem, Body, Right} from 'native-base';
 import TouchableByPlatform from '~/components/common/TouchableByPlatform';
 
-const SettingScreen = ({params}) => {
+import appleAuth, {
+  AppleAuthRequestOperation,
+  AppleAuthCredentialState,
+} from '@invertase/react-native-apple-authentication';
+//for apple logout
+
+async function onLogout() {
+  // performs logout request
+  const appleAuthRequestResponse = await appleAuth.performRequest({
+    requestedOperation: AppleAuthRequestOperation.LOGOUT,
+  });
+
+  // get current authentication state for user
+  const credentialState = await appleAuth.getCredentialStateForUser(
+    appleAuthRequestResponse.user,
+  );
+
+  // use credentialState response to ensure the user credential's have been revoked
+  if (credentialState === AppleAuthCredentialState.REVOKED) {
+    // user is unauthenticated
+    console.log('un... auth');
+  } else {
+    console.log('auth..!?');
+  }
+}
+
+const SettingScreen = ({navigation}) => {
   const [toggleLike, setToggleLike] = useState(true);
   const [toggleLikeMatch, setToggleLikeMatch] = useState(true);
   const [toggleMeeting, setToggleMeeting] = useState(true);
@@ -144,13 +170,16 @@ const SettingScreen = ({params}) => {
                   '',
                   [
                     {
-                      text: '아니오',
-                      onPress: () => console.log('NOPE'),
+                      text: '네',
+                      onPress: () => {
+                        navigation.navigate('Main');
+                        onLogout();
+                        console.log('YES LOGOUT');
+                      },
                     },
                     {
-                      text: '네',
-                      onPress: () => console.log('YES LOGOUT'),
-                      style: 'cancel',
+                      text: '아니오',
+                      onPress: () => console.log('NOPE'),
                     },
                   ],
                   {cancelable: false},
@@ -171,13 +200,16 @@ const SettingScreen = ({params}) => {
                   '',
                   [
                     {
-                      text: '아니오',
-                      onPress: () => console.log('NOPE'),
+                      text: '네',
+                      onPress: () => {
+                        navigation.navigate('Main');
+                        onLogout();
+                        console.log('YES LOGOUT');
+                      },
                     },
                     {
-                      text: '네',
-                      onPress: () => console.log('YES TALTAE'),
-                      style: 'cancel',
+                      text: '아니오',
+                      onPress: () => console.log('NOPE'),
                     },
                   ],
                   {cancelable: false},
