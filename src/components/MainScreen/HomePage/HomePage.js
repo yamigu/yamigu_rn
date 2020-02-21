@@ -243,7 +243,8 @@ const HomePage = props => {
                   (복수 선택 가능)
                 </CustomTextRegular>
               </View>
-              <TouchableByPlatform
+              <Button
+                transparent={true}
                 onPress={() => {
                   setMemberModalVisible(false);
                   let tmpText = '';
@@ -262,11 +263,16 @@ const HomePage = props => {
                 <CustomTextMedium color={palette.orange} size={13}>
                   완료
                 </CustomTextMedium>
-              </TouchableByPlatform>
+              </Button>
             </View>
 
             <View name="인원선택list" style={styles.itemList}>
-              <TouchableByPlatform
+              <Button
+                style={
+                  memberMainSelected === true
+                    ? styles.memberMainBtnSelected
+                    : styles.memberMainBtnUnselected
+                }
                 onPress={() => {
                   {
                     if (memberMainSelected === false) {
@@ -276,23 +282,14 @@ const HomePage = props => {
                     } else null;
                   }
                 }}>
-                <Button
-                  style={
-                    memberMainSelected === true
-                      ? styles.memberMainBtnSelected
-                      : styles.memberMainBtnUnselected
+                <CustomTextRegular
+                  size={12}
+                  color={
+                    memberMainSelected === true ? palette.orange : palette.black
                   }>
-                  <CustomTextRegular
-                    size={12}
-                    color={
-                      memberMainSelected === true
-                        ? palette.orange
-                        : palette.black
-                    }>
-                    인원 상관 없음
-                  </CustomTextRegular>
-                </Button>
-              </TouchableByPlatform>
+                  인원 상관 없음
+                </CustomTextRegular>
+              </Button>
 
               <View
                 style={{
@@ -303,7 +300,12 @@ const HomePage = props => {
                 }}>
                 {memberList.map((item, index) => {
                   return (
-                    <TouchableByPlatform
+                    <Button
+                      style={
+                        memberSelected[index] === true
+                          ? styles.memeberListBtnSelected
+                          : styles.memeberListBtnUnselected
+                      }
                       onPress={() => {
                         let tmpNo = memberItemNo;
                         let tmp;
@@ -322,23 +324,16 @@ const HomePage = props => {
                         tmp[index] = !memberSelected[index];
                         setMemberSelected(tmp);
                       }}>
-                      <Button
-                        style={
+                      <CustomTextRegular
+                        size={12}
+                        color={
                           memberSelected[index] === true
-                            ? styles.memeberListBtnSelected
-                            : styles.memeberListBtnUnselected
+                            ? palette.orange
+                            : palette.black
                         }>
-                        <CustomTextRegular
-                          size={12}
-                          color={
-                            memberSelected[index] === true
-                              ? palette.orange
-                              : palette.black
-                          }>
-                          {item}
-                        </CustomTextRegular>
-                      </Button>
-                    </TouchableByPlatform>
+                        {item}
+                      </CustomTextRegular>
+                    </Button>
                   );
                 })}
               </View>
@@ -867,7 +862,6 @@ const styles = StyleSheet.create({
     margin: 0,
     flexDirection: 'column',
     width: dw * 0.93,
-    height: 40,
     backgroundColor: 'white',
   },
   memberMainBtnSelected: {
@@ -882,6 +876,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
+    elevation: 0,
   },
   memberMainBtnUnselected: {
     marginTop: 12,
@@ -892,6 +887,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
+    elevation: 0,
   },
   dateMainBtnSelected: {
     paddingHorizontal: 16,
@@ -927,6 +923,7 @@ const styles = StyleSheet.create({
     width: 74,
     flexDirection: 'column',
     justifyContent: 'center',
+    elevation: 0,
   },
   memeberListBtnUnselected: {
     marginRight: 12,
@@ -939,6 +936,7 @@ const styles = StyleSheet.create({
     width: 74,
     flexDirection: 'column',
     justifyContent: 'center',
+    elevation: 0,
   },
   dateListBtnSelected: {
     marginRight: 12,
