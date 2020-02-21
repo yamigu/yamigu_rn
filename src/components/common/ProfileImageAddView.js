@@ -10,6 +10,7 @@ import {
   Modal,
   Alert,
   TouchableWithoutFeedback,
+  SafeAreaView,
 } from 'react-native';
 import {Button} from 'native-base';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
@@ -84,10 +85,10 @@ const ProfileImageAddView = ({image1, image2, image3, image4, image5}) => {
         onRequestClose={() => {
           Alert.alert('Modal has been closed.');
         }}>
-        <View
+        <SafeAreaView
           style={{
-            height: dh,
-            backgroundColor: 'rgba(0,0,0,0.5)',
+            height: '100%',
+            backgroundColor: 'rgba(0,0,0,0.7)',
             flexDirection: 'column',
             justifyContent: 'flex-end',
           }}>
@@ -121,13 +122,6 @@ const ProfileImageAddView = ({image1, image2, image3, image4, image5}) => {
                 완료
               </CustomTextRegular>
             </Button>
-            <View
-              style={{
-                height: 1,
-                width: dw - 20,
-                backgroundColor: palette.black,
-              }}
-            />
           </View>
 
           <Button
@@ -140,7 +134,7 @@ const ProfileImageAddView = ({image1, image2, image3, image4, image5}) => {
               취소
             </CustomTextBold>
           </Button>
-        </View>
+        </SafeAreaView>
       </Modal>
       {/* modal end */}
 
