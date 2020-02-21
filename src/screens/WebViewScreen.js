@@ -14,7 +14,7 @@ const WebViewScreen = ({navigation}) => {
     if (checkString.indexOf(substring) > -1) {
       setVerifyFlag(1, console.log('flag : ' + verifyFlag));
       //set flag to 1 if verification successed
-      navigation.navigate('IV');
+      navigation.navigate('Main');
     }
   };
 

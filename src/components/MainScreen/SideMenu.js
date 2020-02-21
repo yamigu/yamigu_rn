@@ -1,3 +1,5 @@
+/* eslint-disable react/self-closing-comp */
+/* eslint-disable prettier/prettier */
 /* eslint-disable react-native/no-inline-styles */
 import React, {useState} from 'react';
 import {
@@ -31,15 +33,24 @@ import {CustomSwitch} from '../common/CustomSwtich';
 import TouchableByPlatform from '../common/TouchableByPlatform';
 import Navigation from '~/../Navigation';
 import {TouchableOpacity} from 'react-native-gesture-handler';
+import KakaoSDK from '@actbase/react-native-kakaosdk';
+
 const deviceWidth = Dimensions.get('window').width;
 const SideMenu = ({navigation}) => {
+  const gotoChat = () => {
+    console.log('sdk : ' + KakaoSDK.Channel.chat);
+    KakaoSDK.Channel.chat('_xjxamkT')
+      .then(res => console.log(res))
+      .catch(e => console.log(e));
+  };
+
   const [toggle, setToggle] = useState(false);
   const [numOfFreinds, setNumOfFriends] = useState(0);
   return (
     <SafeAreaView style={styles.root}>
       <Content showsVerticalScrollIndicator={false}>
         <View style={styles.profileView}>
-          <TouchableByPlatform onPress={() => navigation.navigate('Signup')}>
+          {/* <TouchableByPlatform onPress={() => navigation.navigate('Signup')}>
             <ImageBackground
               style={styles.profileBackground}
               source={require('~/images/profile-default-background.png')}>
@@ -51,7 +62,9 @@ const SideMenu = ({navigation}) => {
                 style={styles.icon}
               />
             </ImageBackground>
-          </TouchableByPlatform>
+          </TouchableByPlatform> */}
+          <View
+            style={{backgroundColor: palette.default_bg, height: 150}}></View>
           <View style={styles.thumbnailWrapper}>
             <TouchableByPlatform
               onPress={() => navigation.navigate('MyProfile')}>
@@ -79,7 +92,11 @@ const SideMenu = ({navigation}) => {
           </View>
         </View>
         <List style={styles.list}>
-          <TouchableByPlatform>
+          <TouchableByPlatform
+            onPress={() => {
+              navigation.navigate('BV');
+              console.log('goto BV');
+            }}>
             <ListItem icon noIndent style={styles.listItem}>
               <Left style={styles.listItemLeft}>
                 <Anticon
@@ -95,7 +112,9 @@ const SideMenu = ({navigation}) => {
               </Body>
             </ListItem>
           </TouchableByPlatform>
-          <TouchableByPlatform onPress={() => navigation.navigate('MyProfile')}>
+          <TouchableByPlatform
+            navigation={navigation}
+            onPress={() => navigation.navigate('MyProfile')}>
             <ListItem icon noIndent style={styles.listItem}>
               <Left style={styles.listItemLeft}>
                 <Anticon
@@ -161,7 +180,7 @@ const SideMenu = ({navigation}) => {
               )}
             </Body>
           </ListItem>
-          <TouchableByPlatform onPress={() => navigation.navigate('Store')}>
+          {/* <TouchableByPlatform onPress={() => navigation.navigate('Store')}>
             <ListItem icon noIndent style={styles.listItem}>
               <Left style={styles.listItemLeft}>
                 <Materialicon
@@ -185,8 +204,8 @@ const SideMenu = ({navigation}) => {
                 </CustomTextRegular>
               </Right>
             </ListItem>
-          </TouchableByPlatform>
-          <TouchableByPlatform onPress={() => navigation.navigate('Shield')}>
+          </TouchableByPlatform> */}
+          {/* <TouchableByPlatform onPress={() => navigation.navigate('Shield')}>
             <ListItem icon noIndent style={styles.listItem}>
               <Left style={styles.listItemLeft}>
                 <MaterialCommunityicon
@@ -201,7 +220,7 @@ const SideMenu = ({navigation}) => {
                 </CustomTextRegular>
               </Body>
             </ListItem>
-          </TouchableByPlatform>
+          </TouchableByPlatform> */}
           <ListItem
             button
             icon
@@ -243,7 +262,7 @@ const SideMenu = ({navigation}) => {
               더보기
             </CustomTextMedium>
           </ListItem>
-          <TouchableByPlatform>
+          <TouchableByPlatform onPress={() => navigation.navigate('Guide')}>
             <ListItem noIndent style={styles.listItem}>
               <Body style={styles.listItemBody}>
                 <CustomTextRegular size={14} color={palette.black}>
@@ -252,7 +271,7 @@ const SideMenu = ({navigation}) => {
               </Body>
             </ListItem>
           </TouchableByPlatform>
-          <TouchableByPlatform>
+          <TouchableByPlatform onPress={() => gotoChat()}>
             <ListItem noIndent style={styles.listItem}>
               <Body style={styles.listItemBody}>
                 <CustomTextRegular size={14} color={palette.black}>
@@ -267,7 +286,22 @@ const SideMenu = ({navigation}) => {
               </Right>
             </ListItem>
           </TouchableByPlatform>
-          <TouchableByPlatform>
+          <TouchableByPlatform onPress={() => navigation.navigate('Login')}>
+            <ListItem noIndent style={styles.listItem}>
+              <Body style={styles.listItemBody}>
+                <CustomTextRegular size={14} color={palette.black}>
+                  로그인화면
+                </CustomTextRegular>
+              </Body>
+              <Right style={styles.listItemRight}>
+                <Image
+                  style={styles.iconKakao}
+                  source={require('~/images/icon-kakao-with-bg.png')}
+                />
+              </Right>
+            </ListItem>
+          </TouchableByPlatform>
+          <TouchableByPlatform onPress={() => navigation.navigate('Notice')}>
             <ListItem noIndent style={styles.listItem}>
               <Body style={styles.listItemBody}>
                 <CustomTextRegular size={14} color={palette.black}>
@@ -291,11 +325,11 @@ const SideMenu = ({navigation}) => {
               정보
             </CustomTextMedium>
           </ListItem>
-          <TouchableByPlatform>
+          <TouchableByPlatform onPress={() => navigation.navigate('Signup')}>
             <ListItem noIndent style={styles.listItem}>
               <Body style={styles.listItemBody}>
                 <CustomTextRegular size={14} color={palette.black}>
-                  앱 버전
+                  앱 버전(임시 : 회원가입 스크린)
                 </CustomTextRegular>
               </Body>
               <Right style={styles.listItemRight}>
@@ -305,7 +339,7 @@ const SideMenu = ({navigation}) => {
               </Right>
             </ListItem>
           </TouchableByPlatform>
-          <TouchableByPlatform>
+          <TouchableByPlatform onPress={() => navigation.navigate('Privacy')}>
             <ListItem noIndent style={styles.listItem}>
               <Body style={styles.listItemBody}>
                 <CustomTextRegular size={14} color={palette.black}>
@@ -314,11 +348,11 @@ const SideMenu = ({navigation}) => {
               </Body>
             </ListItem>
           </TouchableByPlatform>
-          <TouchableByPlatform>
+          <TouchableByPlatform onPress={() => navigation.navigate('Terms')}>
             <ListItem noIndent style={styles.listItem}>
               <Body style={styles.listItemBody}>
                 <CustomTextRegular size={14} color={palette.black}>
-                  서비스 이용약관
+                  서비스 이용 약관
                 </CustomTextRegular>
               </Body>
             </ListItem>

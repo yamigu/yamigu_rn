@@ -9,6 +9,7 @@ import {
 } from '~/components/common/CustomText';
 import palette from '~/lib/styles/palette';
 import {WebView} from 'react-native-webview'; // for webview
+import {HeaderBackButton} from 'react-navigation-stack';
 
 // import TouchableByPlatform from '~/components/common/TouchableByPlatform';
 
@@ -43,6 +44,15 @@ const IVScreen = ({navigation}) => {
   );
 };
 IVScreen.navigationOptions = ({navigation}) => ({
+  headerLeft: () => (
+    <HeaderBackButton
+      label=" "
+      tintColor={palette.black}
+      onPress={() => {
+        navigation.goBack();
+      }}
+    />
+  ),
   headerTitle: () => (
     <>
       <CustomTextRegular>본인인증</CustomTextRegular>

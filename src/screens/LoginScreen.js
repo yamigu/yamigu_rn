@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   StyleSheet,
   Platform,
@@ -6,6 +6,7 @@ import {
   Image,
   Dimensions,
   ImageBackground,
+  Alert,
 } from 'react-native';
 import KakaoLoginButton from '~/components/LoginScreen/KakaoLoginButton';
 import AppleLoginButton from '~/components/LoginScreen/AppleLoginButton';
@@ -18,12 +19,41 @@ import {
   CustomTextMedium,
 } from '~/components/common/CustomText';
 import palette from '~/lib/styles/palette';
-import {
-  IndicatorViewPager,
-  PagerDotIndicator,
-} from 'react-native-best-viewpager';
 import {TouchableOpacity} from 'react-native-gesture-handler';
+import {SafeAreaView} from 'react-navigation';
 
+import appleAuth, {
+  AppleButton,
+  AppleAuthRequestOperation,
+  AppleAuthRequestScope,
+  AppleAuthCredentialState,
+} from '@invertase/react-native-apple-authentication';
+import Navigation from '~/../Navigation';
+import {CommonActions} from '@react-navigation/native';
+import {HeaderBackButton} from 'react-navigation-stack';
+import utf8 from 'utf8';
+import {SampleConsumer} from '~/Context/Sample';
+import AsyncStorage from '@react-native-community/async-storage';
+
+const majorVersionIOS = parseInt(Platform.Version, 10);
+const dw = Dimensions.get('window').width;
+const dh = Dimensions.get('window').height;
+let tmpValue = ['new', 'ls', 'ls', 'ls', 'ls', 'ls', 'ls', 'ls', 'ls'];
+let originValue = [];
+const _retrieveData = async () => {
+  try {
+    const value = await AsyncStorage.getItem('userInfo');
+    if (value !== null) {
+      // AsyncStorage.setItem('userInfo', JSON.stringify(tmpValue));
+      for (let i = 0; i < 9; i++) {
+        originValue[i] = value[i];
+      }
+      console.log(value);
+    }
+  } catch (error) {
+    // Error retrieving data
+  }
+};
 const ButtonContainerAndroid = ({kakaoLogin}) => {
   return (
     <View style={styles.buttonContainer}>
@@ -31,17 +61,31 @@ const ButtonContainerAndroid = ({kakaoLogin}) => {
     </View>
   );
 };
-const ButtonContainerApple = ({kakaoLogin}) => {
+const ButtonContainerApple = ({kakaoLogin, onAppleButtonPress}) => {
   return (
     <View style={styles.buttonContainer}>
-      <AppleLoginButton />
+      {/* <AppleButton
+        width={dw * 0.8}
+        height={50}
+        buttonStyle={AppleButton.Style.WHITE}
+        buttonType={AppleButton.Type.SIGN_IN}
+        onPress={onAppleButtonPress}
+      /> */}
+      {majorVersionIOS > 12 ? (
+        <AppleLoginButton onPress={onAppleButtonPress} />
+      ) : null}
       <KakaoLoginButton onPress={kakaoLogin} />
     </View>
   );
 };
 const ButtonContainerbyPlatform = Platform.select({
-  ios: ({kakaoLogin}) => {
-    return <ButtonContainerApple kakaoLogin={kakaoLogin} />;
+  ios: ({kakaoLogin, onAppleButtonPress}) => {
+    return (
+      <ButtonContainerApple
+        kakaoLogin={kakaoLogin}
+        onAppleButtonPress={onAppleButtonPress}
+      />
+    );
   },
   android: ({kakaoLogin}) => {
     return <ButtonContainerAndroid kakaoLogin={kakaoLogin} />;
@@ -57,28 +101,94 @@ const logCallback = (log, callback) => {
 const deviceWidth = Dimensions.get('window').width;
 
 const LoginScreen = ({navigation}) => {
+  useEffect(() => {
+    _retrieveData();
+    axios.defaults.headers.common['Authorization'] = '';
+    console.log(originValue);
+  }, []);
   const [loginLoading, setLoginLoading] = useState(false);
-  const [token, setToken] = useState(TOKEN_EMPTY);
+  const [loginToken, setLoginToken] = useState(TOKEN_EMPTY);
 
+  const onAppleButtonPress = async () => {
+    console.log('onAppleButtonPress pressed');
+    // performs login request
+    const appleAuthRequestResponse = await appleAuth.performRequest({
+      requestedOperation: AppleAuthRequestOperation.LOGIN,
+      requestedScopes: [
+        AppleAuthRequestScope.EMAIL,
+        AppleAuthRequestScope.FULL_NAME,
+      ],
+    });
+
+    // get current authentication state for user
+    const credentialState = await appleAuth.getCredentialStateForUser(
+      appleAuthRequestResponse.user,
+      () => {
+        console.log('check credentialState');
+      },
+    );
+    console.log('holy shit');
+
+    // use credentialState response to ensure the user is authenticated
+    if (credentialState === AppleAuthCredentialState.AUTHORIZED) {
+      // user is authenticated
+
+      axios
+        .post('http://13.124.126.30:8000/authorization/oauth/apple/', {
+          access_token: appleAuthRequestResponse.authorizationCode,
+          id_token: appleAuthRequestResponse.identityToken,
+        })
+        .then(result => {
+          console.log('data:::::::');
+          console.log(result.data);
+          setLoginToken(result.data.key);
+          axios.defaults.headers.common['Authorization'] =
+            'Token ' + result.data.key;
+          return result.data.key;
+        })
+        .then(key => {
+          tmpValue[0] = key;
+          AsyncStorage.setItem('userInfo', JSON.stringify(tmpValue));
+          navigation.navigate('Main');
+        });
+
+      console.log(appleAuthRequestResponse);
+      // navigation.navigate('Main');
+      Alert.alert('authed!');
+    } else {
+      console.log('user not auth');
+    }
+  };
+  // const async_navigate = async () => {
+  //   var response = await navigation.navigate('App');
+  // };
   const kakaoLogin = () => {
     logCallback('Login Start', setLoginLoading(true));
     KakaoLogins.login()
       .then(result => {
         logCallback(`Access Token is ${result.accessToken}`, null);
         return axios.post(
-          'http://192.168.0.4:8000/authorization/oauth/kakao/',
+          'http://13.124.126.30:8000/authorization/oauth/kakao/',
           {
             access_token: result.accessToken,
           },
         );
       })
       .then(result => {
-        setToken(result.data.key);
+        setLoginToken(result.data.key);
+        axios.defaults.headers.common['Authorization'] =
+          'Token ' + result.data.key;
+        console.log('token : ' + result.data.key);
         logCallback(
           `Login Finished, Token is ${JSON.stringify(result.data.key)}`,
           setLoginLoading(false),
         );
-        navigation.navigate('App');
+        return result.data.key;
+      })
+      .then(key => {
+        tmpValue[0] = key;
+        AsyncStorage.setItem('userInfo', JSON.stringify(tmpValue));
+        navigation.navigate('Main');
       })
       .catch(err => {
         if (err.code === 'E_CANCELLED_OPERATION') {
@@ -91,68 +201,73 @@ const LoginScreen = ({navigation}) => {
         }
       });
   };
-  const _renderDotIndicator = () => {
-    return (
-      <PagerDotIndicator
-        pageCount={3}
-        dotStyle={styles.dot}
-        selectedDotStyle={styles.selectedDot}
-      />
-    );
-  };
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.topContainer}>
-        <IndicatorViewPager
-          style={styles.viewPager}
-          indicator={_renderDotIndicator()}>
-          <Image
-            style={styles.viewPage}
-            key="1"
-            source={require('~/images/onboarding-screen-1.png')}
+    <SafeAreaView style={styles.root}>
+      <View style={styles.container}>
+        <View style={styles.topContainer}>
+          <CustomTextMedium size={20} color={palette.black}>
+            안녕하세요
+          </CustomTextMedium>
+          <CustomTextMedium size={20} color={palette.black}>
+            야미구 이용에 로그인이 필요합니다
+          </CustomTextMedium>
+
+          <Spinner
+            visible={loginLoading}
+            textContent={'Loading...'}
+            textStyle={styles.spinnerTextStyle}
           />
-          <Image
-            style={styles.viewPage}
-            key="2"
-            source={require('~/images/onboarding-screen-2.png')}
-          />
-          <Image
-            style={styles.viewPage}
-            key="3"
-            source={require('~/images/onboarding-screen-3.png')}
-          />
-        </IndicatorViewPager>
-        <Spinner
-          visible={loginLoading}
-          textContent={'Loading...'}
-          textStyle={styles.spinnerTextStyle}
-        />
-      </View>
-      <View style={styles.bottomContainer}>
-        <View style={styles.buttonContainerWrapper}>
-          <ButtonContainerbyPlatform kakaoLogin={kakaoLogin} />
         </View>
-        <View style={styles.policyContainer}>
-          <CustomTextRegular size={10}>로그인시 </CustomTextRegular>
-          <TouchableOpacity>
-            <CustomTextBold decoLine="underline" size={10}>
-              이용약관
-            </CustomTextBold>
-          </TouchableOpacity>
-          <CustomTextRegular size={10}> & </CustomTextRegular>
-          <TouchableOpacity>
-            <CustomTextBold decoLine="underline" size={10}>
-              개인정보 취급방침
-            </CustomTextBold>
-          </TouchableOpacity>
-          <CustomTextRegular size={10}>
-            에 동의한 것으로 간주합니다
-          </CustomTextRegular>
+        <View style={styles.bottomContainer}>
+          <View style={styles.buttonContainerWrapper}>
+            <ButtonContainerbyPlatform
+              kakaoLogin={kakaoLogin}
+              onAppleButtonPress={onAppleButtonPress}
+            />
+          </View>
+          <View style={styles.policyContainer}>
+            <CustomTextRegular size={10}>로그인시 </CustomTextRegular>
+            <TouchableOpacity>
+              <CustomTextBold decoLine="underline" size={10}>
+                이용약관
+              </CustomTextBold>
+            </TouchableOpacity>
+            <CustomTextRegular size={10}> & </CustomTextRegular>
+            <TouchableOpacity>
+              <CustomTextBold decoLine="underline" size={10}>
+                개인정보 취급방침
+              </CustomTextBold>
+            </TouchableOpacity>
+            <CustomTextRegular size={10}>
+              에 동의한 것으로 간주합니다
+            </CustomTextRegular>
+          </View>
         </View>
       </View>
     </SafeAreaView>
   );
 };
+
+LoginScreen.navigationOptions = ({navigation}) => ({
+  headerLeft: () => (
+    <HeaderBackButton
+      label=" "
+      tintColor={palette.black}
+      onPress={() => {
+        navigation.goBack();
+      }}
+    />
+  ),
+  headerTitle: () => (
+    <CustomTextMedium size={16} color={palette.black}>
+      로그인
+    </CustomTextMedium>
+  ),
+  headerStyle: {
+    backgroundColor: 'white',
+  },
+  headerTitleAlign: 'center',
+});
 
 const styles = StyleSheet.create({
   container: {
@@ -163,6 +278,8 @@ const styles = StyleSheet.create({
   topContainer: {
     flex: 1,
     justifyContent: 'flex-start',
+    marginTop: 30,
+    marginLeft: 18,
   },
   viewPager: {
     marginTop: 15,
@@ -202,6 +319,11 @@ const styles = StyleSheet.create({
   },
   spinnerTextStyle: {
     color: '#FFF',
+  },
+  root: {
+    flex: 1,
+    backgroundColor: palette.default_bg,
+    justifyContent: 'space-between',
   },
 });
 export default LoginScreen;

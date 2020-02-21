@@ -13,6 +13,7 @@ import ViewPager from '@react-native-community/viewpager';
 import {Button} from 'native-base';
 import {SafeAreaView} from 'react-navigation';
 import PersonalInfoPage from '~/components/SignupScreen/PersonalInfoPage';
+import IVScreen from './IVScreen';
 
 let global_viewPager;
 const SignupScreen = ({navigation}) => {
@@ -32,12 +33,18 @@ const SignupScreen = ({navigation}) => {
     go(page + delta);
   };
 
+  const gotoWebView = () => {
+    console.log('button clicked');
+    navigation.navigate('WebView');
+  };
+
   return (
     <SafeAreaView style={styles.root}>
       <ViewPager ref={viewPager} style={styles.viewPager} scrollEnabled={false}>
         <NicknamePage />
-        <PersonalInfoPage />
         <BelongPage />
+        <IVScreen />
+        {/* <BelongPage /> */}
         {/* <ImagePage /> */}
       </ViewPager>
       <View style={styles.bottomView}>
@@ -61,16 +68,35 @@ const SignupScreen = ({navigation}) => {
             </CustomTextRegular>
           </Button>
         ) : (
-          <Button
-            onPress={() => {
-              navigation.navigate('Main');
-              go(0);
-            }}
-            style={styles.button}>
-            <CustomTextRegular size={14} color="white">
-              야미구 시작하기
-            </CustomTextRegular>
-          </Button>
+          <View>
+            <Button
+              style={styles.button}
+              onPress={() => {
+                gotoWebView();
+                go(0);
+              }}>
+              <CustomTextMedium size={16} color="white">
+                본인인증 진행하기
+              </CustomTextMedium>
+            </Button>
+            <CustomTextMedium
+              size={12}
+              color={palette.gray}
+              style={styles.center}>
+              거짓된 정보 및 중복 가입을 방지 하기 위한 인증입니다.
+            </CustomTextMedium>
+
+            {/* <Button
+              onPress={() => {
+                navigation.navigate('Main');
+                go(0);
+              }}
+              style={styles.button}>
+              <CustomTextRegular size={14} color="white">
+                야미구 시작하기
+              </CustomTextRegular>
+            </Button> */}
+          </View>
         )}
       </View>
     </SafeAreaView>
@@ -81,6 +107,8 @@ SignupScreen.navigationOptions = ({navigation}) => ({
   headerLeft: () =>
     navigation.getParam('page', 0) > 0 ? (
       <HeaderBackButton
+        label=" "
+        tintColor={palette.black}
         onPress={() => {
           const page = navigation.getParam('page', 0);
           global_viewPager.current.setPage(page - 1);
@@ -138,6 +166,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     elevation: 0,
+  },
+  buttonLast: {
+    elevation: 0,
+    borderRadius: 5,
+    backgroundColor: '#60BAFF',
+    justifyContent: 'center',
   },
 });
 export default SignupScreen;

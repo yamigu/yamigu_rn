@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
-import React from 'react';
-import {Text, View, Image, StyleSheet, Dimensions} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {Text, View, Image, StyleSheet, Dimensions, Alert} from 'react-native';
 import TouchableByPlatform from '~/components/common/TouchableByPlatform';
 import {
   Icon,
@@ -12,28 +12,26 @@ import {
   Right,
   Body,
 } from 'native-base';
-import Ionicon from 'react-native-vector-icons/Ionicons';
-import palette from '~/lib/styles/palette';
-import {
-  CustomTextMedium,
-  CustomTextRegular,
-} from '~/components/common/CustomText';
-import ProfileCard from '~/components/common/ProfileCard';
 import {
   PagerDotIndicator,
   IndicatorViewPager,
 } from 'react-native-best-viewpager';
+import {
+  CustomTextMedium,
+  CustomTextRegular,
+} from '~/components/common/CustomText';
+import Ionicon from 'react-native-vector-icons/Ionicons';
+import palette from '~/lib/styles/palette';
+
+import ProfileCard from '~/components/common/ProfileCard';
+
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import MeetingSettingPane from '~/components/common/MeetingSettingPane';
 import {HeaderBackButton} from 'react-navigation-stack';
+import axios from 'axios';
+
 const deviceWidth = Dimensions.get('window').width;
-const meeting_setting_data = [
-  '2:2 미팅',
-  '3:3 미팅',
-  '4:4 미팅',
-  '날짜는 조율 가능해요',
-  '수도권',
-];
+
 const frineds_list_data = [
   {
     name: '상큼한 딸기',
@@ -68,11 +66,36 @@ const frineds_list_data = [
     image: require('~/images/test-user-profile-6.png'),
   },
 ];
-const ProfileDetailScreen = props => {
+const ProfileDetailScreen = ({navigation}) => {
+  const uid = navigation.getParam('uid');
+  const nickname = navigation.getParam('nickname');
+  const avata = navigation.getParam('avata');
+  const age = navigation.getParam('age');
+  const belong = navigation.getParam('belong');
+  const department = navigation.getParam('department');
+  const feed_list = navigation.getParam('feed_list');
+
+  // useEffect(() => {
+  //   axios
+  //     .get('http://13.124.126.30:8000/core/feed/' + uid + '/')
+  //     .then(result => {
+  //       let tmpFeed = [];
+  //       let count = 0;
+  //       result.data.map(item => {
+  //         tmpFeed[count] = item.img_src;
+  //         count++;
+  //       });
+  //       setDetailFeed(tmpFeed);
+  //     });
+  // }, []);
+  const [liked, setLiked] = useState(false);
+  const [hasChatting, setHasChatting] = useState(false);
+  const [detailFeed, setDetailFeed] = useState([]);
+
   const _renderDotIndicator = () => {
     return (
       <PagerDotIndicator
-        pageCount={3}
+        pageCount={feed_list.length}
         dotStyle={styles.dot}
         selectedDotStyle={styles.selectedDot}
         style={styles.indicator}
@@ -88,50 +111,55 @@ const ProfileDetailScreen = props => {
           <IndicatorViewPager
             style={styles.viewPager}
             indicator={_renderDotIndicator()}>
-            <Image
-              style={styles.viewPage}
-              key="1"
-              source={require('~/images/test-user-profile-5.png')}
-            />
-            <Image
-              style={styles.viewPage}
-              key="2"
-              source={require('~/images/test-user-profile-5.png')}
-            />
-            <Image
-              style={styles.viewPage}
-              key="3"
-              source={require('~/images/test-user-profile-5.png')}
-            />
+            {feed_list.map(item => {
+              return (
+                <Image
+                  style={styles.viewPage}
+                  key="1"
+                  source={{url: item.img_src}}
+                />
+              );
+            })}
           </IndicatorViewPager>
+
           <View style={styles.cardView}>
             <ProfileCard
               size={66}
               fontSizes={[16, 14, 14]}
-              nickname="또잉또잉또잉"
-              image={require('~/images/test-user-profile-1.png')}
-              age={24}
-              belong="서울대"
-              department="자유전공학부"
-              location="서울"
+              nickname={nickname}
+              image={{url: avata}}
+              age={age}
+              belong={belong}
+              department={department}
+              // location="서울"
             />
-            <MeetingSettingPane data={meeting_setting_data} />
+            {/* <MeetingSettingPane data={meeting_setting_data} /> */}
             <View style={styles.horizontalDivider} />
           </View>
           <View style={styles.actionView}>
-            <TouchableByPlatform style={styles.touchable}>
+            <TouchableByPlatform
+              style={styles.touchable}
+              onPress={() => setLiked(!liked)}>
               <View style={styles.button}>
-                <Ionicon name="ios-heart-empty" color="#898989" size={18} />
+                <Ionicon
+                  name="ios-heart-empty"
+                  size={18}
+                  color={liked === false ? '#898989' : palette.orange}
+                />
                 <CustomTextMedium
                   size={14}
-                  color={palette.sub}
+                  color={liked === false ? '#898989' : palette.orange}
                   style={{marginLeft: 4}}>
                   좋아요
                 </CustomTextMedium>
               </View>
             </TouchableByPlatform>
             <View style={styles.verticalDivider} />
-            <TouchableByPlatform style={styles.touchable}>
+            <TouchableByPlatform
+              style={styles.touchable}
+              onPress={() =>
+                Alert.alert('대화 신청에는 야미3개가 소비됩니다! ')
+              }>
               <View style={styles.button}>
                 <Image
                   source={require('~/images/chat-bubble2-outline.png')}
@@ -147,7 +175,7 @@ const ProfileDetailScreen = props => {
             </TouchableByPlatform>
           </View>
           <List style={styles.detailList}>
-            <ListItem noIndent style={styles.detailListItem}>
+            {/* <ListItem noIndent style={styles.detailListItem}>
               <Left>
                 <CustomTextRegular size={14} color={palette.black}>
                   지역
@@ -158,8 +186,8 @@ const ProfileDetailScreen = props => {
                   서울 관악구
                 </CustomTextRegular>
               </Right>
-            </ListItem>
-            <ListItem noIndent style={styles.detailListItem}>
+            </ListItem> */}
+            {/* <ListItem noIndent style={styles.detailListItem}>
               <Left>
                 <CustomTextRegular size={14} color={palette.black}>
                   키
@@ -170,7 +198,7 @@ const ProfileDetailScreen = props => {
                   182cm
                 </CustomTextRegular>
               </Right>
-            </ListItem>
+            </ListItem> */}
             <ListItem noIndent style={styles.detailListItem}>
               <Left>
                 <CustomTextRegular size={14} color={palette.black}>
@@ -226,7 +254,13 @@ const ProfileDetailScreen = props => {
 };
 ProfileDetailScreen.navigationOptions = ({navigation}) => ({
   headerLeft: () => (
-    <HeaderBackButton tintColor="white" onPress={() => navigation.goBack()} />
+    <HeaderBackButton
+      label=" "
+      tintColor="white"
+      onPress={() => {
+        navigation.goBack();
+      }}
+    />
   ),
   headerTitle: () => <View />,
   headerTransparent: true,

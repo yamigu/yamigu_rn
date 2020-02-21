@@ -14,7 +14,6 @@
 		2D02E4BC1E0B4A80006451C7 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		2D02E4BF1E0B4AB3006451C7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		2DCD954D1E0B4F2C00145EB5 /* yamiguTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* yamiguTests.m */; };
-		3F2CB62623E8506600D482C4 /* KakaoOpenSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3F2CB62523E8506600D482C4 /* KakaoOpenSDK.framework */; };
 		3F4E8F2123EAB1780038B220 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		3F4E8F2223EAB1790038B220 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		3F4E8F2323EAB2150038B220 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
@@ -60,6 +59,7 @@
 		2D02E47B1E0B4A5D006451C7 /* yamigu-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "yamigu-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D02E4901E0B4A5D006451C7 /* yamigu-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "yamigu-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		37337A5D0527A7193D61D026 /* Pods-yamigu-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-yamigu-tvOS.release.xcconfig"; path = "Target Support Files/Pods-yamigu-tvOS/Pods-yamigu-tvOS.release.xcconfig"; sourceTree = "<group>"; };
+		3F0937DA23FC329A00606791 /* yamigu.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = yamigu.entitlements; path = yamigu/yamigu.entitlements; sourceTree = "<group>"; };
 		3F2CB62523E8506600D482C4 /* KakaoOpenSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = KakaoOpenSDK.framework; sourceTree = "<group>"; };
 		3FE4BAFA23E9A45400511EED /* Fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Fonts; sourceTree = "<group>"; };
 		4177BE91C5DB5A56ED6FCCF1 /* Pods-yamigu-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-yamigu-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-yamigu-tvOS/Pods-yamigu-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
@@ -87,7 +87,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				C44EBEFC947EAE682CD3E87D /* libPods-yamigu.a in Frameworks */,
-				3F2CB62623E8506600D482C4 /* KakaoOpenSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -130,6 +129,7 @@
 		13B07FAE1A68108700A75B9A /* yamigu */ = {
 			isa = PBXGroup;
 			children = (
+				3F0937DA23FC329A00606791 /* yamigu.entitlements */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
@@ -686,6 +686,7 @@
 			baseConfigurationReference = 13D41D42114C50B31C559839 /* Pods-yamigu.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = yamigu/yamigu.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = 6Q5H8262SG;
@@ -712,6 +713,7 @@
 			baseConfigurationReference = 64133A8B5D5DF611DF362ABE /* Pods-yamigu.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = yamigu/yamigu.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 6Q5H8262SG;
 				FRAMEWORK_SEARCH_PATHS = (

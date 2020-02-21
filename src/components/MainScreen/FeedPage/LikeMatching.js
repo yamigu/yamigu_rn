@@ -1,16 +1,32 @@
-import React from 'react';
-import {View, StyleSheet, ImageBackground} from 'react-native';
+import React, {useState} from 'react';
+import {
+  View,
+  StyleSheet,
+  ImageBackground,
+  TouchableHighlight,
+  Modal,
+  Alert,
+  Text,
+  Dimensions,
+  TouchableWithoutFeedback,
+} from 'react-native';
 import {
   CustomTextMedium,
   CustomTextLight,
+  CustomTextBold,
+  CustomTextRegular,
 } from '~/components/common/CustomText';
 import palette from '~/lib/styles/palette';
 import TouchableByPlatform from '~/components/common/TouchableByPlatform';
+import {Button, Row} from 'native-base';
+
+const dh = Dimensions.get('window').height;
 
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     marginRight: 12,
+    paddingTop: 12,
   },
   wrapper: {
     width: 66,
@@ -40,12 +56,68 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  modalButton: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginBottom: 10,
+    marginHorizontal: 10,
+    borderRadius: 10,
+    backgroundColor: 'white',
+  },
 });
 const LikeMatching = () => {
+  const [modalVisible, setModalVisible] = useState(false);
+
   return (
     <View style={styles.container}>
+      <Modal
+        animationType="none"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          Alert.alert('Modal has been closed.');
+          setModalVisible(!modalVisible);
+        }}>
+        <TouchableWithoutFeedback
+          onPress={() => {
+            setModalVisible(false);
+            console.log('aa');
+          }}>
+          <View
+            style={{
+              height: dh,
+              backgroundColor: 'rgba(0,0,0,0.7)',
+              flexDirection: 'column',
+              justifyContent: 'flex-end',
+            }}>
+            <Button
+              style={styles.modalButton}
+              onPress={() => {
+                Alert.alert('피드를 삭제하시겠슴미까?');
+                setModalVisible(false);
+              }}>
+              <CustomTextRegular size={17} color={palette.red}>
+                삭제하기
+              </CustomTextRegular>
+            </Button>
+            <Button
+              style={styles.modalButton}
+              onPress={() => setModalVisible(!modalVisible)}>
+              <CustomTextBold size={17} color={palette.black}>
+                취소
+              </CustomTextBold>
+            </Button>
+          </View>
+        </TouchableWithoutFeedback>
+      </Modal>
+
       <View style={styles.wrapper}>
-        <TouchableByPlatform styles={styles.touchable}>
+        <TouchableByPlatform
+          styles={styles.touchable}
+          onPress={() => {
+            Alert.alert('날 좋아하는사람 16명 너도 언능 눌러라');
+            console.log('inin');
+          }}>
           <ImageBackground
             source={require('~/images/gold-inner-circle.png')}
             style={styles.innerBackground}>

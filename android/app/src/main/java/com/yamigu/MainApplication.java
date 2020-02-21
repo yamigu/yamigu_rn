@@ -18,6 +18,7 @@ import android.util.Log;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import com.rnfs.RNFSPackage; 
 
 public class MainApplication extends Application implements ReactApplication {
 
@@ -41,6 +42,7 @@ public class MainApplication extends Application implements ReactApplication {
         protected String getJSMainModuleName() {
           return "index";
         }
+
       };
 
   @Override

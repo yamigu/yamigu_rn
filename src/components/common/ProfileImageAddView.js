@@ -1,4 +1,5 @@
-import React from 'react';
+/* eslint-disable react-native/no-inline-styles */
+import React, {useState, useEffect} from 'react';
 import {
   Text,
   View,
@@ -6,70 +7,220 @@ import {
   Dimensions,
   Image,
   ImageBackground,
+  Modal,
+  Alert,
+  TouchableWithoutFeedback,
+  SafeAreaView,
 } from 'react-native';
 import {Button} from 'native-base';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 import palette from '~/lib/styles/palette';
 import TouchableByPlatform from './TouchableByPlatform';
-const deviceWidth = Dimensions.get('window').width;
+import ImagePicker from 'react-native-image-picker';
+import {CustomTextBold, CustomTextRegular} from './CustomText';
+import file_upload from '~/lib/utils/file_upload';
+import axios from 'axios';
 
-const ProfileImageAddView = ({image1}) => {
+const deviceWidth = Dimensions.get('window').width;
+const dw = Dimensions.get('window').width;
+const dh = Dimensions.get('window').height;
+
+const ProfileImageAddView = ({image1, image2, image3, image4, image5}) => {
+  const [imageSource, setImageSource] = useState(null);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [profileImageNum, setProfileImageNum] = useState(1);
+
+  useEffect(() => {
+    axios
+      .get('http://13.124.126.30:8000/authorization/user/profile_image/')
+      .then(result => {
+        let tmp = ['', '', '', '', ''];
+        result.data.map((item, index) => {
+          tmp[index] = item.src;
+        });
+        setPfImageList(tmp);
+        setProfileImageNum(result.data.length);
+      });
+  }, []);
+  const [pfImageList, setPfImageList] = useState([]);
+
+  const selectPhotoTapped = () => {
+    const options = {
+      quality: 1.0,
+      maxWidth: 500,
+      maxHeight: 500,
+      storageOptions: {
+        skipBackup: true,
+      },
+    };
+    console.log(pfImageList[0]);
+
+    ImagePicker.showImagePicker(options, response => {
+      console.log('Response = ', response);
+
+      if (response.didCancel) {
+        console.log('User cancelled photo picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else if (response.customButton) {
+        console.log('User tapped custom button: ', response.customButton);
+      } else {
+        let source = {
+          uri: response.uri,
+          name: response.fileName,
+          type: response.type,
+        };
+        setImageSource(source);
+        setModalVisible(true);
+      }
+    });
+  };
+
   return (
-    <View style={styles.buttonView}>
-      <Button style={styles.mainButton}>
-        {image1 ? (
-          <TouchableByPlatform style={styles.mainButtonImageWrapper}>
-            <Image
-              style={styles.mainButtonImage}
-              source={require('~/images/test-user-profile-5.png')}
-            />
-          </TouchableByPlatform>
-        ) : (
-          <View style={styles.plusIconView}>
-            <AntDesignIcon
-              name="plus"
-              size={((deviceWidth - 76) / 2) * 0.332}
-              color={palette.orange[0]}
-            />
+    <View>
+      <Modal
+        animationType="none"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          Alert.alert('Modal has been closed.');
+        }}>
+        <SafeAreaView
+          style={{
+            height: '100%',
+            backgroundColor: 'rgba(0,0,0,0.7)',
+            flexDirection: 'column',
+            justifyContent: 'flex-end',
+          }}>
+          <View style={styles.modalBtnContainer}>
+            <Button
+              style={styles.modalButtonMultiple}
+              onPress={() => {
+                const formData = new FormData();
+                formData.append('image', {
+                  uri: imageSource.uri,
+                  type: imageSource.type,
+                  name: imageSource.name,
+                });
+                formData.append('number', '1');
+                file_upload(
+                  formData,
+                  'http://192.168.0.6:8000/authorization/user/profile_image/',
+                ).then(result => {
+                  setImageSource(null);
+                  setModalVisible(false);
+                  setProfileImageNum(profileImageNum + 1);
+                  // Alert.alert(
+                  //   'Alert Title',
+                  //   'My Alert Msg',
+                  //   [{text: 'OK', onPress: () => setModalVisible(false)}],
+                  //   {cancelable: false},
+                  // );
+                });
+              }}>
+              <CustomTextRegular size={17} color={palette.red}>
+                완료
+              </CustomTextRegular>
+            </Button>
           </View>
-        )}
-        <Image
-          style={styles.mainButtonCameraIcon}
-          source={require('~/images/icon-camera-circle.png')}
-        />
-      </Button>
-      <View style={styles.rightButtonView}>
-        <View style={styles.rightButtonViewFirst}>
-          <Button style={styles.button}>
-            <AntDesignIcon
-              name="plus"
-              size={((deviceWidth - 76) / 2) * 0.468 * 0.332}
-              color={palette.orange[0]}
-            />
+
+          <Button
+            style={styles.modalButtonCancle}
+            onPress={() => {
+              setModalVisible(!modalVisible);
+              setImageSource(null);
+            }}>
+            <CustomTextBold size={17} color={palette.black}>
+              취소
+            </CustomTextBold>
           </Button>
-          <Button style={styles.button}>
-            <AntDesignIcon
-              name="plus"
-              size={((deviceWidth - 76) / 2) * 0.468 * 0.332}
-              color={palette.orange[0]}
-            />
-          </Button>
-        </View>
-        <View style={styles.rightButtonViewSecond}>
-          <Button style={styles.button}>
-            <AntDesignIcon
-              name="plus"
-              size={((deviceWidth - 76) / 2) * 0.468 * 0.332}
-              color={palette.orange[0]}
-            />
-          </Button>
-          <Button style={styles.button}>
-            <AntDesignIcon
-              name="plus"
-              size={((deviceWidth - 76) / 2) * 0.468 * 0.332}
-              color={palette.orange[0]}
-            />
-          </Button>
+        </SafeAreaView>
+      </Modal>
+      {/* modal end */}
+
+      <View style={styles.buttonView}>
+        <Button style={styles.mainButton} onPress={selectPhotoTapped}>
+          {pfImageList[0] ? (
+            <TouchableByPlatform style={styles.mainButtonImageWrapper}>
+              <Image
+                style={styles.mainButtonImage}
+                source={{url: pfImageList[0]}}
+              />
+            </TouchableByPlatform>
+          ) : (
+            <View style={styles.plusIconView}>
+              <AntDesignIcon
+                name="plus"
+                size={((deviceWidth - 76) / 2) * 0.332}
+                color={palette.orange[0]}
+              />
+            </View>
+          )}
+          <Image
+            style={styles.mainButtonCameraIcon}
+            source={require('~/images/icon-camera-circle.png')}
+          />
+        </Button>
+        <View style={styles.rightButtonView}>
+          <View style={styles.rightButtonViewFirst}>
+            <Button style={styles.button} onPress={selectPhotoTapped}>
+              {profileImageNum > 1 ? (
+                <Image style={styles.fill} source={{url: pfImageList[1]}} />
+              ) : profileImageNum === 1 && imageSource !== null ? (
+                <Image style={styles.fill} source={imageSource} />
+              ) : (
+                <AntDesignIcon
+                  name="plus"
+                  size={((deviceWidth - 76) / 2) * 0.468 * 0.332}
+                  color={palette.orange[0]}
+                />
+              )}
+            </Button>
+            <Button style={styles.button} onPress={selectPhotoTapped}>
+              {profileImageNum > 2 ? (
+                <Image style={styles.fill} source={{url: pfImageList[2]}} />
+              ) : profileImageNum === 2 && imageSource !== null ? (
+                <Image style={styles.fill} source={imageSource} />
+              ) : (
+                <AntDesignIcon
+                  name="plus"
+                  size={((deviceWidth - 76) / 2) * 0.468 * 0.332}
+                  color={palette.orange[0]}
+                />
+              )}
+            </Button>
+          </View>
+          <View style={styles.rightButtonViewSecond}>
+            <Button style={styles.button} onPress={selectPhotoTapped}>
+              {profileImageNum > 3 ? (
+                <Image style={styles.fill} source={{url: pfImageList[3]}} />
+              ) : profileImageNum === 3 && imageSource !== null ? (
+                <Image style={styles.fill} source={imageSource} />
+              ) : (
+                <AntDesignIcon
+                  name="plus"
+                  size={((deviceWidth - 76) / 2) * 0.468 * 0.332}
+                  color={palette.orange[0]}
+                />
+              )}
+            </Button>
+            <Button style={styles.button} onPress={selectPhotoTapped}>
+              {profileImageNum > 4 ? (
+                <Image
+                  style={styles.fill}
+                  source={require('~/images/test-user-profile-girl.png')}
+                />
+              ) : profileImageNum === 4 && imageSource !== null ? (
+                <Image style={styles.fill} source={{url: pfImageList[4]}} />
+              ) : (
+                <AntDesignIcon
+                  name="plus"
+                  size={((deviceWidth - 76) / 2) * 0.468 * 0.332}
+                  color={palette.orange[0]}
+                />
+              )}
+            </Button>
+          </View>
         </View>
       </View>
     </View>
@@ -144,11 +295,41 @@ const styles = StyleSheet.create({
     height: ((deviceWidth - 76) / 2) * 0.468,
     justifyContent: 'center',
     alignItems: 'center',
+    paddingTop: 0,
+    paddingBottom: 0,
     backgroundColor: '#ffffff00',
     borderColor: palette.orange[0],
     borderWidth: 0.5,
     borderRadius: 5,
     elevation: 0,
+  },
+
+  modalButtonCancle: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginBottom: 10,
+    marginHorizontal: 10,
+    borderRadius: 10,
+    backgroundColor: 'white',
+    height: 52,
+  },
+  modalButtonMultiple: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    borderRadius: 10,
+    backgroundColor: 'white',
+    elevation: 0,
+    height: 52,
+  },
+  modalBtnContainer: {
+    backgroundColor: 'white',
+    borderRadius: 10,
+    marginHorizontal: 10,
+    marginBottom: 10,
+  },
+  fill: {
+    width: '100%',
+    height: '100%',
   },
 });
 export default ProfileImageAddView;

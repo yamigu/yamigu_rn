@@ -1,17 +1,17 @@
+/* eslint-disable prettier/prettier */
 /* eslint-disable react-native/no-inline-styles */
 import React, {useState, useEffect} from 'react';
 import {
   StyleSheet,
   View,
-  Image,
   Dimensions,
   KeyboardAvoidingView,
-  FlatList,
   ScrollView,
-  findNodeHandle,
+  Platform,
+  Modal,
+  Alert,
+  TouchableWithoutFeedback,
 } from 'react-native';
-import AntDesignIcon from 'react-native-vector-icons/AntDesign';
-
 import {Container, Content, Icon, Text, List, Button, Input} from 'native-base';
 import Anticon from 'react-native-vector-icons/AntDesign';
 import palette from '~/lib/styles/palette';
@@ -22,12 +22,24 @@ import {HeaderBackButton} from 'react-navigation-stack';
 import {SafeAreaView} from 'react-navigation';
 import {createRef} from 'react';
 import {} from 'react-native-gesture-handler';
-import {CustomTextMedium} from '~/components/common/CustomText';
+import {
+  CustomTextMedium,
+  CustomTextBold,
+  CustomTextRegular,
+} from '~/components/common/CustomText';
 
 const deviceWidth = Dimensions.get('window').width;
 const buttonWidth = deviceWidth * 0.9;
+const dw = Dimensions.get('window').width;
+const dh = Dimensions.get('window').height;
+
+const pf = Platform.OS;
 
 const ChattingScreen = props => {
+  let keyboardPadding = 0;
+  if (pf === 'ios') keyboardPadding = 100;
+  else keyboardPadding = -400;
+
   const [toggle, setToggle] = useState(0);
   const changeView = () => {
     setToggle(0);
@@ -39,18 +51,20 @@ const ChattingScreen = props => {
 
   const gotoBot = () => {
     console.log('im  in');
+    console.log(pf);
     _scrollToBottomY.current.scrollToEnd();
   };
+  const [modalVisible, setModalVisible] = useState(false);
+
   //behavior : position ###
   return (
     <SafeAreaView style={styles.root}>
       <KeyboardAvoidingView
         style={styles.container}
-        behavior="position"
-        keyboardVerticalOffset={85}>
+        behavior="padding"
+        keyboardVerticalOffset={keyboardPadding}>
         <ScrollView
           bounces="false"
-          overScrollMode="never"
           ref={_scrollToBottomY}
           onContentSizeChange={() => {
             _scrollToBottomY.current.scrollToEnd();
@@ -87,25 +101,28 @@ const ChattingScreen = props => {
             </View>
           ) : (
             <View style={styles.bottomChatInput}>
-              <TouchableByPlatform>
+              {/* <TouchableByPlatform>
                 <Anticon
+                  title="chattingPicture"
                   name="pluscircle"
                   style={{color: palette.gray}}
                   size={deviceWidth * 0.07}
                 />
-              </TouchableByPlatform>
+              </TouchableByPlatform> */}
               <View
                 style={{
+                  marginVertical: 10,
+                  padding: 0,
                   backgroundColor: 'white',
-                  height: 32,
-                  width: deviceWidth * 0.72,
+                  height: 36,
+                  width: deviceWidth * 0.8,
                 }}>
                 <Input
                   placeholder=" 메세지를 입력하세요."
                   color="#eeeeee"
                   style={styles.messageInput}
                   onFocus={() => {
-                    gotoBot;
+                    gotoBot();
                   }}
                 />
               </View>
@@ -123,39 +140,42 @@ const ChattingScreen = props => {
     </SafeAreaView>
   );
 };
-ChattingScreen.navigationOptions = ({navigation}) => ({
-  headerLeft: () => (
-    <HeaderBackButton
-      label=" "
-      tintColor={palette.black}
-      onPress={() => {
-        navigation.goBack();
-      }}
-    />
-  ),
-  headerTitle: () => <CustomTextMedium>제이름은요</CustomTextMedium>,
-  headerRight: () => (
-    <TouchableByPlatform>
-      <Icon
-        name="more"
-        color={palette.black}
-        style={{
-          margin: 10,
+ChattingScreen.navigationOptions = ({navigation}) => {
+  return {
+    headerLeft: () => (
+      <HeaderBackButton
+        label=" "
+        tintColor={palette.black}
+        onPress={() => {
+          navigation.goBack();
         }}
       />
-    </TouchableByPlatform>
-  ),
-  headerMode: 'screen',
-  headerStyle: {
-    backgroundColor: 'white',
-  },
-  headerTitleAlign: 'center',
-});
+    ),
+    headerTitle: () => <CustomTextMedium>제이름은요</CustomTextMedium>,
+    headerRight: () => null,
+    // <TouchableByPlatform>
+    //   <Icon
+    //     name="more"
+    //     color={palette.black}
+    //     style={{
+    //       margin: 10,
+    //     }}
+    //   />
+    // </TouchableByPlatform>
+    headerMode: 'screen',
+    headerStyle: {
+      backgroundColor: 'white',
+    },
+    headerTitleAlign: 'center',
+  };
+};
 const styles = StyleSheet.create({
   root: {
     backgroundColor: palette.default_bg,
     flexDirection: 'column',
     justifyContent: 'space-between',
+    padding: 0,
+    margin: 0,
     flex: 1,
   },
   container: {
@@ -175,7 +195,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     backgroundColor: 'white',
-    height: 48,
+    height: 50,
+    marginTop: 10,
   },
   rightButtonViewSecond: {
     flexDirection: 'row',
@@ -187,6 +208,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'white',
   },
-  messageInput: {borderRadius: 10, backgroundColor: '#EEEEEE', fontSize: 14},
+  messageInput: {
+    borderRadius: 10,
+    backgroundColor: '#EEEEEE',
+    fontSize: 14,
+    padding: 0,
+    margin: 0,
+  },
 });
 export default ChattingScreen;

@@ -1,11 +1,12 @@
 /* eslint-disable react-native/no-inline-styles */
-import React from 'react';
+import React, {useState} from 'react';
 import {
   Image,
   View,
   StyleSheet,
   Dimensions,
-  ImageBackground,
+  Alert,
+  TouchableOpacity,
 } from 'react-native';
 import {
   CustomTextMedium,
@@ -14,35 +15,36 @@ import {
 } from '~/components/common/CustomText';
 import Ionicon from 'react-native-vector-icons/Ionicons';
 import palette from '~/lib/styles/palette';
-import RoundBorderTextView from '~/components/common/RoundBorderTextView';
 import TouchableByPlatform from '~/components/common/TouchableByPlatform';
-import LinearGradient from 'react-native-linear-gradient';
-import MeetingSettingPane from '~/components/common/MeetingSettingPane';
 import ProfileCard from '~/components/common/ProfileCard';
 
-const data = ['2:2 미팅', '3:3 미팅', '4:4 미팅', '날짜는 조율 가능해요'];
+import {
+  PagerDotIndicator,
+  IndicatorViewPager,
+} from 'react-native-best-viewpager';
+
+// const data = ['2:2 미팅', '3:3 미팅', '4:4 미팅', '날짜는 조율 가능해요'];
 
 const width = Dimensions.get('window').width;
+const dh = Dimensions.get('window').height;
 
 const styles = StyleSheet.create({
   container: {
-    width: width - 24,
+    width: width,
     justifyContent: 'center',
-    marginLeft: 12,
-    marginRight: 12,
     marginTop: 20,
     backgroundColor: 'white',
   },
   image: {
-    width: width - 24,
-    height: (width - 24) / 1.618,
+    width: width,
+    height: width / 1.618,
     resizeMode: 'cover',
     paddingLeft: 12,
     paddingTop: 14,
   },
   linearGradient: {
-    width: width - 24,
-    height: (width - 24) / 1.618 / 2,
+    width: width,
+    height: width / 1.618 / 2,
     position: 'absolute',
     top: 0,
   },
@@ -85,14 +87,14 @@ const styles = StyleSheet.create({
     backgroundColor: '#DDDDDD',
   },
   actionDiv: {
-    width: width - 24,
+    width: width,
     flex: 1,
     flexDirection: 'row',
     height: 46,
     alignItems: 'center',
   },
   touchable: {
-    width: (width - 24) / 2,
+    width: width / 2,
     height: 46,
     alignItems: 'center',
     justifyContent: 'center',
@@ -105,64 +107,185 @@ const styles = StyleSheet.create({
   cardView: {
     backgroundColor: 'white',
     padding: 12,
-    paddingBottom: 0,
+    paddingVertical: 10,
+  },
+  viewPage: {
+    width: '100%',
+    height: '100%',
+    resizeMode: 'cover',
+  },
+  viewPager: {
+    width: width,
+    height: width / 1.618,
+  },
+  selectedDot: {
+    backgroundColor: palette.orange[0],
+  },
+  indicator: {
+    width: width,
+    position: 'absolute',
+    top: width / 1.618 - 20,
+  },
+  modalButton: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginBottom: 10,
+    marginHorizontal: 10,
+    borderRadius: 10,
+    backgroundColor: 'white',
+  },
+  viewTouchable: {
+    width: 100,
+    height: 100,
   },
 });
-const ProfileCardFeed = ({navigation}) => (
-  <View style={styles.container}>
-    <TouchableByPlatform onPress={() => navigation.navigate('Profile')}>
-      <ImageBackground
-        style={styles.image}
-        source={require('~/images/test-user-profile-5.png')}>
-        <LinearGradient
-          colors={['#333333ff', '#ffffff00']}
-          style={styles.linearGradient}
-        />
-        <CustomTextMedium size={24} color="white">
-          고려대랑 미팅할래요?
-        </CustomTextMedium>
-        <CustomTextRegular size={12} color="white">
-          친구들과 새로운 친구들을 만나보세요
-        </CustomTextRegular>
-      </ImageBackground>
-    </TouchableByPlatform>
-    <View style={styles.cardView}>
-      <ProfileCard
-        size={50}
-        fontSizes={[14, 12, 12]}
-        nickname="또잉또잉또잉"
-        image={require('~/images/test-user-profile-1.png')}
-        age={24}
-        belong="서울대"
-        department="자유전공학부"
-        location="서울"
-      />
-      <MeetingSettingPane data={data} />
-    </View>
-    <View style={styles.horizontalDivider} />
-    <View style={styles.actionDiv}>
-      <TouchableByPlatform style={styles.touchable}>
-        <View style={styles.button}>
-          <Ionicon name="ios-heart-empty" color="#898989" size={18} />
-          <CustomTextMedium size={14} color="#898989" style={{marginLeft: 4}}>
-            좋아요
-          </CustomTextMedium>
-        </View>
-      </TouchableByPlatform>
-      <View style={styles.verticalDivider} />
-      <TouchableByPlatform style={styles.touchable}>
-        <View style={styles.button}>
-          <Image
-            source={require('~/images/chat-bubble2-outline.png')}
-            style={{height: 16, width: 16}}
-          />
-          <CustomTextMedium size={14} color="#898989" style={{marginLeft: 4}}>
-            미팅 신청
-          </CustomTextMedium>
-        </View>
-      </TouchableByPlatform>
-    </View>
-  </View>
-);
+const ProfileCardFeed = ({
+  navigation,
+  uid,
+  nickname,
+  avata,
+  age,
+  belong,
+  department,
+  feed_list,
+}) => {
+  const [liked, setLiked] = useState(false);
+  const [hasChatting, setHasChatting] = useState(false);
 
+  const _renderDotIndicator = () => {
+    return (
+      <PagerDotIndicator
+        pageCount={feed_list.length}
+        dotStyle={styles.dot}
+        selectedDotStyle={styles.selectedDot}
+        style={styles.indicator}
+      />
+    );
+  };
+  return (
+    <View style={styles.container}>
+      <View style={styles.cardView}>
+        <ProfileCard
+          size={50}
+          fontSizes={[14, 12, 12]}
+          nickname={nickname}
+          avata={avata === null ? null : {url: avata}}
+          age={age}
+          belong={belong}
+          department={department}
+          rightComponent={
+            <Ionicon name="ios-more" size={26} color={palette.black} />
+          }
+        />
+      </View>
+      {/* <TouchableByPlatform
+        onPress={() => {
+          // navigation.setParams('3'); signup screen.js 참고해서 page수 넘겨주기
+          navigation.navigate('Profile');
+        }}> */}
+      <IndicatorViewPager
+        style={styles.viewPager}
+        indicator={_renderDotIndicator()}>
+        {feed_list.map((item, index) => {
+          return (
+            <TouchableOpacity
+              onPress={() => {
+                // navigation.setParams({
+                //   nickname: nickname,
+                // });
+                navigation.navigate('Profile', {
+                  uid,
+                  nickname,
+                  avata,
+                  age,
+                  belong,
+                  department,
+                  feed_list,
+                });
+              }}>
+              <Image
+                style={styles.viewPage}
+                key={index}
+                source={item.img_src === null ? null : {url: item.img_src}}
+              />
+            </TouchableOpacity>
+          );
+        })}
+      </IndicatorViewPager>
+
+      {/* 
+        <TouchableOpacity
+          onPress={() => {
+            // navigation.setParams('3'); signup screen.js 참고해서 page수 넘겨주기
+            navigation.navigate('Profile');
+          }}>
+          <Image
+            style={styles.viewPage}
+            key="2"
+            source={require('~/images/test-user-profile-girl.png')}
+          />
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            // navigation.setParams('3'); signup screen.js 참고해서 page수 넘겨주기
+            navigation.navigate('Profile');
+          }}>
+          <Image
+            style={styles.viewPage}
+            key="3"
+            source={require('~/images/test-user-profile-8.png')}
+          />
+        </TouchableOpacity> */}
+      {/* <ImageBackground
+          style={styles.image}
+          source={require('~/images/test-user-profile-5.png')}>
+          <LinearGradient
+            colors={['#333333ff', '#ffffff00']}
+            style={styles.linearGradient}
+          />
+          <CustomTextMedium size={24} color="white">
+            고려대랑 미팅할래요?
+          </CustomTextMedium>
+          <CustomTextRegular size={12} color="white">
+            친구들과 새로운 친구들을 만나보세요
+          </CustomTextRegular>
+        </ImageBackground> */}
+      {/* </TouchableByPlatform> */}
+      {/* <View style={styles.horizontalDivider} /> */}
+      <View style={styles.actionDiv}>
+        <TouchableByPlatform
+          style={styles.touchable}
+          onPress={() => setLiked(!liked)}>
+          <View style={styles.button}>
+            <Ionicon
+              name="ios-heart-empty"
+              size={18}
+              color={liked === false ? '#898989' : palette.orange}
+            />
+            <CustomTextMedium
+              size={14}
+              color={liked === false ? '#898989' : palette.orange}
+              style={{marginLeft: 4}}>
+              좋아요
+            </CustomTextMedium>
+          </View>
+        </TouchableByPlatform>
+        <View style={styles.verticalDivider} />
+        <TouchableByPlatform
+          style={styles.touchable}
+          onPress={() => Alert.alert('대화 서비스는 아직 준비중입니다! ')}>
+          <View style={styles.button}>
+            <Image
+              source={require('~/images/chat-bubble2-outline.png')}
+              style={{height: 16, width: 16}}
+            />
+            <CustomTextMedium size={14} color="#898989" style={{marginLeft: 4}}>
+              미팅 신청
+            </CustomTextMedium>
+          </View>
+        </TouchableByPlatform>
+      </View>
+    </View>
+  );
+};
 export default ProfileCardFeed;

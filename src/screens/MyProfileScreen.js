@@ -1,24 +1,50 @@
-import React from 'react';
-import {Text, View, StyleSheet} from 'react-native';
+/* eslint-disable react-native/no-inline-styles */
+import React, {useState} from 'react';
+import {
+  Text,
+  View,
+  StyleSheet,
+  Modal,
+  Alert,
+  TouchableWithoutFeedback,
+  Dimensions,
+} from 'react-native';
 import {HeaderBackButton} from 'react-navigation-stack';
-import {CustomTextMedium} from '~/components/common/CustomText';
+import {
+  CustomTextMedium,
+  CustomTextRegular,
+  CustomTextBold,
+} from '~/components/common/CustomText';
 import palette from '~/lib/styles/palette';
 import ImageView from '~/components/MyProfileScreen/ImageView';
 import FriendsView from '~/components/MyProfileScreen/FriendsView';
+import MyFeedView from '~/components/MyProfileScreen/MyFeedView';
 import InfoView from '~/components/MyProfileScreen/InfoView';
-import {Content} from 'native-base';
+import {Content, Button} from 'native-base';
+import ImagePicker from 'react-native-image-picker';
 
-const MyProfileScreen = ({navigation}) => (
-  <Content showsVerticalScrollIndicator={false} style={styles.root}>
-    <ImageView />
-    <View style={styles.divider} />
-    <FriendsView navigation={navigation} />
-    <View style={styles.divider} />
-    <InfoView />
-  </Content>
-);
+const MyProfileScreen = ({navigation}) => {
+  return (
+    <Content showsVerticalScrollIndicator={false} style={styles.root}>
+      <ImageView />
+      <View style={styles.divider} />
+      <MyFeedView />
+      <FriendsView navigation={navigation} />
+      <View style={styles.divider} />
+      <InfoView navigation={navigation} />
+    </Content>
+  );
+};
 MyProfileScreen.navigationOptions = ({navigation}) => ({
-  headerLeft: () => <HeaderBackButton onPress={() => navigation.goBack()} />,
+  headerLeft: () => (
+    <HeaderBackButton
+      label=" "
+      tintColor={palette.black}
+      onPress={() => {
+        navigation.goBack();
+      }}
+    />
+  ),
   headerTitle: () => (
     <CustomTextMedium size={16} color={palette.black}>
       프로필 수정

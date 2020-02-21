@@ -107,9 +107,16 @@ Fontisto.ttf</string>
 		<string>Fonts/NotoSansCJKkr-Light.otf</string>
 		<string>Fonts/NotoSansMonoCJKkr-Bold.otf</string>
 		<string>Fonts/NotoSansMonoCJKkr-Regular.otf</string>
+		<string>Fonts/privacy.txt</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
+	<key>CFBundleGetInfoString</key>
+	<string>privacy.txt</string>
+	<key>CFAppleHelpAnchor</key>
+	<string>privacy.txt</string>
+	<key>ITSEncryptionExportComplianceCode</key>
+	<string></string>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
 		<string>armv7</string>
