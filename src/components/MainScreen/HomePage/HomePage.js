@@ -38,7 +38,7 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import {UserContextConsumer, UserContextProvider} from '~/Context/UserContext';
 import axios from 'axios';
 import AsyncStorage from '@react-native-community/async-storage';
-import {TouchableNativeFeedback} from 'react-native-gesture-handler';
+import {SafeAreaProvider} from 'react-native-safe-area-context';
 
 // import CustomLabel from './CustomLabel';
 
@@ -50,17 +50,15 @@ const logCallback = (log, callback) => {
   callback;
 };
 
-let newValue = ['new', 'new', 'new', 'asd', 'new', 'new', 'new', 'new', 'new'];
-
 const _retrieveData = async () => {
   try {
     const value = await AsyncStorage.getItem('userInfo');
+    const jValue = JSON.parse(value);
+    console.log(jValue);
+    console.log(jValue[0]);
+
     if (value !== null) {
-      for (let i = 0; i < 9; i++) {
-        newValue[i] = value[i];
-      }
-      // axios.defaults.headers.common['Authorization'] = 'Token ' + newValue[0];
-      console.log(value);
+      axios.defaults.headers.common['Authorization'] = 'Token ' + jValue[0];
     }
   } catch (error) {
     // Error retrieving data
@@ -68,20 +66,24 @@ const _retrieveData = async () => {
 };
 
 const HomePage = props => {
+  const [asyncValue, setAsyncValue] = useState([]);
+
   useEffect(() => {
     _retrieveData();
-    axios.get('http://13.124.126.30:8000/core/match_request/').then(result => {
-      console.log('homepage useEffect match_request');
-      setMatchRequested(result.data.matched_on);
-    });
+    // console.log(asyncValue);
+
+    // axios.get('http://13.124.126.30:8000/core/match_request/').then(result => {
+    //   console.log('homepage useEffect match_request');
+    //   setMatchRequested(result.data.matched_on);
+    // });
   }, []);
 
   const requestMatching = () => {
     logCallback('Login Start', setLoginLoading(true));
 
-    axios
-      .get('http://13.124.126.30:8000/core/match_request/')
-      .then(result => console.log(result.data));
+    axios.get('http://13.124.126.30:8000/core/match_request/');
+    // .then(result => console.log(result.data));
+
     setTimeout(() => {
       setLoginLoading(false);
       setMatchRequested(!matchRequested);
@@ -215,7 +217,7 @@ const HomePage = props => {
           setMemberText(tmpText);
           setMemberModalVisible(false);
         }}>
-        <SafeAreaView>
+        <SafeAreaProvider>
           <TouchableWithoutFeedback
             onPress={() => {
               setMemberModalVisible(false);
@@ -380,7 +382,7 @@ const HomePage = props => {
               </View>
             </View>
           </View>
-        </SafeAreaView>
+        </SafeAreaProvider>
       </Modal>
 
       <Modal
@@ -402,7 +404,7 @@ const HomePage = props => {
           setDateText(tmpText);
           setDateModalVisible(false);
         }}>
-        <SafeAreaView>
+        <SafeAreaProvider>
           <TouchableWithoutFeedback
             onPress={() => {
               setDateModalVisible(false);
@@ -570,7 +572,7 @@ const HomePage = props => {
               </View>
             </View>
           </View>
-        </SafeAreaView>
+        </SafeAreaProvider>
       </Modal>
 
       <Modal
@@ -580,7 +582,7 @@ const HomePage = props => {
         onRequestClose={() => {
           setAgeModalVisible(false);
         }}>
-        <SafeAreaView>
+        <SafeAreaProvider>
           <TouchableWithoutFeedback
             onPress={() => {
               setAgeModalVisible(false);
@@ -677,11 +679,11 @@ const HomePage = props => {
               {/* end of age module  */}
             </View>
           </View>
-        </SafeAreaView>
+        </SafeAreaProvider>
       </Modal>
 
       <View style={styles.topLayout}>
-        <CustomTextBold>{newValue[3]}</CustomTextBold>
+        <CustomTextBold>{}</CustomTextBold>
         <CustomTextBold size={24} color={palette.black}>
           미팅 주선
         </CustomTextBold>

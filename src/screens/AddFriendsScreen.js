@@ -22,7 +22,7 @@ const AddFriendsScreen = ({navigation}) => {
     callback;
   };
   useEffect(() => {
-    axios.get('http://13.124.126.30:8000/core/friend/').then(result => {
+    axios.get('http://13.124.126.30:8000/core/friends/').then(result => {
       console.log(result.data);
       setFriendList(result.data);
     });
@@ -67,7 +67,7 @@ const AddFriendsScreen = ({navigation}) => {
             Alert.alert('no string man');
             setInputValue('');
           } else {
-            setInputValue(item);
+            setInputValue(item.nativeEvent.text);
           }
         }}
       />
@@ -75,6 +75,9 @@ const AddFriendsScreen = ({navigation}) => {
         style={styles.button}
         onPress={() => {
           logCallback('friend request started', setLoginLoading(true));
+          console.log('inputValue');
+
+          console.log(inputValue);
           axios
             .post('http://13.124.126.30:8000/core/friend/', {
               phoneno: inputValue,
@@ -82,13 +85,15 @@ const AddFriendsScreen = ({navigation}) => {
             .then(result => {
               if (result.data === 'successfully requested') {
                 setLoginLoading(false);
-                Alert.alert(
-                  '친구 신청이 완료되었습니다! 상대방이 수락을 하면 친구목록에 추가됩니다!',
-                );
+                console.log('add friend successed.');
               } else {
-                console.log('오류로인해 실패하였습니다.');
+                console.log('add friend failed.');
               }
-              setInputValue('');
+            })
+            .then(() => axios.get('http://13.124.126.30:8000/core/friends/'))
+            .then(result => {
+              console.log(result.data);
+              setFriendList(result.data);
             });
         }}>
         <CustomTextMedium size={14} color="white">
@@ -100,46 +105,48 @@ const AddFriendsScreen = ({navigation}) => {
           {friendList.map(friend => (
             <ListItem noIndent style={styles.friendsListItem}>
               <Body>
-                {friend.user_info === null ? (
-                  <ProfileCard
-                    size={50}
-                    fontSizes={[12, 0.1, 10]}
-                    nickname="친구 수락을 기다리는 중입니다."
-                    image=""
-                    age=""
-                    belong={friend.phoneno}
-                    department=""
-                  />
-                ) : friend.approved === false ? (
+                {friend.approved === true ? (
                   <ProfileCard
                     size={50}
                     fontSizes={[14, 12, 12]}
                     nickname={friend.user_info.nickname}
-                    image={friend.user_info.avata}
+                    image={
+                      Object.keys(friend.user_info).length === 5
+                        ? null
+                        : friend.user_info.avata
+                    }
                     age={Math.floor(
                       (nowYear - parseInt(friend.user_info.birthdate) + 20000) /
                         10000,
                     )}
                     belong={friend.user_info.belong}
                     department={friend.user_info.department}
+                  />
+                ) : friend.you_sent === true ? (
+                  <ProfileCard
+                    size={50}
+                    fontSizes={[14, 0.1, 12]}
+                    nickname="상대방의 수락을 기다리는 중입니다."
+                    image={require('~/images/test-user-profile-girl.png')}
+                    age=""
+                    belong=""
+                    department={friend.phoneno}
                   />
                 ) : (
                   <ProfileCard
-                    size={10}
-                    fontSizes={[14, 12, 12]}
+                    size={50}
+                    fontSizes={[14, 0.1, 12]}
                     nickname="친구가 맞나요??"
-                    image={friend.user_info.avata}
-                    age={Math.floor(
-                      (nowYear - parseInt(friend.user_info.birthdate) + 20000) /
-                        10000,
-                    )}
-                    belong={friend.user_info.belong}
-                    department={friend.user_info.department}
+                    image={require('~/images/test-user-profile-girl.png')}
+                    age=""
+                    belong=""
+                    department={friend.phoneno}
                   />
                 )}
               </Body>
+
               <Right>
-                {friend.user_info === null ? (
+                {friend.approved === true ? (
                   <Octionicon name="x" style={styles.iconX} />
                 ) : friend.you_sent !== true ? (
                   <View style={styles.notAccetedView}>
