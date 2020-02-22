@@ -18,6 +18,7 @@ const ProfileCardList = ({navigation}) => {
           console.log('no feed : ' + item.nickname);
         } else {
           console.log('yes feed : ' + item.profile.nickname);
+          item.feed_list = item.feed_list.reverse();
           tmp[count] = item;
           count++;
         }

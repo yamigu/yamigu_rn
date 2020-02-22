@@ -17,6 +17,8 @@ import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 import palette from '~/lib/styles/palette';
 import TouchableByPlatform from './TouchableByPlatform';
 import ImagePicker from 'react-native-image-picker';
+import Spinner from 'react-native-loading-spinner-overlay';
+
 import {CustomTextBold, CustomTextRegular} from './CustomText';
 import file_upload from '~/lib/utils/file_upload';
 import axios from 'axios';
@@ -24,27 +26,54 @@ import axios from 'axios';
 const deviceWidth = Dimensions.get('window').width;
 const dw = Dimensions.get('window').width;
 const dh = Dimensions.get('window').height;
-
+const temp_init_data = [
+  {
+    src: null,
+    number: 1,
+  },
+  {
+    src: null,
+    number: 2,
+  },
+  {
+    src: null,
+    number: 3,
+  },
+  {
+    src: null,
+    number: 4,
+  },
+  {
+    src: null,
+    number: 5,
+  },
+];
 const ProfileImageAddView = ({image1, image2, image3, image4, image5}) => {
   const [imageSource, setImageSource] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
-  const [profileImageNum, setProfileImageNum] = useState(1);
+  const [pfImageList, setPfImageList] = useState(temp_init_data);
+  const [pfImageTempList, setPfImageTempList] = useState(temp_init_data);
+  const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
-    axios
-      .get('http://13.124.126.30:8000/authorization/user/profile_image/')
-      .then(result => {
-        let tmp = ['', '', '', '', ''];
-        result.data.map((item, index) => {
-          tmp[index] = item.src;
-        });
-        setPfImageList(tmp);
-        setProfileImageNum(result.data.length);
+    axios({
+      url: 'http://13.124.126.30:8000/authorization/user/profile_image/',
+      method: 'GET',
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        Authorization: 'Token ' + 'fe917733867cf9cf05937e7a7ac1a67247e873b1',
+      },
+    }).then(result => {
+      console.log(result.data);
+      let tmp = ['', '', '', '', ''];
+      result.data.map((item, index) => {
+        tmp[index] = item.src;
       });
+      setPfImageList(result.data);
+    });
   }, []);
-  const [pfImageList, setPfImageList] = useState([]);
 
-  const selectPhotoTapped = () => {
+  const selectPhotoTapped = number => {
     const options = {
       quality: 1.0,
       maxWidth: 500,
@@ -69,8 +98,12 @@ const ProfileImageAddView = ({image1, image2, image3, image4, image5}) => {
           uri: response.uri,
           name: response.fileName,
           type: response.type,
+          number: number,
         };
+        let temp = pfImageTempList.slice();
+        temp[number - 1].src = source.uri;
         setImageSource(source);
+        setPfImageTempList(temp);
         setModalVisible(true);
       }
     });
@@ -78,6 +111,11 @@ const ProfileImageAddView = ({image1, image2, image3, image4, image5}) => {
 
   return (
     <View>
+      <Spinner
+        visible={uploading}
+        textContent={'Uploading...'}
+        textStyle={styles.spinnerTextStyle}
+      />
       <Modal
         animationType="none"
         transparent={true}
@@ -97,20 +135,24 @@ const ProfileImageAddView = ({image1, image2, image3, image4, image5}) => {
             <Button
               style={styles.modalButtonMultiple}
               onPress={() => {
+                setUploading(true);
                 const formData = new FormData();
                 formData.append('image', {
                   uri: imageSource.uri,
                   type: imageSource.type,
                   name: imageSource.name,
                 });
-                formData.append('number', '1');
+                formData.append('number', imageSource.number);
                 file_upload(
                   formData,
-                  'http://192.168.0.6:8000/authorization/user/profile_image/',
+                  'http://13.124.126.30:8000/authorization/user/profile_image/',
                 ).then(result => {
-                  setImageSource(null);
+                  setUploading(false);
+                  let temp = pfImageList.slice();
+                  temp[result.data.number - 1] = result.data;
+                  setPfImageList(temp);
+                  setPfImageTempList(temp_init_data);
                   setModalVisible(false);
-                  setProfileImageNum(profileImageNum + 1);
                   // Alert.alert(
                   //   'Alert Title',
                   //   'My Alert Msg',
@@ -129,7 +171,7 @@ const ProfileImageAddView = ({image1, image2, image3, image4, image5}) => {
             style={styles.modalButtonCancle}
             onPress={() => {
               setModalVisible(!modalVisible);
-              setImageSource(null);
+              setPfImageTempList(temp_init_data);
             }}>
             <CustomTextBold size={17} color={palette.black}>
               취소
@@ -140,12 +182,14 @@ const ProfileImageAddView = ({image1, image2, image3, image4, image5}) => {
       {/* modal end */}
 
       <View style={styles.buttonView}>
-        <Button style={styles.mainButton} onPress={selectPhotoTapped}>
-          {pfImageList[0] ? (
+        <Button style={styles.mainButton} onPress={() => selectPhotoTapped(1)}>
+          {pfImageTempList[0].src !== null ? (
+            <Image style={styles.fill} source={{uri: pfImageTempList[0].src}} />
+          ) : pfImageList[0].src !== null ? (
             <TouchableByPlatform style={styles.mainButtonImageWrapper}>
               <Image
                 style={styles.mainButtonImage}
-                source={{uri: pfImageList[0]}}
+                source={{uri: pfImageList[0].src}}
               />
             </TouchableByPlatform>
           ) : (
@@ -164,11 +208,14 @@ const ProfileImageAddView = ({image1, image2, image3, image4, image5}) => {
         </Button>
         <View style={styles.rightButtonView}>
           <View style={styles.rightButtonViewFirst}>
-            <Button style={styles.button} onPress={selectPhotoTapped}>
-              {profileImageNum > 1 ? (
-                <Image style={styles.fill} source={{uri: pfImageList[1]}} />
-              ) : profileImageNum === 1 && imageSource !== null ? (
-                <Image style={styles.fill} source={imageSource} />
+            <Button style={styles.button} onPress={() => selectPhotoTapped(2)}>
+              {pfImageTempList[1].src !== null ? (
+                <Image
+                  style={styles.fill}
+                  source={{uri: pfImageTempList[1].src}}
+                />
+              ) : pfImageList[1].src !== null ? (
+                <Image style={styles.fill} source={{uri: pfImageList[1].src}} />
               ) : (
                 <AntDesignIcon
                   name="plus"
@@ -177,11 +224,14 @@ const ProfileImageAddView = ({image1, image2, image3, image4, image5}) => {
                 />
               )}
             </Button>
-            <Button style={styles.button} onPress={selectPhotoTapped}>
-              {profileImageNum > 2 ? (
-                <Image style={styles.fill} source={{uri: pfImageList[2]}} />
-              ) : profileImageNum === 2 && imageSource !== null ? (
-                <Image style={styles.fill} source={imageSource} />
+            <Button style={styles.button} onPress={() => selectPhotoTapped(3)}>
+              {pfImageTempList[2].src !== null ? (
+                <Image
+                  style={styles.fill}
+                  source={{uri: pfImageTempList[2].src}}
+                />
+              ) : pfImageList[2].src !== null ? (
+                <Image style={styles.fill} source={{uri: pfImageList[2].src}} />
               ) : (
                 <AntDesignIcon
                   name="plus"
@@ -192,11 +242,14 @@ const ProfileImageAddView = ({image1, image2, image3, image4, image5}) => {
             </Button>
           </View>
           <View style={styles.rightButtonViewSecond}>
-            <Button style={styles.button} onPress={selectPhotoTapped}>
-              {profileImageNum > 3 ? (
-                <Image style={styles.fill} source={{uri: pfImageList[3]}} />
-              ) : profileImageNum === 3 && imageSource !== null ? (
-                <Image style={styles.fill} source={imageSource} />
+            <Button style={styles.button} onPress={() => selectPhotoTapped(4)}>
+              {pfImageTempList[3].src !== null ? (
+                <Image
+                  style={styles.fill}
+                  source={{uri: pfImageTempList[3].src}}
+                />
+              ) : pfImageList[3].src !== null ? (
+                <Image style={styles.fill} source={{uri: pfImageList[3].src}} />
               ) : (
                 <AntDesignIcon
                   name="plus"
@@ -205,14 +258,14 @@ const ProfileImageAddView = ({image1, image2, image3, image4, image5}) => {
                 />
               )}
             </Button>
-            <Button style={styles.button} onPress={selectPhotoTapped}>
-              {profileImageNum > 4 ? (
+            <Button style={styles.button} onPress={() => selectPhotoTapped(5)}>
+              {pfImageTempList[4].src !== null ? (
                 <Image
                   style={styles.fill}
-                  source={require('~/images/test-user-profile-girl.png')}
+                  source={{uri: pfImageTempList[4].src}}
                 />
-              ) : profileImageNum === 4 && imageSource !== null ? (
-                <Image style={styles.fill} source={{uri: pfImageList[4]}} />
+              ) : pfImageList[4].src !== null ? (
+                <Image style={styles.fill} source={{uri: pfImageList[4].src}} />
               ) : (
                 <AntDesignIcon
                   name="plus"
