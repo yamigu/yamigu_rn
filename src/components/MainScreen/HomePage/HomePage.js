@@ -67,6 +67,7 @@ let initUserValue = [
 const HomePage = ({navigation}) => {
   const [asyncValue, setAsyncValue] = useState([]);
   const [tmpSt, setTmpSt] = useState('');
+  const [matchRequested, setMatchRequested] = useState(false);
 
   const _retrieveData = async () => {
     // axios.defaults.headers.common['Authorization'] = '';
@@ -76,188 +77,39 @@ const HomePage = ({navigation}) => {
       const userValue = await AsyncStorage.getItem('userValue');
       const jUserValue = JSON.parse(userValue);
       if (userValue !== null) {
-        setAsyncValue(jUserValue);
-        console.log('uservalue not null');
+        // console.log('uservalue not null');
         if (userValue.token === 'token') {
-          console.log('token not set yet.');
+          // console.log('token not set yet.');
         } else {
-          console.log('token is set' + jUserValue[0]);
+          // console.log('token is set' + jUserValue[0]);
           axios.defaults.headers.common['Authorization'] =
             'Token ' + jUserValue[0];
-          // nickname,  등 userinfo 불러와서 async에 저장하기, null이면 안하고
+          axios
+            .get('http://13.124.126.30:8000/authorization/user/info/')
+            .then(result => {
+              // console.log(result.data.uid);
+              if (result.data.uid !== 'uid') jUserValue[1] = result.data.uid;
+              if (result.data.nickname !== 'nickname')
+                jUserValue[2] = result.data.nickname;
+              if (result.data.avata !== 'avata')
+                jUserValue[3] = result.data.avata;
+              if (result.data.birthdate !== 'birhdate')
+                jUserValue[4] = result.data.birthdate;
+              if (result.data.belong !== 'belong')
+                jUserValue[5] = result.data.belong;
+              if (result.data.department !== 'department')
+                jUserValue[6] = result.data.department;
+            })
+            .then(() => setAsyncValue(jUserValue));
         }
       } else {
         console.log('first user, async init');
       }
-      console.log(jUserValue);
-
-      // const value = await AsyncStorage.getItem('');
-      // const jValue = JSON.parse(value);
-      // setAsyncValue(jValue);
-      // // console.log('hererererer');
-
-      // if (value !== null) {
-      //   axios.defaults.headers.common['Authorization'] = 'Token ' + jValue[0];
-      //   setHeader('Token ' + jValue[0]);
-      // } else {
-      //   console.log('can detect');
-      // }
     } catch (error) {
-      console.log('error');
+      // console.log('error');
       // Error retrieving data
     }
   };
-
-  useEffect(() => {
-    navigation.addListener(
-      'didFocus',
-      () => {
-        _retrieveData().then(() => console.log('willfocus'));
-      },
-      // run function that updates the data on entering the screen
-    );
-    _retrieveData().then(() => {
-      axios
-        .get('http://13.124.126.30:8000/core/match_request/')
-        .then(result => {
-          // console.log('homepage useEffect match_request');
-          if (result.data.user === null) {
-            setMatchRequested(false);
-          } else {
-            setMatchRequested(true);
-            // result.data.personnel_select 처리 후 memberSelected에 넣기, memberText설정
-            let tmpMemInt = result.data.personnel_selected;
-            let tmpMemSelected = [];
-            for (let i = 0; i < 4; i++) {
-              tmpMemSelected[i] = Math.floor(tmpMemInt % 2);
-              tmpMemInt /= 2;
-            }
-            // console.log(tmpMemSelected);
-            // setText when ongoing
-            let tmpMemText = '';
-            if (tmpMemSelected[0] === 1) tmpMemText = '인원 상관 없음';
-            else {
-              tmpMemSelected.map((item, index) => {
-                if (tmpMemSelected[index] === 1) {
-                  tmpMemText = tmpMemText + memberList[index - 1] + ', ';
-                }
-              });
-              tmpMemText = tmpMemText.substring(0, tmpMemText.length - 2);
-              if (tmpMemText.length > 20) {
-                tmpMemText = tmpMemText.substring(0, 20);
-                tmpMemText = tmpMemText + ' ...';
-              }
-            }
-            setOnMemText(tmpMemText);
-
-            // result.data.date_select 처리 후 memberSelected에 넣기, dateText설정
-            let tmpDateInt = result.data.date_selected;
-            let tmpDateSelected = [];
-            for (let i = 0; i < 8; i++) {
-              tmpDateSelected[i] = Math.floor(tmpDateInt % 2);
-              tmpDateInt /= 2;
-            }
-            // console.log(tmpDateSelected);
-            //setText when ongoing
-            let tmpDateText = '';
-            if (tmpDateSelected[0] === 1) tmpDateText = '날짜 상관 없음';
-            else {
-              tmpDateSelected.map((item, index) => {
-                if (tmpDateSelected[index] === 1) {
-                  tmpDateText = tmpDateText + dateList[index - 1] + ', ';
-                }
-              });
-              tmpDateText = tmpDateText.substring(0, tmpDateText.length - 2);
-              if (tmpDateText.length > 20) {
-                tmpDateText = tmpDateText.substring(0, 20);
-                tmpDateText = tmpDateText + ' ...';
-              }
-            }
-            setOnDateText(tmpDateText);
-            // console.log(tmpDateText);
-
-            // result.date.max,min처리
-            let tmpAge = [result.data.min_age, result.data.max_age];
-            setMultiSliderValue(tmpAge);
-          }
-          return result.data;
-        });
-      // .then(data => console.log(data));
-    });
-  }, [navigation]);
-
-  const requestMatching = () => {
-    // logCallback('Login Start', setLoginLoading(true));
-    console.log('matching sddaddo');
-    // 'token',     'uid',        'nickname',   'avata',
-    // 'birhdate',  'belong',     'department', 'profile_list',
-    // 'feed_list', 'friend_list','yami_number',
-    if (asyncValue[0] === 'token') {
-      navigation.navigate('Login');
-    } else if (asyncValue[2] === 'nickname') {
-      navigation.navigate('Signup');
-      //navigate to loginscreen
-    } else if (asyncValue[4] === 'birthdate') {
-      navigation.navigate('IV');
-    } else {
-      if (matchRequested === true) {
-        console.log('came true');
-        logCallback('match request', setLoginLoading(false));
-        setMatchRequested(false);
-
-        //이미 매칭중인데 누르면 취소니까
-        // axios
-        //   .post() //매치 했던거 취소
-        //   .then(() => {
-        //    setMatchRequested(!matchRequested);
-        //     setLoginLoading(false);
-        //   });
-      } else {
-        //아직 매칭 안한거고, 이제 보내야지
-        //날짜, 멤버, 나이 계산해서 아래 형식에 맞게 넣어주기
-        let memInt = 0;
-        memInt += memberSelected.map((item, index) => {
-          if (item === true) Math.pow(2, index);
-        });
-        let dateInt = 0;
-        dateInt = dateSelected.map((item, index) => {
-          if (item === true) Math.pow(2, index);
-        });
-        let min_age = multiSliderValue[0];
-        let max_age = multiSliderValue[1];
-        axios
-          .post('http://13.124.126.30:8000/core/match_request/', {
-            personnel_selected: memInt,
-            date_selected: dateInt,
-            min_age: min_age,
-            max_age: max_age,
-          })
-          .then(result => {
-            console.log(result.data);
-            setMatchRequested(!matchRequested);
-          })
-          .then(setLoginLoading(false));
-      }
-    }
-  };
-
-  const [matchRequested, setMatchRequested] = useState(false);
-
-  let spinValue = new Animated.Value(0);
-  // First set up animation
-
-  Animated.loop(
-    Animated.timing(spinValue, {
-      toValue: 1,
-      duration: 2000,
-      easing: Easing.linear,
-    }),
-  ).start();
-  // Second interpolate beginning and end values (in this case 0 and 1)
-  let spin = spinValue.interpolate({
-    inputRange: [0, 1],
-    outputRange: ['0deg', '360deg'],
-  });
 
   useEffect(() => {
     const today = new Date();
@@ -286,7 +138,233 @@ const HomePage = ({navigation}) => {
       '토요일만',
     ];
     setDateList(wow);
-  }, []);
+
+    navigation.addListener(
+      'didFocus',
+      () => {
+        _retrieveData().then(() => console.log('willfocus'));
+      },
+      // run function that updates the data on entering the screen
+    );
+    _retrieveData().then(() => {
+      console.log(memberSelected);
+      axios
+        .get('http://13.124.126.30:8000/core/match_request/')
+        .then(result => {
+          // console.log('homepage useEffect match_request');
+          console.log(result.data);
+          if (result.data === 'no match request') {
+            setMatchRequested(false);
+            console.log('hehe');
+          } else {
+            setMatchRequested(true);
+            console.log(result.data);
+
+            // result.data.personnel_select 처리 후 memberSelected에 넣기, memberText설정
+            let tmpMemInt = result.data.personnel_selected;
+            let tmpMemSelected = [false, false, false, false];
+            for (let i = 0; i < 4; i++) {
+              tmpMemSelected[i] = Math.floor(tmpMemInt % 2);
+              tmpMemInt /= 2;
+            }
+            setMemberMainSelected(tmpMemSelected[0]);
+            setMemberSelected(tmpMemSelected.slice(1, 3));
+            console.log(tmpMemSelected);
+            // setText when ongoing
+            let tmpMemText = '';
+            if (tmpMemSelected[0] === 1 || result.data.personnel_selected === 0)
+              tmpMemText = '인원 상관 없음  ';
+            else {
+              tmpMemSelected.map((item, index) => {
+                if (tmpMemSelected[index] === 1) {
+                  tmpMemText = tmpMemText + memberList[index - 1] + ', ';
+                }
+                console.log(memberList);
+              });
+              tmpMemText = tmpMemText.substring(0, tmpMemText.length - 2);
+              if (tmpMemText.length > 20) {
+                tmpMemText = tmpMemText.substring(0, 20);
+                tmpMemText = tmpMemText + ' ...';
+              }
+            }
+            setOnMemText(tmpMemText);
+            console.log(tmpMemText);
+
+            // result.data.date_select 처리 후 memberSelected에 넣기, dateText설정
+            let tmpDateInt = result.data.date_selected;
+            let tmpDateSelected = [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false,
+              false,
+              false,
+              false,
+            ];
+            console.log(tmpDateInt);
+            for (let i = 0; i < 9; i++) {
+              tmpDateSelected[i] = Math.floor(tmpDateInt % 2);
+              tmpDateInt /= 2;
+            }
+            setDateMainSelected(tmpDateSelected[0]);
+            setDateSelected(tmpDateSelected.slice(1, 8));
+            console.log(tmpDateSelected);
+            //setText when ongoing
+            let tmpDateText = '';
+            if (tmpDateSelected[0] === 1 || result.data.date_selected === 0)
+              tmpDateText = '날짜 상관 없음  ';
+            else {
+              tmpDateSelected.map((item, index) => {
+                if (tmpDateSelected[index] === 1) {
+                  tmpDateText = tmpDateText + wow[index - 1] + ', ';
+                }
+                console.log(dateList);
+              });
+              tmpDateText = tmpDateText.substring(0, tmpDateText.length - 2);
+              if (tmpDateText.length > 20) {
+                tmpDateText = tmpDateText.substring(0, 20);
+                tmpDateText = tmpDateText + ' ...';
+              }
+            }
+            setOnDateText(tmpDateText);
+            console.log(tmpDateText);
+
+            // result.date.max,min처리
+            let tmpAge = [result.data.min_age, result.data.max_age];
+            setMultiSliderValue(tmpAge);
+          }
+          return result.data;
+        });
+    });
+  }, [memberSelected, dateSelected]);
+
+  const requestMatching = () => {
+    // logCallback('Login Start', setLoginLoading(true));
+    console.log('matching sddaddo');
+    // 'token',     'uid',        'nickname',   'avata',
+    // 'birhdate',  'belong',     'department', 'profile_list',
+    // 'feed_list', 'friend_list','yami_number',
+    if (asyncValue[0] === 'token') {
+      navigation.navigate('Login');
+    } else if (asyncValue[2] === 'nickname') {
+      navigation.navigate('Signup');
+      //navigate to loginscreen
+    } else if (asyncValue[4] === 'birthdate') {
+      navigation.navigate('IV');
+    } else {
+      if (matchRequested === true) {
+        console.log('came true');
+        logCallback('match request', setLoginLoading(false));
+        setMatchRequested(false);
+
+        setMemberItemNo(0);
+        setMemberMainSelected(true);
+        let tmselected = [false, false, false];
+        setMemberSelected(tmselected);
+
+        setDateItemNo(0);
+        setDateMainSelected(true);
+        let tdselected = [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+        ];
+        setDateSelected(tdselected);
+
+        //이미 매칭중인데 누르면 취소니까
+        axios
+          .patch('http://13.124.126.30:8000/core/match_request/')
+          .then(() => {
+            setLoginLoading(false);
+          })
+          .then(() => console.log('cancleed'));
+      } else {
+        console.log('sending?');
+        //아직 매칭 안한거고, 이제 보내야지
+        //날짜, 멤버, 나이 계산해서 아래 형식에 맞게 넣어주기
+
+        let tmpMemText = '';
+        let memInt = 0;
+        if (memberMainSelected === true) {
+          tmpMemText = '인원 상관 없음  ';
+          memInt = 0;
+        } else {
+          memberSelected.map((item, index) => {
+            if (item === true) {
+              memInt += Math.pow(2, index + 1);
+              tmpMemText = tmpMemText + memberList[index] + ', ';
+            }
+          });
+        }
+        tmpMemText = tmpMemText.substring(0, tmpMemText.length - 2);
+        if (tmpMemText.length > 20) {
+          tmpMemText = tmpMemText.substring(0, 20);
+          tmpMemText = tmpMemText + ' ...';
+        }
+        setOnMemText(tmpMemText);
+
+        let dateInt = 0;
+        let tmpDateText = '';
+        if (dateMainSelected === true) {
+          tmpDateText = '날짜 상관 없음  ';
+          dateInt = 0;
+        } else {
+          dateSelected.map((item, index) => {
+            if (item === true) {
+              dateInt += Math.pow(2, index + 1);
+              tmpDateText = tmpDateText + dateList[index] + ', ';
+            }
+          });
+        }
+        tmpDateText = tmpDateText.substring(0, tmpDateText.length - 2);
+        if (tmpDateText.length > 20) {
+          tmpDateText = tmpDateText.substring(0, 20);
+          tmpDateText = tmpDateText + ' ...';
+        }
+        setOnDateText(tmpDateText);
+
+        let min_age = multiSliderValue[0];
+        let max_age = multiSliderValue[1];
+        // console.log(memInt);
+        axios
+          .post('http://13.124.126.30:8000/core/match_request/', {
+            personnel_selected: memInt,
+            date_selected: dateInt,
+            min_age: min_age,
+            max_age: max_age,
+          })
+          .then(result => {
+            console.log(memInt + ' ' + dateInt);
+            console.log(result.data);
+            setMatchRequested(!matchRequested);
+          })
+          .then(setLoginLoading(false));
+      }
+    }
+  };
+
+  let spinValue = new Animated.Value(0);
+  // First set up animation
+
+  Animated.loop(
+    Animated.timing(spinValue, {
+      toValue: 1,
+      duration: 2000,
+      easing: Easing.linear,
+    }),
+  ).start();
+  // Second interpolate beginning and end values (in this case 0 and 1)
+  let spin = spinValue.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['0deg', '360deg'],
+  });
 
   const [loginLoading, setLoginLoading] = useState(false);
 
@@ -839,7 +917,7 @@ const HomePage = ({navigation}) => {
       </Modal>
 
       <View style={styles.topLayout}>
-        <CustomTextBold>{}</CustomTextBold>
+        {/* <CustomTextBold>{asyncValue[1]}</CustomTextBold> */}
         <CustomTextBold size={24} color={palette.black}>
           미팅 주선
         </CustomTextBold>
@@ -951,7 +1029,7 @@ const HomePage = ({navigation}) => {
               {matchRequested === true
                 ? onDateText
                 : dateMainSelected === true
-                ? '인원 상관 없음'
+                ? '날짜 상관 없음'
                 : dateText}
             </CustomTextMedium>
 
