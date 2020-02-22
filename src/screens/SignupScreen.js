@@ -14,9 +14,16 @@ import {Button} from 'native-base';
 import {SafeAreaView} from 'react-navigation';
 import PersonalInfoPage from '~/components/SignupScreen/PersonalInfoPage';
 import IVScreen from './IVScreen';
+import Axios from 'axios';
+import AsyncStorage from '@react-native-community/async-storage';
 
 let global_viewPager;
 const SignupScreen = ({navigation}) => {
+  const [nickname, setNickname] = useState('');
+  const [belong, setBelong] = useState('');
+  const [department, setDepartment] = useState('');
+  const [is_student, setIs_student] = useState('');
+
   const [page, setPage] = useState(0);
   const viewPager = createRef();
   global_viewPager = viewPager;
@@ -41,12 +48,15 @@ const SignupScreen = ({navigation}) => {
   return (
     <SafeAreaView style={styles.root}>
       <ViewPager ref={viewPager} style={styles.viewPager} scrollEnabled={false}>
-        <NicknamePage />
-        <BelongPage />
+        <NicknamePage setNickname={setNickname} />
+        <BelongPage
+          setBelong={setBelong}
+          setDepartment={setDepartment}
+          setIs_student={setIs_student}
+        />
         <IVScreen />
-        {/* <BelongPage /> */}
-        {/* <ImagePage /> */}
       </ViewPager>
+
       <View style={styles.bottomView}>
         <View style={styles.indicator}>
           <CustomTextRegular
@@ -61,43 +71,48 @@ const SignupScreen = ({navigation}) => {
             />
           </View>
         </View>
-        {page < 2 ? (
-          <Button onPress={() => move(1)} style={styles.button}>
+
+        <Button
+          onPress={async () => {
+            const userValue = await AsyncStorage.getItem('userValue');
+            const jUserValue = JSON.parse(userValue);
+            Axios.defaults.headers.common['Authorization'] =
+              'Token ' + jUserValue[0];
+            if (page === 1) {
+              //server로 nickname, belong, department, is_student 보내기
+              // console.log(nickname);
+              // console.log(department);
+              // console.log(belong);
+              // console.log(is_student);
+
+              Axios.post(
+                'http://13.124.126.30:8000/authorization/user/signup/',
+                {
+                  nickname: nickname,
+                  is_student: is_student,
+                  department: department,
+                  belong: belong,
+                },
+              ).then(() => console.log('done'));
+            } else if (page === 2) {
+              gotoWebView();
+              go(0);
+              setPage(0);
+            }
+            move(1);
+            console.log(Axios.defaults.headers.common['Authorization']);
+          }}
+          style={styles.button}>
+          {page !== 2 ? (
             <CustomTextRegular size={14} color="white">
               다음
             </CustomTextRegular>
-          </Button>
-        ) : (
-          <View>
-            <Button
-              style={styles.button}
-              onPress={() => {
-                gotoWebView();
-                go(0);
-              }}>
-              <CustomTextMedium size={16} color="white">
-                본인인증 진행하기
-              </CustomTextMedium>
-            </Button>
-            <CustomTextMedium
-              size={12}
-              color={palette.gray}
-              style={styles.center}>
-              거짓된 정보 및 중복 가입을 방지 하기 위한 인증입니다.
+          ) : (
+            <CustomTextMedium size={16} color="white">
+              본인인증 하고 야미구 시작하기!
             </CustomTextMedium>
-
-            {/* <Button
-              onPress={() => {
-                navigation.navigate('Main');
-                go(0);
-              }}
-              style={styles.button}>
-              <CustomTextRegular size={14} color="white">
-                야미구 시작하기
-              </CustomTextRegular>
-            </Button> */}
-          </View>
-        )}
+          )}
+        </Button>
       </View>
     </SafeAreaView>
   );
@@ -118,7 +133,15 @@ SignupScreen.navigationOptions = ({navigation}) => ({
           });
         }}
       />
-    ) : null,
+    ) : (
+      <HeaderBackButton
+        label=" "
+        tintColor={palette.black}
+        onPress={() => {
+          navigation.goBack();
+        }}
+      />
+    ),
   headerTitle: () => (
     <CustomTextMedium size={16} color={palette.black}>
       회원가입

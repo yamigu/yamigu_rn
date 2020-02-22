@@ -5,7 +5,7 @@ import palette from '~/lib/styles/palette';
 import {Button, Form, Item, Label, Input, Content} from 'native-base';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 
-const BelongPage = ({params}) => {
+const BelongPage = ({setBelong, setDepartment, setIs_student}) => {
   const [toggle, setToggle] = useState(0);
   const [text1, setText1] = useState('');
   const [text2, setText2] = useState('');
@@ -36,7 +36,10 @@ const BelongPage = ({params}) => {
             toggle === 1 ? styles.buttonActive : styles.button,
             styles.buttonLeft,
           ]}
-          onPress={() => clickButton(1)}>
+          onPress={() => {
+            setIs_student(true);
+            clickButton(1);
+          }}>
           <CustomTextRegular
             size={14}
             color={toggle === 1 ? palette.orange[0] : palette.nonselect}>
@@ -48,7 +51,10 @@ const BelongPage = ({params}) => {
             toggle === 2 ? styles.buttonActive : styles.button,
             styles.buttonRight,
           ]}
-          onPress={() => clickButton(2)}>
+          onPress={() => {
+            setIs_student(false);
+            clickButton(2);
+          }}>
           <CustomTextRegular
             size={14}
             color={toggle === 2 ? palette.orange[0] : palette.nonselect}>
@@ -71,7 +77,10 @@ const BelongPage = ({params}) => {
                   ? 'ex) 연세대, 고려대, 서울대, 이화여대, OO대'
                   : 'ex) 삼성전자, 스타트업, 프리랜서'
               }
-              onChangeText={value => setText1(value)}
+              onChangeText={value => {
+                setText1(value);
+                setBelong(value);
+              }}
               value={text1}
               selectionColor={palette.orange[0]}
               placeholderTextColor={palette.nonselect}
@@ -96,7 +105,10 @@ const BelongPage = ({params}) => {
                   ? 'ex) 전기전자공학부, 경영학과, 의학과'
                   : 'ex) 디자이너, 의사, 개발자, 선생님'
               }
-              onChangeText={value => setText2(value)}
+              onChangeText={value => {
+                setText2(value);
+                setDepartment(value);
+              }}
               value={text2}
               selectionColor={palette.orange[0]}
               placeholderTextColor={palette.nonselect}

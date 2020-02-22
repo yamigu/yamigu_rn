@@ -24,48 +24,12 @@ import Ionicon from 'react-native-vector-icons/Ionicons';
 import palette from '~/lib/styles/palette';
 
 import ProfileCard from '~/components/common/ProfileCard';
-
-import {TouchableOpacity} from 'react-native-gesture-handler';
-import MeetingSettingPane from '~/components/common/MeetingSettingPane';
 import {HeaderBackButton} from 'react-navigation-stack';
 import axios from 'axios';
 
 const deviceWidth = Dimensions.get('window').width;
+const nowYear = 20200000;
 
-const frineds_list_data = [
-  {
-    name: '상큼한 딸기',
-    age: 24,
-    belong: '삼성물산',
-    department: '',
-    location: '서울',
-    image: require('~/images/test-user-profile-6.png'),
-  },
-  {
-    name: '안암불주먹',
-    age: 24,
-    belong: '고려대',
-    department: '의과병원',
-    location: '서울',
-    image: require('~/images/test-user-profile-7.png'),
-  },
-  {
-    name: '연남도끼',
-    age: 24,
-    belong: '프리랜서',
-    department: '디자이너',
-    location: '서울',
-    image: require('~/images/test-user-profile-8.png'),
-  },
-  {
-    name: 'Jane Park',
-    age: 24,
-    belong: '5급 공무원',
-    department: '',
-    location: '서울',
-    image: require('~/images/test-user-profile-6.png'),
-  },
-];
 const ProfileDetailScreen = ({navigation}) => {
   const uid = navigation.getParam('uid');
   const nickname = navigation.getParam('nickname');
@@ -73,21 +37,40 @@ const ProfileDetailScreen = ({navigation}) => {
   const age = navigation.getParam('age');
   const belong = navigation.getParam('belong');
   const department = navigation.getParam('department');
-  const feed_list = navigation.getParam('feed_list');
 
-  // useEffect(() => {
-  //   axios
-  //     .get('http://13.124.126.30:8000/core/feed/' + uid + '/')
-  //     .then(result => {
-  //       let tmpFeed = [];
-  //       let count = 0;
-  //       result.data.map(item => {
-  //         tmpFeed[count] = item.img_src;
-  //         count++;
-  //       });
-  //       setDetailFeed(tmpFeed);
-  //     });
-  // }, []);
+  const [friendList, setFriendList] = useState([]);
+  const [feedList, setFeedList] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get('http://13.124.126.30:8000/core/feed/' + uid + '/')
+      .then(result => {
+        console.log(result.data);
+        let tmpFeedList = [];
+
+        result.data.map((item, index) => {
+          tmpFeedList[index] = item;
+        });
+        console.log(tmpFeedList);
+        setFeedList(tmpFeedList);
+      });
+    axios
+      .get('http://13.124.126.30:8000/core/friends/' + uid + '/')
+      .then(result => {
+        console.log(result.data);
+        let tmpFriendList = [];
+        let count = 0;
+
+        result.data.map((item, index) => {
+          if (item.approved === true) {
+            tmpFriendList[count] = item.user_info;
+            count++;
+          }
+        });
+        console.log(tmpFriendList);
+        setFriendList(tmpFriendList);
+      });
+  }, []);
   const [liked, setLiked] = useState(false);
   const [hasChatting, setHasChatting] = useState(false);
   const [detailFeed, setDetailFeed] = useState([]);
@@ -95,7 +78,7 @@ const ProfileDetailScreen = ({navigation}) => {
   const _renderDotIndicator = () => {
     return (
       <PagerDotIndicator
-        pageCount={feed_list.length}
+        pageCount={feedList.length}
         dotStyle={styles.dot}
         selectedDotStyle={styles.selectedDot}
         style={styles.indicator}
@@ -111,7 +94,7 @@ const ProfileDetailScreen = ({navigation}) => {
           <IndicatorViewPager
             style={styles.viewPager}
             indicator={_renderDotIndicator()}>
-            {feed_list.map(item => {
+            {feedList.map(item => {
               return (
                 <Image
                   style={styles.viewPage}
@@ -227,21 +210,24 @@ const ProfileDetailScreen = ({navigation}) => {
           <List style={styles.friendsList}>
             <ListItem noIndent style={styles.friendsListHeader}>
               <CustomTextRegular size={14} color={palette.black}>
-                또잉또잉또잉님의 실제 친구들
+                또잉또잉또잉님의 제 친구들
               </CustomTextRegular>
             </ListItem>
-            {frineds_list_data.map(friend => (
+
+            {friendList.map(friend => (
               <ListItem noIndent style={styles.friendsListItem}>
                 <Body>
                   <ProfileCard
                     size={50}
                     fontSizes={[14, 12, 12]}
-                    nickname={friend.name}
-                    image={friend.image}
-                    age={friend.age}
+                    nickname={friend.nickname}
+                    image={friend.avata}
+                    age={Math.floor(
+                      (nowYear - parseInt(friend.birthdate) + 20000) / 10000,
+                    )}
                     belong={friend.belong}
                     department={friend.department}
-                    location={friend.location}
+                    // location={friend.location}
                   />
                 </Body>
               </ListItem>

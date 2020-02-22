@@ -5,9 +5,10 @@ import palette from '~/lib/styles/palette';
 import {Item, Input} from 'native-base';
 
 const deviceWidth = Dimensions.get('window').width;
-const NicknamePage = ({params}) => {
+const NicknamePage = ({setNickname}) => {
   const [text, setText] = useState('');
   const [focus, setFocus] = useState(false);
+
   return (
     <View style={styles.root}>
       <CustomTextMedium size={20} color={palette.black}>
@@ -20,7 +21,10 @@ const NicknamePage = ({params}) => {
         <Input
           style={styles.input}
           placeholder={focus ? '' : '한글, 영문, 숫자만 입력 가능'}
-          onChangeText={value => setText({value})}
+          onChangeText={value => {
+            setText(value);
+            setNickname(value);
+          }}
           value={text}
           onFocus={() => setFocus(true)}
           onBlur={() => setFocus(false)}

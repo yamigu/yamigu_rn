@@ -39,24 +39,23 @@ const majorVersionIOS = parseInt(Platform.Version, 10);
 const dw = Dimensions.get('window').width;
 const dh = Dimensions.get('window').height;
 let tmpValue = [
-  'new',
-  'ls',
-  'ls',
-  'ls',
-  'ls',
-  'ls',
-  'ls',
-  'ls',
-  'ls',
-  'ls',
-  'ls',
+  'token',
+  'uid',
+  'nickname',
+  'avata',
+  'birhdate',
+  'belong',
+  'department',
+  'profile_list',
+  'feed_list',
+  'friend_list',
+  'yami_number',
 ];
 let originValue = [];
 const _retrieveData = async () => {
   try {
-    const value = await AsyncStorage.getItem('userInfo');
+    const value = await AsyncStorage.getItem('userValue');
     if (value !== null) {
-      // AsyncStorage.setItem('userInfo', JSON.stringify(tmpValue));
       for (let i = 0; i < 9; i++) {
         originValue[i] = value[i];
       }
@@ -160,9 +159,9 @@ const LoginScreen = ({navigation}) => {
         })
         .then(key => {
           tmpValue[0] = key;
-          AsyncStorage.setItem('userInfo', JSON.stringify(tmpValue));
-          navigation.navigate('Main');
-        });
+          AsyncStorage.setItem('userValue', JSON.stringify(tmpValue));
+        })
+        .then(() => navigation.navigate('Main'));
 
       console.log(appleAuthRequestResponse);
       // navigation.navigate('Main');
@@ -199,9 +198,9 @@ const LoginScreen = ({navigation}) => {
       })
       .then(key => {
         tmpValue[0] = key;
-        AsyncStorage.setItem('userInfo', JSON.stringify(tmpValue));
-        navigation.navigate('Main');
+        AsyncStorage.setItem('userValue', JSON.stringify(tmpValue));
       })
+      .then(() => navigation.navigate('Main'))
       .catch(err => {
         if (err.code === 'E_CANCELLED_OPERATION') {
           logCallback(`Login Cancelled:${err.message}`, setLoginLoading(false));

@@ -1,7 +1,8 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/self-closing-comp */
 /* eslint-disable prettier/prettier */
 /* eslint-disable react-native/no-inline-styles */
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   ImageBackground,
@@ -24,6 +25,7 @@ import {
   Left,
   Body,
   Right,
+  Row,
 } from 'native-base';
 import Anticon from 'react-native-vector-icons/AntDesign';
 import Materialicon from 'react-native-vector-icons/MaterialIcons';
@@ -34,6 +36,8 @@ import TouchableByPlatform from '../common/TouchableByPlatform';
 import Navigation from '~/../Navigation';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import KakaoSDK from '@actbase/react-native-kakaosdk';
+import AsyncStorage from '@react-native-community/async-storage';
+import {getProfile} from '@react-native-seoul/kakao-login';
 
 const deviceWidth = Dimensions.get('window').width;
 const SideMenu = ({navigation}) => {
@@ -46,6 +50,28 @@ const SideMenu = ({navigation}) => {
 
   const [toggle, setToggle] = useState(false);
   const [numOfFreinds, setNumOfFriends] = useState(0);
+
+  const [sideInfo, setSideInfo] = useState([]);
+  // 'token',     'uid',        'nickname',   'avata',
+  // 'birhdate',  'belong',     'department', 'profile_list',
+  // 'feed_list', 'friend_list','yami_number',
+  const _retrieveData = async () => {
+    try {
+      const userValue = await AsyncStorage.getItem('userValue');
+      const jUserValue = JSON.parse(userValue);
+      if (userValue !== null) {
+        // console.log('qweqwe');
+        setSideInfo(jUserValue);
+        // console.log(jUserValue[3]);
+      } else {
+        console.log('asdasd');
+      }
+    } catch (error) {}
+  };
+  useEffect(() => {
+    _retrieveData();
+  }, []);
+
   return (
     <SafeAreaView style={styles.root}>
       <Content showsVerticalScrollIndicator={false}>
@@ -70,24 +96,39 @@ const SideMenu = ({navigation}) => {
               onPress={() => navigation.navigate('MyProfile')}>
               <Thumbnail
                 style={styles.thumbnail}
-                source={require('~/images/test-user-profile-1.png')}
+                source={
+                  sideInfo[3] === 'avata'
+                    ? require('~/images/test-user-profile-girl.png')
+                    : {uri: sideInfo[3]}
+                }
               />
             </TouchableByPlatform>
           </View>
           <View style={styles.nameAndAgeView}>
             <CustomTextBold size={18} color={palette.black}>
-              또잉또잉또잉
+              {sideInfo[2] === 'nickname' ? null : sideInfo[2]}
             </CustomTextBold>
             <CustomTextMedium
               size={14}
               color={palette.black}
               style={{marginLeft: 6}}>
-              24살
+              {sideInfo[4] === 'birthdate'
+                ? null
+                : Math.floor((20200000 - parseInt(sideInfo[4])) / 10000 + 2)}
+            </CustomTextMedium>
+            <CustomTextMedium
+              size={14}
+              color={palette.black}
+              style={{marginLeft: 0}}>
+              살
             </CustomTextMedium>
           </View>
           <View style={styles.belongView}>
             <CustomTextRegular size={14} color={palette.gray}>
-              서울대 자유전공학부, 서울
+              {sideInfo[5] === 'belong' ? null : sideInfo[5] + '  '}
+            </CustomTextRegular>
+            <CustomTextRegular size={14} color={palette.gray}>
+              {sideInfo[6] === 'depart' ? null : sideInfo[6]}
             </CustomTextRegular>
           </View>
         </View>
@@ -112,7 +153,7 @@ const SideMenu = ({navigation}) => {
               </Body>
             </ListItem>
           </TouchableByPlatform>
-          <TouchableByPlatform
+          {/* <TouchableByPlatform
             navigation={navigation}
             onPress={() => navigation.navigate('MyProfile')}>
             <ListItem icon noIndent style={styles.listItem}>
@@ -129,7 +170,7 @@ const SideMenu = ({navigation}) => {
                 </CustomTextRegular>
               </Body>
             </ListItem>
-          </TouchableByPlatform>
+          </TouchableByPlatform> */}
           <TouchableByPlatform
             onPress={() => navigation.navigate('AddFriends')}>
             <ListItem icon noIndent style={styles.listItem}>
@@ -403,6 +444,8 @@ const styles = StyleSheet.create({
   },
   belongView: {
     marginTop: 1,
+    flexDirection: 'row',
+    justifyContent: 'center',
     alignItems: 'center',
   },
   list: {
