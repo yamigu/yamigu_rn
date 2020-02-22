@@ -87,16 +87,14 @@ const HomePage = ({navigation}) => {
             .get('http://13.124.126.30:8000/authorization/user/info/')
             .then(result => {
               // console.log(result.data);
-              if (result.data.uid !== 'uid') jUserValue[1] = result.data.uid;
-              if (result.data.nickname !== 'nickname')
-                jUserValue[2] = result.data.nickname;
-              if (result.data.avata === 'avata') jUserValue[3] = 'avata';
-              if (result.data.birthdate !== 'birhdate')
-                jUserValue[4] = result.data.birthdate;
-              if (result.data.belong !== 'belong')
-                jUserValue[5] = result.data.belong;
-              if (result.data.department !== 'department')
-                jUserValue[6] = result.data.department;
+              jUserValue[1] = result.data.uid;
+              jUserValue[2] = result.data.nickname;
+              jUserValue[3] = result.data.avata;
+              jUserValue[4] = result.data.birthdate;
+              jUserValue[5] = result.data.belong;
+              jUserValue[6] = result.data.department;
+              jUserValue[7] = result.data.gender;
+              jUserValue[8] = result.data.verified;
             })
             .then(() => {
               AsyncStorage.setItem('userValue', JSON.stringify(jUserValue));

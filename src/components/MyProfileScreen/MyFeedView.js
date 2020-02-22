@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   StyleSheet,
@@ -23,14 +23,33 @@ import {
 import TouchableByPlatform from '../common/TouchableByPlatform';
 import ImagePicker from 'react-native-image-picker';
 import {Button} from 'native-base';
+import axios from 'axios';
 
 const dw = Dimensions.get('window').width;
 const dh = Dimensions.get('window').height;
 
-const MyFeedView = ({navigation}) => {
+const MyFeedView = ({userInfo}) => {
   const [imageSource, setImageSource] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
+  const [feed_list, setFeed_list] = useState([]);
 
+  useEffect(() => {
+    if (userInfo[1] !== undefined) {
+      axios
+        .get('http://13.124.126.30:8000/core/feed/' + userInfo[1] + '/')
+        .then(result => {
+          console.log(result.data);
+          let tmpFeed = [];
+          let count = 0;
+          result.data.map(item => {
+            tmpFeed[count] = item;
+            count++;
+          });
+          tmpFeed.reverse();
+          setFeed_list(tmpFeed);
+        });
+    }
+  }, [userInfo]);
   const selectPhotoTapped = () => {
     const options = {
       quality: 1.0,
@@ -58,7 +77,7 @@ const MyFeedView = ({navigation}) => {
   const _renderDotIndicator = () => {
     return (
       <PagerDotIndicator
-        pageCount={3}
+        pageCount={feed_list.length + 1}
         dotStyle={styles.dot}
         selectedDotStyle={styles.selectedDot}
         style={styles.indicator}
@@ -78,7 +97,7 @@ const MyFeedView = ({navigation}) => {
         <View
           style={{
             height: dh,
-            backgroundColor: 'rgba(0,0,0,0.5)',
+            backgroundColor: 'rgba(0,0,0,0.7)',
             flexDirection: 'column',
             justifyContent: 'flex-end',
           }}>
@@ -125,13 +144,13 @@ const MyFeedView = ({navigation}) => {
       <CustomTextMedium
         size={18}
         color={palette.black}
-        style={{marginLeft: 30, marginBottom: 20}}>
+        style={{marginLeft: 30, marginBottom: 20, marginTop: 16}}>
         내 피드
       </CustomTextMedium>
-      <IndicatorViewPager
-        style={styles.viewPager}
-        indicator={_renderDotIndicator()}>
-        {imageSource === null ? (
+      {imageSource === null ? (
+        <IndicatorViewPager
+          style={styles.viewPager}
+          indicator={_renderDotIndicator()}>
           <ImageBackground
             style={styles.viewPage}
             key="1"
@@ -141,7 +160,7 @@ const MyFeedView = ({navigation}) => {
                 style={{
                   width: '100%',
                   height: '100%',
-                  backgroundColor: 'rgba(0,0,0,0.6)',
+                  backgroundColor: 'rgba(0,0,0,0.7)',
                   flexDirection: 'column',
                   justifyContent: 'center',
                   alignItems: 'center',
@@ -155,33 +174,20 @@ const MyFeedView = ({navigation}) => {
               </View>
             </TouchableByPlatform>
           </ImageBackground>
-        ) : (
-          <Image style={styles.viewPage} source={imageSource} />
-        )}
-        <Image
-          style={styles.viewPage}
-          key="2"
-          source={require('~/images/test-user-profile-girl.png')}>
-          {/* <View
-              style={{
-                height: dh,
-                width: dw,
-                backgroundColor: 'rgba(0,0,0,0.6)',
-                flexDirection: 'column',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <CustomTextRegular color="white" size={20} style={styles.feedT}>
-                {feedText}
-              </CustomTextRegular>
-            </View> */}
-        </Image>
-        <Image
-          style={styles.viewPage}
-          key="3"
-          source={require('~/images/test-user-profile-7.png')}
-        />
-      </IndicatorViewPager>
+          {feed_list.map((item, index) => {
+            console.log(item);
+            return (
+              <Image
+                style={styles.viewPage}
+                key={index + 2}
+                source={item.img_src === null ? null : {uri: item.img_src}}
+              />
+            );
+          })}
+        </IndicatorViewPager>
+      ) : (
+        <Image style={styles.viewPager} source={imageSource} />
+      )}
     </View>
   );
 };

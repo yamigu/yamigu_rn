@@ -137,8 +137,8 @@ const MyFeedManage = ({navigation}) => {
         }}>
         <View
           style={{
-            height: dh,
-            backgroundColor: 'rgba(0,0,0,0.5)',
+            height: '100%',
+            backgroundColor: 'rgba(0,0,0,0.7)',
             flexDirection: 'column',
             justifyContent: 'flex-end',
           }}>
@@ -227,41 +227,41 @@ const MyFeedManage = ({navigation}) => {
           </TouchableOpacity>
         </View>
       </View>
-
       {feedDisplay === true ? (
-        <IndicatorViewPager
-          style={styles.viewPager}
-          indicator={_renderDotIndicator()}>
-          {feed_list.map(item => {
-            if (imageSource !== null) {
-              return <Image style={styles.viewPage} source={imageSource} />;
-            }
-            return (
-              <TouchableOpacity
-                onPress={
-                  item.img_src === null
-                    ? null
-                    : () => {
-                        navigation.navigate('Profile', {
-                          uid,
-                          nickname,
-                          avata,
-                          age,
-                          belong,
-                          department,
-                          feed_list,
-                        });
-                      }
-                }>
-                <Image
-                  style={styles.viewPage}
-                  key="1"
-                  source={item.img_src === null ? null : {uri: item.img_src}}
-                />
-              </TouchableOpacity>
-            );
-          })}
-        </IndicatorViewPager>
+        imageSource !== null ? (
+          <Image style={styles.viewPager} source={imageSource} />
+        ) : (
+          <IndicatorViewPager
+            style={styles.viewPager}
+            indicator={_renderDotIndicator()}>
+            {feed_list.map(item => {
+              return (
+                <TouchableOpacity
+                  onPress={
+                    item.img_src === null
+                      ? null
+                      : () => {
+                          navigation.navigate('Profile', {
+                            uid,
+                            nickname,
+                            avata,
+                            age,
+                            belong,
+                            department,
+                            feed_list,
+                          });
+                        }
+                  }>
+                  <Image
+                    style={styles.viewPage}
+                    key="1"
+                    source={item.img_src === null ? null : {uri: item.img_src}}
+                  />
+                </TouchableOpacity>
+              );
+            })}
+          </IndicatorViewPager>
+        )
       ) : null}
       <View style={styles.lastDivider} />
     </View>

@@ -145,7 +145,8 @@ const AddFriendsScreen = ({navigation}) => {
                 )}
               </Body>
 
-              <Right>
+              <Right
+                style={!friend.you_sent && !friend.approved ? {} : {flex: 0}}>
                 {friend.approved === true ? (
                   <Octionicon name="x" style={styles.iconX} />
                 ) : friend.you_sent !== true ? (

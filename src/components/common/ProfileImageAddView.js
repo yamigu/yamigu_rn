@@ -61,7 +61,6 @@ const ProfileImageAddView = ({image1, image2, image3, image4, image5}) => {
       method: 'GET',
       headers: {
         'Content-Type': 'multipart/form-data',
-        Authorization: 'Token ' + 'fe917733867cf9cf05937e7a7ac1a67247e873b1',
       },
     }).then(result => {
       console.log(result.data);

@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   Text,
   View,
@@ -21,17 +21,36 @@ import FriendsView from '~/components/MyProfileScreen/FriendsView';
 import MyFeedView from '~/components/MyProfileScreen/MyFeedView';
 import InfoView from '~/components/MyProfileScreen/InfoView';
 import {Content, Button} from 'native-base';
-import ImagePicker from 'react-native-image-picker';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const MyProfileScreen = ({navigation}) => {
+  const [userInfo, setUserInfo] = useState([]);
+  const _retrieveData = async () => {
+    try {
+      const userValue = await AsyncStorage.getItem('userValue');
+      const jUserValue = JSON.parse(userValue);
+      if (userValue !== null) {
+        // console.log('qweqwe');
+        // console.log(jUserValue);
+        setUserInfo(jUserValue);
+        // console.log(jUserValue[3]);
+      } else {
+        console.log('asdasd');
+      }
+    } catch (error) {}
+  };
+  useEffect(() => {
+    _retrieveData();
+  }, []);
+
   return (
     <Content showsVerticalScrollIndicator={false} style={styles.root}>
       <ImageView />
       <View style={styles.divider} />
-      <MyFeedView />
+      <MyFeedView userInfo={userInfo} />
       <FriendsView navigation={navigation} />
       <View style={styles.divider} />
-      <InfoView navigation={navigation} />
+      <InfoView navigation={navigation} userInfo={userInfo} />
     </Content>
   );
 };

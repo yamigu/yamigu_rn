@@ -61,6 +61,7 @@ const SideMenu = ({navigation}) => {
       const jUserValue = JSON.parse(userValue);
       if (userValue !== null) {
         // console.log('qweqwe');
+        console.log(jUserValue);
         setSideInfo(jUserValue);
         // console.log(jUserValue[3]);
       } else {
@@ -98,7 +99,7 @@ const SideMenu = ({navigation}) => {
                 style={styles.thumbnail}
                 source={
                   sideInfo[3] === 'avata'
-                    ? require('~/images/test-user-profile-girl.png')
+                    ? require('~/images/user-default-profile.png')
                     : {uri: sideInfo[3]}
                 }
               />
