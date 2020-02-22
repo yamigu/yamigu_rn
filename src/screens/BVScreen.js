@@ -25,17 +25,12 @@ const BVScreen = ({navigation}) => {
   const [focus2, setFocus2] = useState(false);
 
   const doVerify = () => {
-    console.log('doVerify');
     setUploading(true);
     const formData = new FormData();
     const image = imageSource;
     const belong = text1;
     const department = text2;
     const studentToggle = toggle;
-    console.log('belong:' + belong);
-    console.log('department:' + department);
-    console.log('studentToggle:' + studentToggle);
-    console.log('image:', image);
     if (studentToggle == 1) {
       formData.append('is_student', true);
     } else if (studentToggle == 1) {

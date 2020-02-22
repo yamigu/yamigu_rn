@@ -17,6 +17,8 @@ import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 import palette from '~/lib/styles/palette';
 import TouchableByPlatform from './TouchableByPlatform';
 import ImagePicker from 'react-native-image-picker';
+import Spinner from 'react-native-loading-spinner-overlay';
+
 import {CustomTextBold, CustomTextRegular} from './CustomText';
 import file_upload from '~/lib/utils/file_upload';
 import axios from 'axios';
@@ -51,6 +53,7 @@ const ProfileImageAddView = ({image1, image2, image3, image4, image5}) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [pfImageList, setPfImageList] = useState(temp_init_data);
   const [pfImageTempList, setPfImageTempList] = useState(temp_init_data);
+  const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
     axios({
@@ -108,6 +111,11 @@ const ProfileImageAddView = ({image1, image2, image3, image4, image5}) => {
 
   return (
     <View>
+      <Spinner
+        visible={uploading}
+        textContent={'Uploading...'}
+        textStyle={styles.spinnerTextStyle}
+      />
       <Modal
         animationType="none"
         transparent={true}
@@ -127,6 +135,7 @@ const ProfileImageAddView = ({image1, image2, image3, image4, image5}) => {
             <Button
               style={styles.modalButtonMultiple}
               onPress={() => {
+                setUploading(true);
                 const formData = new FormData();
                 formData.append('image', {
                   uri: imageSource.uri,
@@ -138,6 +147,7 @@ const ProfileImageAddView = ({image1, image2, image3, image4, image5}) => {
                   formData,
                   'http://13.124.126.30:8000/authorization/user/profile_image/',
                 ).then(result => {
+                  setUploading(false);
                   let temp = pfImageList.slice();
                   temp[result.data.number - 1] = result.data;
                   setPfImageList(temp);
