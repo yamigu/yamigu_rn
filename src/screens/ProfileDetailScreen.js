@@ -31,6 +31,7 @@ import {HeaderBackButton} from 'react-navigation-stack';
 import axios from 'axios';
 
 const deviceWidth = Dimensions.get('window').width;
+const nowYear = 20200000;
 
 const frineds_list_data = [
   {
@@ -75,19 +76,26 @@ const ProfileDetailScreen = ({navigation}) => {
   const department = navigation.getParam('department');
   const feed_list = navigation.getParam('feed_list');
 
-  // useEffect(() => {
-  //   axios
-  //     .get('http://13.124.126.30:8000/core/feed/' + uid + '/')
-  //     .then(result => {
-  //       let tmpFeed = [];
-  //       let count = 0;
-  //       result.data.map(item => {
-  //         tmpFeed[count] = item.img_src;
-  //         count++;
-  //       });
-  //       setDetailFeed(tmpFeed);
-  //     });
-  // }, []);
+  const [friendList, setFriendList] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get('http://13.124.126.30:8000/core/friends/' + uid + '/')
+      .then(result => {
+        console.log(result.data);
+        let tmpFriendList = [];
+        let count = 0;
+
+        result.data.map((item, index) => {
+          if (item.approved === true) {
+            tmpFriendList[count] = item.user_info;
+            count++;
+          }
+        });
+        console.log(tmpFriendList);
+        setFriendList(tmpFriendList);
+      });
+  }, []);
   const [liked, setLiked] = useState(false);
   const [hasChatting, setHasChatting] = useState(false);
   const [detailFeed, setDetailFeed] = useState([]);
@@ -227,21 +235,24 @@ const ProfileDetailScreen = ({navigation}) => {
           <List style={styles.friendsList}>
             <ListItem noIndent style={styles.friendsListHeader}>
               <CustomTextRegular size={14} color={palette.black}>
-                또잉또잉또잉님의 실제 친구들
+                또잉또잉또잉님의 제 친구들
               </CustomTextRegular>
             </ListItem>
-            {frineds_list_data.map(friend => (
+
+            {friendList.map(friend => (
               <ListItem noIndent style={styles.friendsListItem}>
                 <Body>
                   <ProfileCard
                     size={50}
                     fontSizes={[14, 12, 12]}
-                    nickname={friend.name}
-                    image={friend.image}
-                    age={friend.age}
+                    nickname={friend.nickname}
+                    image={friend.avata}
+                    age={Math.floor(
+                      (nowYear - parseInt(friend.birthdate) + 20000) / 10000,
+                    )}
                     belong={friend.belong}
                     department={friend.department}
-                    location={friend.location}
+                    // location={friend.location}
                   />
                 </Body>
               </ListItem>

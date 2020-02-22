@@ -71,11 +71,10 @@ const HomePage = ({navigation}) => {
 
   const _retrieveData = async () => {
     // axios.defaults.headers.common['Authorization'] = '';
-    // AsyncStorage.setItem('userValue', JSON.stringify(initUserValue));
-
     try {
       const userValue = await AsyncStorage.getItem('userValue');
       const jUserValue = JSON.parse(userValue);
+      console.log(jUserValue);
       if (userValue !== null) {
         // console.log('uservalue not null');
         if (userValue.token === 'token') {
@@ -87,12 +86,11 @@ const HomePage = ({navigation}) => {
           axios
             .get('http://13.124.126.30:8000/authorization/user/info/')
             .then(result => {
-              // console.log(result.data.uid);
+              // console.log(result.data);
               if (result.data.uid !== 'uid') jUserValue[1] = result.data.uid;
               if (result.data.nickname !== 'nickname')
                 jUserValue[2] = result.data.nickname;
-              if (result.data.avata !== 'avata')
-                jUserValue[3] = result.data.avata;
+              if (result.data.avata === 'avata') jUserValue[3] = 'avata';
               if (result.data.birthdate !== 'birhdate')
                 jUserValue[4] = result.data.birthdate;
               if (result.data.belong !== 'belong')
@@ -100,10 +98,15 @@ const HomePage = ({navigation}) => {
               if (result.data.department !== 'department')
                 jUserValue[6] = result.data.department;
             })
-            .then(() => setAsyncValue(jUserValue));
+            .then(() => {
+              AsyncStorage.setItem('userValue', JSON.stringify(jUserValue));
+              setAsyncValue(jUserValue);
+            });
         }
       } else {
-        console.log('first user, async init');
+        AsyncStorage.setItem('userValue', JSON.stringify(initUserValue));
+        setAsyncValue(jUserValue);
+        // console.log('first user, async init');
       }
     } catch (error) {
       // console.log('error');
@@ -147,7 +150,7 @@ const HomePage = ({navigation}) => {
       // run function that updates the data on entering the screen
     );
     _retrieveData().then(() => {
-      console.log(memberSelected);
+      // console.log(memberSelected);
       axios
         .get('http://13.124.126.30:8000/core/match_request/')
         .then(result => {
@@ -241,8 +244,8 @@ const HomePage = ({navigation}) => {
   }, [memberSelected, dateSelected]);
 
   const requestMatching = () => {
+    console.log(asyncValue[0]);
     // logCallback('Login Start', setLoginLoading(true));
-    console.log('matching sddaddo');
     // 'token',     'uid',        'nickname',   'avata',
     // 'birhdate',  'belong',     'department', 'profile_list',
     // 'feed_list', 'friend_list','yami_number',
