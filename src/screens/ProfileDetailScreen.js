@@ -24,49 +24,12 @@ import Ionicon from 'react-native-vector-icons/Ionicons';
 import palette from '~/lib/styles/palette';
 
 import ProfileCard from '~/components/common/ProfileCard';
-
-import {TouchableOpacity} from 'react-native-gesture-handler';
-import MeetingSettingPane from '~/components/common/MeetingSettingPane';
 import {HeaderBackButton} from 'react-navigation-stack';
 import axios from 'axios';
 
 const deviceWidth = Dimensions.get('window').width;
 const nowYear = 20200000;
 
-const frineds_list_data = [
-  {
-    name: '상큼한 딸기',
-    age: 24,
-    belong: '삼성물산',
-    department: '',
-    location: '서울',
-    image: require('~/images/test-user-profile-6.png'),
-  },
-  {
-    name: '안암불주먹',
-    age: 24,
-    belong: '고려대',
-    department: '의과병원',
-    location: '서울',
-    image: require('~/images/test-user-profile-7.png'),
-  },
-  {
-    name: '연남도끼',
-    age: 24,
-    belong: '프리랜서',
-    department: '디자이너',
-    location: '서울',
-    image: require('~/images/test-user-profile-8.png'),
-  },
-  {
-    name: 'Jane Park',
-    age: 24,
-    belong: '5급 공무원',
-    department: '',
-    location: '서울',
-    image: require('~/images/test-user-profile-6.png'),
-  },
-];
 const ProfileDetailScreen = ({navigation}) => {
   const uid = navigation.getParam('uid');
   const nickname = navigation.getParam('nickname');
@@ -74,11 +37,23 @@ const ProfileDetailScreen = ({navigation}) => {
   const age = navigation.getParam('age');
   const belong = navigation.getParam('belong');
   const department = navigation.getParam('department');
-  const feed_list = navigation.getParam('feed_list');
 
   const [friendList, setFriendList] = useState([]);
+  const [feedList, setFeedList] = useState([]);
 
   useEffect(() => {
+    axios
+      .get('http://13.124.126.30:8000/core/feed/' + uid + '/')
+      .then(result => {
+        console.log(result.data);
+        let tmpFeedList = [];
+
+        result.data.map((item, index) => {
+          tmpFeedList[index] = item;
+        });
+        console.log(tmpFeedList);
+        setFeedList(tmpFeedList);
+      });
     axios
       .get('http://13.124.126.30:8000/core/friends/' + uid + '/')
       .then(result => {
@@ -103,7 +78,7 @@ const ProfileDetailScreen = ({navigation}) => {
   const _renderDotIndicator = () => {
     return (
       <PagerDotIndicator
-        pageCount={feed_list.length}
+        pageCount={feedList.length}
         dotStyle={styles.dot}
         selectedDotStyle={styles.selectedDot}
         style={styles.indicator}
@@ -119,7 +94,7 @@ const ProfileDetailScreen = ({navigation}) => {
           <IndicatorViewPager
             style={styles.viewPager}
             indicator={_renderDotIndicator()}>
-            {feed_list.map(item => {
+            {feedList.map(item => {
               return (
                 <Image
                   style={styles.viewPage}

@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import React, {useEffect, useState} from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
 import {List, ListItem} from 'native-base';
@@ -7,34 +8,9 @@ import LikeMatching from './LikeMatching';
 import UserProfileSmall from '~/components/common/UserProfileSmall';
 import GoldBadge from '~/components/common/GoldBadge';
 import axios from 'axios';
+import TouchableByPlatform from '~/components/common/TouchableByPlatform';
 
-const data = [
-  {
-    name: '또로링',
-    image: require('~/images/test-user-profile-girl.png'),
-    isUnread: true,
-  },
-  {
-    name: '뚜루뚜막뚜',
-    image: require('~/images/test-user-profile-girl.png'),
-    isUnread: true,
-  },
-  {
-    name: '꿈발라',
-    image: require('~/images/test-user-profile-girl.png'),
-    isUnread: false,
-  },
-  {
-    name: '요잇',
-    image: require('~/images/test-user-profile-girl.png'),
-    isUnread: false,
-  },
-  {
-    name: '요잇',
-    image: require('~/images/test-user-profile-girl.png'),
-    isUnread: false,
-  },
-];
+const nowYear = 20200000;
 
 const styles = StyleSheet.create({
   scrollView: {
@@ -48,15 +24,17 @@ const LikeMatchingList = ({navigation}) => {
   useEffect(() => {
     let tmpBothLike = [];
     axios.get('http://13.124.126.30:8000/core/both_like/').then(result => {
-      result.data.user_list.map((item, index) => {
+      result.data.map((item, index) => {
         tmpBothLike[index] = item;
       });
-      setBothLiskUid(tmpBothLike);
+      setBothLikeUser(tmpBothLike);
+      console.log('likematching: ');
       console.log(result.data);
     });
   }, []);
 
-  const [bothLikeUid, setBothLiskUid] = useState([]);
+  const [bothLikeUser, setBothLikeUser] = useState([]);
+
   return (
     <List>
       {/* <ListItem itemDivider>
@@ -69,14 +47,35 @@ const LikeMatchingList = ({navigation}) => {
         showsHorizontalScrollIndicator={false}
         style={styles.scrollView}>
         <LikeMatching />
-        {bothLikeUid.map(user => {
+        {bothLikeUser.map(user => {
+          let intAge =
+            Math.floor((nowYear - parseInt(user.birthdate)) / 10000) + 2;
+          console.log('usersrrrrr');
+          console.log(user);
           return (
-            <UserProfileSmall
-              style={{marginRight: 12, paddingTop: 13}}
-              userName={user.name}
-              imageSource={user.image}
-              badgeComponent={user.isUnread === true ? <GoldBadge /> : null}
-            />
+            <TouchableByPlatform
+              onPress={() =>
+                navigation.navigate('Profile', {
+                  uid: user.uid,
+                  nickname: user.nickname,
+                  // avata: user.avata,
+                  age: intAge,
+                  belong: user.belong,
+                  department: user.department,
+                })
+              }>
+              <UserProfileSmall
+                style={{
+                  marginRight: 12,
+                  paddingTop: 13,
+                }}
+                userName={user.nickname}
+                imageSource={user.avata === null ? null : user.avata}
+                // badgeComponent={
+                //   user.isUnread === true ? <GoldBadge /> : null
+                // }
+              />
+            </TouchableByPlatform>
           );
         })}
       </ScrollView>

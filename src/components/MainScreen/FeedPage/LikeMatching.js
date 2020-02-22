@@ -115,7 +115,9 @@ const LikeMatching = () => {
         <TouchableByPlatform
           styles={styles.touchable}
           onPress={() => {
-            Alert.alert('날 좋아하는사람 16명 너도 언능 눌러라');
+            Alert.alert(
+              '마음에 드는 이성친구 피드에 좋아요를 눌러보세요! 서로 좋아요를 한 친구들을 알려준답니다 ㅎㅎ',
+            );
             console.log('inin');
           }}>
           <ImageBackground
@@ -124,9 +126,9 @@ const LikeMatching = () => {
             <ImageBackground
               source={require('~/images/gold-like.png')}
               style={styles.goldLike}>
-              <CustomTextLight size={16} color="white">
+              {/* <CustomTextLight size={16} color="white">
                 16
-              </CustomTextLight>
+              </CustomTextLight> */}
             </ImageBackground>
           </ImageBackground>
         </TouchableByPlatform>

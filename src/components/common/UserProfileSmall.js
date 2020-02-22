@@ -21,18 +21,32 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-end',
   },
 });
-const UserProfileSmall = ({style, imageSource, userName, badgeComponent}) => (
-  <View style={[styles.container, style]}>
-    <View style={styles.imageContainer}>
-      <Image source={imageSource} style={styles.image} />
-      <View style={styles.badgeWrapper}>{badgeComponent}</View>
+const UserProfileSmall = ({style, imageSource, userName, badgeComponent}) => {
+  console.log('profile small');
+  console.log(imageSource);
+  return (
+    <View style={[styles.container, style]}>
+      <View style={styles.imageContainer}>
+        <Image
+          source={
+            imageSource === null
+              ? require('~/images/test-user-profile-girl.png')
+              : {uri: imageSource}
+          }
+          style={styles.image}
+        />
+        {/* <View style={styles.badgeWrapper}>{badgeComponent}</View> */}
+      </View>
+      {userName ? (
+        <CustomTextMedium
+          size={12}
+          color={palette.black}
+          style={{marginTop: 3}}>
+          {userName}
+        </CustomTextMedium>
+      ) : null}
     </View>
-    {userName ? (
-      <CustomTextMedium size={12} color={palette.black} style={{marginTop: 3}}>
-        {userName}
-      </CustomTextMedium>
-    ) : null}
-  </View>
-);
+  );
+};
 
 export default UserProfileSmall;

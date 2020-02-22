@@ -39,7 +39,6 @@ const ProfileCardList = ({navigation}) => {
             )}
             belong={item.profile.belong}
             department={item.profile.department}
-            feed_list={item.feed_list}
           />
         );
       })}

@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   Image,
   View,
@@ -17,7 +17,7 @@ import Ionicon from 'react-native-vector-icons/Ionicons';
 import palette from '~/lib/styles/palette';
 import TouchableByPlatform from '~/components/common/TouchableByPlatform';
 import ProfileCard from '~/components/common/ProfileCard';
-
+import axios from 'axios';
 import {
   PagerDotIndicator,
   IndicatorViewPager,
@@ -147,15 +147,30 @@ const ProfileCardFeed = ({
   age,
   belong,
   department,
-  feed_list,
 }) => {
   const [liked, setLiked] = useState(false);
   const [hasChatting, setHasChatting] = useState(false);
+  const [feedList, setFeedList] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get('http://13.124.126.30:8000/core/feed/' + uid + '/')
+      .then(result => {
+        console.log(result.data);
+        let tmpFeedList = [];
+
+        result.data.map((item, index) => {
+          tmpFeedList[index] = item;
+        });
+        console.log(tmpFeedList);
+        setFeedList(tmpFeedList);
+      });
+  }, []);
 
   const _renderDotIndicator = () => {
     return (
       <PagerDotIndicator
-        pageCount={feed_list.length}
+        pageCount={feedList.length}
         dotStyle={styles.dot}
         selectedDotStyle={styles.selectedDot}
         style={styles.indicator}
@@ -186,7 +201,7 @@ const ProfileCardFeed = ({
       <IndicatorViewPager
         style={styles.viewPager}
         indicator={_renderDotIndicator()}>
-        {feed_list.map((item, index) => {
+        {feedList.map((item, index) => {
           return (
             <TouchableOpacity
               onPress={() => {
@@ -200,7 +215,6 @@ const ProfileCardFeed = ({
                   age,
                   belong,
                   department,
-                  feed_list,
                 });
               }}>
               <Image
