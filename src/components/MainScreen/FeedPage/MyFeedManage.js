@@ -31,6 +31,7 @@ import {
   CustomTextMedium,
   CustomTextBold,
 } from '~/components/common/CustomText';
+import file_upload from '~/lib/utils/file_upload';
 
 const dw = Dimensions.get('window').width;
 const dh = Dimensions.get('window').height;
@@ -60,6 +61,7 @@ const MyFeedManage = ({navigation}) => {
             tmpFeed[count] = item;
             count++;
           });
+          tmpFeed.reverse();
           setFeed_list(tmpFeed);
         }),
       );
@@ -93,7 +95,11 @@ const MyFeedManage = ({navigation}) => {
       } else if (response.customButton) {
         console.log('User tapped custom button: ', response.customButton);
       } else {
-        let source = {uri: response.uri};
+        let source = {
+          uri: response.uri,
+          name: response.fileName,
+          type: response.type,
+        };
         setFeedDisplay(true);
         setImageSource(source);
         setModalVisible(true);
@@ -140,15 +146,23 @@ const MyFeedManage = ({navigation}) => {
             <Button
               style={styles.modalButtonMultiple}
               onPress={() => {
-                setImageSource(null);
-                setModalVisible(false);
-                Alert.alert('이때 서버 보내기');
-                // Alert.alert(
-                //   'Alert Title',
-                //   'My Alert Msg',
-                //   [{text: 'OK', onPress: () => setModalVisible(false)}],
-                //   {cancelable: false},
-                // );
+                const formData = new FormData();
+                formData.append('image', {
+                  uri: imageSource.uri,
+                  type: imageSource.type,
+                  name: imageSource.name,
+                });
+                file_upload(
+                  formData,
+                  'http://13.124.126.30:8000/core/feed/',
+                ).then(result => {
+                  setImageSource(null);
+                  setModalVisible(false);
+                  let tmpFeed = feed_list.slice();
+                  tmpFeed.unshift(result.data);
+                  console.log(result.data);
+                  setFeed_list(tmpFeed);
+                });
               }}>
               <CustomTextRegular size={17} color={palette.red}>
                 완료

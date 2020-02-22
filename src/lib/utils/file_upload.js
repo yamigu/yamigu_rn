@@ -7,7 +7,7 @@ const file_upload = (formData, url) => {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
-      Authorization: 'Token ' + '567c3b626249c463a3c9372639628d5c435e330a',
+      Authorization: 'Token ' + 'fe917733867cf9cf05937e7a7ac1a67247e873b1',
     },
     data: formData,
   })

@@ -106,7 +106,7 @@ const ProfileImageAddView = ({image1, image2, image3, image4, image5}) => {
                 formData.append('number', '1');
                 file_upload(
                   formData,
-                  'http://192.168.0.6:8000/authorization/user/profile_image/',
+                  'http://13.124.126.30:8000/authorization/user/profile_image/',
                 ).then(result => {
                   setImageSource(null);
                   setModalVisible(false);
