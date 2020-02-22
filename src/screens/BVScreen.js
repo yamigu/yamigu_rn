@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, StyleSheet, Dimensions, PixelRatio, Image} from 'react-native';
 import {
   CustomTextRegular,
@@ -11,10 +11,69 @@ import MaterialCommunityicon from 'react-native-vector-icons/MaterialCommunityIc
 import ImagePicker from 'react-native-image-picker';
 import TouchableByPlatform from '~/components/common/TouchableByPlatform';
 import {HeaderBackButton} from 'react-navigation-stack';
+import Spinner from 'react-native-loading-spinner-overlay';
+import file_upload from '~/lib/utils/file_upload';
 
 const dw = Dimensions.get('window').width;
-const BVScreen = ({params}) => {
-  const [ImageSource, setImageSource] = useState(null);
+const BVScreen = ({navigation}) => {
+  const [imageSource, setImageSource] = useState(null);
+  const [uploading, setUploading] = useState(false);
+  const [toggle, setToggle] = useState(0);
+  const [text1, setText1] = useState('');
+  const [text2, setText2] = useState('');
+  const [focus1, setFocus1] = useState(false);
+  const [focus2, setFocus2] = useState(false);
+
+  const doVerify = () => {
+    console.log('doVerify');
+    setUploading(true);
+    const formData = new FormData();
+    const image = imageSource;
+    const belong = text1;
+    const department = text2;
+    const studentToggle = toggle;
+    console.log('belong:' + belong);
+    console.log('department:' + department);
+    console.log('studentToggle:' + studentToggle);
+    console.log('image:', image);
+    if (studentToggle == 1) {
+      formData.append('is_student', true);
+    } else if (studentToggle == 1) {
+      formData.append('is_student', false);
+    }
+    formData.append('belong', belong);
+    formData.append('department', department);
+    if (image === null) {
+      setUploading(false);
+      return;
+    }
+    formData.append('image', {
+      uri: image.uri,
+      type: image.type,
+      name: image.name,
+    });
+    file_upload(
+      formData,
+      'http://13.124.126.30:8000/authorization/user/belong_verification/',
+    )
+      .then(result => {
+        console.log(result.data);
+        setUploading(false);
+      })
+      .catch(error => {
+        setUploading(false);
+      });
+  };
+  useEffect(() => {
+    navigation.setParams({
+      doVerify: () => doVerify(),
+      toggle: toggle,
+      text1: text1,
+      text2: text2,
+      imageSource: imageSource,
+    });
+    console.log('useEffect');
+  }, []);
 
   const selectPhotoTapped = () => {
     const options = {
@@ -36,28 +95,47 @@ const BVScreen = ({params}) => {
       } else if (response.customButton) {
         console.log('User tapped custom button: ', response.customButton);
       } else {
-        let source = {uri: response.uri};
+        let source = {
+          uri: response.uri,
+          name: response.fileName,
+          type: response.type,
+        };
+        console.log('image uri' + response.uri);
         setImageSource(source);
+        navigation.setParams({
+          doVerify: () => doVerify(),
+          toggle: toggle,
+          text1: text1,
+          text2: text2,
+          imageSource: source,
+        });
       }
     });
   };
 
-  const [toggle, setToggle] = useState(0);
-  const [text1, setText1] = useState('');
-  const [text2, setText2] = useState('');
-  const [focus1, setFocus1] = useState(false);
-  const [focus2, setFocus2] = useState(false);
-
   const clickButton = pos => {
+    let value = 0;
     if (pos === toggle) {
-      setToggle(0);
+      value = 0;
     } else {
-      setToggle(pos);
-      console.log(dw);
+      value = pos;
     }
+    setToggle(value);
+    navigation.setParams({
+      doVerify: () => doVerify(),
+      toggle: value,
+      text1: text1,
+      text2: text2,
+      imageSource: imageSource,
+    });
   };
   return (
     <Content style={styles.root}>
+      <Spinner
+        visible={uploading}
+        textContent={'Uploading...'}
+        textStyle={styles.spinnerTextStyle}
+      />
       <CustomTextMedium size={20} color={palette.black}>
         소속을 인증 해 주세요
       </CustomTextMedium>
@@ -105,7 +183,17 @@ const BVScreen = ({params}) => {
                   ? 'ex) 연세대, 고려대, 서울대, 이화여대, OO대'
                   : 'ex) 삼성전자, 스타트업, 프리랜서'
               }
-              onChangeText={value => setText1({value})}
+              onChangeText={value => {
+                console.log(value);
+                setText1(value);
+                navigation.setParams({
+                  doVerify: () => doVerify(),
+                  toggle: toggle,
+                  text1: value,
+                  text2: text2,
+                  imageSource: imageSource,
+                });
+              }}
               value={text1}
               selectionColor={palette.orange[0]}
               placeholderTextColor={palette.nonselect}
@@ -126,7 +214,16 @@ const BVScreen = ({params}) => {
                   ? 'ex) 전기전자공학부, 경영학과, 의학과'
                   : 'ex) 디자이너, 의사, 개발자, 선생님'
               }
-              onChangeText={value => setText2({value})}
+              onChangeText={value => {
+                setText2(value);
+                navigation.setParams({
+                  doVerify: () => doVerify(),
+                  toggle: toggle,
+                  text1: text1,
+                  text2: value,
+                  imageSource: imageSource,
+                });
+              }}
               value={text2}
               selectionColor={palette.orange[0]}
               placeholderTextColor={palette.nonselect}
@@ -137,7 +234,7 @@ const BVScreen = ({params}) => {
         </Form>
       ) : null}
       <CustomTextRegular
-        color="#707070"
+        color={palette.gray}
         style={{marginTop: 24, marginBottom: 10}}>
         소속인증
       </CustomTextRegular>
@@ -153,7 +250,7 @@ const BVScreen = ({params}) => {
           height: dw * 0.41,
           elevation: 0,
         }}>
-        {ImageSource === null ? (
+        {imageSource === null ? (
           <View
             style={{
               flex: 1,
@@ -180,7 +277,7 @@ const BVScreen = ({params}) => {
             </CustomTextRegular>
           </View>
         ) : (
-          <Image style={styles.ImageContainer} source={ImageSource} />
+          <Image style={styles.ImageContainer} source={imageSource} />
         )}
       </Button>
       <View style={{marginLeft: dw * 0.04}}>
@@ -220,8 +317,31 @@ BVScreen.navigationOptions = ({navigation}) => ({
     </CustomTextRegular>
   ),
   headerRight: () => (
-    <Button style={{backgroundColor: 'white', marginRight: 10, height: 40}}>
-      <CustomTextRegular size={15} color={palette.orange}>
+    <Button
+      disabled={
+        navigation.getParam('text1') === '' ||
+        navigation.getParam('text2') === '' ||
+        navigation.getParam('toggle') === 0 ||
+        navigation.getParam('imageSource') === null
+      }
+      transparent
+      style={{
+        backgroundColor: 'white',
+        marginRight: 10,
+        height: 40,
+        elevation: 0,
+      }}
+      onPress={() => navigation.getParam('doVerify')()}>
+      <CustomTextRegular
+        size={15}
+        color={
+          navigation.getParam('text1') === '' ||
+          navigation.getParam('text2') === '' ||
+          navigation.getParam('toggle') === 0 ||
+          navigation.getParam('imageSource') === null
+            ? palette.nonselect
+            : palette.orange
+        }>
         인증
       </CustomTextRegular>
     </Button>
@@ -326,8 +446,10 @@ const styles = StyleSheet.create({
     lineHeight: 14,
     fontFamily: 'NotoSansCJKkr-Regular',
     paddingBottom: 0,
-    marginBottom: -10,
     color: palette.black,
+  },
+  spinnerTextStyle: {
+    color: '#FFF',
   },
 });
 export default BVScreen;
