@@ -145,11 +145,13 @@ const BVScreen = ({params}) => {
         onPress={selectPhotoTapped}
         style={{
           flex: 1,
+          borderWidth: 1,
           borderColor: palette.nonselect,
           backgroundColor: palette.default_bg,
           borderRadius: 5,
           width: dw * 0.9,
           height: dw * 0.41,
+          elevation: 0,
         }}>
         {ImageSource === null ? (
           <View
