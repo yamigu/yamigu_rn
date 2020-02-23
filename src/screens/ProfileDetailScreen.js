@@ -51,8 +51,7 @@ const ProfileDetailScreen = ({navigation}) => {
         result.data.map((item, index) => {
           tmpFeedList[index] = item;
         });
-        console.log(tmpFeedList);
-        setFeedList(tmpFeedList);
+        setFeedList(tmpFeedList.reverse());
       });
     axios
       .get('http://13.124.126.30:8000/core/friends/' + uid + '/')
@@ -67,7 +66,6 @@ const ProfileDetailScreen = ({navigation}) => {
             count++;
           }
         });
-        console.log(tmpFriendList);
         setFriendList(tmpFriendList);
       });
   }, []);

@@ -22,6 +22,7 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import {CustomTextBold, CustomTextRegular} from './CustomText';
 import file_upload from '~/lib/utils/file_upload';
 import axios from 'axios';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const deviceWidth = Dimensions.get('window').width;
 const dw = Dimensions.get('window').width;
@@ -48,14 +49,29 @@ const temp_init_data = [
     number: 5,
   },
 ];
-const ProfileImageAddView = ({image1, image2, image3, image4, image5}) => {
+const ProfileImageAddView = () => {
   const [imageSource, setImageSource] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [pfImageList, setPfImageList] = useState(temp_init_data);
   const [pfImageTempList, setPfImageTempList] = useState(temp_init_data);
   const [uploading, setUploading] = useState(false);
-
+  const [userInfo, setUserInfo] = useState([]);
+  const _retrieveData = async () => {
+    try {
+      const userValue = await AsyncStorage.getItem('userValue');
+      const jUserValue = JSON.parse(userValue);
+      if (userValue !== null) {
+        // console.log('qweqwe');
+        // console.log(jUserValue);
+        setUserInfo(jUserValue);
+        // console.log(jUserValue[3]);
+      } else {
+        console.log('asdasd');
+      }
+    } catch (error) {}
+  };
   useEffect(() => {
+    _retrieveData();
     axios({
       url: 'http://13.124.126.30:8000/authorization/user/profile_image/',
       method: 'GET',
@@ -67,7 +83,8 @@ const ProfileImageAddView = ({image1, image2, image3, image4, image5}) => {
       result.data.map((item, index) => {
         tmp[index] = item.src;
       });
-      if (result.data.length() > 0) setPfImageList(result.data);
+      console.log(result.data);
+      if (result.data.length > 0) setPfImageList(result.data);
     });
   }, []);
 
@@ -83,8 +100,6 @@ const ProfileImageAddView = ({image1, image2, image3, image4, image5}) => {
     console.log(pfImageList[0]);
 
     ImagePicker.showImagePicker(options, response => {
-      console.log('Response = ', response);
-
       if (response.didCancel) {
         console.log('User cancelled photo picker');
       } else if (response.error) {
@@ -151,6 +166,17 @@ const ProfileImageAddView = ({image1, image2, image3, image4, image5}) => {
                   setPfImageList(temp);
                   setPfImageTempList(temp_init_data);
                   setModalVisible(false);
+                  if (imageSource.number === 1) {
+                    let newUserInfo = userInfo.slice();
+                    newUserInfo[global.config.user_info_const.AVATA] =
+                      result.data.src;
+                    console.log('new profile image: ');
+                    console.log(result.data);
+                    AsyncStorage.setItem(
+                      'userValue',
+                      JSON.stringify(newUserInfo),
+                    );
+                  }
                   // Alert.alert(
                   //   'Alert Title',
                   //   'My Alert Msg',
@@ -183,7 +209,7 @@ const ProfileImageAddView = ({image1, image2, image3, image4, image5}) => {
         <Button style={styles.mainButton} onPress={() => selectPhotoTapped(1)}>
           {pfImageTempList[0].src !== null ? (
             <Image style={styles.fill} source={{uri: pfImageTempList[0].src}} />
-          ) : pfImageList[0].src !== null ? (
+          ) : pfImageList.length > 0 && pfImageList[0].src !== null ? (
             <TouchableByPlatform style={styles.mainButtonImageWrapper}>
               <Image
                 style={styles.mainButtonImage}
@@ -212,7 +238,7 @@ const ProfileImageAddView = ({image1, image2, image3, image4, image5}) => {
                   style={styles.fill}
                   source={{uri: pfImageTempList[1].src}}
                 />
-              ) : pfImageList[1].src !== null ? (
+              ) : pfImageList.length > 1 && pfImageList[1].src !== null ? (
                 <Image style={styles.fill} source={{uri: pfImageList[1].src}} />
               ) : (
                 <AntDesignIcon
@@ -228,7 +254,7 @@ const ProfileImageAddView = ({image1, image2, image3, image4, image5}) => {
                   style={styles.fill}
                   source={{uri: pfImageTempList[2].src}}
                 />
-              ) : pfImageList[2].src !== null ? (
+              ) : pfImageList.length > 2 && pfImageList[2].src !== null ? (
                 <Image style={styles.fill} source={{uri: pfImageList[2].src}} />
               ) : (
                 <AntDesignIcon
@@ -246,7 +272,7 @@ const ProfileImageAddView = ({image1, image2, image3, image4, image5}) => {
                   style={styles.fill}
                   source={{uri: pfImageTempList[3].src}}
                 />
-              ) : pfImageList[3].src !== null ? (
+              ) : pfImageList.length > 3 && pfImageList[3].src !== null ? (
                 <Image style={styles.fill} source={{uri: pfImageList[3].src}} />
               ) : (
                 <AntDesignIcon
@@ -262,7 +288,7 @@ const ProfileImageAddView = ({image1, image2, image3, image4, image5}) => {
                   style={styles.fill}
                   source={{uri: pfImageTempList[4].src}}
                 />
-              ) : pfImageList[4].src !== null ? (
+              ) : pfImageList.length > 4 && pfImageList[4].src !== null ? (
                 <Image style={styles.fill} source={{uri: pfImageList[4].src}} />
               ) : (
                 <AntDesignIcon

@@ -9,7 +9,7 @@ const ImageView = ({params}) => (
     <CustomTextMedium size={18} color={palette.black}>
       프로필 사진
     </CustomTextMedium>
-    <ProfileImageAddView image1 />
+    <ProfileImageAddView />
     <View style={styles.descView}>
       <CustomTextRegular size={12} color={palette.gray}>
         메인 사진은 반드시 본인 사진이어야 합니다

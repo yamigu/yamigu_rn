@@ -162,8 +162,7 @@ const ProfileCardFeed = ({
         result.data.map((item, index) => {
           tmpFeedList[index] = item;
         });
-        console.log(tmpFeedList);
-        setFeedList(tmpFeedList);
+        setFeedList(tmpFeedList.reverse());
       });
   }, []);
 

@@ -34,11 +34,11 @@ const MyFeedView = ({userInfo}) => {
   const [feed_list, setFeed_list] = useState([]);
 
   useEffect(() => {
-    if (userInfo[global.config.user_info_const.NICKNAME] !== undefined) {
+    if (userInfo[global.config.user_info_const.UID] !== undefined) {
       axios
         .get(
           'http://13.124.126.30:8000/core/feed/' +
-            userInfo[global.config.user_info_const.NICKNAME] +
+            userInfo[global.config.user_info_const.UID] +
             '/',
         )
         .then(result => {
