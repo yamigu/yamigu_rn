@@ -76,16 +76,10 @@ const SideMenu = ({navigation}) => {
     } catch (error) {}
   };
   useEffect(() => {
-    console.log('fuck that');
-    _retrieveData();
-    navigation.addListener(
-      'didFocus',
-      () => {
-        _retrieveData().then(() => console.log('SideMenu didfocus'));
-      },
-      // run function that updates the data on entering the screen
-    );
-  }, []);
+    if (navigation.state.isDrawerOpen) {
+      _retrieveData().then(() => console.log('SideMenu didfocus'));
+    }
+  }, [navigation]);
 
   return (
     <SafeAreaView style={styles.root}>
