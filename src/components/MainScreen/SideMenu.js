@@ -63,7 +63,7 @@ const SideMenu = ({navigation}) => {
         // console.log('qweqwe');
         console.log(jUserValue);
         setSideInfo(jUserValue);
-        // console.log(jUserValue[3]);
+        console.log(jUserValue[3]);
       } else {
         console.log('asdasd');
       }
@@ -98,7 +98,7 @@ const SideMenu = ({navigation}) => {
               <Thumbnail
                 style={styles.thumbnail}
                 source={
-                  sideInfo[3] === 'avata'
+                  sideInfo[3] === 'avata' || sideInfo[3] === null
                     ? require('~/images/user-default-profile.png')
                     : {uri: sideInfo[3]}
                 }
@@ -134,26 +134,29 @@ const SideMenu = ({navigation}) => {
           </View>
         </View>
         <List style={styles.list}>
-          <TouchableByPlatform
-            onPress={() => {
-              navigation.navigate('BV');
-              console.log('goto BV');
-            }}>
-            <ListItem icon noIndent style={styles.listItem}>
-              <Left style={styles.listItemLeft}>
-                <Anticon
-                  name="exclamationcircle"
-                  style={styles.iconWarning}
-                  size={deviceWidth * 0.813 * 0.06}
-                />
-              </Left>
-              <Body style={styles.listItemBody}>
-                <CustomTextRegular size={14} color={palette.red}>
-                  소속 인증하기
-                </CustomTextRegular>
-              </Body>
-            </ListItem>
-          </TouchableByPlatform>
+          {sideInfo[8] === 0 ? (
+            <TouchableByPlatform
+              onPress={() => {
+                navigation.navigate('BV');
+                console.log('goto BV');
+              }}>
+              <ListItem icon noIndent style={styles.listItem}>
+                <Left style={styles.listItemLeft}>
+                  <Anticon
+                    name="exclamationcircle"
+                    style={styles.iconWarning}
+                    size={deviceWidth * 0.813 * 0.06}
+                  />
+                </Left>
+                <Body style={styles.listItemBody}>
+                  <CustomTextRegular size={14} color={palette.red}>
+                    소속 인증하기
+                  </CustomTextRegular>
+                </Body>
+              </ListItem>
+            </TouchableByPlatform>
+          ) : null}
+
           {/* <TouchableByPlatform
             navigation={navigation}
             onPress={() => navigation.navigate('MyProfile')}>
