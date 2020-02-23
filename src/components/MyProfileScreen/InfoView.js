@@ -6,13 +6,13 @@ import {List, ListItem, Left, Right, Body} from 'native-base';
 import Anticon from 'react-native-vector-icons/AntDesign';
 import TouchableByPlatform from '../common/TouchableByPlatform';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-
+import '~/config';
 const InfoView = ({navigation, userInfo}) => {
   const [info, setInfo] = useState([]);
   const nowYear = 20200000;
 
   useEffect(() => {
-    if (userInfo[1] !== undefined) {
+    if (userInfo[global.config.user_info_const.NICKNAME] !== undefined) {
       setInfo(userInfo);
     }
   }, [userInfo]);
@@ -33,7 +33,7 @@ const InfoView = ({navigation, userInfo}) => {
           </Left>
           <Body style={{alignItems: 'flex-end'}}>
             <CustomTextRegular size={16} color={palette.gray}>
-              {info[2]}
+              {info[global.config.user_info_const.NICKNAME]}
             </CustomTextRegular>
           </Body>
         </ListItem>
@@ -45,7 +45,9 @@ const InfoView = ({navigation, userInfo}) => {
           </Left>
           <Right>
             <CustomTextRegular size={16} color={palette.gray}>
-              {info[7] === 1 ? '남자' : '여자'}
+              {info[global.config.user_info_const.GENDER] === 1
+                ? '남자'
+                : '여자'}
             </CustomTextRegular>
           </Right>
         </ListItem>
@@ -68,7 +70,7 @@ const InfoView = ({navigation, userInfo}) => {
             </CustomTextRegular>
           </Left>
           <Body style={{alignItems: 'flex-end'}}>
-            {info[8] === 0 ? (
+            {info[global.config.user_info_const.VERIFIED] === 0 ? (
               <TouchableOpacity
                 style={styles.listItemRight}
                 onPress={() => navigation.navigate('BV')}>
@@ -81,13 +83,14 @@ const InfoView = ({navigation, userInfo}) => {
                   size={18}
                 />
               </TouchableOpacity>
-            ) : info[8] === 1 ? (
+            ) : info[global.config.user_info_const.VERIFIED] === 1 ? (
               <CustomTextRegular size={16} color={palette.gray}>
                 인증 진행 중
               </CustomTextRegular>
-            ) : info[8] === 2 ? (
+            ) : info[global.config.user_info_const.VERIFIED] === 2 ? (
               <CustomTextRegular size={16} color={palette.gray}>
-                {info[5]} {info[6]}
+                {info[global.config.user_info_const.BELONG]}{' '}
+                {info[global.config.user_info_const.DEPARTMENT]}
               </CustomTextRegular>
             ) : null}
           </Body>

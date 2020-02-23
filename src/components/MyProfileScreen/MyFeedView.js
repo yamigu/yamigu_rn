@@ -24,7 +24,7 @@ import TouchableByPlatform from '../common/TouchableByPlatform';
 import ImagePicker from 'react-native-image-picker';
 import {Button} from 'native-base';
 import axios from 'axios';
-
+import '~/config';
 const dw = Dimensions.get('window').width;
 const dh = Dimensions.get('window').height;
 
@@ -34,9 +34,13 @@ const MyFeedView = ({userInfo}) => {
   const [feed_list, setFeed_list] = useState([]);
 
   useEffect(() => {
-    if (userInfo[1] !== undefined) {
+    if (userInfo[global.config.user_info_const.NICKNAME] !== undefined) {
       axios
-        .get('http://13.124.126.30:8000/core/feed/' + userInfo[1] + '/')
+        .get(
+          'http://13.124.126.30:8000/core/feed/' +
+            userInfo[global.config.user_info_const.NICKNAME] +
+            '/',
+        )
         .then(result => {
           console.log(result.data);
           let tmpFeed = [];

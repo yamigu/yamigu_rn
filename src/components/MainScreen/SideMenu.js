@@ -38,7 +38,7 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 import KakaoSDK from '@actbase/react-native-kakaosdk';
 import AsyncStorage from '@react-native-community/async-storage';
 import {getProfile} from '@react-native-seoul/kakao-login';
-
+import '~/config';
 const deviceWidth = Dimensions.get('window').width;
 const SideMenu = ({navigation}) => {
   const gotoChat = () => {
@@ -63,7 +63,7 @@ const SideMenu = ({navigation}) => {
         // console.log('qweqwe');
         console.log(jUserValue);
         setSideInfo(jUserValue);
-        // console.log(jUserValue[3]);
+        console.log(jUserValue[3]);
       } else {
         console.log('asdasd');
       }
@@ -98,24 +98,34 @@ const SideMenu = ({navigation}) => {
               <Thumbnail
                 style={styles.thumbnail}
                 source={
-                  sideInfo[3] === 'avata'
+                  sideInfo[global.config.user_info_const.AVATA] === 'avata' ||
+                  sideInfo[global.config.user_info_const.AVATA] === null
                     ? require('~/images/user-default-profile.png')
-                    : {uri: sideInfo[3]}
+                    : {uri: sideInfo[global.config.user_info_const.AVATA]}
                 }
               />
             </TouchableByPlatform>
           </View>
           <View style={styles.nameAndAgeView}>
             <CustomTextBold size={18} color={palette.black}>
-              {sideInfo[2] === 'nickname' ? null : sideInfo[2]}
+              {sideInfo[global.config.user_info_const.NICKNAME] === 'nickname'
+                ? null
+                : sideInfo[global.config.user_info_const.NICKNAME]}
             </CustomTextBold>
             <CustomTextMedium
               size={14}
               color={palette.black}
               style={{marginLeft: 6}}>
-              {sideInfo[4] === 'birthdate'
+              {sideInfo[global.config.user_info_const.BIRTHDATE] === 'birthdate'
                 ? null
-                : Math.floor((20200000 - parseInt(sideInfo[4])) / 10000 + 2)}
+                : Math.floor(
+                    (20200000 -
+                      parseInt(
+                        sideInfo[global.config.user_info_const.BIRTHDATE],
+                      )) /
+                      10000 +
+                      2,
+                  )}
             </CustomTextMedium>
             <CustomTextMedium
               size={14}
@@ -126,34 +136,41 @@ const SideMenu = ({navigation}) => {
           </View>
           <View style={styles.belongView}>
             <CustomTextRegular size={14} color={palette.gray}>
-              {sideInfo[5] === 'belong' ? null : sideInfo[5] + '  '}
+              {sideInfo[global.config.user_info_const.BELONG] === 'belong'
+                ? null
+                : sideInfo[global.config.user_info_const.BELONG] + '  '}
             </CustomTextRegular>
             <CustomTextRegular size={14} color={palette.gray}>
-              {sideInfo[6] === 'depart' ? null : sideInfo[6]}
+              {sideInfo[global.config.user_info_const.DEPARTMENT] === 'depart'
+                ? null
+                : sideInfo[global.config.user_info_const.DEPARTMENT]}
             </CustomTextRegular>
           </View>
         </View>
         <List style={styles.list}>
-          <TouchableByPlatform
-            onPress={() => {
-              navigation.navigate('BV');
-              console.log('goto BV');
-            }}>
-            <ListItem icon noIndent style={styles.listItem}>
-              <Left style={styles.listItemLeft}>
-                <Anticon
-                  name="exclamationcircle"
-                  style={styles.iconWarning}
-                  size={deviceWidth * 0.813 * 0.06}
-                />
-              </Left>
-              <Body style={styles.listItemBody}>
-                <CustomTextRegular size={14} color={palette.red}>
-                  소속 인증하기
-                </CustomTextRegular>
-              </Body>
-            </ListItem>
-          </TouchableByPlatform>
+          {sideInfo[global.config.user_info_const.VERIFIED] === 0 ? (
+            <TouchableByPlatform
+              onPress={() => {
+                navigation.navigate('BV');
+                console.log('goto BV');
+              }}>
+              <ListItem icon noIndent style={styles.listItem}>
+                <Left style={styles.listItemLeft}>
+                  <Anticon
+                    name="exclamationcircle"
+                    style={styles.iconWarning}
+                    size={deviceWidth * 0.813 * 0.06}
+                  />
+                </Left>
+                <Body style={styles.listItemBody}>
+                  <CustomTextRegular size={14} color={palette.red}>
+                    소속 인증하기
+                  </CustomTextRegular>
+                </Body>
+              </ListItem>
+            </TouchableByPlatform>
+          ) : null}
+
           {/* <TouchableByPlatform
             navigation={navigation}
             onPress={() => navigation.navigate('MyProfile')}>
@@ -367,16 +384,16 @@ const SideMenu = ({navigation}) => {
               정보
             </CustomTextMedium>
           </ListItem>
-          <TouchableByPlatform onPress={() => navigation.navigate('Signup')}>
+          <TouchableByPlatform>
             <ListItem noIndent style={styles.listItem}>
               <Body style={styles.listItemBody}>
                 <CustomTextRegular size={14} color={palette.black}>
-                  앱 버전(임시 : 회원가입 스크린)
+                  앱 버전
                 </CustomTextRegular>
               </Body>
               <Right style={styles.listItemRight}>
                 <CustomTextRegular size={14} color={palette.orange}>
-                  1.0.0
+                  {global.config.app_version}
                 </CustomTextRegular>
               </Right>
             </ListItem>
