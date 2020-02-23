@@ -100,6 +100,8 @@ const ProfileImageAddView = ({image1, image2, image3, image4, image5}) => {
         };
         let temp = pfImageTempList.slice();
         temp[number - 1].src = source.uri;
+        console.log('asdasdasd');
+        console.log(source);
         setImageSource(source);
         setPfImageTempList(temp);
         setModalVisible(true);
@@ -138,7 +140,7 @@ const ProfileImageAddView = ({image1, image2, image3, image4, image5}) => {
                 formData.append('image', {
                   uri: imageSource.uri,
                   type: imageSource.type,
-                  name: imageSource.name,
+                  name: imageSource.uri,
                 });
                 formData.append('number', imageSource.number);
                 file_upload(

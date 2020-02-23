@@ -56,6 +56,7 @@ const SideMenu = ({navigation}) => {
   // 'birhdate',  'belong',     'department', 'profile_list',
   // 'feed_list', 'friend_list','yami_number',
   const _retrieveData = async () => {
+    console.log('retriv!!');
     try {
       const userValue = await AsyncStorage.getItem('userValue');
       const jUserValue = JSON.parse(userValue);
@@ -70,6 +71,7 @@ const SideMenu = ({navigation}) => {
     } catch (error) {}
   };
   useEffect(() => {
+    console.log('here!');
     _retrieveData();
   }, []);
 
@@ -345,11 +347,11 @@ const SideMenu = ({navigation}) => {
               </Right>
             </ListItem>
           </TouchableByPlatform>
-          <TouchableByPlatform onPress={() => navigation.navigate('Login')}>
+          {/* <TouchableByPlatform onPress={() => navigation.navigate('Login')}>
             <ListItem noIndent style={styles.listItem}>
               <Body style={styles.listItemBody}>
                 <CustomTextRegular size={14} color={palette.black}>
-                  로그인화면
+                  인화면
                 </CustomTextRegular>
               </Body>
               <Right style={styles.listItemRight}>
@@ -359,7 +361,7 @@ const SideMenu = ({navigation}) => {
                 />
               </Right>
             </ListItem>
-          </TouchableByPlatform>
+          </TouchableByPlatform> */}
           <TouchableByPlatform onPress={() => navigation.navigate('Notice')}>
             <ListItem noIndent style={styles.listItem}>
               <Body style={styles.listItemBody}>
@@ -369,7 +371,7 @@ const SideMenu = ({navigation}) => {
               </Body>
             </ListItem>
           </TouchableByPlatform>
-          <TouchableByPlatform onPress={() => navigation.navigate('Setting')}>
+          {/* <TouchableByPlatform onPress={() => navigation.navigate('Setting')}>
             <ListItem noIndent style={styles.listItem}>
               <Body style={styles.listItemBody}>
                 <CustomTextRegular size={14} color={palette.black}>
@@ -377,7 +379,7 @@ const SideMenu = ({navigation}) => {
                 </CustomTextRegular>
               </Body>
             </ListItem>
-          </TouchableByPlatform>
+          </TouchableByPlatform> */}
 
           <ListItem itemDivider style={styles.itemDivider}>
             <CustomTextMedium size={24} color={palette.black}>

@@ -13,6 +13,7 @@ import {List, ListItem, Body, Right, Button, Content, Input} from 'native-base';
 import ProfileCard from '~/components/common/ProfileCard';
 import Spinner from 'react-native-loading-spinner-overlay';
 import axios from 'axios';
+import TouchableByPlatform from '~/components/common/TouchableByPlatform';
 
 const AddFriendsScreen = ({navigation}) => {
   const [inputValue, setInputValue] = useState('');
@@ -24,15 +25,65 @@ const AddFriendsScreen = ({navigation}) => {
   useEffect(() => {
     axios.get('http://13.124.126.30:8000/core/friends/').then(result => {
       console.log(result.data);
+      setNumOfFriends(result.data.length);
       setFriendList(result.data);
     });
   }, []);
+
+  const patchFriendStatus = (id, action) => {
+    Alert.alert(
+      '정말 친구를 삭제하시겠습니까?',
+      '',
+      [
+        {
+          text: '네',
+          onPress: () => {
+            console.log('OK Pressed');
+            axios
+              .patch('http://13.124.126.30:8000/core/friend/', {
+                id: id,
+                action: action,
+              })
+              .then(() => axios.get('http://13.124.126.30:8000/core/friends/'))
+              .then(result => {
+                console.log(result.data);
+                setFriendList(result.data);
+              });
+          },
+        },
+        {text: '아니오', onPress: () => console.log('Cancel Pressed')},
+      ],
+      {cancelable: false},
+    );
+  };
+
+  const addFriend = phone => {
+    console.log('inputValue');
+    console.log(inputValue);
+
+    axios.post('http://13.124.126.30:8000/core/friend/', {
+      phoneno: inputValue,
+    });
+    // .then(result => {
+    //   if (result.data === 'successfully requested') {
+    //     setLoginLoading(false);
+    //     console.log('add friend successed.');
+    //   } else {
+    //     console.log('add friend failed.');
+    //     setLoginLoading(false);
+    //   }
+    // })
+    // .then(() => axios.get('http://13.124.126.30:8000/core/friends/'))
+    // .then(result => {
+    //   console.log(result.data);
+    //   setFriendList(result.data);
+    // });
+  };
+
   const [friendList, setFriendList] = useState([]);
-
   const nowYear = 20200000;
-  let tmpAge = 0;
-
   const [numOfFriends, setNumOfFriends] = useState(1);
+
   return (
     <Content style={styles.container} showsVerticalScrollIndicator={false}>
       <Spinner
@@ -71,31 +122,7 @@ const AddFriendsScreen = ({navigation}) => {
           }
         }}
       />
-      <Button
-        style={styles.button}
-        onPress={() => {
-          logCallback('friend request started', setLoginLoading(true));
-          console.log('inputValue');
-
-          console.log(inputValue);
-          axios
-            .post('http://13.124.126.30:8000/core/friend/', {
-              phoneno: inputValue,
-            })
-            .then(result => {
-              if (result.data === 'successfully requested') {
-                setLoginLoading(false);
-                console.log('add friend successed.');
-              } else {
-                console.log('add friend failed.');
-              }
-            })
-            .then(() => axios.get('http://13.124.126.30:8000/core/friends/'))
-            .then(result => {
-              console.log(result.data);
-              setFriendList(result.data);
-            });
-        }}>
+      <Button style={styles.button} onPress={() => addFriend(inputValue)}>
         <CustomTextMedium size={14} color="white">
           친구 등록하기
         </CustomTextMedium>
@@ -148,22 +175,32 @@ const AddFriendsScreen = ({navigation}) => {
               <Right
                 style={!friend.you_sent && !friend.approved ? {} : {flex: 0}}>
                 {friend.approved === true ? (
-                  <Octionicon name="x" style={styles.iconX} />
+                  <TouchableByPlatform
+                    onPress={() => patchFriendStatus(friend.id, 'DELETE')}>
+                    <Octionicon name="x" style={styles.iconX} />
+                  </TouchableByPlatform>
                 ) : friend.you_sent !== true ? (
                   <View style={styles.notAccetedView}>
-                    <Button style={styles.declineButton}>
+                    <Button
+                      style={styles.declineButton}
+                      onPress={() => patchFriendStatus(friend.id, 'DELETE')}>
                       <CustomTextRegular size={18} color={palette.gray}>
                         X
                       </CustomTextRegular>
                     </Button>
-                    <Button style={styles.acceptButton}>
+                    <Button
+                      style={styles.acceptButton}
+                      onPress={() => patchFriendStatus(friend.id, 'APPROVE')}>
                       <CustomTextRegular size={18} color={palette.orange}>
                         O
                       </CustomTextRegular>
                     </Button>
                   </View>
                 ) : (
-                  <Octionicon name="x" style={styles.iconX} />
+                  <TouchableByPlatform
+                    onPress={() => patchFriendStatus(friend.id, 'CANCEL')}>
+                    <Octionicon name="x" style={styles.iconX} />
+                  </TouchableByPlatform>
                 )}
               </Right>
             </ListItem>
