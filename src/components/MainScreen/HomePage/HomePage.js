@@ -3,6 +3,7 @@
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable prettier/prettier */
 import React, {useState, useEffect} from 'react';
+import '~/config';
 import {
   Text,
   View,
@@ -87,14 +88,21 @@ const HomePage = ({navigation}) => {
             .get('http://13.124.126.30:8000/authorization/user/info/')
             .then(result => {
               // console.log(result.data);
-              jUserValue[1] = result.data.uid;
-              jUserValue[2] = result.data.nickname;
-              jUserValue[3] = result.data.avata;
-              jUserValue[4] = result.data.birthdate;
-              jUserValue[5] = result.data.belong;
-              jUserValue[6] = result.data.department;
-              jUserValue[7] = result.data.gender;
-              jUserValue[8] = result.data.verified;
+              jUserValue[global.config.user_info_const.UID] = result.data.uid;
+              jUserValue[global.config.user_info_const.NICKNAME] =
+                result.data.nickname;
+              jUserValue[global.config.user_info_const.AVATA] =
+                result.data.avata;
+              jUserValue[global.config.user_info_const.BIRTHDATE] =
+                result.data.birthdate;
+              jUserValue[global.config.user_info_const.BELONG] =
+                result.data.belong;
+              jUserValue[global.config.user_info_const.DEPARTMENT] =
+                result.data.department;
+              jUserValue[global.config.user_info_const.GENDER] =
+                result.data.gender;
+              jUserValue[global.config.user_info_const.VERIFIED] =
+                result.data.verified;
             })
             .then(() => {
               AsyncStorage.setItem('userValue', JSON.stringify(jUserValue));

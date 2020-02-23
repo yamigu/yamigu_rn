@@ -24,7 +24,7 @@ const TermsScreen = () => {
       setTermsIos2(res.slice(4491, 8549));
     });
   } else {
-    filePath = 'data/policy.txt';
+    filePath = 'data/terms.txt';
     RNFS.readFileAssets(filePath).then(res => {
       termsSetAndroid(res);
     });
