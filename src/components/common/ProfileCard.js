@@ -131,7 +131,7 @@ const ProfileCard = ({
                 {nickname}
               </CustomTextBold>
               <CustomTextMedium size={fontSizes[1]} color={palette.black}>
-                {age}살
+                {age + (age === '' ? '' : '살')}
               </CustomTextMedium>
             </View>
             <View style={styles.secondLine}>

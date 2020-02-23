@@ -33,8 +33,8 @@ const FriendsView = ({navigation}) => {
               <Body>
                 {friend.approved === true ? (
                   <ProfileCard
-                    size={50}
-                    fontSizes={[14, 12, 12]}
+                    size={66}
+                    fontSizes={[16, 14, 14]}
                     nickname={friend.user_info.nickname}
                     image={
                       Object.keys(friend.user_info).length === 5
@@ -50,8 +50,8 @@ const FriendsView = ({navigation}) => {
                   />
                 ) : friend.you_sent === true ? (
                   <ProfileCard
-                    size={50}
-                    fontSizes={[14, 0.1, 12]}
+                    size={66}
+                    fontSizes={[16, 14, 14]}
                     nickname="상대방의 수락을 기다리는 중입니다."
                     image={require('~/images/test-user-profile-girl.png')}
                     age=""
@@ -60,8 +60,8 @@ const FriendsView = ({navigation}) => {
                   />
                 ) : (
                   <ProfileCard
-                    size={50}
-                    fontSizes={[14, 0.1, 12]}
+                    size={66}
+                    fontSizes={[16, 14, 14]}
                     nickname="친구가 맞나요??"
                     image={require('~/images/test-user-profile-girl.png')}
                     age=""
@@ -128,6 +128,7 @@ const styles = StyleSheet.create({
   friendsListItem: {
     paddingHorizontal: 22,
     borderBottomWidth: 0,
+    paddingLeft: 12,
   },
   iconX: {
     width: 10,

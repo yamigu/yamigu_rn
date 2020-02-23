@@ -63,12 +63,11 @@ const ProfileImageAddView = ({image1, image2, image3, image4, image5}) => {
         'Content-Type': 'multipart/form-data',
       },
     }).then(result => {
-      console.log(result.data);
       let tmp = ['', '', '', '', ''];
       result.data.map((item, index) => {
         tmp[index] = item.src;
       });
-      setPfImageList(result.data);
+      if (result.data.length() > 0) setPfImageList(result.data);
     });
   }, []);
 
