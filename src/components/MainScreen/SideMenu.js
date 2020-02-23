@@ -2,7 +2,12 @@
 /* eslint-disable react/self-closing-comp */
 /* eslint-disable prettier/prettier */
 /* eslint-disable react-native/no-inline-styles */
-import React, {useState, useEffect} from 'react';
+import React, {
+  useState,
+  useFocusEffect,
+  useEffect,
+  useLayoutEffect,
+} from 'react';
 import {
   View,
   ImageBackground,
@@ -39,6 +44,7 @@ import KakaoSDK from '@actbase/react-native-kakaosdk';
 import AsyncStorage from '@react-native-community/async-storage';
 import {getProfile} from '@react-native-seoul/kakao-login';
 import '~/config';
+import {useCallback} from 'react';
 const deviceWidth = Dimensions.get('window').width;
 const SideMenu = ({navigation}) => {
   const gotoChat = () => {
@@ -71,8 +77,15 @@ const SideMenu = ({navigation}) => {
     } catch (error) {}
   };
   useEffect(() => {
-    console.log('here!');
+    console.log('fuck that');
     _retrieveData();
+    navigation.addListener(
+      'didFocus',
+      () => {
+        _retrieveData().then(() => console.log('SideMenu didfocus'));
+      },
+      // run function that updates the data on entering the screen
+    );
   }, []);
 
   return (

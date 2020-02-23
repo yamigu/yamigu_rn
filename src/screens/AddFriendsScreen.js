@@ -14,18 +14,30 @@ import ProfileCard from '~/components/common/ProfileCard';
 import Spinner from 'react-native-loading-spinner-overlay';
 import axios from 'axios';
 import TouchableByPlatform from '~/components/common/TouchableByPlatform';
+import CustomMarker from '~/components/MainScreen/HomePage/CustomMarker';
 
 const AddFriendsScreen = ({navigation}) => {
   const [inputValue, setInputValue] = useState('');
   const [loginLoading, setLoginLoading] = useState(false);
+
+  const [friendList, setFriendList] = useState([]);
+  const nowYear = 20200000;
+  const [numOfFriends, setNumOfFriends] = useState(1);
+
   const logCallback = (log, callback) => {
     console.log(log);
     callback;
   };
   useEffect(() => {
     axios.get('http://13.124.126.30:8000/core/friends/').then(result => {
+      let tmpNo = 0;
       console.log(result.data);
-      setNumOfFriends(result.data.length);
+      result.data.map(item => {
+        if (item.approved === true) {
+          tmpNo++;
+        }
+      });
+      setNumOfFriends(tmpNo);
       setFriendList(result.data);
     });
   }, []);
@@ -61,28 +73,25 @@ const AddFriendsScreen = ({navigation}) => {
     console.log('inputValue');
     console.log(inputValue);
 
-    axios.post('http://13.124.126.30:8000/core/friend/', {
-      phoneno: inputValue,
-    });
-    // .then(result => {
-    //   if (result.data === 'successfully requested') {
-    //     setLoginLoading(false);
-    //     console.log('add friend successed.');
-    //   } else {
-    //     console.log('add friend failed.');
-    //     setLoginLoading(false);
-    //   }
-    // })
-    // .then(() => axios.get('http://13.124.126.30:8000/core/friends/'))
-    // .then(result => {
-    //   console.log(result.data);
-    //   setFriendList(result.data);
-    // });
+    axios
+      .post('http://13.124.126.30:8000/core/friend/', {
+        phoneno: inputValue,
+      })
+      .then(result => {
+        if (result.data === 'successfully requested') {
+          setLoginLoading(false);
+          console.log('add friend successed.');
+        } else {
+          console.log('add friend failed.');
+          setLoginLoading(false);
+        }
+      })
+      .then(() => axios.get('http://13.124.126.30:8000/core/friends/'))
+      .then(result => {
+        console.log(result.data);
+        setFriendList(result.data);
+      });
   };
-
-  const [friendList, setFriendList] = useState([]);
-  const nowYear = 20200000;
-  const [numOfFriends, setNumOfFriends] = useState(1);
 
   return (
     <Content style={styles.container} showsVerticalScrollIndicator={false}>
@@ -127,15 +136,18 @@ const AddFriendsScreen = ({navigation}) => {
           친구 등록하기
         </CustomTextMedium>
       </Button>
-      {numOfFriends > 0 ? (
+      <CustomTextMedium size={18} color={palette.black} style={{marginTop: 5}}>
+        내 친구들 {numOfFriends}명
+      </CustomTextMedium>
+      {friendList.length > 0 ? (
         <List>
           {friendList.map(friend => (
             <ListItem noIndent style={styles.friendsListItem}>
               <Body>
                 {friend.approved === true ? (
                   <ProfileCard
-                    size={50}
-                    fontSizes={[14, 12, 12]}
+                    size={66}
+                    fontSizes={[16, 14, 14]}
                     nickname={friend.user_info.nickname}
                     image={
                       Object.keys(friend.user_info).length === 5
@@ -151,9 +163,9 @@ const AddFriendsScreen = ({navigation}) => {
                   />
                 ) : friend.you_sent === true ? (
                   <ProfileCard
-                    size={50}
-                    fontSizes={[14, 0.1, 12]}
-                    nickname="상대방의 수락을 기다리는 중입니다."
+                    size={66}
+                    fontSizes={[16, 14, 14]}
+                    nickname="친구 수락중"
                     image={require('~/images/test-user-profile-girl.png')}
                     age=""
                     belong=""
@@ -161,8 +173,8 @@ const AddFriendsScreen = ({navigation}) => {
                   />
                 ) : (
                   <ProfileCard
-                    size={50}
-                    fontSizes={[14, 0.1, 12]}
+                    size={66}
+                    fontSizes={[16, 14, 14]}
                     nickname="친구가 맞나요??"
                     image={require('~/images/test-user-profile-girl.png')}
                     age=""
