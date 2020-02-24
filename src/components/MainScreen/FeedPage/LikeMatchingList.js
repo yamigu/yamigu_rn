@@ -62,6 +62,7 @@ const LikeMatchingList = ({navigation}) => {
                   age: intAge,
                   belong: user.belong,
                   department: user.department,
+                  bothLike: true,
                 })
               }>
               <UserProfileSmall

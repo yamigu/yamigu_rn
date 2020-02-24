@@ -364,7 +364,7 @@ const SideMenu = ({navigation}) => {
             <ListItem noIndent style={styles.listItem}>
               <Body style={styles.listItemBody}>
                 <CustomTextRegular size={14} color={palette.black}>
-                  인화면
+                  로그인 화면
                 </CustomTextRegular>
               </Body>
               <Right style={styles.listItemRight}>

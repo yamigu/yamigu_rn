@@ -9,6 +9,7 @@ import {
   TouchableHighlight,
   Modal,
   TouchableWithoutFeedback,
+  Image,
 } from 'react-native';
 import {
   List,
@@ -37,7 +38,7 @@ const ProfileCard = ({
   age,
   belong,
   department,
-  rightComponent,
+  bothLike,
 }) => {
   const [modalVisible, setModalVisible] = useState(false);
   return (
@@ -141,7 +142,8 @@ const ProfileCard = ({
             </View>
           </View>
         </Body>
-        {/* <Right
+
+        <Right
           style={{
             borderBottomWidth: 0,
             height: '100%',
@@ -150,10 +152,12 @@ const ProfileCard = ({
             justifyContent: 'center',
             paddingRight: 10,
           }}>
-          <TouchableByPlatform onPress={() => setModalVisible(true)}>
-            {rightComponent}
-          </TouchableByPlatform>
-        </Right> */}
+          {bothLike === true ? (
+            <Image source={require('~/images/bothlike-icon.png')}></Image>
+          ) : (
+            <Text>no both like</Text>
+          )}
+        </Right>
       </ListItem>
     </List>
   );

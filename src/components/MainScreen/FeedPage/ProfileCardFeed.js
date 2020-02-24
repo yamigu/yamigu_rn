@@ -147,6 +147,7 @@ const ProfileCardFeed = ({
   age,
   belong,
   department,
+  bothLike,
 }) => {
   const [liked, setLiked] = useState(false);
   const [hasChatting, setHasChatting] = useState(false);
@@ -165,6 +166,14 @@ const ProfileCardFeed = ({
         setFeedList(tmpFeedList.reverse());
       });
   }, []);
+
+  const postLike = () => {
+    console.log(feedList.id);
+    axios
+      .post('http://13.124.126.30:8000/core/like/' + feedList.id + '/')
+      .then(result => console.log(result));
+    setLiked(!liked);
+  };
 
   const _renderDotIndicator = () => {
     return (
@@ -187,6 +196,7 @@ const ProfileCardFeed = ({
           age={age}
           belong={belong}
           department={department}
+          bothLike={bothLike}
           rightComponent={
             <Ionicon name="ios-more" size={26} color={palette.black} />
           }
@@ -226,49 +236,12 @@ const ProfileCardFeed = ({
         })}
       </IndicatorViewPager>
 
-      {/* 
-        <TouchableOpacity
-          onPress={() => {
-            // navigation.setParams('3'); signup screen.js 참고해서 page수 넘겨주기
-            navigation.navigate('Profile');
-          }}>
-          <Image
-            style={styles.viewPage}
-            key="2"
-            source={require('~/images/test-user-profile-girl.png')}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => {
-            // navigation.setParams('3'); signup screen.js 참고해서 page수 넘겨주기
-            navigation.navigate('Profile');
-          }}>
-          <Image
-            style={styles.viewPage}
-            key="3"
-            source={require('~/images/test-user-profile-8.png')}
-          />
-        </TouchableOpacity> */}
-      {/* <ImageBackground
-          style={styles.image}
-          source={require('~/images/test-user-profile-5.png')}>
-          <LinearGradient
-            colors={['#333333ff', '#ffffff00']}
-            style={styles.linearGradient}
-          />
-          <CustomTextMedium size={24} color="white">
-            고려대랑 미팅할래요?
-          </CustomTextMedium>
-          <CustomTextRegular size={12} color="white">
-            친구들과 새로운 친구들을 만나보세요
-          </CustomTextRegular>
-        </ImageBackground> */}
-      {/* </TouchableByPlatform> */}
-      {/* <View style={styles.horizontalDivider} /> */}
       <View style={styles.actionDiv}>
         <TouchableByPlatform
           style={styles.touchable}
-          onPress={() => setLiked(!liked)}>
+          onPress={() => {
+            postLike();
+          }}>
           <View style={styles.button}>
             <Ionicon
               name="ios-heart-empty"

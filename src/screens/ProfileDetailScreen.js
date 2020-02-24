@@ -37,6 +37,7 @@ const ProfileDetailScreen = ({navigation}) => {
   const age = navigation.getParam('age');
   const belong = navigation.getParam('belong');
   const department = navigation.getParam('department');
+  const bothLike = navigation.getParam('bothLike');
 
   const [friendList, setFriendList] = useState([]);
   const [feedList, setFeedList] = useState([]);
@@ -112,6 +113,7 @@ const ProfileDetailScreen = ({navigation}) => {
               age={age}
               belong={belong}
               department={department}
+              bothLike={bothLike}
               // location="서울"
             />
             {/* <MeetingSettingPane data={meeting_setting_data} /> */}
