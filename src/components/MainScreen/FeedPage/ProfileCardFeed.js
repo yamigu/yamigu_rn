@@ -162,8 +162,6 @@ const ProfileCardFeed = ({
       .then(result => {
         // console.log(result.data);
         let tmpFeedList = [];
-        let tmpFeedListNo = result.data.length;
-
         result.data.map((item, index) => {
           tmpFeedList[index] = item;
         });
@@ -251,6 +249,7 @@ const ProfileCardFeed = ({
                     belong,
                     department,
                     liked,
+                    setLiked: value => setLiked(value),
                   });
                 }}>
                 <Image

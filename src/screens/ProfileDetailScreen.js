@@ -40,13 +40,40 @@ const ProfileDetailScreen = ({navigation}) => {
   const department = navigation.getParam('department');
   const bothLike = navigation.getParam('bothLike');
   const myFeed = navigation.getParam('my_feed');
+  const liked = navigation.getParam('liked');
 
-  const [liked, setLiked] = useState(false);
-
+  const [likedState, setLikedState] = useState(false);
   const [friendList, setFriendList] = useState([]);
   const [feedList, setFeedList] = useState([]);
 
+  const postLike = () => {
+    console.log('like pressed');
+    if (likedState === true) {
+      // console.log('좋아요 취소');
+      axios
+        .post(
+          'http://13.124.126.30:8000/core/like/' + feedList[0].id + '/cancel/',
+        )
+        .then(result => {
+          console.log(result.data);
+          setLikedState(!likedState);
+          navigation.getParam('setLiked')(!likedState);
+        });
+    } else {
+      // console.log('좋아요 보내기');
+      axios
+        .post('http://13.124.126.30:8000/core/like/' + feedList[0].id + '/')
+        .then(result => {
+          console.log(result.data);
+          setLikedState(!likedState);
+          navigation.getParam('setLiked')(!likedState);
+        });
+    }
+  };
+
   useEffect(() => {
+    console.log(liked);
+    setLikedState(liked);
     axios
       .get('http://13.124.126.30:8000/core/feed/' + uid + '/')
       .then(result => {
@@ -147,17 +174,17 @@ const ProfileDetailScreen = ({navigation}) => {
               <TouchableByPlatform
                 style={styles.touchable}
                 onPress={() => {
-                  setLiked(!liked);
+                  postLike();
                 }}>
                 <View style={styles.button}>
                   <Ionicon
                     name="ios-heart-empty"
                     size={18}
-                    color={liked === false ? '#898989' : palette.orange}
+                    color={likedState === false ? '#898989' : palette.orange}
                   />
                   <CustomTextMedium
                     size={14}
-                    color={liked === false ? '#898989' : palette.orange}
+                    color={likedState === false ? '#898989' : palette.orange}
                     style={{marginLeft: 4}}>
                     좋아요
                   </CustomTextMedium>
@@ -259,7 +286,18 @@ const ProfileDetailScreen = ({navigation}) => {
                 {nickname}님의 친구들
               </CustomTextRegular>
             </ListItem>
-
+            {friendList.length === 0 ? (
+              <View
+                style={{
+                  marginTop: 30,
+                  flexDirection: 'row',
+                  justifyContent: 'center',
+                }}>
+                <CustomTextRegular size={14}>
+                  아직 등록한 친구가 없어요 ㅠ.ㅠ
+                </CustomTextRegular>
+              </View>
+            ) : null}
             {friendList.map(friend => (
               <ListItem noIndent style={styles.friendsListItem}>
                 <Body>

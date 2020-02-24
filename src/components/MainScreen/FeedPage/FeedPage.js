@@ -65,7 +65,7 @@ const FeedPage = props => {
         setProfileCardProp(tmp);
       })
       .then(() => console.log('axios done'));
-  }, []);
+  }, [props.navigation]);
 
   return (
     <View style={styles.root}>
