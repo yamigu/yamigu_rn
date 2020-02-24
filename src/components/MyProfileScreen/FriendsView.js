@@ -1,11 +1,12 @@
 import React, {useState, useEffect} from 'react';
-import {Text, View, StyleSheet} from 'react-native';
+import {Text, View, StyleSheet, Alert} from 'react-native';
 import {CustomTextMedium, CustomTextRegular} from '../common/CustomText';
 import palette from '~/lib/styles/palette';
 import {Button, ListItem, List, Body, Icon, Right} from 'native-base';
 import ProfileCard from '../common/ProfileCard';
 import Octionicon from 'react-native-vector-icons/Octicons';
 import axios from 'axios';
+import TouchableByPlatform from '../common/TouchableByPlatform';
 
 const FriendsView = ({navigation}) => {
   const [numOfFriends, setNumOfFriends] = useState(0);
@@ -18,6 +19,34 @@ const FriendsView = ({navigation}) => {
       setNumOfFriends(result.data.length);
     });
   }, []);
+
+  const patchFriendStatus = (id, action) => {
+    Alert.alert(
+      '정말 친구를 삭제하시겠습니까?',
+      '',
+      [
+        {
+          text: '네',
+          onPress: () => {
+            console.log('OK Pressed');
+            axios
+              .patch('http://13.124.126.30:8000/core/friend/', {
+                id: id,
+                action: action,
+              })
+              .then(() => axios.get('http://13.124.126.30:8000/core/friends/'))
+              .then(result => {
+                console.log(result.data);
+                setFriendList(result.data);
+              });
+          },
+        },
+        {text: '아니오', onPress: () => console.log('Cancel Pressed')},
+      ],
+      {cancelable: false},
+    );
+  };
+
   return (
     <View style={styles.container}>
       <CustomTextMedium
@@ -74,22 +103,42 @@ const FriendsView = ({navigation}) => {
               <Right
                 style={!friend.you_sent && !friend.approved ? {} : {flex: 0}}>
                 {friend.approved === true ? (
-                  <Octionicon name="x" style={styles.iconX} />
+                  <TouchableByPlatform
+                    onPress={() => patchFriendStatus(friend.id, 'DELETE')}>
+                    <Octionicon name="x" style={styles.iconX} />
+                  </TouchableByPlatform>
                 ) : friend.you_sent !== true ? (
                   <View style={styles.notAccetedView}>
-                    <Button style={styles.declineButton}>
+                    <Button
+                      style={styles.declineButton}
+                      onPress={() => patchFriendStatus(friend.id, 'DELETE')}>
                       <CustomTextRegular size={18} color={palette.gray}>
                         X
                       </CustomTextRegular>
                     </Button>
-                    <Button style={styles.acceptButton}>
+                    <Button
+                      style={styles.acceptButton}
+                      onPress={() => patchFriendStatus(friend.id, 'APPROVE')}>
                       <CustomTextRegular size={18} color={palette.orange}>
                         O
                       </CustomTextRegular>
                     </Button>
                   </View>
                 ) : (
-                  <Octionicon name="x" style={styles.iconX} />
+                  <TouchableByPlatform
+                    style={{
+                      width: 30,
+                      height: 30,
+                      borderWidth: 1,
+                      borderRadius: 10,
+                      borderColor: palette.default_bg,
+                      flexDirection: 'column',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    }}
+                    onPress={() => patchFriendStatus(friend.id, 'CANCEL')}>
+                    <Octionicon name="x" style={styles.iconX} size={12} />
+                  </TouchableByPlatform>
                 )}
               </Right>
             </ListItem>
