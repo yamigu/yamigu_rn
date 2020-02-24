@@ -27,51 +27,51 @@ import ProfileCard from '~/components/common/ProfileCard';
 import {HeaderBackButton} from 'react-navigation-stack';
 import axios from 'axios';
 
-const deviceWidth = Dimensions.get('window').width;
+const deviceWidth = Dimensions.get ('window').width;
 const nowYear = 20200000;
 
 const ProfileDetailScreen = ({navigation}) => {
-  const uid = navigation.getParam('uid');
-  const nickname = navigation.getParam('nickname');
-  const avata = navigation.getParam('avata');
-  const age = navigation.getParam('age');
-  const belong = navigation.getParam('belong');
-  const department = navigation.getParam('department');
+  const uid = navigation.getParam ('uid');
+  const nickname = navigation.getParam ('nickname');
+  const avata = navigation.getParam ('avata');
+  const age = navigation.getParam ('age');
+  const belong = navigation.getParam ('belong');
+  const department = navigation.getParam ('department');
 
-  const [friendList, setFriendList] = useState([]);
-  const [feedList, setFeedList] = useState([]);
+  const [friendList, setFriendList] = useState ([]);
+  const [feedList, setFeedList] = useState ([]);
 
-  useEffect(() => {
+  useEffect (() => {
     axios
-      .get('http://13.124.126.30:8000/core/feed/' + uid + '/')
-      .then(result => {
-        console.log(result.data);
+      .get ('http://13.124.126.30:8000/core/feed/' + uid + '/')
+      .then (result => {
+        console.log (result.data);
         let tmpFeedList = [];
 
-        result.data.map((item, index) => {
+        result.data.map ((item, index) => {
           tmpFeedList[index] = item;
         });
-        setFeedList(tmpFeedList.reverse());
+        setFeedList (tmpFeedList.reverse ());
       });
     axios
-      .get('http://13.124.126.30:8000/core/friends/' + uid + '/')
-      .then(result => {
-        console.log(result.data);
+      .get ('http://13.124.126.30:8000/core/friends/' + uid + '/')
+      .then (result => {
+        console.log (result.data);
         let tmpFriendList = [];
         let count = 0;
 
-        result.data.map((item, index) => {
+        result.data.map ((item, index) => {
           if (item.approved === true) {
             tmpFriendList[count] = item.user_info;
             count++;
           }
         });
-        setFriendList(tmpFriendList);
+        setFriendList (tmpFriendList);
       });
   }, []);
-  const [liked, setLiked] = useState(false);
-  const [hasChatting, setHasChatting] = useState(false);
-  const [detailFeed, setDetailFeed] = useState([]);
+  const [liked, setLiked] = useState (false);
+  const [hasChatting, setHasChatting] = useState (false);
+  const [detailFeed, setDetailFeed] = useState ([]);
 
   const _renderDotIndicator = () => {
     return (
@@ -88,11 +88,13 @@ const ProfileDetailScreen = ({navigation}) => {
       <Container style={styles.container}>
         <Content
           contentContainerStyle={styles.innerView}
-          showsVerticalScrollIndicator={false}>
+          showsVerticalScrollIndicator={false}
+        >
           <IndicatorViewPager
             style={styles.viewPager}
-            indicator={_renderDotIndicator()}>
-            {feedList.map(item => {
+            indicator={_renderDotIndicator ()}
+          >
+            {feedList.map (item => {
               return (
                 <Image
                   style={styles.viewPage}
@@ -108,7 +110,7 @@ const ProfileDetailScreen = ({navigation}) => {
               size={66}
               fontSizes={[16, 14, 14]}
               nickname={nickname}
-              image={{uri: avata}}
+              avata={avata === null ? null : {uri: avata}}
               age={age}
               belong={belong}
               department={department}
@@ -120,7 +122,8 @@ const ProfileDetailScreen = ({navigation}) => {
           <View style={styles.actionView}>
             <TouchableByPlatform
               style={styles.touchable}
-              onPress={() => setLiked(!liked)}>
+              onPress={() => setLiked (!liked)}
+            >
               <View style={styles.button}>
                 <Ionicon
                   name="ios-heart-empty"
@@ -130,7 +133,8 @@ const ProfileDetailScreen = ({navigation}) => {
                 <CustomTextMedium
                   size={14}
                   color={liked === false ? '#898989' : palette.orange}
-                  style={{marginLeft: 4}}>
+                  style={{marginLeft: 4}}
+                >
                   좋아요
                 </CustomTextMedium>
               </View>
@@ -138,18 +142,18 @@ const ProfileDetailScreen = ({navigation}) => {
             <View style={styles.verticalDivider} />
             <TouchableByPlatform
               style={styles.touchable}
-              onPress={() =>
-                Alert.alert('대화 신청에는 야미3개가 소비됩니다! ')
-              }>
+              onPress={() => Alert.alert ('대화 신청에는 야미3개가 소비됩니다! ')}
+            >
               <View style={styles.button}>
                 <Image
-                  source={require('~/images/chat-bubble2-outline.png')}
+                  source={require ('~/images/chat-bubble2-outline.png')}
                   style={{height: 16, width: 16}}
                 />
                 <CustomTextMedium
                   size={14}
                   color={palette.sub}
-                  style={{marginLeft: 4}}>
+                  style={{marginLeft: 4}}
+                >
                   미팅 신청
                 </CustomTextMedium>
               </View>
@@ -212,7 +216,7 @@ const ProfileDetailScreen = ({navigation}) => {
               </CustomTextRegular>
             </ListItem>
 
-            {friendList.map(friend => (
+            {friendList.map (friend => (
               <ListItem noIndent style={styles.friendsListItem}>
                 <Body>
                   <ProfileCard
@@ -220,8 +224,8 @@ const ProfileDetailScreen = ({navigation}) => {
                     fontSizes={[14, 12, 12]}
                     nickname={friend.nickname}
                     image={friend.avata}
-                    age={Math.floor(
-                      (nowYear - parseInt(friend.birthdate) + 20000) / 10000,
+                    age={Math.floor (
+                      (nowYear - parseInt (friend.birthdate) + 20000) / 10000
                     )}
                     belong={friend.belong}
                     department={friend.department}
@@ -242,7 +246,7 @@ ProfileDetailScreen.navigationOptions = ({navigation}) => ({
       label=" "
       tintColor="white"
       onPress={() => {
-        navigation.goBack();
+        navigation.goBack ();
       }}
     />
   ),
@@ -254,7 +258,7 @@ ProfileDetailScreen.navigationOptions = ({navigation}) => ({
   },
 });
 
-const styles = StyleSheet.create({
+const styles = StyleSheet.create ({
   root: {
     flex: 1,
   },
