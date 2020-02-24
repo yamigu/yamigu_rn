@@ -40,7 +40,6 @@ const ProfileCard = ({
   department,
   bothLike,
 }) => {
-  const [avataUrl, setAvataUrl] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
   useEffect(() => {
     console.log(avata);
@@ -158,10 +157,8 @@ const ProfileCard = ({
             paddingRight: 10,
           }}>
           {bothLike === true ? (
-            <Image source={require('~/images/bothlike-icon.png')}></Image>
-          ) : null
-          // <Text>no both like</Text>
-          }
+            <Image source={require('~/images/bothlike-icon.png')} />
+          ) : null}
         </Right>
       </ListItem>
     </List>

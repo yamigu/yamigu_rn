@@ -45,6 +45,7 @@ const LikeMatchingList = ({navigation, likeMatchingProp}) => {
         showsHorizontalScrollIndicator={false}
         style={styles.scrollView}>
         <LikeMatching />
+
         {likeMatchingProp.map(user => {
           let intAge =
             Math.floor((nowYear - parseInt(user.birthdate)) / 10000) + 2;

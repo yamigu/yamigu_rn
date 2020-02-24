@@ -26,7 +26,6 @@ import palette from '~/lib/styles/palette';
 import ProfileCard from '~/components/common/ProfileCard';
 import {HeaderBackButton} from 'react-navigation-stack';
 import axios from 'axios';
-import CustomMarker from '~/components/MainScreen/HomePage/CustomMarker';
 
 const deviceWidth = Dimensions.get('window').width;
 const nowYear = 20200000;
