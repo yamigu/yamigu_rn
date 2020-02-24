@@ -37,7 +37,7 @@ const MyFeedView = ({userInfo, scroll, offsetY}) => {
 
   const _image = createRef();
   const measureView = event => {
-    console.log(`*** event: ${JSON.stringify(event.nativeEvent)}`);
+    // console.log(`*** event: ${JSON.stringify(event.nativeEvent)}`);
     // you'll get something like this here:
     // {"target":1105,"layout":{"y":0,"width":256,"x":32,"height":54.5}}
   };
@@ -67,7 +67,7 @@ const MyFeedView = ({userInfo, scroll, offsetY}) => {
             '/',
         )
         .then(result => {
-          console.log(result.data);
+          // console.log(result.data);
           let tmpFeed = [];
           let count = 0;
           result.data.map(item => {
@@ -171,7 +171,7 @@ const MyFeedView = ({userInfo, scroll, offsetY}) => {
                 setModalVisible(false);
                 let tmpFeed = feed_list.slice();
                 tmpFeed.unshift(result.data);
-                console.log(result.data);
+                // console.log(result.data);
                 setFeed_list(tmpFeed);
               });
             }}>
@@ -230,13 +230,15 @@ const MyFeedView = ({userInfo, scroll, offsetY}) => {
             </TouchableByPlatform>
           </ImageBackground>
           {feed_list.map((item, index) => {
-            console.log(item);
+            // console.log(item);
             return (
-              <Image
-                style={styles.viewPage}
-                key={index + 2}
-                source={item.img_src === null ? null : {uri: item.img_src}}
-              />
+              <View>
+                <Image
+                  style={styles.viewPage}
+                  key={index + 2}
+                  source={item.img_src === null ? null : {uri: item.img_src}}
+                />
+              </View>
             );
           })}
         </IndicatorViewPager>

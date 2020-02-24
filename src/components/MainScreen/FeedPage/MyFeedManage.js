@@ -201,31 +201,35 @@ const MyFeedManage = ({navigation, myFeedManageProp, myFeed, setMyFeed}) => {
             indicator={_renderDotIndicator()}>
             {myFeed.map(item => {
               return (
-                <TouchableOpacity
-                  onPress={
-                    item.img_src === null
-                      ? null
-                      : () => {
-                          navigation.navigate('Profile', {
-                            uid: myFeedManageProp.uid,
-                            nickname: myFeedManageProp.nickname,
-                            avata: myFeedManageProp.avata,
-                            age: Math.floor(
-                              (nowYear - myFeedManageProp.birthdate) / 10000 +
-                                2,
-                            ),
-                            belong: myFeedManageProp.belong,
-                            department: myFeedManageProp.department,
-                            my_feed: true,
-                          });
-                        }
-                  }>
-                  <Image
-                    style={styles.viewPage}
-                    key="1"
-                    source={item.img_src === null ? null : {uri: item.img_src}}
-                  />
-                </TouchableOpacity>
+                <View>
+                  <TouchableOpacity
+                    onPress={
+                      item.img_src === null
+                        ? null
+                        : () => {
+                            navigation.navigate('Profile', {
+                              uid: myFeedManageProp.uid,
+                              nickname: myFeedManageProp.nickname,
+                              avata: myFeedManageProp.avata,
+                              age: Math.floor(
+                                (nowYear - myFeedManageProp.birthdate) / 10000 +
+                                  2,
+                              ),
+                              belong: myFeedManageProp.belong,
+                              department: myFeedManageProp.department,
+                              my_feed: true,
+                            });
+                          }
+                    }>
+                    <Image
+                      style={styles.viewPage}
+                      key="1"
+                      source={
+                        item.img_src === null ? null : {uri: item.img_src}
+                      }
+                    />
+                  </TouchableOpacity>
+                </View>
               );
             })}
           </IndicatorViewPager>

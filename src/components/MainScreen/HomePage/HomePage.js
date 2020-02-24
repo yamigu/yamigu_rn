@@ -87,7 +87,7 @@ const HomePage = ({navigation}) => {
           axios
             .get('http://13.124.126.30:8000/authorization/user/info/')
             .then(result => {
-              // console.log(result.data);
+              // console.log(result.status);
               jUserValue[global.config.user_info_const.UID] = result.data.uid;
               jUserValue[global.config.user_info_const.NICKNAME] =
                 result.data.nickname;
@@ -103,10 +103,16 @@ const HomePage = ({navigation}) => {
                 result.data.gender;
               jUserValue[global.config.user_info_const.VERIFIED] =
                 result.data.verified;
-            })
-            .then(() => {
               AsyncStorage.setItem('userValue', JSON.stringify(jUserValue));
               setAsyncValue(jUserValue);
+            })
+            .catch(e => {
+              if (e.response.status === 401) {
+                AsyncStorage.setItem(
+                  'userValue',
+                  JSON.stringify(initUserValue),
+                );
+              }
             });
         }
       } else {
@@ -261,7 +267,7 @@ const HomePage = ({navigation}) => {
       navigation.navigate('Signup');
       //navigate to loginscreen
     } else if (asyncValue[4] === 'birthdate') {
-      navigation.navigate('IV');
+      navigation.navigate('IV', {needBtn: true});
     } else {
       if (matchRequested === true) {
         console.log('came true');
