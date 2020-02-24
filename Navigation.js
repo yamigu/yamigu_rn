@@ -27,6 +27,7 @@ import AddFriendsScreen from '~/screens/AddFriendsScreen';
 import StoreScreen from '~/screens/StoreScreen';
 import ShieldScreen from '~/screens/ShieldScreen';
 import SettingScreen from '~/screens/SettingScreen';
+import HomeGuideScreen from '~/screens/HomeGuideScreen';
 
 const deviceWidth = Dimensions.get('window').width;
 
@@ -108,6 +109,9 @@ const AppStack = createStackNavigator({
   },
   Privacy: {
     screen: PrivacyScreen,
+  },
+  HomeGuideScreen: {
+    screen: HomeGuideScreen,
   },
 });
 const AuthStack = createStackNavigator({

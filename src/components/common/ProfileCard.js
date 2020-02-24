@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   Text,
   View,
@@ -9,6 +9,7 @@ import {
   TouchableHighlight,
   Modal,
   TouchableWithoutFeedback,
+  Image,
 } from 'react-native';
 import {
   List,
@@ -37,9 +38,12 @@ const ProfileCard = ({
   age,
   belong,
   department,
-  rightComponent,
+  bothLike,
 }) => {
   const [modalVisible, setModalVisible] = useState(false);
+  useEffect(() => {
+    console.log(avata);
+  }, []);
   return (
     <List style={{height: size}}>
       <Modal
@@ -52,7 +56,6 @@ const ProfileCard = ({
         <TouchableWithoutFeedback
           onPress={() => {
             setModalVisible(false);
-            console.log('aa');
           }}>
           <View
             style={{
@@ -110,7 +113,9 @@ const ProfileCard = ({
               borderRadius: size / 2,
             }}
             source={
-              avata ? avata : require('~/images/user-default-profile.png')
+              avata
+                ? {uri: avata.uri}
+                : require('~/images/user-default-profile.png')
             }
           />
         </Left>
@@ -141,7 +146,8 @@ const ProfileCard = ({
             </View>
           </View>
         </Body>
-        {/* <Right
+
+        <Right
           style={{
             borderBottomWidth: 0,
             height: '100%',
@@ -150,10 +156,10 @@ const ProfileCard = ({
             justifyContent: 'center',
             paddingRight: 10,
           }}>
-          <TouchableByPlatform onPress={() => setModalVisible(true)}>
-            {rightComponent}
-          </TouchableByPlatform>
-        </Right> */}
+          {bothLike === true ? (
+            <Image source={require('~/images/bothlike-icon.png')} />
+          ) : null}
+        </Right>
       </ListItem>
     </List>
   );

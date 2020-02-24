@@ -20,20 +20,18 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
   },
 });
-const LikeMatchingList = ({navigation}) => {
-  useEffect(() => {
-    let tmpBothLike = [];
-    axios.get('http://13.124.126.30:8000/core/both_like/').then(result => {
-      result.data.map((item, index) => {
-        tmpBothLike[index] = item;
-      });
-      setBothLikeUser(tmpBothLike);
-      console.log('likematching: ');
-      console.log(result.data);
-    });
-  }, []);
-
+const LikeMatchingList = ({navigation, likeMatchingProp}) => {
   const [bothLikeUser, setBothLikeUser] = useState([]);
+
+  useEffect(() => {
+    // let tmpBothLike = [];
+    // axios.get('http://13.124.126.30:8000/core/both_like/').then(result => {
+    //   result.data.map((item, index) => {
+    //     tmpBothLike[index] = item;
+    //   });
+    //   setBothLikeUser(tmpBothLike);
+    // });
+  }, []);
 
   return (
     <List>
@@ -47,21 +45,23 @@ const LikeMatchingList = ({navigation}) => {
         showsHorizontalScrollIndicator={false}
         style={styles.scrollView}>
         <LikeMatching />
-        {bothLikeUser.map(user => {
+
+        {likeMatchingProp.map(user => {
           let intAge =
             Math.floor((nowYear - parseInt(user.birthdate)) / 10000) + 2;
-          console.log('usersrrrrr');
-          console.log(user);
+          // console.log('usersrrrrr');
+          // console.log(user);
           return (
             <TouchableByPlatform
               onPress={() =>
                 navigation.navigate('Profile', {
                   uid: user.uid,
                   nickname: user.nickname,
-                  // avata: user.avata,
+                  avata: user.avata,
                   age: intAge,
                   belong: user.belong,
                   department: user.department,
+                  bothLike: true,
                 })
               }>
               <UserProfileSmall

@@ -147,24 +147,56 @@ const ProfileCardFeed = ({
   age,
   belong,
   department,
+  bothLike,
+  likedByServer,
 }) => {
   const [liked, setLiked] = useState(false);
-  const [hasChatting, setHasChatting] = useState(false);
   const [feedList, setFeedList] = useState([]);
+  // const [hasChatting, setHasChatting] = useState(false);
 
   useEffect(() => {
+    setLiked(likedByServer);
+
     axios
       .get('http://13.124.126.30:8000/core/feed/' + uid + '/')
       .then(result => {
-        console.log(result.data);
+        // console.log(result.data);
         let tmpFeedList = [];
-
         result.data.map((item, index) => {
           tmpFeedList[index] = item;
         });
+        // console.log(tmpFeedListNo);
         setFeedList(tmpFeedList.reverse());
       });
   }, []);
+
+  const postLike = () => {
+    console.log('like pressed');
+    if (liked === true) {
+      // console.log('좋아요 취소');
+      // console.log(feedList);
+      // console.log(feedList[0].id);
+      axios
+        .post(
+          'http://13.124.126.30:8000/core/like/' + feedList[0].id + '/cancel/',
+        )
+        .then(result => {
+          // console.log(result.data);
+          setLiked(!liked);
+        });
+    } else {
+      //좋아요 보내기
+      // console.log('좋아요 보내기');
+      // console.log(feedList);
+      // console.log(feedList[0].id);
+      axios
+        .post('http://13.124.126.30:8000/core/like/' + feedList[0].id + '/')
+        .then(result => {
+          // console.log(result.data);
+          setLiked(!liked);
+        });
+    }
+  };
 
   const _renderDotIndicator = () => {
     return (
@@ -187,6 +219,7 @@ const ProfileCardFeed = ({
           age={age}
           belong={belong}
           department={department}
+          bothLike={bothLike}
           rightComponent={
             <Ionicon name="ios-more" size={26} color={palette.black} />
           }
@@ -202,73 +235,41 @@ const ProfileCardFeed = ({
         indicator={_renderDotIndicator()}>
         {feedList.map((item, index) => {
           return (
-            <TouchableOpacity
-              onPress={() => {
-                // navigation.setParams({
-                //   nickname: nickname,
-                // });
-                navigation.navigate('Profile', {
-                  uid,
-                  nickname,
-                  avata,
-                  age,
-                  belong,
-                  department,
-                });
-              }}>
-              <Image
-                style={styles.viewPage}
-                key={index}
-                source={item.img_src === null ? null : {uri: item.img_src}}
-              />
-            </TouchableOpacity>
+            <View>
+              <TouchableOpacity
+                onPress={() => {
+                  // navigation.setParams({
+                  //   nickname: nickname,
+                  // });
+                  navigation.navigate('Profile', {
+                    uid,
+                    nickname,
+                    avata,
+                    age,
+                    belong,
+                    department,
+                    liked,
+                    setLiked: value => setLiked(value),
+                  });
+                }}>
+                <Image
+                  style={styles.viewPage}
+                  key={index}
+                  source={item.img_src === null ? null : {uri: item.img_src}}
+                />
+              </TouchableOpacity>
+            </View>
           );
         })}
       </IndicatorViewPager>
 
-      {/* 
-        <TouchableOpacity
-          onPress={() => {
-            // navigation.setParams('3'); signup screen.js 참고해서 page수 넘겨주기
-            navigation.navigate('Profile');
-          }}>
-          <Image
-            style={styles.viewPage}
-            key="2"
-            source={require('~/images/test-user-profile-girl.png')}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => {
-            // navigation.setParams('3'); signup screen.js 참고해서 page수 넘겨주기
-            navigation.navigate('Profile');
-          }}>
-          <Image
-            style={styles.viewPage}
-            key="3"
-            source={require('~/images/test-user-profile-8.png')}
-          />
-        </TouchableOpacity> */}
-      {/* <ImageBackground
-          style={styles.image}
-          source={require('~/images/test-user-profile-5.png')}>
-          <LinearGradient
-            colors={['#333333ff', '#ffffff00']}
-            style={styles.linearGradient}
-          />
-          <CustomTextMedium size={24} color="white">
-            고려대랑 미팅할래요?
-          </CustomTextMedium>
-          <CustomTextRegular size={12} color="white">
-            친구들과 새로운 친구들을 만나보세요
-          </CustomTextRegular>
-        </ImageBackground> */}
-      {/* </TouchableByPlatform> */}
-      {/* <View style={styles.horizontalDivider} /> */}
       <View style={styles.actionDiv}>
         <TouchableByPlatform
           style={styles.touchable}
-          onPress={() => setLiked(!liked)}>
+          onPress={() => {
+            console.log(feedList);
+            postLike();
+          }}>
           <View style={styles.button}>
             <Ionicon
               name="ios-heart-empty"
@@ -284,6 +285,7 @@ const ProfileCardFeed = ({
           </View>
         </TouchableByPlatform>
         <View style={styles.verticalDivider} />
+
         <TouchableByPlatform
           style={styles.touchable}
           onPress={() => Alert.alert('대화 서비스는 아직 준비중입니다! ')}>

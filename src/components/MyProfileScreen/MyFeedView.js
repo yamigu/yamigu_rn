@@ -26,23 +26,23 @@ import {Button} from 'native-base';
 import axios from 'axios';
 import '~/config';
 import file_upload from '~/lib/utils/file_upload';
-const dw = Dimensions.get ('window').width;
-const dh = Dimensions.get ('window').height;
+const dw = Dimensions.get('window').width;
+const dh = Dimensions.get('window').height;
 
 const MyFeedView = ({userInfo, scroll, offsetY}) => {
-  const [imageSource, setImageSource] = useState (null);
-  const [modalVisible, setModalVisible] = useState (false);
-  const [feed_list, setFeed_list] = useState ([]);
-  const [btnMeasure, setBtnMeasure] = useState (null);
+  const [imageSource, setImageSource] = useState(null);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [feed_list, setFeed_list] = useState([]);
+  const [btnMeasure, setBtnMeasure] = useState(null);
 
-  const _image = createRef ();
+  const _image = createRef();
   const measureView = event => {
-    console.log (`*** event: ${JSON.stringify (event.nativeEvent)}`);
+    console.log(`*** event: ${JSON.stringify(event.nativeEvent)}`);
     // you'll get something like this here:
     // {"target":1105,"layout":{"y":0,"width":256,"x":32,"height":54.5}}
   };
   const _measure = obj => {
-    obj.current.measure ((x, y, width, height, pagex, pagey) => {
+    obj.current.measure((x, y, width, height, pagex, pagey) => {
       const location = {
         fx: x,
         fy: y,
@@ -52,39 +52,36 @@ const MyFeedView = ({userInfo, scroll, offsetY}) => {
         height: height,
       };
       if (location.py + location.height > dh - 114) {
-        scroll.current.scrollTo (offsetY + 114, 0, true);
+        scroll.current.scrollTo(offsetY + 114, 0, true);
         location.py = location.py - 114;
       }
-      setBtnMeasure (location);
+      setBtnMeasure(location);
     });
   };
-  useEffect (
-    () => {
-      if (userInfo[global.config.user_info_const.UID] !== undefined) {
-        axios
-          .get (
-            'http://13.124.126.30:8000/core/feed/' +
-              userInfo[global.config.user_info_const.UID] +
-              '/'
-          )
-          .then (result => {
-            console.log (result.data);
-            let tmpFeed = [];
-            let count = 0;
-            result.data.map (item => {
-              tmpFeed[count] = item;
-              count++;
-            });
-            tmpFeed.reverse ();
-            setFeed_list (tmpFeed);
+  useEffect(() => {
+    if (userInfo[global.config.user_info_const.UID] !== undefined) {
+      axios
+        .get(
+          'http://13.124.126.30:8000/core/feed/' +
+            userInfo[global.config.user_info_const.UID] +
+            '/',
+        )
+        .then(result => {
+          console.log(result.data);
+          let tmpFeed = [];
+          let count = 0;
+          result.data.map(item => {
+            tmpFeed[count] = item;
+            count++;
           });
-      }
-    },
-    [userInfo]
-  );
+          tmpFeed.reverse();
+          setFeed_list(tmpFeed);
+        });
+    }
+  }, [userInfo]);
   const selectPhotoTapped = () => {
     if (modalVisible) return;
-    _measure (_image);
+    _measure(_image);
     const options = {
       quality: 1.0,
       maxWidth: 500,
@@ -93,21 +90,21 @@ const MyFeedView = ({userInfo, scroll, offsetY}) => {
         skipBackup: true,
       },
     };
-    ImagePicker.showImagePicker (options, response => {
+    ImagePicker.showImagePicker(options, response => {
       if (response.didCancel) {
-        console.log ('User cancelled photo picker');
+        console.log('User cancelled photo picker');
       } else if (response.error) {
-        console.log ('ImagePicker Error: ', response.error);
+        console.log('ImagePicker Error: ', response.error);
       } else if (response.customButton) {
-        console.log ('User tapped custom button: ', response.customButton);
+        console.log('User tapped custom button: ', response.customButton);
       } else {
         let source = {
           uri: response.uri,
           name: response.uri,
           type: response.type,
         };
-        setImageSource (source);
-        setModalVisible (true);
+        setImageSource(source);
+        setModalVisible(true);
       }
     });
   }; // for uploading pictures
@@ -130,23 +127,21 @@ const MyFeedView = ({userInfo, scroll, offsetY}) => {
         transparent={true}
         visible={modalVisible}
         onRequestClose={() => {
-          setImageSource (null);
-        }}
-      >
-        {btnMeasure !== null && btnMeasure !== undefined
-          ? <View
-              style={{
-                position: 'absolute',
-                zIndex: 2,
-                width: dw,
-                height: dw / 1.618,
-                left: btnMeasure.px,
-                top: btnMeasure.py,
-              }}
-            >
-              <Image style={styles.viewPage} source={imageSource} />
-            </View>
-          : null}
+          setImageSource(null);
+        }}>
+        {btnMeasure !== null && btnMeasure !== undefined ? (
+          <View
+            style={{
+              position: 'absolute',
+              zIndex: 2,
+              width: dw,
+              height: dw / 1.618,
+              left: btnMeasure.px,
+              top: btnMeasure.py,
+            }}>
+            <Image style={styles.viewPage} source={imageSource} />
+          </View>
+        ) : null}
         <View
           style={{
             width: '100%',
@@ -162,25 +157,24 @@ const MyFeedView = ({userInfo, scroll, offsetY}) => {
           <Button
             style={styles.modalButtonMultiple}
             onPress={() => {
-              const formData = new FormData ();
-              formData.append ('image', {
+              const formData = new FormData();
+              formData.append('image', {
                 uri: imageSource.uri,
                 type: imageSource.type,
                 name: imageSource.name,
               });
-              file_upload (
+              file_upload(
                 formData,
-                'http://13.124.126.30:8000/core/feed/'
-              ).then (result => {
-                setImageSource (null);
-                setModalVisible (false);
-                let tmpFeed = feed_list.slice ();
-                tmpFeed.unshift (result.data);
-                console.log (result.data);
-                setFeed_list (tmpFeed);
+                'http://13.124.126.30:8000/core/feed/',
+              ).then(result => {
+                setImageSource(null);
+                setModalVisible(false);
+                let tmpFeed = feed_list.slice();
+                tmpFeed.unshift(result.data);
+                console.log(result.data);
+                setFeed_list(tmpFeed);
               });
-            }}
-          >
+            }}>
             <CustomTextRegular size={17} color={palette.red}>
               완료
             </CustomTextRegular>
@@ -188,84 +182,72 @@ const MyFeedView = ({userInfo, scroll, offsetY}) => {
           <Button
             style={styles.modalButtonCancle}
             onPress={() => {
-              setModalVisible (false);
-              setImageSource (null);
-            }}
-          >
+              setModalVisible(false);
+              setImageSource(null);
+            }}>
             <CustomTextBold size={17} color={palette.black}>
               취소
             </CustomTextBold>
           </Button>
         </View>
-
       </Modal>
 
       <CustomTextMedium
         size={18}
         color={palette.black}
-        style={{marginLeft: 30, marginBottom: 20, marginTop: 16}}
-      >
+        style={{marginLeft: 30, marginBottom: 20, marginTop: 16}}>
         내 피드
       </CustomTextMedium>
-      {imageSource === null
-        ? <IndicatorViewPager
-            style={styles.viewPager}
-            indicator={_renderDotIndicator ()}
-          >
-            <ImageBackground
-              style={styles.viewPage}
-              key="1"
-              source={require ('~/images/addFeedExample.png')}
-            >
-              <TouchableByPlatform onPress={selectPhotoTapped}>
-                <View
-                  onLayout={event => {
-                    measureView (event);
-                  }}
-                  ref={_image}
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    backgroundColor: 'rgba(0,0,0,0.7)',
-                    flexDirection: 'column',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}
-                >
-                  <CustomTextRegular
-                    color="white"
-                    size={40}
-                    style={styles.feedT}
-                  >
-                    +
-                  </CustomTextRegular>
-                  <CustomTextRegular
-                    color="white"
-                    size={20}
-                    style={styles.feedT}
-                  >
-                    내 피드 추가하기
-                  </CustomTextRegular>
-                </View>
-              </TouchableByPlatform>
-            </ImageBackground>
-            {feed_list.map ((item, index) => {
-              console.log (item);
-              return (
-                <Image
-                  style={styles.viewPage}
-                  key={index + 2}
-                  source={item.img_src === null ? null : {uri: item.img_src}}
-                />
-              );
-            })}
-          </IndicatorViewPager>
-        : <Image style={styles.viewPager} source={imageSource} />}
+      {imageSource === null ? (
+        <IndicatorViewPager
+          style={styles.viewPager}
+          indicator={_renderDotIndicator()}>
+          <ImageBackground
+            style={styles.viewPage}
+            key="1"
+            source={require('~/images/addFeedExample.png')}>
+            <TouchableByPlatform onPress={selectPhotoTapped}>
+              <View
+                onLayout={event => {
+                  measureView(event);
+                }}
+                ref={_image}
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  backgroundColor: 'rgba(0,0,0,0.7)',
+                  flexDirection: 'column',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <CustomTextRegular color="white" size={40} style={styles.feedT}>
+                  +
+                </CustomTextRegular>
+                <CustomTextRegular color="white" size={20} style={styles.feedT}>
+                  내 피드 추가하기
+                </CustomTextRegular>
+              </View>
+            </TouchableByPlatform>
+          </ImageBackground>
+          {feed_list.map((item, index) => {
+            console.log(item);
+            return (
+              <Image
+                style={styles.viewPage}
+                key={index + 2}
+                source={item.img_src === null ? null : {uri: item.img_src}}
+              />
+            );
+          })}
+        </IndicatorViewPager>
+      ) : (
+        <Image style={styles.viewPager} source={imageSource} />
+      )}
     </View>
   );
 };
 
-const styles = StyleSheet.create ({
+const styles = StyleSheet.create({
   viewPage: {
     width: '100%',
     height: '100%',
