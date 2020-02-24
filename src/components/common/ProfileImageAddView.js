@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, createRef} from 'react';
 import {
   Text,
   View,
@@ -49,13 +49,43 @@ const temp_init_data = [
     number: 5,
   },
 ];
-const ProfileImageAddView = () => {
+const ProfileImageAddView = ({scroll, offsetY}) => {
   const [imageSource, setImageSource] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [pfImageList, setPfImageList] = useState(temp_init_data);
   const [pfImageTempList, setPfImageTempList] = useState(temp_init_data);
   const [uploading, setUploading] = useState(false);
   const [userInfo, setUserInfo] = useState([]);
+  const [btnMeasure, setBtnMeasure] = useState(null);
+  const [btnMeasureRight, setBtnMeasureRight] = useState(null);
+  const _imageLeft = createRef();
+  const _imageRight = createRef();
+  const _measure = (obj, number) => {
+    obj.current.measure((x, y, width, height, pagex, pagey) => {
+      const location = {
+        fx: x,
+        fy: y,
+        px: pagex,
+        py: pagey,
+        width: width,
+        height: height,
+        number: number,
+      };
+      if (number === 3) {
+        location.px = location.px + 10 + ((deviceWidth - 76) / 2) * 0.468;
+      } else if (number === 4) {
+        location.py = location.py + 10 + ((deviceWidth - 76) / 2) * 0.468;
+      } else if (number === 5) {
+        location.px = location.px + 10 + ((deviceWidth - 76) / 2) * 0.468;
+        location.py = location.py + 10 + ((deviceWidth - 76) / 2) * 0.468;
+      }
+      location.py = location.py + offsetY;
+      obj === _imageLeft
+        ? setBtnMeasure(location)
+        : setBtnMeasureRight(location);
+    });
+    scroll.current.scrollTo(0, 0, true);
+  };
   const _retrieveData = async () => {
     try {
       const userValue = await AsyncStorage.getItem('userValue');
@@ -66,10 +96,15 @@ const ProfileImageAddView = () => {
         setUserInfo(jUserValue);
         // console.log(jUserValue[3]);
       } else {
-        console.log('asdasd');
       }
     } catch (error) {}
   };
+  const measureView = event => {
+    console.log(`*** event: ${JSON.stringify(event.nativeEvent)}`);
+    // you'll get something like this here:
+    // {"target":1105,"layout":{"y":0,"width":256,"x":32,"height":54.5}}
+  };
+
   useEffect(() => {
     _retrieveData();
     axios({
@@ -79,16 +114,18 @@ const ProfileImageAddView = () => {
         'Content-Type': 'multipart/form-data',
       },
     }).then(result => {
-      let tmp = ['', '', '', '', ''];
+      const tmp = temp_init_data.slice();
       result.data.map((item, index) => {
-        tmp[index] = item.src;
+        tmp[index] = item;
       });
       console.log(result.data);
-      if (result.data.length > 0) setPfImageList(result.data);
+      setPfImageList(tmp);
     });
   }, []);
 
   const selectPhotoTapped = number => {
+    if (number === 1) setBtnMeasure(_measure(_imageLeft, number));
+    else setBtnMeasureRight(_measure(_imageRight, number));
     const options = {
       quality: 1.0,
       maxWidth: 500,
@@ -97,8 +134,6 @@ const ProfileImageAddView = () => {
         skipBackup: true,
       },
     };
-    console.log(pfImageList[0]);
-
     ImagePicker.showImagePicker(options, response => {
       if (response.didCancel) {
         console.log('User cancelled photo picker');
@@ -109,14 +144,12 @@ const ProfileImageAddView = () => {
       } else {
         let source = {
           uri: response.uri,
-          name: response.fileName,
+          name: response.uri,
           type: response.type,
           number: number,
         };
         let temp = pfImageTempList.slice();
         temp[number - 1].src = source.uri;
-        console.log('asdasdasd');
-        console.log(source);
         setImageSource(source);
         setPfImageTempList(temp);
         setModalVisible(true);
@@ -138,10 +171,50 @@ const ProfileImageAddView = () => {
         onRequestClose={() => {
           Alert.alert('Modal has been closed.');
         }}>
+        {btnMeasure !== null && btnMeasure !== undefined ? (
+          <View
+            style={{
+              position: 'absolute',
+              zIndex: 2,
+              width: (deviceWidth - 76) / 2,
+              height: (deviceWidth - 76) / 2,
+              left: btnMeasure.px,
+              top: btnMeasure.py,
+              borderRadius: 5,
+              alignItems: 'center',
+            }}>
+            <Image style={styles.fill} source={{uri: pfImageTempList[0].src}} />
+            <Image
+              style={styles.mainButtonCameraIcon}
+              source={require('~/images/icon-camera-circle.png')}
+            />
+          </View>
+        ) : null}
+        {btnMeasureRight !== null && btnMeasureRight !== undefined ? (
+          <View
+            style={{
+              position: 'absolute',
+              zIndex: 2,
+              width: ((deviceWidth - 76) / 2) * 0.468,
+              height: ((deviceWidth - 76) / 2) * 0.468,
+              left: btnMeasureRight.px,
+              top: btnMeasureRight.py,
+              borderRadius: 5,
+              alignItems: 'center',
+            }}>
+            <Image
+              style={styles.fill}
+              source={{uri: pfImageTempList[btnMeasureRight.number - 1].src}}
+            />
+          </View>
+        ) : null}
         <SafeAreaView
           style={{
+            flex: 1,
+            position: 'absolute',
+            zIndex: 1,
+            width: '100%',
             height: '100%',
-
             backgroundColor: 'rgba(0,0,0,0.7)',
             flexDirection: 'column',
             justifyContent: 'flex-end',
@@ -196,8 +269,12 @@ const ProfileImageAddView = () => {
           <Button
             style={styles.modalButtonCancle}
             onPress={() => {
-              setModalVisible(!modalVisible);
               setPfImageTempList(temp_init_data);
+              setBtnMeasure(null);
+              setBtnMeasureRight(null);
+              setImageSource(null);
+
+              setModalVisible(!modalVisible);
             }}>
             <CustomTextBold size={17} color={palette.black}>
               취소
@@ -206,10 +283,14 @@ const ProfileImageAddView = () => {
         </SafeAreaView>
       </Modal>
       {/* modal end */}
-
-      <View style={styles.buttonView}>
+      <View
+        style={styles.buttonView}
+        ref={_imageLeft}
+        onLayout={event => {
+          measureView(event);
+        }}>
         <Button style={styles.mainButton} onPress={() => selectPhotoTapped(1)}>
-          {pfImageTempList[0].src !== null ? (
+          {modalVisible && pfImageTempList[0].src !== null ? (
             <Image style={styles.fill} source={{uri: pfImageTempList[0].src}} />
           ) : pfImageList.length > 0 && pfImageList[0].src !== null ? (
             <TouchableByPlatform style={styles.mainButtonImageWrapper}>
@@ -232,10 +313,15 @@ const ProfileImageAddView = () => {
             source={require('~/images/icon-camera-circle.png')}
           />
         </Button>
-        <View style={styles.rightButtonView}>
+        <View
+          onLayout={event => {
+            measureView(event);
+          }}
+          ref={_imageRight}
+          style={styles.rightButtonView}>
           <View style={styles.rightButtonViewFirst}>
             <Button style={styles.button} onPress={() => selectPhotoTapped(2)}>
-              {pfImageTempList[1].src !== null ? (
+              {modalVisible && pfImageTempList[1].src !== null ? (
                 <Image
                   style={styles.fill}
                   source={{uri: pfImageTempList[1].src}}
@@ -251,7 +337,7 @@ const ProfileImageAddView = () => {
               )}
             </Button>
             <Button style={styles.button} onPress={() => selectPhotoTapped(3)}>
-              {pfImageTempList[2].src !== null ? (
+              {modalVisible && pfImageTempList[2].src !== null ? (
                 <Image
                   style={styles.fill}
                   source={{uri: pfImageTempList[2].src}}
@@ -269,7 +355,7 @@ const ProfileImageAddView = () => {
           </View>
           <View style={styles.rightButtonViewSecond}>
             <Button style={styles.button} onPress={() => selectPhotoTapped(4)}>
-              {pfImageTempList[3].src !== null ? (
+              {modalVisible && pfImageTempList[3].src !== null ? (
                 <Image
                   style={styles.fill}
                   source={{uri: pfImageTempList[3].src}}
@@ -285,7 +371,7 @@ const ProfileImageAddView = () => {
               )}
             </Button>
             <Button style={styles.button} onPress={() => selectPhotoTapped(5)}>
-              {pfImageTempList[4].src !== null ? (
+              {modalVisible && pfImageTempList[4].src !== null ? (
                 <Image
                   style={styles.fill}
                   source={{uri: pfImageTempList[4].src}}

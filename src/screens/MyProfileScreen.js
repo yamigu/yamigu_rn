@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, createRef} from 'react';
 import {
   Text,
   View,
@@ -22,36 +22,46 @@ import MyFeedView from '~/components/MyProfileScreen/MyFeedView';
 import InfoView from '~/components/MyProfileScreen/InfoView';
 import {Content, Button} from 'native-base';
 import AsyncStorage from '@react-native-community/async-storage';
+import {ScrollView} from 'react-native-gesture-handler';
 
 const MyProfileScreen = ({navigation}) => {
-  const [userInfo, setUserInfo] = useState([]);
+  const [userInfo, setUserInfo] = useState ([]);
+  const [offsetY, setOffsetY] = useState (0);
+  const _scroll = createRef ();
   const _retrieveData = async () => {
     try {
-      const userValue = await AsyncStorage.getItem('userValue');
-      const jUserValue = JSON.parse(userValue);
+      const userValue = await AsyncStorage.getItem ('userValue');
+      const jUserValue = JSON.parse (userValue);
       if (userValue !== null) {
         // console.log('qweqwe');
         // console.log(jUserValue);
-        setUserInfo(jUserValue);
+        setUserInfo (jUserValue);
         // console.log(jUserValue[3]);
       } else {
-        console.log('asdasd');
+        console.log ('asdasd');
       }
     } catch (error) {}
   };
-  useEffect(() => {
-    _retrieveData();
+  useEffect (() => {
+    _retrieveData ();
   }, []);
 
   return (
-    <Content showsVerticalScrollIndicator={false} style={styles.root}>
-      <ImageView />
+    <ScrollView
+      ref={_scroll}
+      showsVerticalScrollIndicator={false}
+      style={styles.root}
+      onScroll={e => {
+        setOffsetY (e.nativeEvent.contentOffset.y);
+      }}
+    >
+      <ImageView scroll={_scroll} offsetY={offsetY} />
       <View style={styles.divider} />
-      <MyFeedView userInfo={userInfo} />
+      <MyFeedView scroll={_scroll} offsetY={offsetY} userInfo={userInfo} />
       <FriendsView navigation={navigation} />
       <View style={styles.divider} />
       <InfoView navigation={navigation} userInfo={userInfo} />
-    </Content>
+    </ScrollView>
   );
 };
 MyProfileScreen.navigationOptions = ({navigation}) => ({
@@ -60,7 +70,7 @@ MyProfileScreen.navigationOptions = ({navigation}) => ({
       label=" "
       tintColor={palette.black}
       onPress={() => {
-        navigation.goBack();
+        navigation.goBack ();
       }}
     />
   ),
@@ -74,7 +84,7 @@ MyProfileScreen.navigationOptions = ({navigation}) => ({
   },
   headerTitleAlign: 'center',
 });
-const styles = StyleSheet.create({
+const styles = StyleSheet.create ({
   root: {
     flex: 1,
     backgroundColor: palette.default_bg,

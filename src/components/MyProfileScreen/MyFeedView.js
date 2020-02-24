@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, createRef} from 'react';
 import {
   View,
   StyleSheet,
@@ -29,11 +29,35 @@ import file_upload from '~/lib/utils/file_upload';
 const dw = Dimensions.get('window').width;
 const dh = Dimensions.get('window').height;
 
-const MyFeedView = ({userInfo}) => {
+const MyFeedView = ({userInfo, scroll, offsetY}) => {
   const [imageSource, setImageSource] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [feed_list, setFeed_list] = useState([]);
+  const [btnMeasure, setBtnMeasure] = useState(null);
 
+  const _image = createRef();
+  const measureView = event => {
+    console.log(`*** event: ${JSON.stringify(event.nativeEvent)}`);
+    // you'll get something like this here:
+    // {"target":1105,"layout":{"y":0,"width":256,"x":32,"height":54.5}}
+  };
+  const _measure = obj => {
+    obj.current.measure((x, y, width, height, pagex, pagey) => {
+      const location = {
+        fx: x,
+        fy: y,
+        px: pagex,
+        py: pagey,
+        width: width,
+        height: height,
+      };
+      if (location.py + location.height > dh - 114) {
+        scroll.current.scrollTo(offsetY + 114, 0, true);
+        location.py = location.py - 114;
+      }
+      setBtnMeasure(location);
+    });
+  };
   useEffect(() => {
     if (userInfo[global.config.user_info_const.UID] !== undefined) {
       axios
@@ -56,6 +80,8 @@ const MyFeedView = ({userInfo}) => {
     }
   }, [userInfo]);
   const selectPhotoTapped = () => {
+    if (modalVisible) return;
+    _measure(_image);
     const options = {
       quality: 1.0,
       maxWidth: 500,
@@ -72,7 +98,11 @@ const MyFeedView = ({userInfo}) => {
       } else if (response.customButton) {
         console.log('User tapped custom button: ', response.customButton);
       } else {
-        let source = {uri: response.uri};
+        let source = {
+          uri: response.uri,
+          name: response.uri,
+          type: response.type,
+        };
         setImageSource(source);
         setModalVisible(true);
       }
@@ -97,50 +127,58 @@ const MyFeedView = ({userInfo}) => {
         transparent={true}
         visible={modalVisible}
         onRequestClose={() => {
-          Alert.alert('Modal has been closed.');
+          setImageSource(null);
         }}>
+        {btnMeasure !== null && btnMeasure !== undefined ? (
+          <View
+            style={{
+              position: 'absolute',
+              zIndex: 2,
+              width: dw,
+              height: dw / 1.618,
+              left: btnMeasure.px,
+              top: btnMeasure.py,
+            }}>
+            <Image style={styles.viewPage} source={imageSource} />
+          </View>
+        ) : null}
         <View
           style={{
-            height: dh,
+            width: '100%',
+            height: '100%',
+            position: 'absolute',
+            zIndex: 1,
             backgroundColor: 'rgba(0,0,0,0.7)',
             flexDirection: 'column',
             justifyContent: 'flex-end',
-          }}>
-          <View style={styles.modalBtnContainer}>
-            <Button
-              style={styles.modalButtonMultiple}
-              onPress={() => {
-                const formData = new FormData();
-                formData.append('image', {
-                  uri: imageSource.uri,
-                  type: imageSource.type,
-                  name: imageSource.uri,
-                });
-                file_upload(
-                  formData,
-                  'http://13.124.126.30:8000/core/feed/',
-                ).then(result => {
-                  setImageSource(null);
-                  setModalVisible(false);
-                  let tmpFeed = feed_list.slice();
-                  tmpFeed.unshift(result.data);
-                  console.log(result.data);
-                  setFeed_list(tmpFeed);
-                });
-              }}>
-              <CustomTextRegular size={17} color={palette.red}>
-                완료
-              </CustomTextRegular>
-            </Button>
-            <View
-              style={{
-                height: 1,
-                width: dw - 20,
-                backgroundColor: palette.black,
-              }}
-            />
-          </View>
-
+          }}
+        />
+        <View style={styles.modalBtnContainer}>
+          <Button
+            style={styles.modalButtonMultiple}
+            onPress={() => {
+              const formData = new FormData();
+              formData.append('image', {
+                uri: imageSource.uri,
+                type: imageSource.type,
+                name: imageSource.name,
+              });
+              file_upload(
+                formData,
+                'http://13.124.126.30:8000/core/feed/',
+              ).then(result => {
+                setImageSource(null);
+                setModalVisible(false);
+                let tmpFeed = feed_list.slice();
+                tmpFeed.unshift(result.data);
+                console.log(result.data);
+                setFeed_list(tmpFeed);
+              });
+            }}>
+            <CustomTextRegular size={17} color={palette.red}>
+              완료
+            </CustomTextRegular>
+          </Button>
           <Button
             style={styles.modalButtonCancle}
             onPress={() => {
@@ -170,6 +208,10 @@ const MyFeedView = ({userInfo}) => {
             source={require('~/images/addFeedExample.png')}>
             <TouchableByPlatform onPress={selectPhotoTapped}>
               <View
+                onLayout={event => {
+                  measureView(event);
+                }}
+                ref={_image}
                 style={{
                   width: '100%',
                   height: '100%',
@@ -227,10 +269,9 @@ const styles = StyleSheet.create({
   modalButtonCancle: {
     flexDirection: 'row',
     justifyContent: 'center',
-    marginBottom: 10,
-    marginHorizontal: 10,
     borderRadius: 10,
     backgroundColor: 'white',
+    marginTop: 10,
     height: 52,
   },
   modalButtonMultiple: {
@@ -242,9 +283,13 @@ const styles = StyleSheet.create({
     height: 52,
   },
   modalBtnContainer: {
-    backgroundColor: 'white',
+    width: '100%',
+    backgroundColor: '#00000000',
+    position: 'absolute',
+    zIndex: 3,
+    bottom: 0,
     borderRadius: 10,
-    marginHorizontal: 10,
+    paddingHorizontal: 10,
     marginBottom: 10,
   },
 });
