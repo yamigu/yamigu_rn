@@ -41,6 +41,8 @@ const ProfileDetailScreen = ({navigation}) => {
   const bothLike = navigation.getParam('bothLike');
   const myFeed = navigation.getParam('my_feed');
 
+  const [liked, setLiked] = useState(false);
+
   const [friendList, setFriendList] = useState([]);
   const [feedList, setFeedList] = useState([]);
 
@@ -48,7 +50,7 @@ const ProfileDetailScreen = ({navigation}) => {
     axios
       .get('http://13.124.126.30:8000/core/feed/' + uid + '/')
       .then(result => {
-        console.log(result.data);
+        // console.log(result.data);
         let tmpFeedList = [];
 
         result.data.map((item, index) => {
@@ -59,7 +61,7 @@ const ProfileDetailScreen = ({navigation}) => {
     axios
       .get('http://13.124.126.30:8000/core/friends/' + uid + '/')
       .then(result => {
-        console.log(result.data);
+        // console.log(result.data);
         let tmpFriendList = [];
         let count = 0;
 
@@ -69,12 +71,10 @@ const ProfileDetailScreen = ({navigation}) => {
             count++;
           }
         });
+        console.log(tmpFriendList);
         setFriendList(tmpFriendList);
       });
   }, []);
-  const [liked, setLiked] = useState(false);
-  const [hasChatting, setHasChatting] = useState(false);
-  const [detailFeed, setDetailFeed] = useState([]);
 
   const _renderDotIndicator = () => {
     return (
@@ -86,6 +86,7 @@ const ProfileDetailScreen = ({navigation}) => {
       />
     );
   };
+
   return (
     <View style={styles.root}>
       <Container style={styles.container}>
@@ -111,7 +112,7 @@ const ProfileDetailScreen = ({navigation}) => {
               size={66}
               fontSizes={[16, 14, 14]}
               nickname={nickname}
-              image={{uri: avata}}
+              avata={{uri: avata}}
               age={age}
               belong={belong}
               department={department}
@@ -255,7 +256,7 @@ const ProfileDetailScreen = ({navigation}) => {
           <List style={styles.friendsList}>
             <ListItem noIndent style={styles.friendsListHeader}>
               <CustomTextRegular size={14} color={palette.black}>
-                또잉또잉또잉님의 제 친구들
+                {nickname}님의 친구들
               </CustomTextRegular>
             </ListItem>
 

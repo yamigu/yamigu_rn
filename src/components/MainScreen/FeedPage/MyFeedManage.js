@@ -4,21 +4,17 @@ import {
   View,
   StyleSheet,
   Dimensions,
-  TextInput,
-  ImageBackground,
   Alert,
   Modal,
   TouchableOpacity,
 } from 'react-native';
 import React, {useState, useReducer, useEffect} from 'react';
-import ProfileCard from '~/components/common/ProfileCard';
 import palette from '~/lib/styles/palette';
 import {Thumbnail, Input, Button} from 'native-base';
 import TouchableByPlatform from '~/components/common/TouchableByPlatform';
 import ImagePicker from 'react-native-image-picker';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 import MaterialCommuniticons from 'react-native-vector-icons/MaterialCommunityIcons';
-import Feather from 'react-native-vector-icons/Feather';
 import axios from 'axios';
 
 import {
@@ -36,47 +32,17 @@ import file_upload from '~/lib/utils/file_upload';
 const dw = Dimensions.get('window').width;
 const dh = Dimensions.get('window').height;
 const nowYear = 20200000;
-const MyFeedManage = ({navigation}) => {
-  useEffect(() => {
-    let tmpUrl;
-    axios
-      .get('http://13.124.126.30:8000/authorization/user/info/')
-      .then(result => {
-        setMyUid(result.data.uid);
-        setNickname(result.data.nickname);
-        setAvata(result.data.avata);
-        setAge(result.data.age);
-        setBelong(result.data.belong);
-        setDepartment(result.data.department);
-        tmpUrl = 'http://13.124.126.30:8000/core/feed/' + result.data.uid + '/';
-        return tmpUrl;
-      })
-      .then(url =>
-        axios.get(url).then(result => {
-          // console.log('myfeedmanage 1st axios done');
-          // console.log(result.data);
-          let tmpFeed = [];
-          let count = 0;
-          result.data.map(item => {
-            tmpFeed[count] = item;
-            count++;
-          });
-          tmpFeed.reverse();
-          setFeed_list(tmpFeed);
-        }),
-      );
-  }, []);
 
-  const [uid, setMyUid] = useState('');
-  const [nickname, setNickname] = useState('');
-  const [avata, setAvata] = useState('');
-  const [age, setAge] = useState(0);
-  const [belong, setBelong] = useState('');
-  const [department, setDepartment] = useState('');
-
-  const [feed_list, setFeed_list] = useState([]);
+const MyFeedManage = ({navigation, myFeedManageProp, myFeed, setMyFeed}) => {
   const [imageSource, setImageSource] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
+
+  const [feedDisplay, setFeedDisplay] = useState(false);
+
+  useEffect(() => {
+    console.log('uid::::::');
+    console.log(myFeedManageProp.uid);
+  }, []);
 
   const selectPhotoTapped = () => {
     const options = {
@@ -107,12 +73,29 @@ const MyFeedManage = ({navigation}) => {
     });
   }; // for uploading pictures
 
-  const [feedDisplay, setFeedDisplay] = useState(false);
+  const uploadMyFeed = () => {
+    const formData = new FormData();
+    formData.append('image', {
+      uri: imageSource.uri,
+      type: imageSource.type,
+      name: imageSource.uri,
+    });
+    file_upload(formData, 'http://13.124.126.30:8000/core/feed/').then(
+      result => {
+        setImageSource(null);
+        setModalVisible(false);
+        let tmpFeed = myFeed.slice();
+        tmpFeed.unshift(result.data);
+        // console.log(result.data);
+        setMyFeed(tmpFeed);
+      },
+    );
+  };
 
   const _renderDotIndicator = () => {
     return (
       <PagerDotIndicator
-        pageCount={feed_list.length}
+        pageCount={myFeed.length}
         dotStyle={styles.dot}
         selectedDotStyle={styles.selectedDot}
         style={styles.indicator}
@@ -145,25 +128,7 @@ const MyFeedManage = ({navigation}) => {
           <View style={styles.modalBtnContainer}>
             <Button
               style={styles.modalButtonMultiple}
-              onPress={() => {
-                const formData = new FormData();
-                formData.append('image', {
-                  uri: imageSource.uri,
-                  type: imageSource.type,
-                  name: imageSource.name,
-                });
-                file_upload(
-                  formData,
-                  'http://13.124.126.30:8000/core/feed/',
-                ).then(result => {
-                  setImageSource(null);
-                  setModalVisible(false);
-                  let tmpFeed = feed_list.slice();
-                  tmpFeed.unshift(result.data);
-                  // console.log(result.data);
-                  setFeed_list(tmpFeed);
-                });
-              }}>
+              onPress={() => uploadMyFeed()}>
               <CustomTextRegular size={17} color={palette.red}>
                 완료
               </CustomTextRegular>
@@ -234,7 +199,7 @@ const MyFeedManage = ({navigation}) => {
           <IndicatorViewPager
             style={styles.viewPager}
             indicator={_renderDotIndicator()}>
-            {feed_list.map(item => {
+            {myFeed.map(item => {
               return (
                 <TouchableOpacity
                   onPress={
@@ -242,13 +207,15 @@ const MyFeedManage = ({navigation}) => {
                       ? null
                       : () => {
                           navigation.navigate('Profile', {
-                            uid,
-                            nickname,
-                            avata,
-                            age,
-                            belong,
-                            department,
-                            feed_list,
+                            uid: myFeedManageProp.uid,
+                            nickname: myFeedManageProp.nickname,
+                            avata: myFeedManageProp.avata,
+                            age: Math.floor(
+                              (nowYear - myFeedManageProp.birthdate) / 10000 +
+                                2,
+                            ),
+                            belong: myFeedManageProp.belong,
+                            department: myFeedManageProp.department,
                             my_feed: true,
                           });
                         }

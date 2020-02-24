@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   Text,
   View,
@@ -40,7 +40,11 @@ const ProfileCard = ({
   department,
   bothLike,
 }) => {
+  const [avataUrl, setAvataUrl] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
+  useEffect(() => {
+    console.log(avata);
+  }, []);
   return (
     <List style={{height: size}}>
       <Modal
@@ -53,7 +57,6 @@ const ProfileCard = ({
         <TouchableWithoutFeedback
           onPress={() => {
             setModalVisible(false);
-            console.log('aa');
           }}>
           <View
             style={{
@@ -111,7 +114,9 @@ const ProfileCard = ({
               borderRadius: size / 2,
             }}
             source={
-              avata ? avata : require('~/images/user-default-profile.png')
+              avata
+                ? {uri: avata.uri}
+                : require('~/images/user-default-profile.png')
             }
           />
         </Left>
