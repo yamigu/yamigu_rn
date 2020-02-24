@@ -140,14 +140,14 @@ const SideMenu = ({navigation}) => {
                       )) /
                       10000 +
                       2,
-                  )}
+                  ) + '살'}
             </CustomTextMedium>
-            <CustomTextMedium
+            {/* <CustomTextMedium
               size={14}
               color={palette.black}
               style={{marginLeft: 0}}>
               살
-            </CustomTextMedium>
+            </CustomTextMedium> */}
           </View>
           <View style={styles.belongView}>
             {sideInfo[global.config.user_info_const.BELONG] === 'belong' ? (
