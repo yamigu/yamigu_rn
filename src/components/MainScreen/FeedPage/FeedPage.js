@@ -84,24 +84,26 @@ const FeedPage = props => {
           //   Alert.alert('do something?');
           // }}
           onMomentumScrollBegin={() => {
-            Alert.alert(
-              '프로필 등록하면 모든 유저 피드 다볼수있다?',
-              '',
-              [
-                {
-                  text: '지금 할래요',
-                  onPress: () => {
-                    props.navigation.navigate('MyProfile');
-                    console.log('profile~~');
-                  },
-                },
-                {
-                  text: '안하고 안본다 더러워서 쳇',
-                  onPress: () => console.log('NOPE'),
-                },
-              ],
-              {cancelable: false},
-            );
+            hasProfile === false
+              ? Alert.alert(
+                  '프로필 등록하면 모든 유저 피드 다볼수있다?',
+                  '',
+                  [
+                    {
+                      text: '지금 할래요',
+                      onPress: () => {
+                        props.navigation.navigate('MyProfile');
+                        console.log('profile~~');
+                      },
+                    },
+                    {
+                      text: '안하고 안본다 더러워서 쳇',
+                      onPress: () => console.log('NOPE'),
+                    },
+                  ],
+                  {cancelable: false},
+                )
+              : null;
           }}
           contentContainerStyle={styles.innerView}
           showsVerticalScrollIndicator={false}>
