@@ -56,7 +56,7 @@ let initUserValue = [
   'uid',
   'nickname',
   'avata',
-  'birhdate',
+  'birthdate',
   'belong',
   'department',
   'profile_list',
@@ -170,6 +170,7 @@ const HomePage = ({navigation}) => {
     _retrieveData().then(result => {
       if (!result) return;
       // console.log(memberSelected);
+
       axios
         .get('http://13.124.126.30:8000/core/match_request/')
         .then(result => {
