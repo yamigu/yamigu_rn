@@ -26,6 +26,7 @@ import palette from '~/lib/styles/palette';
 import ProfileCard from '~/components/common/ProfileCard';
 import {HeaderBackButton} from 'react-navigation-stack';
 import axios from 'axios';
+import CustomMarker from '~/components/MainScreen/HomePage/CustomMarker';
 
 const deviceWidth = Dimensions.get('window').width;
 const nowYear = 20200000;
@@ -38,6 +39,7 @@ const ProfileDetailScreen = ({navigation}) => {
   const belong = navigation.getParam('belong');
   const department = navigation.getParam('department');
   const bothLike = navigation.getParam('bothLike');
+  const myFeed = navigation.getParam('my_feed');
 
   const [friendList, setFriendList] = useState([]);
   const [feedList, setFeedList] = useState([]);
@@ -119,27 +121,10 @@ const ProfileDetailScreen = ({navigation}) => {
             {/* <MeetingSettingPane data={meeting_setting_data} /> */}
             <View style={styles.horizontalDivider} />
           </View>
-          <View style={styles.actionView}>
+
+          {bothLike === true ? (
             <TouchableByPlatform
-              style={styles.touchable}
-              onPress={() => setLiked(!liked)}>
-              <View style={styles.button}>
-                <Ionicon
-                  name="ios-heart-empty"
-                  size={18}
-                  color={liked === false ? '#898989' : palette.orange}
-                />
-                <CustomTextMedium
-                  size={14}
-                  color={liked === false ? '#898989' : palette.orange}
-                  style={{marginLeft: 4}}>
-                  좋아요
-                </CustomTextMedium>
-              </View>
-            </TouchableByPlatform>
-            <View style={styles.verticalDivider} />
-            <TouchableByPlatform
-              style={styles.touchable}
+              style={styles.soleAction}
               onPress={() =>
                 Alert.alert('대화 신청에는 야미3개가 소비됩니다! ')
               }>
@@ -156,7 +141,65 @@ const ProfileDetailScreen = ({navigation}) => {
                 </CustomTextMedium>
               </View>
             </TouchableByPlatform>
-          </View>
+          ) : myFeed !== true ? (
+            <View style={styles.actionView}>
+              <TouchableByPlatform
+                style={styles.touchable}
+                onPress={() => setLiked(!liked)}>
+                <View style={styles.button}>
+                  <Ionicon
+                    name="ios-heart-empty"
+                    size={18}
+                    color={liked === false ? '#898989' : palette.orange}
+                  />
+                  <CustomTextMedium
+                    size={14}
+                    color={liked === false ? '#898989' : palette.orange}
+                    style={{marginLeft: 4}}>
+                    좋아요
+                  </CustomTextMedium>
+                </View>
+              </TouchableByPlatform>
+              <View style={styles.verticalDivider} />
+
+              <TouchableByPlatform
+                style={styles.touchable}
+                onPress={() =>
+                  Alert.alert('대화 신청에는 야미3개가 소비됩니다! ')
+                }>
+                <View style={styles.button}>
+                  <Image
+                    source={require('~/images/chat-bubble2-outline.png')}
+                    style={{height: 16, width: 16}}
+                  />
+                  <CustomTextMedium
+                    size={14}
+                    color={palette.sub}
+                    style={{marginLeft: 4}}>
+                    미팅 신청
+                  </CustomTextMedium>
+                </View>
+              </TouchableByPlatform>
+            </View>
+          ) : (
+            <TouchableByPlatform
+              style={styles.soleAction}
+              onPress={() => navigation.navigate('MyProfile')}>
+              <View style={styles.button}>
+                <Image
+                  source={require('~/images/chat-bubble2-outline.png')}
+                  style={{height: 16, width: 16}}
+                />
+                <CustomTextMedium
+                  size={14}
+                  color={palette.sub}
+                  style={{marginLeft: 4}}>
+                  프로필 수정하러 가기
+                </CustomTextMedium>
+              </View>
+            </TouchableByPlatform>
+          )}
+
           <List style={styles.detailList}>
             {/* <ListItem noIndent style={styles.detailListItem}>
               <Left>
@@ -343,6 +386,12 @@ const styles = StyleSheet.create({
   friendsListItem: {
     backgroundColor: 'white',
     paddingLeft: 22,
+  },
+  soleAction: {
+    backgroundColor: 'white',
+    height: 50,
+    flexDirection: 'column',
+    justifyContent: 'center',
   },
 });
 

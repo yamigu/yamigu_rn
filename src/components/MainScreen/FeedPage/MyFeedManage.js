@@ -249,6 +249,7 @@ const MyFeedManage = ({navigation}) => {
                             belong,
                             department,
                             feed_list,
+                            my_feed: true,
                           });
                         }
                   }>

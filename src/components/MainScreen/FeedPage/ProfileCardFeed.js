@@ -257,6 +257,7 @@ const ProfileCardFeed = ({
           </View>
         </TouchableByPlatform>
         <View style={styles.verticalDivider} />
+
         <TouchableByPlatform
           style={styles.touchable}
           onPress={() => Alert.alert('대화 서비스는 아직 준비중입니다! ')}>
