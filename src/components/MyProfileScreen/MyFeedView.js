@@ -25,35 +25,39 @@ import ImagePicker from 'react-native-image-picker';
 import {Button} from 'native-base';
 import axios from 'axios';
 import '~/config';
-const dw = Dimensions.get('window').width;
-const dh = Dimensions.get('window').height;
+import file_upload from '~/lib/utils/file_upload';
+const dw = Dimensions.get ('window').width;
+const dh = Dimensions.get ('window').height;
 
 const MyFeedView = ({userInfo}) => {
-  const [imageSource, setImageSource] = useState(null);
-  const [modalVisible, setModalVisible] = useState(false);
-  const [feed_list, setFeed_list] = useState([]);
+  const [imageSource, setImageSource] = useState (null);
+  const [modalVisible, setModalVisible] = useState (false);
+  const [feed_list, setFeed_list] = useState ([]);
 
-  useEffect(() => {
-    if (userInfo[global.config.user_info_const.UID] !== undefined) {
-      axios
-        .get(
-          'http://13.124.126.30:8000/core/feed/' +
-            userInfo[global.config.user_info_const.UID] +
-            '/',
-        )
-        .then(result => {
-          console.log(result.data);
-          let tmpFeed = [];
-          let count = 0;
-          result.data.map(item => {
-            tmpFeed[count] = item;
-            count++;
+  useEffect (
+    () => {
+      if (userInfo[global.config.user_info_const.UID] !== undefined) {
+        axios
+          .get (
+            'http://13.124.126.30:8000/core/feed/' +
+              userInfo[global.config.user_info_const.UID] +
+              '/'
+          )
+          .then (result => {
+            console.log (result.data);
+            let tmpFeed = [];
+            let count = 0;
+            result.data.map (item => {
+              tmpFeed[count] = item;
+              count++;
+            });
+            tmpFeed.reverse ();
+            setFeed_list (tmpFeed);
           });
-          tmpFeed.reverse();
-          setFeed_list(tmpFeed);
-        });
-    }
-  }, [userInfo]);
+      }
+    },
+    [userInfo]
+  );
   const selectPhotoTapped = () => {
     const options = {
       quality: 1.0,
@@ -63,17 +67,21 @@ const MyFeedView = ({userInfo}) => {
         skipBackup: true,
       },
     };
-    ImagePicker.showImagePicker(options, response => {
+    ImagePicker.showImagePicker (options, response => {
       if (response.didCancel) {
-        console.log('User cancelled photo picker');
+        console.log ('User cancelled photo picker');
       } else if (response.error) {
-        console.log('ImagePicker Error: ', response.error);
+        console.log ('ImagePicker Error: ', response.error);
       } else if (response.customButton) {
-        console.log('User tapped custom button: ', response.customButton);
+        console.log ('User tapped custom button: ', response.customButton);
       } else {
-        let source = {uri: response.uri};
-        setImageSource(source);
-        setModalVisible(true);
+        let source = {
+          uri: response.uri,
+          name: response.uri,
+          type: response.type,
+        };
+        setImageSource (source);
+        setModalVisible (true);
       }
     });
   }; // for uploading pictures
@@ -96,29 +104,40 @@ const MyFeedView = ({userInfo}) => {
         transparent={true}
         visible={modalVisible}
         onRequestClose={() => {
-          Alert.alert('Modal has been closed.');
-        }}>
+          Alert.alert ('Modal has been closed.');
+        }}
+      >
         <View
           style={{
             height: dh,
             backgroundColor: 'rgba(0,0,0,0.7)',
             flexDirection: 'column',
             justifyContent: 'flex-end',
-          }}>
+          }}
+        >
           <View style={styles.modalBtnContainer}>
             <Button
               style={styles.modalButtonMultiple}
               onPress={() => {
-                setImageSource(null);
-                setModalVisible(false);
-                Alert.alert('이때 서버 보내기');
-                // Alert.alert(
-                //   'Alert Title',
-                //   'My Alert Msg',
-                //   [{text: 'OK', onPress: () => setModalVisible(false)}],
-                //   {cancelable: false},
-                // );
-              }}>
+                const formData = new FormData ();
+                formData.append ('image', {
+                  uri: imageSource.uri,
+                  type: imageSource.type,
+                  name: imageSource.name,
+                });
+                file_upload (
+                  formData,
+                  'http://13.124.126.30:8000/core/feed/'
+                ).then (result => {
+                  setImageSource (null);
+                  setModalVisible (false);
+                  let tmpFeed = feed_list.slice ();
+                  tmpFeed.unshift (result.data);
+                  console.log (result.data);
+                  setFeed_list (tmpFeed);
+                });
+              }}
+            >
               <CustomTextRegular size={17} color={palette.red}>
                 완료
               </CustomTextRegular>
@@ -135,9 +154,10 @@ const MyFeedView = ({userInfo}) => {
           <Button
             style={styles.modalButtonCancle}
             onPress={() => {
-              setModalVisible(false);
-              setImageSource(null);
-            }}>
+              setModalVisible (false);
+              setImageSource (null);
+            }}
+          >
             <CustomTextBold size={17} color={palette.black}>
               취소
             </CustomTextBold>
@@ -148,55 +168,65 @@ const MyFeedView = ({userInfo}) => {
       <CustomTextMedium
         size={18}
         color={palette.black}
-        style={{marginLeft: 30, marginBottom: 20, marginTop: 16}}>
+        style={{marginLeft: 30, marginBottom: 20, marginTop: 16}}
+      >
         내 피드
       </CustomTextMedium>
-      {imageSource === null ? (
-        <IndicatorViewPager
-          style={styles.viewPager}
-          indicator={_renderDotIndicator()}>
-          <ImageBackground
-            style={styles.viewPage}
-            key="1"
-            source={require('~/images/addFeedExample.png')}>
-            <TouchableByPlatform onPress={selectPhotoTapped}>
-              <View
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  backgroundColor: 'rgba(0,0,0,0.7)',
-                  flexDirection: 'column',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}>
-                <CustomTextRegular color="white" size={40} style={styles.feedT}>
-                  +
-                </CustomTextRegular>
-                <CustomTextRegular color="white" size={20} style={styles.feedT}>
-                  내 피드 추가하기
-                </CustomTextRegular>
-              </View>
-            </TouchableByPlatform>
-          </ImageBackground>
-          {feed_list.map((item, index) => {
-            console.log(item);
-            return (
-              <Image
-                style={styles.viewPage}
-                key={index + 2}
-                source={item.img_src === null ? null : {uri: item.img_src}}
-              />
-            );
-          })}
-        </IndicatorViewPager>
-      ) : (
-        <Image style={styles.viewPager} source={imageSource} />
-      )}
+      {imageSource === null
+        ? <IndicatorViewPager
+            style={styles.viewPager}
+            indicator={_renderDotIndicator ()}
+          >
+            <ImageBackground
+              style={styles.viewPage}
+              key="1"
+              source={require ('~/images/addFeedExample.png')}
+            >
+              <TouchableByPlatform onPress={selectPhotoTapped}>
+                <View
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    backgroundColor: 'rgba(0,0,0,0.7)',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}
+                >
+                  <CustomTextRegular
+                    color="white"
+                    size={40}
+                    style={styles.feedT}
+                  >
+                    +
+                  </CustomTextRegular>
+                  <CustomTextRegular
+                    color="white"
+                    size={20}
+                    style={styles.feedT}
+                  >
+                    내 피드 추가하기
+                  </CustomTextRegular>
+                </View>
+              </TouchableByPlatform>
+            </ImageBackground>
+            {feed_list.map ((item, index) => {
+              console.log (item);
+              return (
+                <Image
+                  style={styles.viewPage}
+                  key={index + 2}
+                  source={item.img_src === null ? null : {uri: item.img_src}}
+                />
+              );
+            })}
+          </IndicatorViewPager>
+        : <Image style={styles.viewPager} source={imageSource} />}
     </View>
   );
 };
 
-const styles = StyleSheet.create({
+const styles = StyleSheet.create ({
   viewPage: {
     width: '100%',
     height: '100%',

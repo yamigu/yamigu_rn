@@ -1,4 +1,4 @@
-package com.yamigu;
+package com.yamigu.yamigu_app;
 
 import android.app.Application;
 import android.content.Context;

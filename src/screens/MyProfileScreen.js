@@ -24,23 +24,23 @@ import {Content, Button} from 'native-base';
 import AsyncStorage from '@react-native-community/async-storage';
 
 const MyProfileScreen = ({navigation}) => {
-  const [userInfo, setUserInfo] = useState([]);
+  const [userInfo, setUserInfo] = useState ([]);
   const _retrieveData = async () => {
     try {
-      const userValue = await AsyncStorage.getItem('userValue');
-      const jUserValue = JSON.parse(userValue);
+      const userValue = await AsyncStorage.getItem ('userValue');
+      const jUserValue = JSON.parse (userValue);
       if (userValue !== null) {
         // console.log('qweqwe');
         // console.log(jUserValue);
-        setUserInfo(jUserValue);
+        setUserInfo (jUserValue);
         // console.log(jUserValue[3]);
       } else {
-        console.log('asdasd');
+        console.log ('asdasd');
       }
     } catch (error) {}
   };
-  useEffect(() => {
-    _retrieveData();
+  useEffect (() => {
+    _retrieveData ();
   }, []);
 
   return (
@@ -60,7 +60,7 @@ MyProfileScreen.navigationOptions = ({navigation}) => ({
       label=" "
       tintColor={palette.black}
       onPress={() => {
-        navigation.goBack();
+        navigation.goBack ();
       }}
     />
   ),
@@ -74,7 +74,7 @@ MyProfileScreen.navigationOptions = ({navigation}) => ({
   },
   headerTitleAlign: 'center',
 });
-const styles = StyleSheet.create({
+const styles = StyleSheet.create ({
   root: {
     flex: 1,
     backgroundColor: palette.default_bg,
