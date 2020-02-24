@@ -261,7 +261,7 @@ const HomePage = ({navigation}) => {
       navigation.navigate('Signup');
       //navigate to loginscreen
     } else if (asyncValue[4] === 'birthdate') {
-      navigation.navigate('IV');
+      navigation.navigate('IV', {needBtn: true});
     } else {
       if (matchRequested === true) {
         console.log('came true');

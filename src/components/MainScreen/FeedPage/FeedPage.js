@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Text, View, StyleSheet} from 'react-native';
+import {Text, View, StyleSheet, Alert} from 'react-native';
 import palette from '~/lib/styles/palette';
 import ProfileCardList from './ProfileCardList';
 import LikeMatchingList from './LikeMatchingList';
@@ -13,6 +13,8 @@ const FeedPage = props => {
   const [likeMatchingProp, setLikeMatchingProp] = useState([]);
   const [profileCardProp, setProfileCardProp] = useState([]);
 
+  const [hasProfile, setHasProfile] = useState(false);
+
   const [] = useState([]);
   useEffect(() => {
     //axios for myfeedmanage
@@ -20,6 +22,9 @@ const FeedPage = props => {
       .get('http://13.124.126.30:8000/authorization/user/info/')
       .then(item => {
         setMyFeedManageProp(item.data);
+        if (item.data.avata !== null) {
+          setHasProfile(true);
+        }
         let tmpUrl =
           'http://13.124.126.30:8000/core/feed/' + item.data.uid + '/';
         return tmpUrl;
@@ -27,7 +32,7 @@ const FeedPage = props => {
       .then(url => {
         axios.get(url).then(result => {
           // console.log('myfeedmanage 1st axios done');
-          console.log(result.data);
+          // console.log(result.data);
           let tmpFeed = [];
           let count = 0;
           result.data.map(item => {
@@ -38,7 +43,9 @@ const FeedPage = props => {
           setMyFeed(tmpFeed);
         });
       })
-      .then(() => console.log('myfeedmanage axios done'));
+      .then(() => {
+        // console.log('myfeedmanage axios done');
+      });
 
     //axios for likematchning
     axios.get('http://13.124.126.30:8000/core/both_like/').then(result => {
@@ -64,13 +71,38 @@ const FeedPage = props => {
         });
         setProfileCardProp(tmp);
       })
-      .then(() => console.log('axios done'));
+      .then(() => {
+        // console.log('axios done');
+      });
   }, [props.navigation]);
 
   return (
     <View style={styles.root}>
       <Container style={styles.container}>
         <Content
+          // onMomentumScrollBegin={() => {
+          //   Alert.alert('do something?');
+          // }}
+          onMomentumScrollBegin={() => {
+            Alert.alert(
+              '프로필 등록하면 모든 유저 피드 다볼수있다?',
+              '',
+              [
+                {
+                  text: '지금 할래요',
+                  onPress: () => {
+                    props.navigation.navigate('MyProfile');
+                    console.log('profile~~');
+                  },
+                },
+                {
+                  text: '안하고 안본다 더러워서 쳇',
+                  onPress: () => console.log('NOPE'),
+                },
+              ],
+              {cancelable: false},
+            );
+          }}
           contentContainerStyle={styles.innerView}
           showsVerticalScrollIndicator={false}>
           <MyFeedManage

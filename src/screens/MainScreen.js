@@ -8,6 +8,7 @@ import {createBottomTabNavigator} from 'react-navigation-tabs';
 import HomePage from '~/components/MainScreen/HomePage/HomePage';
 import FeedPage from '~/components/MainScreen/FeedPage/FeedPage';
 import {createAppContainer} from 'react-navigation';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const MainScreenNavigator = createBottomTabNavigator(
   {
@@ -24,7 +25,7 @@ const MainScreenNavigator = createBottomTabNavigator(
     },
     Feed: {
       screen: FeedPage,
-      navigationOptions: {
+      navigationOptions: ({navigation}) => ({
         tabBarIcon: ({focused}) => {
           if (focused === true) {
             return <Image source={require('~/images/feed_icon.png')} />;
@@ -34,8 +35,25 @@ const MainScreenNavigator = createBottomTabNavigator(
             );
           }
         },
-        // <Materialicon name="timeline" size={30} style={{color: tintColor}} />
-      },
+        tabBarOnPress: async ({navigation, defaultHandler}) => {
+          console.log('onPress:');
+          const userValue = await AsyncStorage.getItem('userValue');
+          const jUserValue = JSON.parse(userValue);
+          if (jUserValue[0] === 'token') {
+            navigation.navigate('Login');
+          } else if (jUserValue[2] === 'nickname') {
+            navigation.navigate('Signup');
+            //navigate to loginscreen
+          } else if (jUserValue[4] === 'birthdate') {
+            navigation.navigate('IV', {needBtn: true});
+          }
+          // 'token',     'uid',        'nickname',   'avata',
+          // 'birhdate',  'belong',     'department', 'profile_list',
+          // 'feed_list', 'friend_list','yami_number',
+
+          defaultHandler();
+        },
+      }),
     },
   },
   {

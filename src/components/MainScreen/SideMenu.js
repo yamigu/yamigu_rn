@@ -262,7 +262,23 @@ const SideMenu = ({navigation}) => {
               )}
             </Body>
           </ListItem>
-          {/* <TouchableByPlatform onPress={() => navigation.navigate('Store')}>
+          <TouchableByPlatform onPress={() => navigation.navigate('Signup')}>
+            <ListItem icon noIndent style={styles.listItem}>
+              <Left style={styles.listItemLeft}>
+                <Materialicon
+                  name="store"
+                  size={deviceWidth * 0.813 * 0.06}
+                  style={styles.iconStore}
+                />
+              </Left>
+              <Body style={styles.listItemBody}>
+                <CustomTextRegular size={14} color={palette.black}>
+                  회원가입
+                </CustomTextRegular>
+              </Body>
+            </ListItem>
+          </TouchableByPlatform>
+          <TouchableByPlatform onPress={() => navigation.navigate('Store')}>
             <ListItem icon noIndent style={styles.listItem}>
               <Left style={styles.listItemLeft}>
                 <Materialicon
@@ -286,7 +302,7 @@ const SideMenu = ({navigation}) => {
                 </CustomTextRegular>
               </Right>
             </ListItem>
-          </TouchableByPlatform> */}
+          </TouchableByPlatform>
           {/* <TouchableByPlatform onPress={() => navigation.navigate('Shield')}>
             <ListItem icon noIndent style={styles.listItem}>
               <Left style={styles.listItemLeft}>
@@ -368,7 +384,7 @@ const SideMenu = ({navigation}) => {
               </Right>
             </ListItem>
           </TouchableByPlatform>
-          {/* <TouchableByPlatform onPress={() => navigation.navigate('Login')}>
+          <TouchableByPlatform onPress={() => navigation.navigate('Login')}>
             <ListItem noIndent style={styles.listItem}>
               <Body style={styles.listItemBody}>
                 <CustomTextRegular size={14} color={palette.black}>
@@ -382,7 +398,7 @@ const SideMenu = ({navigation}) => {
                 />
               </Right>
             </ListItem>
-          </TouchableByPlatform> */}
+          </TouchableByPlatform>
           <TouchableByPlatform onPress={() => navigation.navigate('Notice')}>
             <ListItem noIndent style={styles.listItem}>
               <Body style={styles.listItemBody}>
