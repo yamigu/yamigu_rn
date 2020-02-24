@@ -49,7 +49,7 @@ const temp_init_data = [
     number: 5,
   },
 ];
-const ProfileImageAddView = () => {
+const ProfileImageAddView = ({scroll, offsetY}) => {
   const [imageSource, setImageSource] = useState (null);
   const [modalVisible, setModalVisible] = useState (false);
   const [pfImageList, setPfImageList] = useState (temp_init_data);
@@ -61,7 +61,6 @@ const ProfileImageAddView = () => {
   const _imageLeft = createRef ();
   const _imageRight = createRef ();
   const _measure = (obj, number) => {
-    console.log (btnMeasure);
     obj.current.measure ((x, y, width, height, pagex, pagey) => {
       const location = {
         fx: x,
@@ -80,10 +79,12 @@ const ProfileImageAddView = () => {
         location.px = location.px + 10 + (deviceWidth - 76) / 2 * 0.468;
         location.py = location.py + 10 + (deviceWidth - 76) / 2 * 0.468;
       }
+      location.py = location.py + offsetY;
       obj === _imageLeft
         ? setBtnMeasure (location)
         : setBtnMeasureRight (location);
     });
+    scroll.current.scrollTo (0, 0, true);
   };
   const _retrieveData = async () => {
     try {
