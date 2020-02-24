@@ -28,8 +28,8 @@ const LikeMatchingList = ({navigation}) => {
         tmpBothLike[index] = item;
       });
       setBothLikeUser(tmpBothLike);
-      console.log('likematching: ');
-      console.log(result.data);
+      // console.log('likematching: ');
+      // console.log(result.data);
     });
   }, []);
 
@@ -50,8 +50,8 @@ const LikeMatchingList = ({navigation}) => {
         {bothLikeUser.map(user => {
           let intAge =
             Math.floor((nowYear - parseInt(user.birthdate)) / 10000) + 2;
-          console.log('usersrrrrr');
-          console.log(user);
+          // console.log('usersrrrrr');
+          // console.log(user);
           return (
             <TouchableByPlatform
               onPress={() =>

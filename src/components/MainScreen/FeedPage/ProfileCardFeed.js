@@ -148,31 +148,56 @@ const ProfileCardFeed = ({
   belong,
   department,
   bothLike,
+  likedByServer,
 }) => {
   const [liked, setLiked] = useState(false);
   const [feedList, setFeedList] = useState([]);
   // const [hasChatting, setHasChatting] = useState(false);
 
   useEffect(() => {
+    setLiked(likedByServer);
+
     axios
       .get('http://13.124.126.30:8000/core/feed/' + uid + '/')
       .then(result => {
-        console.log(result.data);
+        // console.log(result.data);
         let tmpFeedList = [];
+        let tmpFeedListNo = result.data.length;
 
         result.data.map((item, index) => {
           tmpFeedList[index] = item;
         });
+        // console.log(tmpFeedListNo);
         setFeedList(tmpFeedList.reverse());
       });
   }, []);
 
   const postLike = () => {
-    console.log(feedList[0].id);
-    axios
-      .post('http://13.124.126.30:8000/core/like/' + feedList[0].id + '/')
-      .then(result => console.log(result));
-    setLiked(!liked);
+    console.log('like pressed');
+    if (liked === true) {
+      // console.log('좋아요 취소');
+      // console.log(feedList);
+      // console.log(feedList[0].id);
+      axios
+        .post(
+          'http://13.124.126.30:8000/core/like/' + feedList[0].id + '/cancel/',
+        )
+        .then(result => {
+          // console.log(result.data);
+          setLiked(!liked);
+        });
+    } else {
+      //좋아요 보내기
+      // console.log('좋아요 보내기');
+      // console.log(feedList);
+      // console.log(feedList[0].id);
+      axios
+        .post('http://13.124.126.30:8000/core/like/' + feedList[0].id + '/')
+        .then(result => {
+          // console.log(result.data);
+          setLiked(!liked);
+        });
+    }
   };
 
   const _renderDotIndicator = () => {
@@ -212,26 +237,29 @@ const ProfileCardFeed = ({
         indicator={_renderDotIndicator()}>
         {feedList.map((item, index) => {
           return (
-            <TouchableOpacity
-              onPress={() => {
-                // navigation.setParams({
-                //   nickname: nickname,
-                // });
-                navigation.navigate('Profile', {
-                  uid,
-                  nickname,
-                  avata,
-                  age,
-                  belong,
-                  department,
-                });
-              }}>
-              <Image
-                style={styles.viewPage}
-                key={index}
-                source={item.img_src === null ? null : {uri: item.img_src}}
-              />
-            </TouchableOpacity>
+            <View>
+              <TouchableOpacity
+                onPress={() => {
+                  // navigation.setParams({
+                  //   nickname: nickname,
+                  // });
+                  navigation.navigate('Profile', {
+                    uid,
+                    nickname,
+                    avata,
+                    age,
+                    belong,
+                    department,
+                    liked,
+                  });
+                }}>
+                <Image
+                  style={styles.viewPage}
+                  key={index}
+                  source={item.img_src === null ? null : {uri: item.img_src}}
+                />
+              </TouchableOpacity>
+            </View>
           );
         })}
       </IndicatorViewPager>
@@ -240,6 +268,7 @@ const ProfileCardFeed = ({
         <TouchableByPlatform
           style={styles.touchable}
           onPress={() => {
+            console.log(feedList);
             postLike();
           }}>
           <View style={styles.button}>

@@ -13,13 +13,9 @@ const ProfileCardList = ({navigation}) => {
     axios.get('http://13.124.126.30:8000/core/feeds/').then(result => {
       let tmp = [];
       let count = 0;
-      console.log('ProfileCardList: ');
-      console.log(result.data);
       result.data.map((item, index) => {
         if (item.feed_list.length === 0) {
-          console.log('no feed : ' + item.profile.nickname);
         } else {
-          console.log('yes feed : ' + item.profile.nickname);
           tmp[count] = item;
           count++;
         }
@@ -41,6 +37,7 @@ const ProfileCardList = ({navigation}) => {
             )}
             belong={item.profile.belong}
             department={item.profile.department}
+            likedByServer={item.liked}
             bothLike={false}
             my_feed={false}
           />

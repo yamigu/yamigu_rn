@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Text, View, StyleSheet} from 'react-native';
 import palette from '~/lib/styles/palette';
 import ProfileCardList from './ProfileCardList';
@@ -6,20 +6,27 @@ import LikeMatchingList from './LikeMatchingList';
 import MyFeedManage from './MyFeedManage';
 import {Content, Container} from 'native-base';
 
-const FeedPage = props => (
-  <View style={styles.root}>
-    <Container style={styles.container}>
-      <Content
-        contentContainerStyle={styles.innerView}
-        showsVerticalScrollIndicator={false}>
-        <MyFeedManage navigation={props.navigation} />
-        <LikeMatchingList navigation={props.navigation} />
-        <ProfileCardList navigation={props.navigation} />
-        <View style={styles.lastScroll} />
-      </Content>
-    </Container>
-  </View>
-);
+const FeedPage = props => {
+  useEffect(() => {
+    console.log('page useEffect');
+  }, []);
+
+  return (
+    <View style={styles.root}>
+      <Container style={styles.container}>
+        <Content
+          contentContainerStyle={styles.innerView}
+          showsVerticalScrollIndicator={false}>
+          <MyFeedManage navigation={props.navigation} />
+          <LikeMatchingList navigation={props.navigation} />
+          <ProfileCardList navigation={props.navigation} />
+          <View style={styles.lastScroll} />
+        </Content>
+      </Container>
+    </View>
+  );
+};
+
 const styles = StyleSheet.create({
   root: {
     flex: 1,

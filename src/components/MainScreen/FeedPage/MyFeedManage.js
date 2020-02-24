@@ -53,8 +53,8 @@ const MyFeedManage = ({navigation}) => {
       })
       .then(url =>
         axios.get(url).then(result => {
-          console.log('myfeedmanage 1st axios done');
-          console.log(result.data);
+          // console.log('myfeedmanage 1st axios done');
+          // console.log(result.data);
           let tmpFeed = [];
           let count = 0;
           result.data.map(item => {
@@ -160,7 +160,7 @@ const MyFeedManage = ({navigation}) => {
                   setModalVisible(false);
                   let tmpFeed = feed_list.slice();
                   tmpFeed.unshift(result.data);
-                  console.log(result.data);
+                  // console.log(result.data);
                   setFeed_list(tmpFeed);
                 });
               }}>

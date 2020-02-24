@@ -145,7 +145,9 @@ const ProfileDetailScreen = ({navigation}) => {
             <View style={styles.actionView}>
               <TouchableByPlatform
                 style={styles.touchable}
-                onPress={() => setLiked(!liked)}>
+                onPress={() => {
+                  setLiked(!liked);
+                }}>
                 <View style={styles.button}>
                   <Ionicon
                     name="ios-heart-empty"

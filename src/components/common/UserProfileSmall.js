@@ -22,8 +22,8 @@ const styles = StyleSheet.create({
   },
 });
 const UserProfileSmall = ({style, imageSource, userName, badgeComponent}) => {
-  console.log('profile small');
-  console.log(imageSource);
+  // console.log('profile small');
+  // console.log(imageSource);
   return (
     <View style={[styles.container, style]}>
       <View style={styles.imageContainer}>
