@@ -31,6 +31,7 @@ import {
   Body,
   Right,
   Row,
+  Button,
 } from 'native-base';
 import Anticon from 'react-native-vector-icons/AntDesign';
 import Materialicon from 'react-native-vector-icons/MaterialIcons';
@@ -62,6 +63,7 @@ const SideMenu = ({navigation}) => {
   // 'birhdate',  'belong',     'department', 'profile_list',
   // 'feed_list', 'friend_list','yami_number',
   const _retrieveData = async () => {
+    console.log('retriv!!');
     try {
       const userValue = await AsyncStorage.getItem('userValue');
       const jUserValue = JSON.parse(userValue);
@@ -116,9 +118,14 @@ const SideMenu = ({navigation}) => {
           </View>
           <View style={styles.nameAndAgeView}>
             <CustomTextBold size={18} color={palette.black}>
-              {sideInfo[global.config.user_info_const.NICKNAME] === 'nickname'
-                ? null
-                : sideInfo[global.config.user_info_const.NICKNAME]}
+              {sideInfo[global.config.user_info_const.NICKNAME] ===
+              'nickname' ? (
+                <CustomTextBold size={18} color={palette.black}>
+                  로그인이 필요합니다!
+                </CustomTextBold>
+              ) : (
+                sideInfo[global.config.user_info_const.NICKNAME]
+              )}
             </CustomTextBold>
             <CustomTextMedium
               size={14}
@@ -143,11 +150,19 @@ const SideMenu = ({navigation}) => {
             </CustomTextMedium>
           </View>
           <View style={styles.belongView}>
-            <CustomTextRegular size={14} color={palette.gray}>
-              {sideInfo[global.config.user_info_const.BELONG] === 'belong'
-                ? null
-                : sideInfo[global.config.user_info_const.BELONG] + '  '}
-            </CustomTextRegular>
+            {sideInfo[global.config.user_info_const.BELONG] === 'belong' ? (
+              <Button
+                style={{backgroundColor: palette.default_bg}}
+                onPress={() => navigation.navigate('Login')}>
+                <CustomTextRegular size={14} color={palette.black}>
+                  로그인 하기
+                </CustomTextRegular>
+              </Button>
+            ) : (
+              <CustomTextRegular size={14} color={palette.gray}>
+                {sideInfo[global.config.user_info_const.BELONG] + '  '}
+              </CustomTextRegular>
+            )}
             <CustomTextRegular size={14} color={palette.gray}>
               {sideInfo[global.config.user_info_const.DEPARTMENT] === 'depart'
                 ? null
@@ -353,11 +368,11 @@ const SideMenu = ({navigation}) => {
               </Right>
             </ListItem>
           </TouchableByPlatform>
-          <TouchableByPlatform onPress={() => navigation.navigate('Login')}>
+          {/* <TouchableByPlatform onPress={() => navigation.navigate('Login')}>
             <ListItem noIndent style={styles.listItem}>
               <Body style={styles.listItemBody}>
                 <CustomTextRegular size={14} color={palette.black}>
-                  로그인화면
+                  로그인 화면
                 </CustomTextRegular>
               </Body>
               <Right style={styles.listItemRight}>
@@ -367,7 +382,7 @@ const SideMenu = ({navigation}) => {
                 />
               </Right>
             </ListItem>
-          </TouchableByPlatform>
+          </TouchableByPlatform> */}
           <TouchableByPlatform onPress={() => navigation.navigate('Notice')}>
             <ListItem noIndent style={styles.listItem}>
               <Body style={styles.listItemBody}>
@@ -377,7 +392,7 @@ const SideMenu = ({navigation}) => {
               </Body>
             </ListItem>
           </TouchableByPlatform>
-          <TouchableByPlatform onPress={() => navigation.navigate('Setting')}>
+          {/* <TouchableByPlatform onPress={() => navigation.navigate('Setting')}>
             <ListItem noIndent style={styles.listItem}>
               <Body style={styles.listItemBody}>
                 <CustomTextRegular size={14} color={palette.black}>
@@ -385,7 +400,7 @@ const SideMenu = ({navigation}) => {
                 </CustomTextRegular>
               </Body>
             </ListItem>
-          </TouchableByPlatform>
+          </TouchableByPlatform> */}
 
           <ListItem itemDivider style={styles.itemDivider}>
             <CustomTextMedium size={24} color={palette.black}>

@@ -81,7 +81,7 @@ const LikeMatching = () => {
         <TouchableWithoutFeedback
           onPress={() => {
             setModalVisible(false);
-            console.log('aa');
+            // console.log('aa');
           }}>
           <View
             style={{
@@ -118,7 +118,7 @@ const LikeMatching = () => {
             Alert.alert(
               '마음에 드는 이성친구 피드에 좋아요를 눌러보세요! 서로 좋아요를 한 친구들을 알려준답니다 ㅎㅎ',
             );
-            console.log('inin');
+            // console.log('inin');
           }}>
           <ImageBackground
             source={require('~/images/gold-inner-circle.png')}

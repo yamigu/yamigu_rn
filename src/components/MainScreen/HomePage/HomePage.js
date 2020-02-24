@@ -958,6 +958,10 @@ const HomePage = ({navigation}) => {
           }}>
           <CustomTextRegular>미팅 설정</CustomTextRegular>
           <Button
+            onPress={() => {
+              navigation.navigate('HomeGuideScreen');
+              console.log('home guide button pressed');
+            }}
             style={{
               borderRadius: 15,
               backgroundColor: palette.default_bg,
