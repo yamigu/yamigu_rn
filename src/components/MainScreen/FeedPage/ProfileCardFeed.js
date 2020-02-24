@@ -150,8 +150,8 @@ const ProfileCardFeed = ({
   bothLike,
 }) => {
   const [liked, setLiked] = useState(false);
-  const [hasChatting, setHasChatting] = useState(false);
   const [feedList, setFeedList] = useState([]);
+  // const [hasChatting, setHasChatting] = useState(false);
 
   useEffect(() => {
     axios
@@ -168,9 +168,9 @@ const ProfileCardFeed = ({
   }, []);
 
   const postLike = () => {
-    console.log(feedList.id);
+    console.log(feedList[0].id);
     axios
-      .post('http://13.124.126.30:8000/core/like/' + feedList.id + '/')
+      .post('http://13.124.126.30:8000/core/like/' + feedList[0].id + '/')
       .then(result => console.log(result));
     setLiked(!liked);
   };

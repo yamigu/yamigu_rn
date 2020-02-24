@@ -25,6 +25,7 @@ import ImagePicker from 'react-native-image-picker';
 import {Button} from 'native-base';
 import axios from 'axios';
 import '~/config';
+import file_upload from '~/lib/utils/file_upload';
 const dw = Dimensions.get('window').width;
 const dh = Dimensions.get('window').height;
 
@@ -109,15 +110,23 @@ const MyFeedView = ({userInfo}) => {
             <Button
               style={styles.modalButtonMultiple}
               onPress={() => {
-                setImageSource(null);
-                setModalVisible(false);
-                Alert.alert('이때 서버 보내기');
-                // Alert.alert(
-                //   'Alert Title',
-                //   'My Alert Msg',
-                //   [{text: 'OK', onPress: () => setModalVisible(false)}],
-                //   {cancelable: false},
-                // );
+                const formData = new FormData();
+                formData.append('image', {
+                  uri: imageSource.uri,
+                  type: imageSource.type,
+                  name: imageSource.uri,
+                });
+                file_upload(
+                  formData,
+                  'http://13.124.126.30:8000/core/feed/',
+                ).then(result => {
+                  setImageSource(null);
+                  setModalVisible(false);
+                  let tmpFeed = feed_list.slice();
+                  tmpFeed.unshift(result.data);
+                  console.log(result.data);
+                  setFeed_list(tmpFeed);
+                });
               }}>
               <CustomTextRegular size={17} color={palette.red}>
                 완료

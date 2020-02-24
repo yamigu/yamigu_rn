@@ -97,7 +97,7 @@ const MyFeedManage = ({navigation}) => {
       } else {
         let source = {
           uri: response.uri,
-          name: response.fileName,
+          name: response.uri,
           type: response.type,
         };
         setFeedDisplay(true);

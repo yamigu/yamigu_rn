@@ -154,9 +154,9 @@ const ProfileCard = ({
           }}>
           {bothLike === true ? (
             <Image source={require('~/images/bothlike-icon.png')}></Image>
-          ) : (
-            <Text>no both like</Text>
-          )}
+          ) : null
+          // <Text>no both like</Text>
+          }
         </Right>
       </ListItem>
     </List>
