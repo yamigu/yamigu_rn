@@ -10,3 +10,5 @@
 # Add any project specific keep options here:
 -keep class io.invertase.firebase.** { *; }
 -dontwarn io.invertase.firebase.**
+-keep class com.facebook.react.devsupport.** { *; }
+-dontwarn com.facebook.react.devsupport.**
