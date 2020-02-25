@@ -1,5 +1,14 @@
-import React from 'react';
-import {View, StyleSheet, Image, Platform} from 'react-native';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, {useState, useEffect} from 'react';
+import {
+  View,
+  StyleSheet,
+  Image,
+  Platform,
+  Alert,
+  ScrollView,
+  Text,
+} from 'react-native';
 import {HeaderBackButton} from 'react-navigation-stack';
 import palette from '~/lib/styles/palette';
 import {
@@ -10,87 +19,88 @@ import {List, ListItem, Body, Content} from 'native-base';
 import ListItemWithPrice from '~/components/StoreScreen/ListItemWithPrice';
 import ListItemWithNavigation from '~/components/StoreScreen/ListItemWithNavigation';
 import TouchableByPlatform from '~/components/common/TouchableByPlatform';
-import * as RNIap from 'react-native-iap';
+import RNIap, {
+  InAppPurchase,
+  PurchaseError,
+  SubscriptionPurchase,
+  acknowledgePurchaseAndroid,
+  consumePurchaseAndroid,
+  finishTransaction,
+  finishTransactionIOS,
+  purchaseErrorListener,
+  purchaseUpdatedListener,
+} from 'react-native-iap';
+import NativeButton from 'apsl-react-native-button';
 
 const itemSkus = Platform.select({
-  ios: ['com.example.coins100'],
-  android: ['com.example.coins100'],
+  ios: ['party.yamigu.www.com.ticket_1', 'party.yamigu.www.com.ticket_3'],
+  android: [
+    'android.test.purchased',
+    'android.test.canceled',
+    'android.test.refunded',
+    'android.test.item_unavailable',
+    // 'point_1000',
+    // '5000_point', // dooboolab
+  ],
 });
 
-// async componentDidMount() {
-//   try {
-//     const products: Product[] = await RNIap.getProducts(itemSkus);
-//     this.setState({ products });
-//   } catch(err) {
-//     console.warn(err); // standardized err.code and err.message available
-//   }
-// }
+const itemSubs = Platform.select({
+  ios: [
+    // 'com.cooni.point1000',
+    // 'com.cooni.point5000', // dooboolab
+  ],
+  android: [
+    // 'test.sub1', // subscription
+  ],
+});
+
+let purchaseUpdateSubscription;
+let purchaseErrorSubscription;
 
 const StoreScreen = ({navigation}) => {
-  let purchaseUpdateSubscription = null;
-  let purchaseErrorSubscription = null;
-  /**
-  let requestPurchase = async (sku: string) => {
+  const [productList, setProductList] = useState([]);
+  const [receipt, setReceipt] = useState('');
+  const [availableItemsMessage, setAvailableItemsMessage] = useState('');
+
+  const initIap = async () => {
     try {
-      await RNIap.requestPurchase(sku, false);
+      const result = await RNIap.initConnection();
+      await RNIap.consumeAllItemsAndroid();
+      console.log('result', result);
     } catch (err) {
-      console.warn(err.code, err.message);
+      throw err;
     }
-  };
-
-  let requestSubscription = async (sku: string) => {
-    try {
-      await RNIap.requestSubscription(sku);
-    } catch (err) {
-      console.warn(err.code, err.message);
-    }
-  };
-
-  function componentDidMount() {
-    purchaseUpdateSubscription = purchaseUpdatedListener(
-      (purchase: InAppPurchase | SubscriptionPurchase | ProductPurchase) => {
-        console.log('purchaseUpdatedListener', purchase);
-        const receipt = purchase.transactionReceipt;
-        if (receipt) {
-          yourAPI
-            .deliverOrDownloadFancyInAppPurchase(purchase.transactionReceipt)
-            .then(deliveryResult => {
-              if (isSuccess(deliveryResult)) {
-                // Tell the store that you have delivered what has been paid for.
-                // Failure to do this will result in the purchase being refunded on Android and
-                // the purchase event will reappear on every relaunch of the app until you succeed
-                // in doing the below. It will also be impossible for the user to purchase consumables
-                // again untill you do this.
-                if (Platform.OS === 'ios') {
-                  RNIap.finishTransactionIOS(purchase.transactionId);
-                } else if (Platform.OS === 'android') {
-                  // If consumable (can be purchased again)
-                  RNIap.consumePurchaseAndroid(purchase.purchaseToken);
-                  // If not consumable
-                  RNIap.acknowledgePurchaseAndroid(purchase.purchaseToken);
-                }
-
-                // From react-native-iap@4.1.0 you can simplify above `method`. Try to wrap the statement with `try` and `catch` to also grab the `error` message.
-                // If consumable (can be purchased again)
-                RNIap.finishTransaction(purchase, true);
-                // If not consumable
-                RNIap.finishTransaction(purchase, false);
-              } else {
-                // Retry / conclude the purchase is fraudulent, etc...
-              }
-            });
+    purchaseUpdateSubscription = purchaseUpdatedListener(async () => {
+      const receipt = (InAppPurchase | SubscriptionPurchase).transactionReceipt;
+      if (receipt) {
+        try {
+          if (Platform.OS === 'ios') {
+            finishTransactionIOS(
+              (InAppPurchase | SubscriptionPurchase).transactionId,
+            );
+          } else if (Platform.OS === 'android') {
+            // If consumable (can be purchased again)
+            consumePurchaseAndroid(
+              (InAppPurchase | SubscriptionPurchase).purchaseToken,
+            );
+            // If not consumable
+            acknowledgePurchaseAndroid(
+              (InAppPurchase | SubscriptionPurchase).purchaseToken,
+            );
+          }
+          const ackResult = await finishTransaction(
+            InAppPurchase | SubscriptionPurchase,
+          );
+        } catch (ackErr) {
+          console.warn('ackErr', ackErr);
         }
-      },
-    );
-
-    purchaseErrorSubscription = purchaseErrorListener(
-      (error: PurchaseError) => {
-        console.warn('purchaseErrorListener', error);
-      },
-    );
-  }
-
-  function componentWillUnmount() {
+        setReceipt(receipt, () => goNext());
+      }
+    });
+    purchaseErrorSubscription = purchaseErrorListener(PurchaseError => {
+      console.log('purchaseErrorListener', PurchaseError);
+      Alert.alert('purchase error', JSON.stringify(PurchaseError));
+    });
     if (purchaseUpdateSubscription) {
       purchaseUpdateSubscription.remove();
       purchaseUpdateSubscription = null;
@@ -99,66 +109,199 @@ const StoreScreen = ({navigation}) => {
       purchaseErrorSubscription.remove();
       purchaseErrorSubscription = null;
     }
-  }
-**/
-  return (
-    <Content showsVerticalScrollIndicator={false} style={styles.root}>
-      <List style={styles.list}>
-        <ListItem itemHeader style={styles.listItemHeader}>
-          <Body style={styles.listItemHeaderBody}>
-            <CustomTextMedium size={14} color={palette.black}>
-              현재 보유 야미
-            </CustomTextMedium>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <Image
-                style={styles.iconYami}
-                source={require('~/images/icon-yami.png')}
-              />
-              <CustomTextRegular size={16} color={palette.black}>
-                10
-              </CustomTextRegular>
-            </View>
-          </Body>
-        </ListItem>
-        <ListItemWithPrice title="야미 10개" price="8,000" />
-        <ListItemWithPrice
-          hot
-          title="야미 30개"
-          price="21,000"
-          discount={12.5}
-        />
-        <ListItemWithPrice title="야미 50개" price="32,000" discount={20} />
-        <ListItemWithPrice title="야미 100개" price="56,000" discount={30} />
+  };
+  useEffect(() => {
+    initIap();
+  }, []);
 
-        {/* <TouchableByPlatform>
-          <Image
-            onPress={requestPurchase(product.productId)}
-            source={require('~/images/test-user-profile-girl.png')}
-            style={{width: 100, height: 100, alignSelf: 'flex-end'}}
-          />
-        </TouchableByPlatform> */}
-        <ListItem itemDivider>
-          <CustomTextMedium size={18} color={palette.black}>
-            무료로 야미 받기
-          </CustomTextMedium>
-        </ListItem>
-        <ListItemWithNavigation
-          title="야미 10개 무료"
-          toGoDisplay="친구 등록"
-          toGo={() => navigation.navigate('AddFriends')}
-        />
-        <ListItemWithNavigation
-          title="야미 5개 무료"
-          toGoDisplay="소속 인증하기"
-          toGo={() => navigation.navigate('AddFriends')}
-        />
-        <ListItemWithNavigation
-          title="야미 3개 무료"
-          toGoDisplay="프로필 완성하기"
-          toGo={() => navigation.navigate('MyProfile')}
-        />
-      </List>
-    </Content>
+  const goNext = () => {
+    Alert.alert('Receipt', receipt);
+  };
+
+  const getItems = async () => {
+    try {
+      const products = await RNIap.getProducts(itemSkus);
+      // const products = await RNIap.getSubscriptions(itemSkus);
+      console.log('Products', products);
+      setProductList(products);
+    } catch (err) {
+      console.warn(err.code, err.message);
+    }
+  };
+
+  const getSubscriptions = async () => {
+    try {
+      const products = await RNIap.getSubscriptions(itemSubs);
+      console.log('Products', products);
+      setProductList(products);
+    } catch (err) {
+      console.warn(err.code, err.message);
+    }
+  };
+
+  const getAvailablePurchases = async () => {
+    try {
+      console.info(
+        'Get available purchases (non-consumable or unconsumed consumable)',
+      );
+      const purchases = await RNIap.getAvailablePurchases();
+      console.info('Available purchases :: ', purchases);
+      if (purchases && purchases.length > 0) {
+        setAvailableItemsMessage('item length : ' + purchases.length);
+        setReceipt(purchases[0].transactionReceipt);
+      }
+    } catch (err) {
+      console.warn(err.code, err.message);
+      Alert.alert(err.message);
+    }
+  };
+
+  // Version 3 apis
+  const requestPurchase = async sku => {
+    try {
+      RNIap.requestPurchase(sku);
+    } catch (err) {
+      console.warn(err.code, err.message);
+    }
+  };
+
+  const requestSubscription = async sku => {
+    try {
+      RNIap.requestSubscription(sku);
+    } catch (err) {
+      Alert.alert(err.message);
+    }
+  };
+
+  return (
+    <View style={styles.container}>
+      <View style={styles.header}>
+        <Text style={styles.headerTxt}>react-native-iap V3</Text>
+      </View>
+      <View style={styles.content}>
+        <Content style={{alignSelf: 'stretch'}}>
+          <View style={{height: 50}} />
+
+          <NativeButton
+            onPress={getAvailablePurchases}
+            activeOpacity={0.5}
+            style={styles.btn}
+            textStyle={styles.txt}>
+            Get available purchases
+          </NativeButton>
+
+          <Text style={{margin: 5, fontSize: 15, alignSelf: 'center'}}>
+            {availableItemsMessage}
+          </Text>
+
+          <Text style={{margin: 5, fontSize: 9, alignSelf: 'center'}}>
+            {receipt}
+          </Text>
+
+          <NativeButton
+            onPress={() => getItems()}
+            activeOpacity={0.5}
+            style={styles.btn}
+            textStyle={styles.txt}>
+            Get Products ({productList.length})
+          </NativeButton>
+          {productList.map((product, i) => {
+            return (
+              <View
+                key={i}
+                style={{
+                  flexDirection: 'column',
+                }}>
+                <Text
+                  style={{
+                    marginTop: 20,
+                    fontSize: 12,
+                    color: 'black',
+                    minHeight: 100,
+                    alignSelf: 'center',
+                    paddingHorizontal: 20,
+                  }}>
+                  {JSON.stringify(product)}
+                </Text>
+                <NativeButton
+                  onPress={() => {
+                    requestPurchase(product.productId);
+                    console.log('first' + product.productId);
+                  }}
+                  // onPress={() => {
+                  //   requestSubscription(product.productId);
+                  //   console.log('sencond done');
+                  // }}
+                  activeOpacity={0.5}
+                  style={styles.btn}
+                  textStyle={styles.txt}>
+                  Request purchase for above product
+                </NativeButton>
+              </View>
+            );
+          })}
+        </Content>
+      </View>
+    </View>
+    // <Content showsVerticalScrollIndicator={false} style={styles.root}>
+    //   <List style={styles.list}>
+    //     <ListItem itemHeader style={styles.listItemHeader}>
+    //       <Body style={styles.listItemHeaderBody}>
+    //         <CustomTextMedium size={14} color={palette.black}>
+    //           현재 보유 야미
+    //         </CustomTextMedium>
+    //         <View style={{flexDirection: 'row', alignItems: 'center'}}>
+    //           <Image
+    //             style={styles.iconYami}
+    //             source={require('~/images/icon-yami.png')}
+    //           />
+    //           <CustomTextRegular size={16} color={palette.black}>
+    //             10
+    //           </CustomTextRegular>
+    //         </View>
+    //       </Body>
+    //     </ListItem>
+    //     <ListItemWithPrice title="야미 10개" price="8,000" />
+    //     <ListItemWithPrice
+    //       hot
+    //       title="야미 30개"
+    //       price="21,000"
+    //       discount={12.5}
+    //     />
+    //     <ListItemWithPrice title="야미 50개" price="32,000" discount={20} />
+    //     <ListItemWithPrice title="야미 100개" price="56,000" discount={30} />
+
+    //     {/* <TouchableByPlatform>
+    //       <Image
+    //         onPress={requestPurchase(product.productId)}
+    //         source={require('~/images/test-user-profile-girl.png')}
+    //         style={{width: 100, height: 100, alignSelf: 'flex-end'}}
+    //       />
+    //     </TouchableByPlatform> */}
+    //     <ListItem itemDivider>
+    //       <CustomTextMedium size={18} color={palette.black}>
+    //         무료로 야미 받기
+    //       </CustomTextMedium>
+    //     </ListItem>
+
+    //     {/* Async로 usevalue불러와서 각 분기별 null 처리 */}
+    //     <ListItemWithNavigation
+    //       title="야미 10개 무료"
+    //       toGoDisplay="친구 등록"
+    //       toGo={() => navigation.navigate('AddFriends')}
+    //     />
+    //     <ListItemWithNavigation
+    //       title="야미 5개 무료"
+    //       toGoDisplay="소속 인증하기"
+    //       toGo={() => navigation.navigate('BV')}
+    //     />
+    //     <ListItemWithNavigation
+    //       title="야미 3개 무료"
+    //       toGoDisplay="프로필 사진 등록하기"
+    //       toGo={() => navigation.navigate('MyProfile')}
+    //     />
+    //   </List>
+    // </Content>
   );
 };
 StoreScreen.navigationOptions = ({navigation}) => ({
@@ -183,6 +326,55 @@ StoreScreen.navigationOptions = ({navigation}) => ({
 });
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: Platform.select({
+      ios: 0,
+      android: 24,
+    }),
+    paddingTop: Platform.select({
+      ios: 0,
+      android: 24,
+    }),
+    backgroundColor: 'white',
+  },
+  header: {
+    flex: 20,
+    flexDirection: 'row',
+    alignSelf: 'stretch',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  headerTxt: {
+    fontSize: 26,
+    color: 'green',
+  },
+  content: {
+    flex: 80,
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignSelf: 'stretch',
+    alignItems: 'center',
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+  },
+  btn: {
+    height: 48,
+    width: 240,
+    alignSelf: 'center',
+    backgroundColor: '#00c40f',
+    borderRadius: 0,
+    borderWidth: 0,
+  },
+  txt: {
+    fontSize: 16,
+    color: 'white',
+  },
   root: {
     backgroundColor: palette.default_bg,
   },

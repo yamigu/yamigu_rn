@@ -13,6 +13,8 @@ import TouchableByPlatform from '~/components/common/TouchableByPlatform';
 import {HeaderBackButton} from 'react-navigation-stack';
 import Spinner from 'react-native-loading-spinner-overlay';
 import file_upload from '~/lib/utils/file_upload';
+import AsyncStorage from '@react-native-community/async-storage';
+import axios from 'axios';
 
 const dw = Dimensions.get('window').width;
 const BVScreen = ({navigation}) => {
@@ -24,6 +26,41 @@ const BVScreen = ({navigation}) => {
   const [focus1, setFocus1] = useState(false);
   const [focus2, setFocus2] = useState(false);
 
+  useEffect(() => {
+    axios
+      .get('http://13.124.126.30:8000/authorization/user/belong_verification/')
+      .then(result => {
+        console.log(result.data);
+        return result.data;
+      })
+      .then(data => {
+        if (data.belong === null) {
+          console.log('nothing');
+        } else {
+          console.log(data.is_student);
+          if (data.is_student === true) {
+            setToggle(1);
+          } else {
+            setToggle(2);
+          }
+          setText1(data.belong);
+          data.department === null ? null : setText2(data.department);
+          data.image[0] === undefined
+            ? setImageSource(null)
+            : setImageSource(data.image);
+        }
+      });
+
+    navigation.setParams({
+      doVerify: () => doVerify(),
+      toggle: toggle,
+      text1: text1,
+      text2: text2,
+      imageSource: imageSource,
+    });
+    console.log('useEffect');
+  }, []);
+
   const doVerify = () => {
     setUploading(true);
     const formData = new FormData();
@@ -31,6 +68,7 @@ const BVScreen = ({navigation}) => {
     const belong = text1;
     const department = text2;
     const studentToggle = toggle;
+
     if (studentToggle == 1) {
       formData.append('is_student', true);
     } else if (studentToggle == 1) {
@@ -59,16 +97,6 @@ const BVScreen = ({navigation}) => {
         setUploading(false);
       });
   };
-  useEffect(() => {
-    navigation.setParams({
-      doVerify: () => doVerify(),
-      toggle: toggle,
-      text1: text1,
-      text2: text2,
-      imageSource: imageSource,
-    });
-    console.log('useEffect');
-  }, []);
 
   const selectPhotoTapped = () => {
     const options = {
@@ -124,6 +152,7 @@ const BVScreen = ({navigation}) => {
       imageSource: imageSource,
     });
   };
+
   return (
     <Content style={styles.root}>
       <Spinner
