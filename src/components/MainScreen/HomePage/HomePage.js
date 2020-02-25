@@ -56,7 +56,7 @@ let initUserValue = [
   'uid',
   'nickname',
   'avata',
-  'birhdate',
+  'birthdate',
   'belong',
   'department',
   'profile_list',
@@ -71,17 +71,19 @@ const HomePage = ({navigation}) => {
   const [matchRequested, setMatchRequested] = useState(false);
 
   const _retrieveData = async () => {
+    console.log('retrieve');
     // axios.defaults.headers.common['Authorization'] = '';
     try {
       const userValue = await AsyncStorage.getItem('userValue');
       const jUserValue = JSON.parse(userValue);
+      console.log('juse::');
       console.log(jUserValue);
       if (userValue !== null) {
-        // console.log('uservalue not null');
-        if (userValue.token === 'token') {
-          // console.log('token not set yet.');
+        console.log('uservalue not null');
+        if (jUserValue[0] === 'token') {
+          console.log('token not set yet.');
         } else {
-          // console.log('token is set' + jUserValue[0]);
+          console.log('token is set' + jUserValue[0]);
           axios.defaults.headers.common['Authorization'] =
             'Token ' + jUserValue[0];
           axios
@@ -105,6 +107,7 @@ const HomePage = ({navigation}) => {
                 result.data.verified;
               AsyncStorage.setItem('userValue', JSON.stringify(jUserValue));
               setAsyncValue(jUserValue);
+              return true;
             })
             .catch(e => {
               if (e.response.status === 401) {
@@ -113,6 +116,7 @@ const HomePage = ({navigation}) => {
                   JSON.stringify(initUserValue),
                 );
               }
+              return false;
             });
         }
       } else {
@@ -121,8 +125,7 @@ const HomePage = ({navigation}) => {
         // console.log('first user, async init');
       }
     } catch (error) {
-      // console.log('error');
-      // Error retrieving data
+      console.log(error);
     }
   };
 
@@ -157,23 +160,28 @@ const HomePage = ({navigation}) => {
     navigation.addListener(
       'didFocus',
       () => {
-        _retrieveData().then(() => console.log('willfocus'));
+        _retrieveData().then(result => {
+          if (!result) return;
+          console.log('willfocus');
+        });
       },
       // run function that updates the data on entering the screen
     );
-    _retrieveData().then(() => {
+    _retrieveData().then(result => {
+      if (!result) return;
       // console.log(memberSelected);
+
       axios
         .get('http://13.124.126.30:8000/core/match_request/')
         .then(result => {
           // console.log('homepage useEffect match_request');
-          console.log(result.data);
+          // console.log(result.data);
           if (result.data === 'no match request') {
             setMatchRequested(false);
-            console.log('hehe');
+            // console.log('hehe');
           } else {
             setMatchRequested(true);
-            console.log(result.data);
+            // console.log(result.data);
 
             // result.data.personnel_select 처리 후 memberSelected에 넣기, memberText설정
             let tmpMemInt = result.data.personnel_selected;
@@ -255,22 +263,25 @@ const HomePage = ({navigation}) => {
     });
   }, [memberSelected, dateSelected]);
 
-  const requestMatching = () => {
-    console.log(asyncValue[0]);
-    // logCallback('Login Start', setLoginLoading(true));
+  const requestMatching = async () => {
+    console.log('***jsuer');
+    const userValue = await AsyncStorage.getItem('userValue');
+    const jUserValue = JSON.parse(userValue);
+    console.log(jUserValue);
+
     // 'token',     'uid',        'nickname',   'avata',
     // 'birhdate',  'belong',     'department', 'profile_list',
     // 'feed_list', 'friend_list','yami_number',
-    if (asyncValue[0] === 'token') {
+    if (jUserValue[0] === 'token') {
       navigation.navigate('Login');
-    } else if (asyncValue[2] === 'nickname') {
+    } else if (jUserValue[2] === 'nickname') {
       navigation.navigate('Signup');
       //navigate to loginscreen
-    } else if (asyncValue[4] === 'birthdate') {
+    } else if (jUserValue[4] === 'birthdate') {
       navigation.navigate('IV', {needBtn: true});
     } else {
       if (matchRequested === true) {
-        console.log('came true');
+        // console.log('came true');
         logCallback('match request', setLoginLoading(false));
         setMatchRequested(false);
 
@@ -359,6 +370,11 @@ const HomePage = ({navigation}) => {
             console.log(memInt + ' ' + dateInt);
             console.log(result.data);
             setMatchRequested(!matchRequested);
+          })
+          .catch(e => {
+            if (e.response.status === 401) {
+              AsyncStorage.setItem('userValue', JSON.stringify(initUserValue));
+            }
           })
           .then(setLoginLoading(false));
       }
@@ -1091,7 +1107,7 @@ const HomePage = ({navigation}) => {
           {matchRequested === false ? (
             <TouchableByPlatform
               style={styles.mainBtn}
-              onPress={requestMatching}>
+              onPress={() => requestMatching()}>
               {/* onPress={() => gotoChat()}> */}
               <CustomTextMedium size={16} color="white">
                 미팅 주선 신청하기

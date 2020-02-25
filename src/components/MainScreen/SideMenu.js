@@ -140,14 +140,14 @@ const SideMenu = ({navigation}) => {
                       )) /
                       10000 +
                       2,
-                  )}
+                  ) + '살'}
             </CustomTextMedium>
-            <CustomTextMedium
+            {/* <CustomTextMedium
               size={14}
               color={palette.black}
               style={{marginLeft: 0}}>
               살
-            </CustomTextMedium>
+            </CustomTextMedium> */}
           </View>
           <View style={styles.belongView}>
             {sideInfo[global.config.user_info_const.BELONG] === 'belong' ? (
@@ -160,11 +160,12 @@ const SideMenu = ({navigation}) => {
               </Button>
             ) : (
               <CustomTextRegular size={14} color={palette.gray}>
-                {sideInfo[global.config.user_info_const.BELONG] + '  '}
+                {sideInfo[global.config.user_info_const.BELONG] + ''}
               </CustomTextRegular>
             )}
             <CustomTextRegular size={14} color={palette.gray}>
-              {sideInfo[global.config.user_info_const.DEPARTMENT] === 'depart'
+              {sideInfo[global.config.user_info_const.DEPARTMENT] ===
+              'department'
                 ? null
                 : sideInfo[global.config.user_info_const.DEPARTMENT]}
             </CustomTextRegular>
@@ -188,6 +189,29 @@ const SideMenu = ({navigation}) => {
                 <Body style={styles.listItemBody}>
                   <CustomTextRegular size={14} color={palette.red}>
                     소속 인증하기
+                  </CustomTextRegular>
+                </Body>
+              </ListItem>
+            </TouchableByPlatform>
+          ) : null}
+
+          {sideInfo[global.config.user_info_const.BIRTHDATE] === 'birthdate' ? (
+            <TouchableByPlatform
+              onPress={() => {
+                navigation.navigate('IV', {btnNeeded: true});
+                console.log('goto IV');
+              }}>
+              <ListItem icon noIndent style={styles.listItem}>
+                <Left style={styles.listItemLeft}>
+                  <Anticon
+                    name="exclamationcircle"
+                    style={styles.iconWarning}
+                    size={deviceWidth * 0.813 * 0.06}
+                  />
+                </Left>
+                <Body style={styles.listItemBody}>
+                  <CustomTextRegular size={14} color={palette.red}>
+                    본인 인증하기
                   </CustomTextRegular>
                 </Body>
               </ListItem>
