@@ -22,11 +22,8 @@ import {HeaderBackButton} from 'react-navigation-stack';
 import {SafeAreaView} from 'react-navigation';
 import {createRef} from 'react';
 import 'react-native-gesture-handler';
-import {
-  CustomTextMedium,
-  CustomTextBold,
-  CustomTextRegular,
-} from '~/components/common/CustomText';
+import {CustomTextMedium} from '~/components/common/CustomText';
+import firebase from 'react-native-firebase';
 
 const deviceWidth = Dimensions.get('window').width;
 const buttonWidth = deviceWidth * 0.9;
@@ -36,6 +33,14 @@ const dh = Dimensions.get('window').height;
 const pf = Platform.OS;
 
 const ChattingScreen = props => {
+  useEffect(() => {
+    firebase
+      .database()
+      .ref('message')
+      .on('child_added', snapshot => {
+        console.log(snapshot.val());
+      });
+  }, []);
   let keyboardPadding = 0;
   if (pf === 'ios') keyboardPadding = 100;
   else keyboardPadding = -400;
