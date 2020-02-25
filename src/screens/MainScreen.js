@@ -46,12 +46,13 @@ const MainScreenNavigator = createBottomTabNavigator(
             //navigate to loginscreen
           } else if (jUserValue[4] === 'birthdate') {
             navigation.navigate('IV', {needBtn: true});
+          } else {
+            defaultHandler();
           }
+
           // 'token',     'uid',        'nickname',   'avata',
           // 'birhdate',  'belong',     'department', 'profile_list',
           // 'feed_list', 'friend_list','yami_number',
-
-          defaultHandler();
         },
       }),
     },

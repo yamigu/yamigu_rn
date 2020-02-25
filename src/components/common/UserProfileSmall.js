@@ -31,7 +31,7 @@ const UserProfileSmall = ({style, imageSource, userName, badgeComponent}) => {
           source={
             imageSource === null
               ? require('~/images/test-user-profile-girl.png')
-              : {uri: imageSource}
+              : imageSource
           }
           style={styles.image}
         />

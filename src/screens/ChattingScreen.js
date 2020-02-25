@@ -28,10 +28,10 @@ import {
   CustomTextRegular,
 } from '~/components/common/CustomText';
 
-const deviceWidth = Dimensions.get ('window').width;
+const deviceWidth = Dimensions.get('window').width;
 const buttonWidth = deviceWidth * 0.9;
-const dw = Dimensions.get ('window').width;
-const dh = Dimensions.get ('window').height;
+const dw = Dimensions.get('window').width;
+const dh = Dimensions.get('window').height;
 
 const pf = Platform.OS;
 
@@ -40,21 +40,21 @@ const ChattingScreen = props => {
   if (pf === 'ios') keyboardPadding = 100;
   else keyboardPadding = -400;
 
-  const [toggle, setToggle] = useState (0);
+  const [toggle, setToggle] = useState(0);
   const changeView = () => {
-    setToggle (0);
+    setToggle(0);
   };
   const changeView2 = () => {
-    setToggle (1);
+    setToggle(1);
   };
-  const _scrollToBottomY = createRef ();
+  const _scrollToBottomY = createRef();
 
   const gotoBot = () => {
-    console.log ('im  in');
-    console.log (pf);
-    _scrollToBottomY.current.scrollToEnd ();
+    console.log('im  in');
+    console.log(pf);
+    _scrollToBottomY.current.scrollToEnd();
   };
-  const [modalVisible, setModalVisible] = useState (false);
+  const [modalVisible, setModalVisible] = useState(false);
 
   //behavior : position ###
   return (
@@ -62,15 +62,13 @@ const ChattingScreen = props => {
       <KeyboardAvoidingView
         style={styles.container}
         behavior="padding"
-        keyboardVerticalOffset={keyboardPadding}
-      >
+        keyboardVerticalOffset={keyboardPadding}>
         <ScrollView
           bounces="false"
           ref={_scrollToBottomY}
           onContentSizeChange={() => {
-            _BottomY.current.scrollToEnd ();
-          }}
-        >
+            _scrollToBottomY.current.scrollToEnd();
+          }}>
           <List style={{flex: 1}}>
             <ReceivedItem />
             <ReceivedItem />
@@ -81,30 +79,29 @@ const ChattingScreen = props => {
             <SentItem />
             <SentItem />
           </List>
-          {toggle === 0
-            ? <View style={styles.bottomButton}>
-                <Button
-                  onPress={changeView2}
+          {toggle === 0 ? (
+            <View style={styles.bottomButton}>
+              <Button
+                onPress={changeView2}
+                style={{
+                  flexDirection: 'column',
+                  justifyContent: 'space-between',
+                  alignSelf: 'center',
+                  height: 40,
+                  width: buttonWidth,
+                  backgroundColor: palette.orange[0],
+                }}>
+                <Text
                   style={{
-                    flexDirection: 'column',
-                    justifyContent: 'space-between',
                     alignSelf: 'center',
-                    height: 40,
-                    width: buttonWidth,
-                    backgroundColor: palette.orange[0],
-                  }}
-                >
-                  <Text
-                    style={{
-                      alignSelf: 'center',
-                    }}
-                  >
-                    대화 시작하기
-                  </Text>
-                </Button>
-              </View>
-            : <View style={styles.bottomChatInput}>
-                {/* <TouchableByPlatform>
+                  }}>
+                  대화 시작하기
+                </Text>
+              </Button>
+            </View>
+          ) : (
+            <View style={styles.bottomChatInput}>
+              {/* <TouchableByPlatform>
                 <Anticon
                   title="chattingPicture"
                   name="pluscircle"
@@ -112,32 +109,32 @@ const ChattingScreen = props => {
                   size={deviceWidth * 0.07}
                 />
               </TouchableByPlatform> */}
-                <View
-                  style={{
-                    marginVertical: 10,
-                    padding: 0,
-                    backgroundColor: 'white',
-                    height: 36,
-                    width: deviceWidth * 0.8,
+              <View
+                style={{
+                  marginVertical: 10,
+                  padding: 0,
+                  backgroundColor: 'white',
+                  height: 36,
+                  width: deviceWidth * 0.8,
+                }}>
+                <Input
+                  placeholder=" 메세지를 입력하세요."
+                  color="#eeeeee"
+                  style={styles.messageInput}
+                  onFocus={() => {
+                    gotoBot();
                   }}
-                >
-                  <Input
-                    placeholder=" 메세지를 입력하세요."
-                    color="#eeeeee"
-                    style={styles.messageInput}
-                    onFocus={() => {
-                      gotoBot ();
-                    }}
-                  />
-                </View>
-                <TouchableByPlatform onPress={changeView}>
-                  <Icon
-                    name="paper-plane"
-                    style={{color: palette.orange}}
-                    size={deviceWidth * 0.05}
-                  />
-                </TouchableByPlatform>
-              </View>}
+                />
+              </View>
+              <TouchableByPlatform onPress={changeView}>
+                <Icon
+                  name="paper-plane"
+                  style={{color: palette.orange}}
+                  size={deviceWidth * 0.05}
+                />
+              </TouchableByPlatform>
+            </View>
+          )}
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -150,7 +147,7 @@ ChattingScreen.navigationOptions = ({navigation}) => {
         label=" "
         tintColor={palette.black}
         onPress={() => {
-          navigation.goBack ();
+          navigation.goBack();
         }}
       />
     ),
@@ -172,7 +169,7 @@ ChattingScreen.navigationOptions = ({navigation}) => {
     headerTitleAlign: 'center',
   };
 };
-const styles = StyleSheet.create ({
+const styles = StyleSheet.create({
   root: {
     backgroundColor: palette.default_bg,
     flexDirection: 'column',

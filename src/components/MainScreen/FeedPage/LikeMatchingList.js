@@ -70,7 +70,7 @@ const LikeMatchingList = ({navigation, likeMatchingProp}) => {
                   paddingTop: 13,
                 }}
                 userName={user.nickname}
-                imageSource={user.avata === null ? null : user.avata}
+                imageSource={user.avata === null ? null : {uri: user.avata}}
                 // badgeComponent={
                 //   user.isUnread === true ? <GoldBadge /> : null
                 // }
