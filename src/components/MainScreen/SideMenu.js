@@ -160,7 +160,7 @@ const SideMenu = ({navigation}) => {
               </Button>
             ) : (
               <CustomTextRegular size={14} color={palette.gray}>
-                {sideInfo[global.config.user_info_const.BELONG] + '  '}
+                {sideInfo[global.config.user_info_const.BELONG] + ''}
               </CustomTextRegular>
             )}
             <CustomTextRegular size={14} color={palette.gray}>

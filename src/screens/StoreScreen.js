@@ -142,6 +142,8 @@ const StoreScreen = ({navigation}) => {
             무료로 야미 받기
           </CustomTextMedium>
         </ListItem>
+
+        {/* Async로 usevalue불러와서 각 분기별 null 처리 */}
         <ListItemWithNavigation
           title="야미 10개 무료"
           toGoDisplay="친구 등록"
@@ -150,11 +152,11 @@ const StoreScreen = ({navigation}) => {
         <ListItemWithNavigation
           title="야미 5개 무료"
           toGoDisplay="소속 인증하기"
-          toGo={() => navigation.navigate('AddFriends')}
+          toGo={() => navigation.navigate('BV')}
         />
         <ListItemWithNavigation
           title="야미 3개 무료"
-          toGoDisplay="프로필 완성하기"
+          toGoDisplay="프로필 사진 등록하기"
           toGo={() => navigation.navigate('MyProfile')}
         />
       </List>
