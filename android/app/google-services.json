@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "529017550501",
+    "firebase_url": "https://yamigu-5fcaa.firebaseio.com",
+    "project_id": "yamigu-5fcaa",
+    "storage_bucket": "yamigu-5fcaa.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:529017550501:android:131f49de22bc4d8277bf4c",
+        "android_client_info": {
+          "package_name": "com.yamigu.yamigu_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "529017550501-72d5ulghjopbkqbig5dqpedv11g2reud.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.yamigu.yamigu_app",
+            "certificate_hash": "d96793540912d2bfeb3a0ddb5cf99eb4890e3f0c"
+          }
+        },
+        {
+          "client_id": "529017550501-j8r1qfi7gilbt5sbqksi5t8van6ajgg4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAO5m4oK-Z-NeyIdH8pBIO1oGfJkswub64"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "529017550501-j8r1qfi7gilbt5sbqksi5t8van6ajgg4.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "529017550501-enkffjcfqn4l8hhtbatvp1n0uigmgt2a.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "party.yamigu.www.com"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
