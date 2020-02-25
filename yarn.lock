@@ -1383,6 +1383,14 @@ anymatch@^2.0.0:
     micromatch "^3.1.4"
     normalize-path "^2.1.1"
 
+apsl-react-native-button@3.1.1:
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/apsl-react-native-button/-/apsl-react-native-button-3.1.1.tgz#313764d84cd9a429d14b329db6639b2c683266a7"
+  integrity sha512-rMk6rLIxXE5xno1Ae6FZqygBUT7nXKSZkCLNMdCXyqiyuWQ+LGXjGargeoTINyuhcoScG7YjCw0fkljBw4q2lw==
+  dependencies:
+    lodash.isequal "^4.1.4"
+    prop-types "^15.5.10"
+
 argparse@^1.0.7:
   version "1.0.10"
   resolved "https://registry.yarnpkg.com/argparse/-/argparse-1.0.10.tgz#bcd6791ea5ae09725e17e5ad988134cd40b3d911"
@@ -4303,6 +4311,11 @@ locate-path@^5.0.0:
   dependencies:
     p-locate "^4.1.0"
 
+lodash.isequal@^4.1.4:
+  version "4.5.0"
+  resolved "https://registry.yarnpkg.com/lodash.isequal/-/lodash.isequal-4.5.0.tgz#415c4478f2bcc30120c22ce10ed3226f7d3e18e0"
+  integrity sha1-QVxEePK8wwEgwizhDtMib30+GOA=
+
 lodash.sortby@^4.7.0:
   version "4.7.0"
   resolved "https://registry.yarnpkg.com/lodash.sortby/-/lodash.sortby-4.7.0.tgz#edd14c824e2cc9c1e0b0a1b42bb5210516a42438"
@@ -5557,10 +5570,10 @@ react-native-gesture-handler@^1.5.6:
     invariant "^2.2.4"
     prop-types "^15.7.2"
 
-react-native-iap@4.4.1:
-  version "4.4.1"
-  resolved "https://registry.yarnpkg.com/react-native-iap/-/react-native-iap-4.4.1.tgz#34385450416fbdd93d8296dd844e7e37fb2ba4dd"
-  integrity sha512-WpIpnL2OBcKpnAsmE3N1RzgCXdjpJUmLUVUKGoXlHT66djmzy/S9sMWZBRaoKV63MfVNiYmavwPi0HlEcBt6zw==
+react-native-iap@4.4.2:
+  version "4.4.2"
+  resolved "https://registry.yarnpkg.com/react-native-iap/-/react-native-iap-4.4.2.tgz#3460fcc3166a1218b8bfe6022c0a053acd767246"
+  integrity sha512-uia29mVN0eoZjXQ6xPz1QEOwXJaqxk9uzEhEz7PUzI6GctRvmptg95Hilqo05yLXIEvWciMQYn32VIMXZ+Zf8A==
   dependencies:
     dooboolab-welcome "^1.1.1"
 

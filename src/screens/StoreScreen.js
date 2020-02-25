@@ -1,5 +1,13 @@
-import React from 'react';
-import {View, StyleSheet, Image, Platform} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {
+  View,
+  StyleSheet,
+  Image,
+  Platform,
+  Alert,
+  ScrollView,
+  Text,
+} from 'react-native';
 import {HeaderBackButton} from 'react-navigation-stack';
 import palette from '~/lib/styles/palette';
 import {
@@ -10,97 +18,48 @@ import {List, ListItem, Body, Content} from 'native-base';
 import ListItemWithPrice from '~/components/StoreScreen/ListItemWithPrice';
 import ListItemWithNavigation from '~/components/StoreScreen/ListItemWithNavigation';
 import TouchableByPlatform from '~/components/common/TouchableByPlatform';
-import * as RNIap from 'react-native-iap';
+import RNIap, {
+  InAppPurchase,
+  PurchaseError,
+  SubscriptionPurchase,
+  acknowledgePurchaseAndroid,
+  consumePurchaseAndroid,
+  finishTransaction,
+  finishTransactionIOS,
+  purchaseErrorListener,
+  purchaseUpdatedListener,
+} from 'react-native-iap';
+import NativeButton from 'apsl-react-native-button';
 
 const itemSkus = Platform.select({
-  ios: ['com.example.coins100'],
-  android: ['com.example.coins100'],
+  ios: [
+    'com.cooni.point1000',
+    'com.cooni.point5000', // dooboolab
+  ],
+  android: [
+    'android.test.purchased',
+    'android.test.canceled',
+    'android.test.refunded',
+    'android.test.item_unavailable',
+    'point_1000',
+    '5000_point', // dooboolab
+  ],
 });
 
-// async componentDidMount() {
-//   try {
-//     const products: Product[] = await RNIap.getProducts(itemSkus);
-//     this.setState({ products });
-//   } catch(err) {
-//     console.warn(err); // standardized err.code and err.message available
-//   }
-// }
+const itemSubs = Platform.select({
+  ios: [
+    'com.cooni.point1000',
+    'com.cooni.point5000', // dooboolab
+  ],
+  android: [
+    'test.sub1', // subscription
+  ],
+});
+
+let purchaseUpdateSubscription;
+let purchaseErrorSubscription;
 
 const StoreScreen = ({navigation}) => {
-  let purchaseUpdateSubscription = null;
-  let purchaseErrorSubscription = null;
-  /**
-  let requestPurchase = async (sku: string) => {
-    try {
-      await RNIap.requestPurchase(sku, false);
-    } catch (err) {
-      console.warn(err.code, err.message);
-    }
-  };
-
-  let requestSubscription = async (sku: string) => {
-    try {
-      await RNIap.requestSubscription(sku);
-    } catch (err) {
-      console.warn(err.code, err.message);
-    }
-  };
-
-  function componentDidMount() {
-    purchaseUpdateSubscription = purchaseUpdatedListener(
-      (purchase: InAppPurchase | SubscriptionPurchase | ProductPurchase) => {
-        console.log('purchaseUpdatedListener', purchase);
-        const receipt = purchase.transactionReceipt;
-        if (receipt) {
-          yourAPI
-            .deliverOrDownloadFancyInAppPurchase(purchase.transactionReceipt)
-            .then(deliveryResult => {
-              if (isSuccess(deliveryResult)) {
-                // Tell the store that you have delivered what has been paid for.
-                // Failure to do this will result in the purchase being refunded on Android and
-                // the purchase event will reappear on every relaunch of the app until you succeed
-                // in doing the below. It will also be impossible for the user to purchase consumables
-                // again untill you do this.
-                if (Platform.OS === 'ios') {
-                  RNIap.finishTransactionIOS(purchase.transactionId);
-                } else if (Platform.OS === 'android') {
-                  // If consumable (can be purchased again)
-                  RNIap.consumePurchaseAndroid(purchase.purchaseToken);
-                  // If not consumable
-                  RNIap.acknowledgePurchaseAndroid(purchase.purchaseToken);
-                }
-
-                // From react-native-iap@4.1.0 you can simplify above `method`. Try to wrap the statement with `try` and `catch` to also grab the `error` message.
-                // If consumable (can be purchased again)
-                RNIap.finishTransaction(purchase, true);
-                // If not consumable
-                RNIap.finishTransaction(purchase, false);
-              } else {
-                // Retry / conclude the purchase is fraudulent, etc...
-              }
-            });
-        }
-      },
-    );
-
-    purchaseErrorSubscription = purchaseErrorListener(
-      (error: PurchaseError) => {
-        console.warn('purchaseErrorListener', error);
-      },
-    );
-  }
-
-  function componentWillUnmount() {
-    if (purchaseUpdateSubscription) {
-      purchaseUpdateSubscription.remove();
-      purchaseUpdateSubscription = null;
-    }
-    if (purchaseErrorSubscription) {
-      purchaseErrorSubscription.remove();
-      purchaseErrorSubscription = null;
-    }
-  }
-**/
   return (
     <Content showsVerticalScrollIndicator={false} style={styles.root}>
       <List style={styles.list}>
