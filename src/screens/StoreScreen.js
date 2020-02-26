@@ -34,14 +34,7 @@ import NativeButton from 'apsl-react-native-button';
 
 const itemSkus = Platform.select({
   ios: ['party.yamigu.www.com.ticket_1', 'party.yamigu.www.com.ticket_3'],
-  android: [
-    'android.test.purchased',
-    'android.test.canceled',
-    'android.test.refunded',
-    'android.test.item_unavailable',
-    // 'point_1000',
-    // '5000_point', // dooboolab
-  ],
+  android: ['ticket_1', 'ticket_2_plus_1'],
 });
 
 const itemSubs = Platform.select({

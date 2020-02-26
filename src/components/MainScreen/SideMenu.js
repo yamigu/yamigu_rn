@@ -160,7 +160,7 @@ const SideMenu = ({navigation}) => {
               </Button>
             ) : (
               <CustomTextRegular size={14} color={palette.gray}>
-                {sideInfo[global.config.user_info_const.BELONG] + ''}
+                {sideInfo[global.config.user_info_const.BELONG] + ' '}
               </CustomTextRegular>
             )}
             <CustomTextRegular size={14} color={palette.gray}>
@@ -218,30 +218,33 @@ const SideMenu = ({navigation}) => {
             </TouchableByPlatform>
           ) : null}
 
-          {/* <TouchableByPlatform
-            navigation={navigation}
-            onPress={() => navigation.navigate('MyProfile')}>
-            <ListItem icon noIndent style={styles.listItem}>
-              <Left style={styles.listItemLeft}>
-                <Anticon
-                  name="exclamationcircle"
-                  style={styles.iconWarning}
-                  size={deviceWidth * 0.813 * 0.06}
-                />
-              </Left>
-              <Body style={styles.listItemBody}>
-                <CustomTextRegular size={14} color={palette.red}>
-                  프로필 완성하기 (0/3)
-                </CustomTextRegular>
-              </Body>
-            </ListItem>
-          </TouchableByPlatform> */}
+          {sideInfo[global.config.user_info_const.AVATA] === 'avata' ? (
+            <TouchableByPlatform
+              navigation={navigation}
+              onPress={() => navigation.navigate('MyProfile')}>
+              <ListItem icon noIndent style={styles.listItem}>
+                <Left style={styles.listItemLeft}>
+                  <Anticon
+                    name="exclamationcircle"
+                    style={styles.iconWarning}
+                    size={deviceWidth * 0.813 * 0.06}
+                  />
+                </Left>
+                <Body style={styles.listItemBody}>
+                  <CustomTextRegular size={14} color={palette.red}>
+                    프로필 사진 등록하기
+                  </CustomTextRegular>
+                </Body>
+              </ListItem>
+            </TouchableByPlatform>
+          ) : null}
+
           <TouchableByPlatform
             onPress={() => navigation.navigate('AddFriends')}>
             <ListItem icon noIndent style={styles.listItem}>
               <Left style={styles.listItemLeft}>
                 <Image
-                  source={require('~/images/icon-add-friend.png')}
+                  source={require('~/images/addfriend_icon.png')}
                   style={styles.iconAddFriend}
                 />
               </Left>
@@ -288,16 +291,9 @@ const SideMenu = ({navigation}) => {
           </ListItem>
           <TouchableByPlatform onPress={() => navigation.navigate('Signup')}>
             <ListItem icon noIndent style={styles.listItem}>
-              <Left style={styles.listItemLeft}>
-                <Materialicon
-                  name="store"
-                  size={deviceWidth * 0.813 * 0.06}
-                  style={styles.iconStore}
-                />
-              </Left>
               <Body style={styles.listItemBody}>
                 <CustomTextRegular size={14} color={palette.black}>
-                  회원가입
+                  (임시) 회원가입
                 </CustomTextRegular>
               </Body>
             </ListItem>
@@ -319,7 +315,7 @@ const SideMenu = ({navigation}) => {
               <Right style={styles.listItemRight}>
                 <Image
                   style={styles.iconYami}
-                  source={require('~/images/icon-yami.png')}
+                  source={require('~/images/yami_icon.png')}
                 />
                 <CustomTextRegular size={12} color={palette.black}>
                   10
@@ -412,15 +408,9 @@ const SideMenu = ({navigation}) => {
             <ListItem noIndent style={styles.listItem}>
               <Body style={styles.listItemBody}>
                 <CustomTextRegular size={14} color={palette.black}>
-                  로그인 화면
+                  (임시) 로그인 화면
                 </CustomTextRegular>
               </Body>
-              <Right style={styles.listItemRight}>
-                <Image
-                  style={styles.iconKakao}
-                  source={require('~/images/icon-kakao-with-bg.png')}
-                />
-              </Right>
             </ListItem>
           </TouchableByPlatform>
           <TouchableByPlatform onPress={() => navigation.navigate('Notice')}>

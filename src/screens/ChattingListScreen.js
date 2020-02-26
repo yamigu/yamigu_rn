@@ -26,7 +26,10 @@ ChattingListScreen.navigationOptions = ({navigation}) => ({
     />
   ),
   headerTitle: () => (
-    <Image source={require('~/images/chat-bubble-orange.png')} />
+    <Image
+      style={{width: 25, height: 22}}
+      source={require('~/images/chat_bubble_orange_icon.png')}
+    />
   ),
   headerStyle: {
     backgroundColor: 'white',

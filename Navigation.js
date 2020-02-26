@@ -48,15 +48,20 @@ const AppStack = createStackNavigator({
         </TouchableByPlatform>
       ),
       headerTitle: () => (
-        <Image source={require('~/images/yamigu-logo-text.png')} />
+        <Image
+          style={{width: 83, height: 20}}
+          source={require('~/images/yamigu_logo_icon.png')}
+        />
       ),
       headerRight: () => (
         <TouchableByPlatform
           onPress={() => navigation.navigate('ChattingList')}>
           <Image
-            source={require('~/images/chat-bubble-outline.png')}
+            source={require('~/images/chat_bubble_icon.png')}
             style={{
               margin: 10,
+              width: 20,
+              height: 18,
             }}
           />
         </TouchableByPlatform>

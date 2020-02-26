@@ -18,9 +18,23 @@ const MainScreenNavigator = createBottomTabNavigator(
       },
       screen: HomePage,
       navigationOptions: {
-        tabBarIcon: ({tintColor}) => (
-          <Icon name="ios-home" size={30} style={{color: tintColor}} />
-        ),
+        tabBarIcon: ({focused}) => {
+          if (focused === true) {
+            return (
+              <Image
+                style={{width: 30, height: 25}}
+                source={require('~/images/homepage_tab_selected.png')}
+              />
+            );
+          } else {
+            return (
+              <Image
+                style={{width: 30, height: 25}}
+                source={require('~/images/homepage_tab.png')}
+              />
+            );
+          }
+        },
       },
     },
     Feed: {
@@ -28,10 +42,18 @@ const MainScreenNavigator = createBottomTabNavigator(
       navigationOptions: ({navigation}) => ({
         tabBarIcon: ({focused}) => {
           if (focused === true) {
-            return <Image source={require('~/images/feed_icon.png')} />;
+            return (
+              <Image
+                style={{width: 30, height: 30}}
+                source={require('~/images/feed_icon.png')}
+              />
+            );
           } else {
             return (
-              <Image source={require('~/images/feed_icon_nonselected.png')} />
+              <Image
+                style={{width: 30, height: 30}}
+                source={require('~/images/feed_icon_nonselected.png')}
+              />
             );
           }
         },
@@ -66,7 +88,7 @@ const MainScreenNavigator = createBottomTabNavigator(
         backgroundColor: 'white',
       },
       activeTintColor: palette.black,
-      inactiveTintColor: palette.nonselect,
+      inactiveTintColor: palette.black,
       upperCaseLabel: false,
       showLabel: false,
       showIcon: true,
