@@ -107,7 +107,7 @@ const FeedPage = props => {
           }}
           contentContainerStyle={styles.innerView}
           showsVerticalScrollIndicator={false}>
-          {hasProfile !== true ? (
+          {hasProfile === true ? (
             <MyFeedManage
               navigation={props.navigation}
               myFeedManageProp={myFeedManageProp}
