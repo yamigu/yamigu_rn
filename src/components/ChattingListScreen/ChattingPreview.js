@@ -31,11 +31,11 @@ const ChattingPreview = ({style, label, navigation}) => (
         <CustomTextRegular size={10} color={palette.gray}>
           오후 2:22
         </CustomTextRegular>
-        <Badge style={styles.badgeUnread}>
+        {/* <Badge style={styles.badgeUnread}>
           <CustomTextMedium size={10} color="white">
             1
           </CustomTextMedium>
-        </Badge>
+        </Badge> */}
       </View>
     </Right>
   </ListItem>

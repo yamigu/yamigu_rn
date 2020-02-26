@@ -961,7 +961,7 @@ const HomePage = ({navigation}) => {
               width: 50,
               height: 60,
             }}
-            source={require('~/images/rotating.png')}
+            source={require('~/images/rotation_icon.png')}
           />
         ) : (
           <CustomTextRegular size={20} color="#646363">

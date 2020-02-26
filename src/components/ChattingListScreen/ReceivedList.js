@@ -12,11 +12,11 @@ const ReceivedList = ({style, navigation}) => (
         <CustomTextMedium color={palette.black} size={16}>
           신청 받은 미팅
         </CustomTextMedium>
-        <Badge style={styles.badge}>
+        {/* <Badge style={styles.badge}>
           <CustomTextMedium size={12} color="white">
             2
           </CustomTextMedium>
-        </Badge>
+        </Badge> */}
       </View>
     </ListItem>
     <ChattingPreview

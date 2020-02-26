@@ -5,7 +5,7 @@ import axios from 'axios';
 import palette from '~/lib/styles/palette';
 import {CustomTextBold} from '~/components/common/CustomText';
 
-const ProfileCardList = ({navigation, profileCardProp}) => {
+const ProfileCardList = ({navigation, profileCardProp, hasProfile}) => {
   let nowYear = 20200000;
   useEffect(() => {}, []);
 
@@ -26,6 +26,7 @@ const ProfileCardList = ({navigation, profileCardProp}) => {
             likedByServer={item.liked}
             bothLike={false}
             my_feed={false}
+            hasProfile={hasProfile}
           />
         );
       })}
