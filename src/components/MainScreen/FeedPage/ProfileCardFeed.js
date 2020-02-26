@@ -291,8 +291,8 @@ const ProfileCardFeed = ({
           onPress={() => Alert.alert('대화 서비스는 아직 준비중입니다! ')}>
           <View style={styles.button}>
             <Image
-              source={require('~/images/chat-bubble2-outline.png')}
-              style={{height: 16, width: 16}}
+              source={require('~/images/chat_bubble_icon.png')}
+              style={{height: 17, width: 18}}
             />
             <CustomTextMedium size={14} color="#898989" style={{marginLeft: 4}}>
               미팅 신청
