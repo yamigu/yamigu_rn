@@ -34,7 +34,7 @@ import NativeButton from 'apsl-react-native-button';
 
 const itemSkus = Platform.select({
   ios: ['party.yamigu.www.com.ticket_1', 'party.yamigu.www.com.ticket_3'],
-  android: ['ticket_1', 'ticket_2_plus_1'],
+  android: ['yami_10', 'yami_30', 'yami_50', 'yami_100'],
 });
 
 const itemSubs = Platform.select({
@@ -54,6 +54,26 @@ const StoreScreen = ({navigation}) => {
   const [productList, setProductList] = useState([]);
   const [receipt, setReceipt] = useState('');
   const [availableItemsMessage, setAvailableItemsMessage] = useState('');
+  useEffect(() => {
+    getItems();
+  }, []);
+
+  Number.prototype.format = function() {
+    if (this == 0) return 0;
+
+    var reg = /(^[+-]?\d+)(\d{3})/;
+    var n = this + '';
+
+    while (reg.test(n)) n = n.replace(reg, '$1' + ',' + '$2');
+
+    return n;
+  };
+  String.prototype.format = function() {
+    var num = parseFloat(this);
+    if (isNaN(num)) return '0';
+
+    return num.format();
+  };
 
   const initIap = async () => {
     try {
@@ -114,8 +134,16 @@ const StoreScreen = ({navigation}) => {
   const getItems = async () => {
     try {
       const products = await RNIap.getProducts(itemSkus);
-      // const products = await RNIap.getSubscriptions(itemSkus);
-      console.log('Products', products);
+      products.sort((a, b) => parseInt(a.price) - parseInt(b.price));
+      products.map(item => {
+        item['hot'] = false;
+        item['discount'] = 0;
+      });
+      products[1].hot = true;
+      products[1].discount = 12.5;
+      products[2].discount = 20;
+      products[3].discount = 30;
+
       setProductList(products);
     } catch (err) {
       console.warn(err.code, err.message);
@@ -167,134 +195,142 @@ const StoreScreen = ({navigation}) => {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.headerTxt}>react-native-iap V3</Text>
-      </View>
-      <View style={styles.content}>
-        <Content style={{alignSelf: 'stretch'}}>
-          <View style={{height: 50}} />
+    // <View style={styles.container}>
+    //   <View style={styles.header}>
+    //     <Text style={styles.headerTxt}>react-native-iap V3</Text>
+    //   </View>
+    //   <View style={styles.content}>
+    //     <Content style={{alignSelf: 'stretch'}}>
+    //       <View style={{height: 50}} />
 
-          <NativeButton
-            onPress={getAvailablePurchases}
-            activeOpacity={0.5}
-            style={styles.btn}
-            textStyle={styles.txt}>
-            Get available purchases
-          </NativeButton>
+    //       <NativeButton
+    //         onPress={getAvailablePurchases}
+    //         activeOpacity={0.5}
+    //         style={styles.btn}
+    //         textStyle={styles.txt}>
+    //         Get available purchases
+    //       </NativeButton>
 
-          <Text style={{margin: 5, fontSize: 15, alignSelf: 'center'}}>
-            {availableItemsMessage}
-          </Text>
+    //       <Text style={{margin: 5, fontSize: 15, alignSelf: 'center'}}>
+    //         {availableItemsMessage}
+    //       </Text>
 
-          <Text style={{margin: 5, fontSize: 9, alignSelf: 'center'}}>
-            {receipt}
-          </Text>
+    //       <Text style={{margin: 5, fontSize: 9, alignSelf: 'center'}}>
+    //         {receipt}
+    //       </Text>
 
-          <NativeButton
-            onPress={() => getItems()}
-            activeOpacity={0.5}
-            style={styles.btn}
-            textStyle={styles.txt}>
-            Get Products ({productList.length})
-          </NativeButton>
-          {productList.map((product, i) => {
-            return (
-              <View
-                key={i}
-                style={{
-                  flexDirection: 'column',
-                }}>
-                <Text
-                  style={{
-                    marginTop: 20,
-                    fontSize: 12,
-                    color: 'black',
-                    minHeight: 100,
-                    alignSelf: 'center',
-                    paddingHorizontal: 20,
-                  }}>
-                  {JSON.stringify(product)}
-                </Text>
-                <NativeButton
-                  onPress={() => {
-                    requestPurchase(product.productId);
-                    console.log('first' + product.productId);
-                  }}
-                  // onPress={() => {
-                  //   requestSubscription(product.productId);
-                  //   console.log('sencond done');
-                  // }}
-                  activeOpacity={0.5}
-                  style={styles.btn}
-                  textStyle={styles.txt}>
-                  Request purchase for above product
-                </NativeButton>
-              </View>
-            );
-          })}
-        </Content>
-      </View>
-    </View>
-    // <Content showsVerticalScrollIndicator={false} style={styles.root}>
-    //   <List style={styles.list}>
-    //     <ListItem itemHeader style={styles.listItemHeader}>
-    //       <Body style={styles.listItemHeaderBody}>
-    //         <CustomTextMedium size={14} color={palette.black}>
-    //           현재 보유 야미
-    //         </CustomTextMedium>
-    //         <View style={{flexDirection: 'row', alignItems: 'center'}}>
-    //           <Image
-    //             style={styles.iconYami}
-    //             source={require('~/images/icon-yami.png')}
-    //           />
-    //           <CustomTextRegular size={16} color={palette.black}>
-    //             10
-    //           </CustomTextRegular>
-    //         </View>
-    //       </Body>
-    //     </ListItem>
-    //     <ListItemWithPrice title="야미 10개" price="8,000" />
-    //     <ListItemWithPrice
-    //       hot
-    //       title="야미 30개"
-    //       price="21,000"
-    //       discount={12.5}
-    //     />
-    //     <ListItemWithPrice title="야미 50개" price="32,000" discount={20} />
-    //     <ListItemWithPrice title="야미 100개" price="56,000" discount={30} />
+    //       <NativeButton
+    //         onPress={() => getItems()}
+    //         activeOpacity={0.5}
+    //         style={styles.btn}
+    //         textStyle={styles.txt}>
+    //         Get Products ({productList.length})
+    //       </NativeButton>
+    //       {productList.map((product, i) => {
+    //         return (
+    //           <View
+    //             key={i}
+    //             style={{
+    //               flexDirection: 'column',
+    //             }}>
+    //             <Text
+    //               style={{
+    //                 marginTop: 20,
+    //                 fontSize: 12,
+    //                 color: 'black',
+    //                 minHeight: 100,
+    //                 alignSelf: 'center',
+    //                 paddingHorizontal: 20,
+    //               }}>
+    //               {JSON.stringify(product)}
+    //             </Text>
+    //             <NativeButton
+    //               onPress={() => {
+    //                 requestPurchase(product.productId);
+    //                 console.log('first' + product.productId);
+    //               }}
+    //               // onPress={() => {
+    //               //   requestSubscription(product.productId);
+    //               //   console.log('sencond done');
+    //               // }}
+    //               activeOpacity={0.5}
+    //               style={styles.btn}
+    //               textStyle={styles.txt}>
+    //               Request purchase for above product
+    //             </NativeButton>
+    //           </View>
+    //         );
+    //       })}
+    //     </Content>
+    //   </View>
+    // </View>
+    <Content showsVerticalScrollIndicator={false} style={styles.root}>
+      <List style={styles.list}>
+        <ListItem itemHeader style={styles.listItemHeader}>
+          <Body style={styles.listItemHeaderBody}>
+            <CustomTextMedium size={14} color={palette.black}>
+              현재 보유 야미
+            </CustomTextMedium>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <Image
+                style={styles.iconYami}
+                source={require('~/images/icon-yami.png')}
+              />
+              <CustomTextRegular size={16} color={palette.black}>
+                10
+              </CustomTextRegular>
+            </View>
+          </Body>
+        </ListItem>
+        {productList.map((product, i) => {
+          return (
+            <ListItemWithPrice
+              title={product.description}
+              price={product.price.format()}
+            />
+          );
+        })}
+        <ListItemWithPrice title="야미 10개" price="8,000" />
+        <ListItemWithPrice
+          hot
+          title="야미 30개"
+          price="21,000"
+          discount={12.5}
+        />
+        <ListItemWithPrice title="야미 50개" price="32,000" discount={20} />
+        <ListItemWithPrice title="야미 100개" price="56,000" discount={30} />
 
-    //     {/* <TouchableByPlatform>
-    //       <Image
-    //         onPress={requestPurchase(product.productId)}
-    //         source={require('~/images/test-user-profile-girl.png')}
-    //         style={{width: 100, height: 100, alignSelf: 'flex-end'}}
-    //       />
-    //     </TouchableByPlatform> */}
-    //     <ListItem itemDivider>
-    //       <CustomTextMedium size={18} color={palette.black}>
-    //         무료로 야미 받기
-    //       </CustomTextMedium>
-    //     </ListItem>
+        {/* <TouchableByPlatform>
+          <Image
+            onPress={requestPurchase(product.productId)}
+            source={require('~/images/test-user-profile-girl.png')}
+            style={{width: 100, height: 100, alignSelf: 'flex-end'}}
+          />
+        </TouchableByPlatform> */}
+        <ListItem itemDivider>
+          <CustomTextMedium size={18} color={palette.black}>
+            무료로 야미 받기
+          </CustomTextMedium>
+        </ListItem>
 
-    //     {/* Async로 usevalue불러와서 각 분기별 null 처리 */}
-    //     <ListItemWithNavigation
-    //       title="야미 10개 무료"
-    //       toGoDisplay="친구 등록"
-    //       toGo={() => navigation.navigate('AddFriends')}
-    //     />
-    //     <ListItemWithNavigation
-    //       title="야미 5개 무료"
-    //       toGoDisplay="소속 인증하기"
-    //       toGo={() => navigation.navigate('BV')}
-    //     />
-    //     <ListItemWithNavigation
-    //       title="야미 3개 무료"
-    //       toGoDisplay="프로필 사진 등록하기"
-    //       toGo={() => navigation.navigate('MyProfile')}
-    //     />
-    //   </List>
-    // </Content>
+        {/* Async로 usevalue불러와서 각 분기별 null 처리 */}
+        <ListItemWithNavigation
+          title="야미 10개 무료"
+          toGoDisplay="친구 등록"
+          toGo={() => navigation.navigate('AddFriends')}
+        />
+        <ListItemWithNavigation
+          title="야미 5개 무료"
+          toGoDisplay="소속 인증하기"
+          toGo={() => navigation.navigate('BV')}
+        />
+        <ListItemWithNavigation
+          title="야미 3개 무료"
+          toGoDisplay="프로필 사진 등록하기"
+          toGo={() => navigation.navigate('MyProfile')}
+        />
+      </List>
+    </Content>
   );
 };
 StoreScreen.navigationOptions = ({navigation}) => ({
