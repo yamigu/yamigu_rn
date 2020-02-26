@@ -20,8 +20,10 @@ const ChattingListScreen = ({navigation}) => {
         console.log(token);
         return token;
       })
+      .catch(error => console.log(error))
       .then(token => {
-        // firebase.auth().signInWithCustomToken(token);
+        firebase.auth().signInWithCustomToken(token);
+
         setRef(firebase.database().ref());
         firebase
           .database()
