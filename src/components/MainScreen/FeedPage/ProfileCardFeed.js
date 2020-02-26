@@ -149,6 +149,7 @@ const ProfileCardFeed = ({
   department,
   bothLike,
   likedByServer,
+  hasProfile,
 }) => {
   const [liked, setLiked] = useState(false);
   const [feedList, setFeedList] = useState([]);
@@ -169,6 +170,10 @@ const ProfileCardFeed = ({
         setFeedList(tmpFeedList.reverse());
       });
   }, []);
+
+  const alertAddProfile = () => {
+    Alert.alert('프로필 등록하셈', '', navigation.navigate('MyProfile'), '');
+  };
 
   const postLike = () => {
     console.log('like pressed');
@@ -238,19 +243,18 @@ const ProfileCardFeed = ({
             <View>
               <TouchableOpacity
                 onPress={() => {
-                  // navigation.setParams({
-                  //   nickname: nickname,
-                  // });
-                  navigation.navigate('Profile', {
-                    uid,
-                    nickname,
-                    avata,
-                    age,
-                    belong,
-                    department,
-                    liked,
-                    setLiked: value => setLiked(value),
-                  });
+                  hasProfile !== true
+                    ? navigation.navigate('Profile', {
+                        uid,
+                        nickname,
+                        avata,
+                        age,
+                        belong,
+                        department,
+                        liked,
+                        setLiked: value => setLiked(value),
+                      })
+                    : alertAddProfile();
                 }}>
                 <Image
                   style={styles.viewPage}
@@ -267,8 +271,7 @@ const ProfileCardFeed = ({
         <TouchableByPlatform
           style={styles.touchable}
           onPress={() => {
-            console.log(feedList);
-            postLike();
+            hasProfile !== true ? postLike() : alertAddProfile();
           }}>
           <View style={styles.button}>
             <Ionicon
@@ -288,7 +291,11 @@ const ProfileCardFeed = ({
 
         <TouchableByPlatform
           style={styles.touchable}
-          onPress={() => Alert.alert('대화 서비스는 아직 준비중입니다! ')}>
+          onPress={() => {
+            hasProfile !== true
+              ? Alert.alert('대화 서비스는 아직 준비중입니다! ')
+              : alertAddProfile();
+          }}>
           <View style={styles.button}>
             <Image
               source={require('~/images/chat_bubble_icon.png')}

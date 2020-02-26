@@ -84,7 +84,7 @@ const FeedPage = props => {
           //   Alert.alert('do something?');
           // }}
           onMomentumScrollBegin={() => {
-            hasProfile === false
+            hasProfile !== false
               ? Alert.alert(
                   '프로필 등록하면 모든 유저 피드 다볼수있다?',
                   '',
@@ -107,12 +107,14 @@ const FeedPage = props => {
           }}
           contentContainerStyle={styles.innerView}
           showsVerticalScrollIndicator={false}>
-          <MyFeedManage
-            navigation={props.navigation}
-            myFeedManageProp={myFeedManageProp}
-            myFeed={myFeed}
-            setMyFeed={setMyFeed}
-          />
+          {hasProfile !== true ? (
+            <MyFeedManage
+              navigation={props.navigation}
+              myFeedManageProp={myFeedManageProp}
+              myFeed={myFeed}
+              setMyFeed={setMyFeed}
+            />
+          ) : null}
           <LikeMatchingList
             navigation={props.navigation}
             likeMatchingProp={likeMatchingProp}
@@ -120,6 +122,7 @@ const FeedPage = props => {
           <ProfileCardList
             navigation={props.navigation}
             profileCardProp={profileCardProp}
+            hasProfile={hasProfile}
           />
           <View style={styles.lastScroll} />
         </Content>
