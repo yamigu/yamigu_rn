@@ -1,5 +1,3 @@
-/* eslint-disable prettier/prettier */
-/* eslint-disable react-native/no-inline-styles */
 import React, {useState, useEffect} from 'react';
 import {
   StyleSheet,
@@ -24,6 +22,7 @@ import {createRef} from 'react';
 import 'react-native-gesture-handler';
 import {CustomTextMedium} from '~/components/common/CustomText';
 import firebase from 'react-native-firebase';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const deviceWidth = Dimensions.get('window').width;
 const buttonWidth = deviceWidth * 0.9;
@@ -33,14 +32,35 @@ const dh = Dimensions.get('window').height;
 const pf = Platform.OS;
 
 const ChattingScreen = props => {
+  const [receivedList, setReceivedList] = useState([]);
+  const [sentList, setSentList] = useState([]);
+  const [messageList, setMessageList] = useState([]);
+  const [tmpMessageList, setTmpMessageList] = useState([]);
+
+  const [myId, setMyId] = useState('');
+
+  const getUid = () => {
+    return new Promise(async (resolve, reject) => {
+      const userValue = await AsyncStorage.getItem('userValue');
+      const jUserValue = JSON.parse(userValue);
+      resolve(jUserValue);
+    });
+  };
   useEffect(() => {
-    firebase
-      .database()
-      .ref('message')
-      .on('child_added', snapshot => {
-        console.log(snapshot.val());
-      });
+    getUid().then(result => {
+      setMyId(result[1]);
+      console.log(myId);
+      firebase
+        .database()
+        .ref('message/0')
+        .on('child_added', snapshot => {
+          let asd = messageList.slice();
+          asd.push(snapshot.val());
+          setMessageList(asd);
+        });
+    });
   }, []);
+
   let keyboardPadding = 0;
   if (pf === 'ios') keyboardPadding = 100;
   else keyboardPadding = -400;
@@ -55,11 +75,10 @@ const ChattingScreen = props => {
   const _scrollToBottomY = createRef();
 
   const gotoBot = () => {
-    console.log('im  in');
-    console.log(pf);
+    // console.log('im  in');
+    // console.log(pf);
     _scrollToBottomY.current.scrollToEnd();
   };
-  const [modalVisible, setModalVisible] = useState(false);
 
   //behavior : position ###
   return (
@@ -75,14 +94,20 @@ const ChattingScreen = props => {
             _scrollToBottomY.current.scrollToEnd();
           }}>
           <List style={{flex: 1}}>
-            <ReceivedItem />
-            <ReceivedItem />
-            <SentItem />
-            <SentItem />
-            <SentItem />
-            <SentItem />
-            <SentItem />
-            <SentItem />
+            {messageList.map((item, index) => {
+              console.log(item);
+              // console.log(messageList);
+              if (item.idSender === myId) {
+                <SentItem
+                  time={item.time}
+                  nickname={item.useName}
+                  text={item.message}
+                />;
+                // console.log('sent');
+              } else {
+                // console.log('received');
+              }
+            })}
           </List>
           {toggle === 0 ? (
             <View style={styles.bottomButton}>
