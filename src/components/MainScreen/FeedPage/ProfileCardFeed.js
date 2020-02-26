@@ -243,7 +243,7 @@ const ProfileCardFeed = ({
             <View>
               <TouchableOpacity
                 onPress={() => {
-                  hasProfile !== true
+                  hasProfile === true
                     ? navigation.navigate('Profile', {
                         uid,
                         nickname,
@@ -271,7 +271,7 @@ const ProfileCardFeed = ({
         <TouchableByPlatform
           style={styles.touchable}
           onPress={() => {
-            hasProfile !== true ? postLike() : alertAddProfile();
+            hasProfile === true ? postLike() : alertAddProfile();
           }}>
           <View style={styles.button}>
             <Ionicon
@@ -292,7 +292,7 @@ const ProfileCardFeed = ({
         <TouchableByPlatform
           style={styles.touchable}
           onPress={() => {
-            hasProfile !== true
+            hasProfile === true
               ? Alert.alert('대화 서비스는 아직 준비중입니다! ')
               : alertAddProfile();
           }}>
