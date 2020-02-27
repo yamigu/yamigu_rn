@@ -6,9 +6,9 @@ import palette from '~/lib/styles/palette';
 import Anticon from 'react-native-vector-icons/AntDesign';
 import TouchableByPlatform from '../common/TouchableByPlatform';
 
-const ListItemWithPrice = ({title, price, hot, discount}) => (
+const ListItemWithPrice = ({title, price, hot, discount, onPress}) => (
   <TouchableByPlatform>
-    <ListItem noIndent icon style={styles.listItem}>
+    <ListItem noIndent icon style={styles.listItem} onPress={onPress}>
       <Left style={styles.listItemLeft}>
         <Image
           style={styles.iconYami}
