@@ -90,7 +90,7 @@ const FeedPage = props => {
       <Container style={styles.container}>
         <Content
           onMomentumScrollBegin={() => {
-            hasProfile !== false
+            hasProfile === false
               ? Alert.alert(
                   '프로필 등록하면 모든 유저 피드 다볼수있다?',
                   '',
