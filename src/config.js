@@ -10,5 +10,6 @@ module.exports = global.config = {
     DEPARTMENT: 6,
     GENDER: 7,
     VERIFIED: 8,
+    YAMI: 9,
   },
 };

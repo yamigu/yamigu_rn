@@ -34,7 +34,7 @@ import axios from 'axios';
 import '~/config';
 
 const itemSkus = Platform.select({
-  ios: ['party.yamigu.www.com.ticket_1', 'party.yamigu.www.com.ticket_3'],
+  ios: ['yami_10', 'yami_30', 'yami_50', 'yami_100'],
   android: ['yami_10', 'yami_30', 'yami_50', 'yami_100'],
 });
 
@@ -198,10 +198,12 @@ const StoreScreen = ({navigation}) => {
                 });
           })
           .catch(err => {
+            console.log(err);
             return false;
           });
       });
     } catch (err) {
+      console.log(err);
       if (err.code === 'E_USER_CANCELLED') {
         console.log(err.message);
       } else if (err.code === 'E_ALREADY_OWNED') {
@@ -235,7 +237,7 @@ const StoreScreen = ({navigation}) => {
           return (
             <ListItemWithPrice
               key={i}
-              title={product.description}
+              title={product.title.split('(')[0]}
               price={product.price.format()}
               discount={product.discount === 0 ? false : product.discount}
               hot={product.hot}

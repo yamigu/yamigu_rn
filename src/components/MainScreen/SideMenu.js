@@ -68,10 +68,8 @@ const SideMenu = ({navigation}) => {
       const userValue = await AsyncStorage.getItem('userValue');
       const jUserValue = JSON.parse(userValue);
       if (userValue !== null) {
-        // console.log('qweqwe');
-        console.log(jUserValue);
+        //console.log('qweqwe');
         setSideInfo(jUserValue);
-        console.log(jUserValue[3]);
       } else {
         console.log('asdasd');
       }
@@ -79,7 +77,7 @@ const SideMenu = ({navigation}) => {
   };
   useEffect(() => {
     if (navigation.state.isDrawerOpen) {
-      _retrieveData().then(() => console.log('SideMenu didfocus'));
+      _retrieveData();
     }
   }, [navigation]);
 
@@ -318,7 +316,7 @@ const SideMenu = ({navigation}) => {
                   source={require('~/images/yami_icon.png')}
                 />
                 <CustomTextRegular size={12} color={palette.black}>
-                  10
+                  {sideInfo[global.config.user_info_const.YAMI]}
                 </CustomTextRegular>
               </Right>
             </ListItem>
