@@ -1,6 +1,14 @@
+/* eslint-disable no-lone-blocks */
 /* eslint-disable react-native/no-inline-styles */
 import React, {useState, useEffect} from 'react';
-import {View, StyleSheet, Dimensions, PixelRatio, Image} from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Dimensions,
+  PixelRatio,
+  Image,
+  Alert,
+} from 'react-native';
 import {
   CustomTextRegular,
   CustomTextMedium,
@@ -47,7 +55,7 @@ const BVScreen = ({navigation}) => {
           data.department === null ? null : setText2(data.department);
           data.image[0] === undefined
             ? setImageSource(null)
-            : setImageSource(data.image);
+            : setImageSource(data.image[0]);
         }
       });
 
@@ -61,41 +69,48 @@ const BVScreen = ({navigation}) => {
     console.log('useEffect');
   }, []);
 
-  const doVerify = () => {
+  const doVerify = source => {
     setUploading(true);
+    console.log('doverererer');
     const formData = new FormData();
-    const image = imageSource;
+    const image = source;
+    console.log(source);
     const belong = text1;
     const department = text2;
     const studentToggle = toggle;
 
     if (studentToggle == 1) {
       formData.append('is_student', true);
-    } else if (studentToggle == 1) {
+    } else if (studentToggle == 2) {
       formData.append('is_student', false);
     }
     formData.append('belong', belong);
     formData.append('department', department);
-    if (image === null) {
+    if (image === null || image === undefined) {
+      console.log(image);
       setUploading(false);
       return;
     }
     formData.append('image', {
       uri: image.uri,
       type: image.type,
-      name: image.name,
+      name: image.uri,
     });
-    file_upload(
-      formData,
-      'http://13.124.126.30:8000/authorization/user/belong_verification/',
-    )
-      .then(result => {
-        console.log(result.data);
-        setUploading(false);
-      })
-      .catch(error => {
-        setUploading(false);
-      });
+    return new Promise((resolve, reject) => {
+      file_upload(
+        formData,
+        'http://13.124.126.30:8000/authorization/user/belong_verification/',
+      )
+        .then(result => {
+          console.log(result.data);
+          setUploading(false);
+          resolve(true);
+        })
+        .catch(error => {
+          setUploading(false);
+          reject(false);
+        });
+    });
   };
 
   const selectPhotoTapped = () => {
@@ -126,7 +141,7 @@ const BVScreen = ({navigation}) => {
         console.log('image uri' + response.uri);
         setImageSource(source);
         navigation.setParams({
-          doVerify: () => doVerify(),
+          doVerify: source => doVerify(source),
           toggle: toggle,
           text1: text1,
           text2: text2,
@@ -145,7 +160,7 @@ const BVScreen = ({navigation}) => {
     }
     setToggle(value);
     navigation.setParams({
-      doVerify: () => doVerify(),
+      doVerify: source => doVerify(source),
       toggle: value,
       text1: text1,
       text2: text2,
@@ -211,7 +226,7 @@ const BVScreen = ({navigation}) => {
                 console.log(value);
                 setText1(value);
                 navigation.setParams({
-                  doVerify: () => doVerify(),
+                  doVerify: imageSource => doVerify(imageSource),
                   toggle: toggle,
                   text1: value,
                   text2: text2,
@@ -241,7 +256,7 @@ const BVScreen = ({navigation}) => {
               onChangeText={value => {
                 setText2(value);
                 navigation.setParams({
-                  doVerify: () => doVerify(),
+                  doVerify: imageSource => doVerify(imageSource),
                   toggle: toggle,
                   text1: text1,
                   text2: value,
@@ -355,7 +370,20 @@ BVScreen.navigationOptions = ({navigation}) => ({
         height: 40,
         elevation: 0,
       }}
-      onPress={() => navigation.getParam('doVerify')()}>
+      onPress={() => {
+        {
+          navigation
+            .getParam('doVerify')(navigation.getParam('imageSource'))
+            .then(result => {
+              console.log(result);
+              if (result) {
+                Alert.alert('신청이 완료되었습니다');
+              } else {
+                Alert.alert('ㅜㅜ');
+              }
+            });
+        }
+      }}>
       <CustomTextRegular
         size={15}
         color={

@@ -172,28 +172,28 @@ const SideMenu = ({navigation}) => {
           </View>
         </View>
         <List style={styles.list}>
-          {sideInfo[global.config.user_info_const.VERIFIED] === 0 ? (
-            <TouchableByPlatform
-              onPress={() => {
-                navigation.navigate('BV');
-                console.log('goto BV');
-              }}>
-              <ListItem icon noIndent style={styles.listItem}>
-                <Left style={styles.listItemLeft}>
-                  <Anticon
-                    name="exclamationcircle"
-                    style={styles.iconWarning}
-                    size={deviceWidth * 0.813 * 0.06}
-                  />
-                </Left>
-                <Body style={styles.listItemBody}>
-                  <CustomTextRegular size={14} color={palette.red}>
-                    소속 인증하기
-                  </CustomTextRegular>
-                </Body>
-              </ListItem>
-            </TouchableByPlatform>
-          ) : null}
+          {/* {sideInfo[global.config.user_info_const.VERIFIED] === 0 ? ( */}
+          <TouchableByPlatform
+            onPress={() => {
+              navigation.navigate('BV');
+              console.log('goto BV');
+            }}>
+            <ListItem icon noIndent style={styles.listItem}>
+              <Left style={styles.listItemLeft}>
+                <Anticon
+                  name="exclamationcircle"
+                  style={styles.iconWarning}
+                  size={deviceWidth * 0.813 * 0.06}
+                />
+              </Left>
+              <Body style={styles.listItemBody}>
+                <CustomTextRegular size={14} color={palette.red}>
+                  소속 인증하기
+                </CustomTextRegular>
+              </Body>
+            </ListItem>
+          </TouchableByPlatform>
+          {/* ) : null} */}
 
           {sideInfo[global.config.user_info_const.BIRTHDATE] === 'birthdate' ? (
             <TouchableByPlatform
