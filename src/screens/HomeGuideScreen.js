@@ -1,11 +1,11 @@
 import React from 'react';
-import {Text, View, Image, ScrollView} from 'react-native';
+import {Text, View, Image, ScrollView, Dimensions} from 'react-native';
 import {SafeAreaView} from 'react-navigation';
 import palette from '~/lib/styles/palette';
 import {Content} from 'native-base';
 import {CustomTextBold, CustomTextMedium} from '~/components/common/CustomText';
 import {HeaderBackButton} from 'react-navigation-stack';
-
+const deviceWidth = Dimensions.get('window').width;
 const HomeGuideScreen = ({navigation}) => (
   <Content
     style={{
@@ -13,14 +13,97 @@ const HomeGuideScreen = ({navigation}) => (
       width: '100%',
       paddingVertical: 30,
       backgroundColor: palette.default_bg,
-    }}>
+    }}
+    contentContainerStyle={{alignItems: 'center'}}>
     {/* <CustomTextBold size={100}>asd</CustomTextBold> */}
-
     <Image
-      style={{width: '100%', resizeMode: 'contain'}}
-      source={require('~/images/homeguidescreen.png')}
+      style={{
+        width: (deviceWidth * 317) / 375,
+        height: (deviceWidth * 317) / 375,
+        resizeMode: 'cover',
+      }}
+      source={require('~/images/homeguidescreen-1.png')}
     />
-
+    <View
+      style={{
+        width: (deviceWidth * 351) / 375,
+        height: 1,
+        marginVertical: 20,
+        backgroundColor: palette.divider,
+      }}
+    />
+    <Image
+      style={{
+        width: (deviceWidth * 317) / 375,
+        height: (deviceWidth * 225) / 375,
+        resizeMode: 'cover',
+      }}
+      source={require('~/images/homeguidescreen-2.png')}
+    />
+    <View
+      style={{
+        width: (deviceWidth * 351) / 375,
+        height: 1,
+        marginVertical: 20,
+        backgroundColor: palette.divider,
+      }}
+    />
+    <Image
+      style={{
+        width: (deviceWidth * 317) / 375,
+        height: (deviceWidth * 130) / 375,
+        resizeMode: 'cover',
+      }}
+      source={require('~/images/homeguidescreen-3.png')}
+    />
+    <View
+      style={{
+        width: (deviceWidth * 351) / 375,
+        height: 1,
+        marginVertical: 20,
+        backgroundColor: palette.divider,
+      }}
+    />
+    <Image
+      style={{
+        width: (deviceWidth * 317) / 375,
+        height: (deviceWidth * 180) / 375,
+        resizeMode: 'cover',
+      }}
+      source={require('~/images/homeguidescreen-4.png')}
+    />
+    <View
+      style={{
+        width: (deviceWidth * 351) / 375,
+        height: 1,
+        marginVertical: 20,
+        backgroundColor: palette.divider,
+      }}
+    />
+    <Image
+      style={{
+        width: (deviceWidth * 317) / 375,
+        height: (deviceWidth * 172) / 375,
+        resizeMode: 'cover',
+      }}
+      source={require('~/images/homeguidescreen-5.png')}
+    />
+    <View
+      style={{
+        width: (deviceWidth * 351) / 375,
+        height: 1,
+        marginVertical: 20,
+        backgroundColor: palette.divider,
+      }}
+    />
+    <Image
+      style={{
+        width: (deviceWidth * 317) / 375,
+        height: (deviceWidth * 317) / 375,
+        resizeMode: 'cover',
+      }}
+      source={require('~/images/homeguidescreen-6.png')}
+    />
     {/* <CustomTextBold size={100}>asd</CustomTextBold> */}
   </Content>
 );
