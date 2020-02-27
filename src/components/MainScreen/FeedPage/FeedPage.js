@@ -21,13 +21,18 @@ const FeedPage = props => {
 
   const [] = useState([]);
   useEffect(() => {
+    let innerHasProfile = false;
+
     //axios for myfeedmanage
     axios
       .get('http://13.124.126.30:8000/authorization/user/info/')
       .then(item => {
         setMyFeedManageProp(item.data);
         if (item.data.avata !== null) {
+          // console.log('avata::::');
+          // console.log(item.data.avata);
           setHasProfile(true);
+          innerHasProfile = true;
         }
         let tmpUrl =
           'http://13.124.126.30:8000/core/feed/' + item.data.uid + '/';
@@ -66,6 +71,7 @@ const FeedPage = props => {
       .then(result => {
         let tmp = [];
         let count = 0;
+
         result.data.map((item, index) => {
           if (item.feed_list.length === 0) {
           } else {
@@ -73,7 +79,15 @@ const FeedPage = props => {
             count++;
           }
         });
-        setProfileCardProp(tmp);
+        //있는애들은 2개만보여주기
+        // console.log('innerhas ::: ??? ' + innerHasProfile);
+        if (innerHasProfile === false) {
+          // console.log(tmp);
+          // console.log(innerHasProfile);
+          setProfileCardProp(tmp.slice(0, 2));
+        } else {
+          setProfileCardProp(tmp);
+        }
       })
       .then(() => {
         // console.log('axios done');
@@ -84,12 +98,12 @@ const FeedPage = props => {
     <View style={styles.root}>
       <Modal animationType="none" transparent={true} visible={modalVisible}>
         <SendChatting setModalVisible={setModalVisible} />
-        {console.log(modalVisible)}
       </Modal>
 
       <Container style={styles.container}>
         <Content
           onMomentumScrollBegin={() => {
+            console.log(hasProfile);
             hasProfile === false
               ? Alert.alert(
                   '프로필 등록하면 모든 유저 피드 다볼수있다?',

@@ -94,8 +94,7 @@ const HomePage = ({navigation}) => {
               jUserValue[global.config.user_info_const.UID] = result.data.uid;
               jUserValue[global.config.user_info_const.NICKNAME] =
                 result.data.nickname;
-              jUserValue[global.config.user_info_const.AVATA] =
-                result.data.avata;
+              jUserValue[global.config.user_info_const.AVATA] = 'avata';
               jUserValue[global.config.user_info_const.BIRTHDATE] =
                 result.data.birthdate;
               jUserValue[global.config.user_info_const.BELONG] =
