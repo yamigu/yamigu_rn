@@ -1,6 +1,14 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {useState, useEffect} from 'react';
-import {Text, View, Image, StyleSheet, Dimensions, Alert} from 'react-native';
+import {
+  Text,
+  View,
+  Image,
+  StyleSheet,
+  Dimensions,
+  Alert,
+  Modal,
+} from 'react-native';
 import TouchableByPlatform from '~/components/common/TouchableByPlatform';
 import {
   Icon,
@@ -26,80 +34,82 @@ import palette from '~/lib/styles/palette';
 import ProfileCard from '~/components/common/ProfileCard';
 import {HeaderBackButton} from 'react-navigation-stack';
 import axios from 'axios';
+import SendChatting from '~/components/common/SendChatting';
 
-const deviceWidth = Dimensions.get ('window').width;
+const deviceWidth = Dimensions.get('window').width;
 const nowYear = 20200000;
 
 const ProfileDetailScreen = ({navigation}) => {
-  const uid = navigation.getParam ('uid');
-  const nickname = navigation.getParam ('nickname');
-  const avata = navigation.getParam ('avata');
-  const age = navigation.getParam ('age');
-  const belong = navigation.getParam ('belong');
-  const department = navigation.getParam ('department');
-  const bothLike = navigation.getParam ('bothLike');
-  const myFeed = navigation.getParam ('my_feed');
-  const liked = navigation.getParam ('liked');
+  const uid = navigation.getParam('uid');
+  const nickname = navigation.getParam('nickname');
+  const avata = navigation.getParam('avata');
+  const age = navigation.getParam('age');
+  const belong = navigation.getParam('belong');
+  const department = navigation.getParam('department');
+  const bothLike = navigation.getParam('bothLike');
+  const myFeed = navigation.getParam('my_feed');
+  const liked = navigation.getParam('liked');
 
-  const [likedState, setLikedState] = useState (false);
-  const [friendList, setFriendList] = useState ([]);
-  const [feedList, setFeedList] = useState ([]);
+  const [likedState, setLikedState] = useState(false);
+  const [friendList, setFriendList] = useState([]);
+  const [feedList, setFeedList] = useState([]);
+  const [modalVisible, setModalVisible] = useState(false);
 
   const postLike = () => {
-    console.log ('like pressed');
+    console.log('like pressed');
     if (likedState === true) {
       // console.log('좋아요 취소');
       axios
-        .post (
-          'http://13.124.126.30:8000/core/like/' + feedList[0].id + '/cancel/'
+        .post(
+          'http://13.124.126.30:8000/core/like/' + feedList[0].id + '/cancel/',
         )
-        .then (result => {
-          console.log (result.data);
-          setLikedState (!likedState);
-          navigation.getParam ('setLiked') (!likedState);
+        .then(result => {
+          console.log(result.data);
+          setLikedState(!likedState);
+          navigation.getParam('setLiked')(!likedState);
         });
     } else {
       // console.log('좋아요 보내기');
       axios
-        .post ('http://13.124.126.30:8000/core/like/' + feedList[0].id + '/')
-        .then (result => {
-          console.log (result.data);
-          setLikedState (!likedState);
-          navigation.getParam ('setLiked') (!likedState);
+        .post('http://13.124.126.30:8000/core/like/' + feedList[0].id + '/')
+        .then(result => {
+          console.log(result.data);
+          setLikedState(!likedState);
+          navigation.getParam('setLiked')(!likedState);
         });
     }
   };
 
-  useEffect (() => {
-    console.log (liked);
-    setLikedState (liked);
+  useEffect(() => {
+    console.log(liked);
+    setLikedState(liked);
     axios
-      .get ('http://13.124.126.30:8000/core/feed/' + uid + '/')
-      .then (result => {
+      .get('http://13.124.126.30:8000/core/feed/' + uid + '/')
+      .then(result => {
         // console.log(result.data);
         let tmpFeedList = [];
 
-        result.data.map ((item, index) => {
+        result.data.map((item, index) => {
           tmpFeedList[index] = item;
         });
-        setFeedList (tmpFeedList.reverse ());
+        setFeedList(tmpFeedList.reverse());
       });
     axios
-      .get ('http://13.124.126.30:8000/core/friends/' + uid + '/')
-      .then (result => {
+      .get('http://13.124.126.30:8000/core/friends/' + uid + '/')
+      .then(result => {
         // console.log(result.data);
         let tmpFriendList = [];
         let count = 0;
 
-        result.data.map ((item, index) => {
+        result.data.map((item, index) => {
           if (item.approved === true) {
             tmpFriendList[count] = item.user_info;
             count++;
           }
         });
 
-        console.log (tmpFriendList);
-        setFriendList (tmpFriendList);
+        console.log(tmpFriendList);
+        setFriendList(tmpFriendList);
       });
   }, []);
 
@@ -116,16 +126,21 @@ const ProfileDetailScreen = ({navigation}) => {
 
   return (
     <View style={styles.root}>
+      <Modal
+        ava={avata}
+        animationType="none"
+        transparent={true}
+        visible={modalVisible}>
+        <SendChatting setModalVisible={setModalVisible} />
+      </Modal>
       <Container style={styles.container}>
         <Content
           contentContainerStyle={styles.innerView}
-          showsVerticalScrollIndicator={false}
-        >
+          showsVerticalScrollIndicator={false}>
           <IndicatorViewPager
             style={styles.viewPager}
-            indicator={_renderDotIndicator ()}
-          >
-            {feedList.map (item => {
+            indicator={_renderDotIndicator()}>
+            {feedList.map(item => {
               return (
                 <Image
                   style={styles.viewPage}
@@ -152,91 +167,81 @@ const ProfileDetailScreen = ({navigation}) => {
             <View style={styles.horizontalDivider} />
           </View>
 
-          {bothLike === true
-            ? <TouchableByPlatform
-                style={styles.soleAction}
-                onPress={() => Alert.alert ('대화 신청에는 야미3개가 소비됩니다! ')}
-              >
+          {bothLike === true ? (
+            <TouchableByPlatform
+              style={styles.soleAction}
+              onPress={() => setModalVisible(true)}>
+              <View style={styles.button}>
+                <Image
+                  source={require('~/images/chat-bubble2-outline.png')}
+                  style={{height: 16, width: 16}}
+                />
+                <CustomTextMedium
+                  size={14}
+                  color={palette.sub}
+                  style={{marginLeft: 4}}>
+                  청
+                </CustomTextMedium>
+              </View>
+            </TouchableByPlatform>
+          ) : myFeed !== true ? (
+            <View style={styles.actionView}>
+              <TouchableByPlatform
+                style={styles.touchable}
+                onPress={() => {
+                  postLike();
+                }}>
+                <View style={styles.button}>
+                  <Ionicon
+                    name="ios-heart-empty"
+                    size={18}
+                    color={likedState === false ? '#898989' : palette.orange}
+                  />
+                  <CustomTextMedium
+                    size={14}
+                    color={likedState === false ? '#898989' : palette.orange}
+                    style={{marginLeft: 4}}>
+                    좋아요
+                  </CustomTextMedium>
+                </View>
+              </TouchableByPlatform>
+              <View style={styles.verticalDivider} />
+
+              <TouchableByPlatform
+                style={styles.touchable}
+                onPress={() => setModalVisible(true)}>
                 <View style={styles.button}>
                   <Image
-                    source={require ('~/images/chat-bubble2-outline.png')}
+                    source={require('~/images/chat-bubble2-outline.png')}
                     style={{height: 16, width: 16}}
                   />
                   <CustomTextMedium
                     size={14}
                     color={palette.sub}
-                    style={{marginLeft: 4}}
-                  >
+                    style={{marginLeft: 4}}>
                     미팅 신청
                   </CustomTextMedium>
                 </View>
               </TouchableByPlatform>
-            : myFeed !== true
-                ? <View style={styles.actionView}>
-                    <TouchableByPlatform
-                      style={styles.touchable}
-                      onPress={() => {
-                        postLike ();
-                      }}
-                    >
-                      <View style={styles.button}>
-                        <Ionicon
-                          name="ios-heart-empty"
-                          size={18}
-                          color={
-                            likedState === false ? '#898989' : palette.orange
-                          }
-                        />
-                        <CustomTextMedium
-                          size={14}
-                          color={
-                            likedState === false ? '#898989' : palette.orange
-                          }
-                          style={{marginLeft: 4}}
-                        >
-                          좋아요
-                        </CustomTextMedium>
-                      </View>
-                    </TouchableByPlatform>
-                    <View style={styles.verticalDivider} />
-
-                    <TouchableByPlatform
-                      style={styles.touchable}
-                      onPress={() => Alert.alert ('대화 신청에는 야미3개가 소비됩니다! ')}
-                    >
-                      <View style={styles.button}>
-                        <Image
-                          source={require ('~/images/chat-bubble2-outline.png')}
-                          style={{height: 16, width: 16}}
-                        />
-                        <CustomTextMedium
-                          size={14}
-                          color={palette.sub}
-                          style={{marginLeft: 4}}
-                        >
-                          미팅 신청
-                        </CustomTextMedium>
-                      </View>
-                    </TouchableByPlatform>
-                  </View>
-                : <TouchableByPlatform
-                    style={styles.soleAction}
-                    onPress={() => navigation.navigate ('MyProfile')}
-                  >
-                    <View style={styles.button}>
-                      <Image
-                        source={require ('~/images/chat-bubble2-outline.png')}
-                        style={{height: 16, width: 16}}
-                      />
-                      <CustomTextMedium
-                        size={14}
-                        color={palette.sub}
-                        style={{marginLeft: 4}}
-                      >
-                        프로필 수정하러 가기
-                      </CustomTextMedium>
-                    </View>
-                  </TouchableByPlatform>}
+            </View>
+          ) : (
+            <TouchableByPlatform
+              style={styles.soleAction}
+              onPress={() => navigation.navigate('MyProfile')}>
+              <View style={styles.button}>
+                <Image
+                  source={require('~/images/chat-bubble2-outline.png')}
+                  style={{height: 16, width: 16}}
+                />
+                <CustomTextMedium
+                  size={14}
+                  color={palette.sub}
+                  style={{marginLeft: 4}}>
+                  프로필 수정하러 가기
+                </CustomTextMedium>
+              </View>
+            </TouchableByPlatform>
+          )}
 
           <List style={styles.detailList}>
             {/* <ListItem noIndent style={styles.detailListItem}>
@@ -294,20 +299,19 @@ const ProfileDetailScreen = ({navigation}) => {
                 {nickname}님의 친구들
               </CustomTextRegular>
             </ListItem>
-            {friendList.length === 0
-              ? <View
-                  style={{
-                    marginTop: 30,
-                    flexDirection: 'row',
-                    justifyContent: 'center',
-                  }}
-                >
-                  <CustomTextRegular size={14}>
-                    아직 등록한 친구가 없어요 ㅠ.ㅠ
-                  </CustomTextRegular>
-                </View>
-              : null}
-            {friendList.map (friend => (
+            {friendList.length === 0 ? (
+              <View
+                style={{
+                  marginTop: 30,
+                  flexDirection: 'row',
+                  justifyContent: 'center',
+                }}>
+                <CustomTextRegular size={14}>
+                  아직 등록한 친구가 없어요 ㅠ.ㅠ
+                </CustomTextRegular>
+              </View>
+            ) : null}
+            {friendList.map(friend => (
               <ListItem noIndent style={styles.friendsListItem}>
                 <Body>
                   <ProfileCard
@@ -315,8 +319,8 @@ const ProfileDetailScreen = ({navigation}) => {
                     fontSizes={[14, 12, 12]}
                     nickname={friend.nickname}
                     avata={friend.avata}
-                    age={Math.floor (
-                      (nowYear - parseInt (friend.birthdate) + 20000) / 10000
+                    age={Math.floor(
+                      (nowYear - parseInt(friend.birthdate) + 20000) / 10000,
                     )}
                     belong={friend.belong}
                     department={friend.department}
@@ -337,7 +341,7 @@ ProfileDetailScreen.navigationOptions = ({navigation}) => ({
       label=" "
       tintColor="white"
       onPress={() => {
-        navigation.goBack ();
+        navigation.goBack();
       }}
     />
   ),
@@ -349,7 +353,7 @@ ProfileDetailScreen.navigationOptions = ({navigation}) => ({
   },
 });
 
-const styles = StyleSheet.create ({
+const styles = StyleSheet.create({
   root: {
     flex: 1,
   },

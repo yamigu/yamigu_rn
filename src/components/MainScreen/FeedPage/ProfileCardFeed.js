@@ -150,6 +150,9 @@ const ProfileCardFeed = ({
   bothLike,
   likedByServer,
   hasProfile,
+
+  setModalUrl,
+  setModalVisible,
 }) => {
   const [liked, setLiked] = useState(false);
   const [feedList, setFeedList] = useState([]);
@@ -243,18 +246,21 @@ const ProfileCardFeed = ({
             <View>
               <TouchableOpacity
                 onPress={() => {
-                  hasProfile === true
-                    ? navigation.navigate('Profile', {
-                        uid,
-                        nickname,
-                        avata,
-                        age,
-                        belong,
-                        department,
-                        liked,
-                        setLiked: value => setLiked(value),
-                      })
-                    : alertAddProfile();
+                  if (hasProfile === true) {
+                    setModalVisible(false);
+                    navigation.navigate('Profile', {
+                      uid,
+                      nickname,
+                      avata,
+                      age,
+                      belong,
+                      department,
+                      liked,
+                      setLiked: value => setLiked(value),
+                    });
+                  } else {
+                    alertAddProfile();
+                  }
                 }}>
                 <Image
                   style={styles.viewPage}
@@ -292,9 +298,11 @@ const ProfileCardFeed = ({
         <TouchableByPlatform
           style={styles.touchable}
           onPress={() => {
-            hasProfile === true
-              ? Alert.alert('대화 서비스는 아직 준비중입니다! ')
-              : alertAddProfile();
+            console.log('asd');
+            setModalVisible(true);
+            console.log(setModalVisible);
+            console.log('done');
+            hasProfile === true ? null : alertAddProfile();
           }}>
           <View style={styles.button}>
             <Image
