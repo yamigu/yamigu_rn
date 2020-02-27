@@ -113,6 +113,7 @@ const deviceWidth = Dimensions.get('window').width;
 
 const LoginScreen = ({navigation}) => {
   useEffect(() => {
+    console.log('hererere');
     _retrieveData();
     axios.defaults.headers.common['Authorization'] = '';
     console.log(originValue);
@@ -265,7 +266,8 @@ LoginScreen.navigationOptions = ({navigation}) => ({
       label=" "
       tintColor={palette.black}
       onPress={() => {
-        navigation.goBack();
+        console.log('login onPress');
+        navigation.navigate('Main');
       }}
     />
   ),

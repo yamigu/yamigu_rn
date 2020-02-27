@@ -28,6 +28,7 @@ import StoreScreen from '~/screens/StoreScreen';
 import ShieldScreen from '~/screens/ShieldScreen';
 import SettingScreen from '~/screens/SettingScreen';
 import HomeGuideScreen from '~/screens/HomeGuideScreen';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const deviceWidth = Dimensions.get('window').width;
 
@@ -54,6 +55,7 @@ const AppStack = createStackNavigator({
         />
       ),
       headerRight: () => {
+        // console.log(jUserValue);
         return (
           <TouchableByPlatform
             onPress={() => navigation.navigate('ChattingList')}>
@@ -75,6 +77,7 @@ const AppStack = createStackNavigator({
       headerTitleAlign: 'center',
     }),
   },
+
   Profile: {
     screen: ProfileDetailScreen,
   },

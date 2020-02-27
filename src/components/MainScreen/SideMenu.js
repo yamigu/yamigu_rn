@@ -152,7 +152,7 @@ const SideMenu = ({navigation}) => {
           <View style={styles.belongView}>
             {sideInfo[global.config.user_info_const.BELONG] === 'belong' ? (
               <Button
-                style={{backgroundColor: palette.default_bg}}
+                style={{backgroundColor: palette.default_bg, elevation: 0}}
                 onPress={() => navigation.navigate('Login')}>
                 <CustomTextRegular size={14} color={palette.black}>
                   로그인 하기
