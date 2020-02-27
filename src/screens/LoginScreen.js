@@ -162,7 +162,7 @@ const LoginScreen = ({navigation}) => {
           tmpValue[0] = key;
           AsyncStorage.setItem('userValue', JSON.stringify(tmpValue));
         })
-        .then(() => navigation.navigate('Main'));
+        .then(() => navigation.navigate('Signup'));
 
       console.log(appleAuthRequestResponse);
       // navigation.navigate('Main');
@@ -201,7 +201,7 @@ const LoginScreen = ({navigation}) => {
         tmpValue[0] = key;
         AsyncStorage.setItem('userValue', JSON.stringify(tmpValue));
       })
-      .then(() => navigation.navigate('Main'))
+      .then(() => navigation.navigate('Signup'))
       .catch(err => {
         if (err.code === 'E_CANCELLED_OPERATION') {
           logCallback(`Login Cancelled:${err.message}`, setLoginLoading(false));
@@ -266,7 +266,6 @@ LoginScreen.navigationOptions = ({navigation}) => ({
       label=" "
       tintColor={palette.black}
       onPress={() => {
-        console.log('login onPress');
         navigation.navigate('Main');
       }}
     />
