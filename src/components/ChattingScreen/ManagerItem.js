@@ -6,7 +6,7 @@ import palette from '~/lib/styles/palette';
 import {CustomTextMedium, CustomTextRegular} from '../common/CustomText';
 
 const deviceWidth = Dimensions.get('window').width;
-const ReceivedItem = ({manager, nickname, text, time, uid}) => {
+const ManagerItem = ({manager, nickname, text, time, uid}) => {
   // uid 로 avata 가져와서 저장해놓기
 
   return (
@@ -27,7 +27,7 @@ const ReceivedItem = ({manager, nickname, text, time, uid}) => {
             size={12}
             color={palette.gray}
             style={styles.alignLeft}>
-            {nickname}
+            야미구
           </CustomTextRegular>
           <View
             style={
@@ -36,13 +36,14 @@ const ReceivedItem = ({manager, nickname, text, time, uid}) => {
                 : styles.chattingBox
             }>
             <CustomTextRegular size={14} color={palette.black}>
-              {text}
+              안녕하세요, 야미구 매칭 축하드려요! 두 분과 친구들과 만날 약속을
+              빨리 잡아 즐거운 미팅 하시길 바래요!
             </CustomTextRegular>
           </View>
         </View>
         <View style={{justifyContent: 'flex-end'}}>
           <CustomTextRegular color={palette.gray} size={10}>
-            {time}
+            오후 5:13
           </CustomTextRegular>
         </View>
       </Body>
@@ -86,4 +87,4 @@ const styles = StyleSheet.create({
   },
   alignLeft: {},
 });
-export default ReceivedItem;
+export default ManagerItem;

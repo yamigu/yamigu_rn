@@ -1,17 +1,21 @@
 import React, {useEffect, useState} from 'react';
-import {Text, View, StyleSheet, Alert} from 'react-native';
+import {Text, View, StyleSheet, Alert, Modal} from 'react-native';
 import palette from '~/lib/styles/palette';
 import ProfileCardList from './ProfileCardList';
 import LikeMatchingList from './LikeMatchingList';
 import MyFeedManage from './MyFeedManage';
 import {Content, Container} from 'native-base';
 import axios from 'axios';
+import SendChatting from '~/components/common/SendChatting';
 
 const FeedPage = props => {
   const [myFeedManageProp, setMyFeedManageProp] = useState([]);
   const [myFeed, setMyFeed] = useState([]);
   const [likeMatchingProp, setLikeMatchingProp] = useState([]);
   const [profileCardProp, setProfileCardProp] = useState([]);
+
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalUrl, setModalUrl] = useState('asd');
 
   const [hasProfile, setHasProfile] = useState(false);
 
@@ -74,17 +78,19 @@ const FeedPage = props => {
       .then(() => {
         // console.log('axios done');
       });
-  }, [props.navigation]);
+  }, [props.navigation, modalVisible]);
 
   return (
     <View style={styles.root}>
+      <Modal animationType="none" transparent={true} visible={modalVisible}>
+        <SendChatting setModalVisible={setModalVisible} />
+        {console.log(modalVisible)}
+      </Modal>
+
       <Container style={styles.container}>
         <Content
-          // onMomentumScrollBegin={() => {
-          //   Alert.alert('do something?');
-          // }}
           onMomentumScrollBegin={() => {
-            hasProfile !== false
+            hasProfile === false
               ? Alert.alert(
                   '프로필 등록하면 모든 유저 피드 다볼수있다?',
                   '',
@@ -123,6 +129,8 @@ const FeedPage = props => {
             navigation={props.navigation}
             profileCardProp={profileCardProp}
             hasProfile={hasProfile}
+            setModalUrl={setModalVisible}
+            setModalVisible={setModalVisible}
           />
           <View style={styles.lastScroll} />
         </Content>

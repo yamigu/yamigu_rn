@@ -1,6 +1,4 @@
-/* eslint-disable prettier/prettier */
-/* eslint-disable react-native/no-inline-styles */
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import {
   StyleSheet,
   View,
@@ -24,6 +22,9 @@ import {createRef} from 'react';
 import 'react-native-gesture-handler';
 import {CustomTextMedium} from '~/components/common/CustomText';
 import firebase from 'react-native-firebase';
+import AsyncStorage from '@react-native-community/async-storage';
+import ListItem from '~/components/common/ListItem';
+import Moment from 'moment';
 
 const deviceWidth = Dimensions.get('window').width;
 const buttonWidth = deviceWidth * 0.9;
@@ -31,16 +32,43 @@ const dw = Dimensions.get('window').width;
 const dh = Dimensions.get('window').height;
 
 const pf = Platform.OS;
-
+let global_messageList = [];
+let lock = false;
 const ChattingScreen = props => {
+  const [receivedList, setReceivedList] = useState([]);
+  const [sentList, setSentList] = useState([]);
+  const [messageList, setMessageList] = useState([]);
+  const [tmpMessageList, setTmpMessageList] = useState([]);
+
+  const [myId, setMyId] = useState('');
+
+  const getUid = () => {
+    return new Promise(async (resolve, reject) => {
+      const userValue = await AsyncStorage.getItem('userValue');
+      const jUserValue = JSON.parse(userValue);
+      resolve(jUserValue);
+    });
+  };
   useEffect(() => {
-    firebase
-      .database()
-      .ref('message')
-      .on('child_added', snapshot => {
-        console.log(snapshot.val());
-      });
+    global_messageList.length = 0; // 배열 초기화
+    getUid().then(result => {
+      setMyId(result[1]);
+      // console.log(myId);
+      firebase
+        .database()
+        .ref('message/57')
+        .on('child_added', result => {
+          global_messageList.push(result.val());
+          setMessageList(global_messageList.slice());
+        });
+    });
+    // .then(result => {
+    //   setMessageList(result);
+    //   console.log(result);
+    // });
+    // console.log(tmpList);
   }, []);
+
   let keyboardPadding = 0;
   if (pf === 'ios') keyboardPadding = 100;
   else keyboardPadding = -400;
@@ -55,11 +83,10 @@ const ChattingScreen = props => {
   const _scrollToBottomY = createRef();
 
   const gotoBot = () => {
-    console.log('im  in');
-    console.log(pf);
+    // console.log('im  in');
+    // console.log(pf);
     _scrollToBottomY.current.scrollToEnd();
   };
-  const [modalVisible, setModalVisible] = useState(false);
 
   //behavior : position ###
   return (
@@ -75,14 +102,20 @@ const ChattingScreen = props => {
             _scrollToBottomY.current.scrollToEnd();
           }}>
           <List style={{flex: 1}}>
-            <ReceivedItem />
-            <ReceivedItem />
-            <SentItem />
-            <SentItem />
-            <SentItem />
-            <SentItem />
-            <SentItem />
-            <SentItem />
+            {messageList.map((item, index) => {
+              let fortime = Moment(item.time).format('MM DD hh:mm');
+              console.log(fortime);
+              if (item.idSender == myId)
+                return <SentItem text={item.message} time={fortime} />;
+              else
+                return (
+                  <ReceivedItem
+                    nickname={item.userName}
+                    text={item.message}
+                    time={fortime}
+                  />
+                );
+            })}
           </List>
           {toggle === 0 ? (
             <View style={styles.bottomButton}>
@@ -184,6 +217,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   container: {
+    flexDirection: 'column',
+    justifyContent: 'space-between',
     backgroundColor: palette.default_bg,
     flex: 1,
   },
