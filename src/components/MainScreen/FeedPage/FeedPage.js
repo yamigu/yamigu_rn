@@ -132,7 +132,6 @@ const FeedPage = props => {
             setModalUrl={setModalVisible}
             setModalVisible={setModalVisible}
           />
-          <View style={styles.lastScroll} />
         </Content>
       </Container>
     </View>
@@ -155,10 +154,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#D9D9D9',
     height: 0.5,
     marginTop: 12,
-  },
-  lastScroll: {
-    height: 20,
-    flex: 1,
   },
 });
 export default FeedPage;
