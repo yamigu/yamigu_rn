@@ -73,6 +73,7 @@ const HomePage = ({navigation}) => {
   const _retrieveData = async () => {
     console.log('retrieve');
     // axios.defaults.headers.common['Authorization'] = '';
+
     try {
       const userValue = await AsyncStorage.getItem('userValue');
       const jUserValue = JSON.parse(userValue);

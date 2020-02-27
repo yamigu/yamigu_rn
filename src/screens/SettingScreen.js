@@ -13,27 +13,41 @@ import appleAuth, {
   AppleAuthRequestOperation,
   AppleAuthCredentialState,
 } from '@invertase/react-native-apple-authentication';
-//for apple logout
+import AsyncStorage from '@react-native-community/async-storage';
+import axios from 'axios';
 
-async function onLogout() {
-  // performs logout request
-  const appleAuthRequestResponse = await appleAuth.performRequest({
-    requestedOperation: AppleAuthRequestOperation.LOGOUT,
-  });
+// async function onLogout() {
+// const appleAuthRequestResponse = await appleAuth.performRequest({
+//   requestedOperation: AppleAuthRequestOperation.LOGOUT,
+// });
 
-  // get current authentication state for user
-  const credentialState = await appleAuth.getCredentialStateForUser(
-    appleAuthRequestResponse.user,
-  );
+// // get current authentication state for user
+// const credentialState = await appleAuth.getCredentialStateForUser(
+//   appleAuthRequestResponse.user,
+// );
 
-  // use credentialState response to ensure the user credential's have been revoked
-  if (credentialState === AppleAuthCredentialState.REVOKED) {
-    // user is unauthenticated
-    console.log('un... auth');
-  } else {
-    console.log('auth..!?');
-  }
-}
+// // use credentialState response to ensure the user credential's have been revoked
+// if (credentialState === AppleAuthCredentialState.REVOKED) {
+//   // user is unauthenticated
+//   console.log('un... auth');
+// } else {
+//   console.log('auth..!?');
+// }
+// }
+
+const initUserValue = [
+  'token',
+  'uid',
+  'nickname',
+  'avata',
+  'birthdate',
+  'belong',
+  'department',
+  'profile_list',
+  'feed_list',
+  'friend_list',
+  'yami_number',
+];
 
 const SettingScreen = ({navigation}) => {
   const [toggleLike, setToggleLike] = useState(true);
@@ -41,6 +55,11 @@ const SettingScreen = ({navigation}) => {
   const [toggleMeeting, setToggleMeeting] = useState(true);
   const [toggleMatch, setToggleMatch] = useState(true);
   const [toggleChatting, setToggleChatting] = useState(true);
+
+  const logout = async () => {
+    axios.defaults.headers.common['Authorization'] = '';
+    AsyncStorage.setItem('userValue', JSON.stringify(initUserValue));
+  };
 
   return (
     <Content showsVerticalScrollIndicator={false} style={styles.root}>
@@ -172,9 +191,11 @@ const SettingScreen = ({navigation}) => {
                     {
                       text: '네',
                       onPress: () => {
-                        navigation.navigate('Main');
-                        onLogout();
-                        console.log('YES LOGOUT');
+                        logout().then(() => {
+                          navigation.navigate('Main');
+                          Alert.alert('로그아웃 되었습니다.');
+                          console.log('YES LOGOUT');
+                        });
                       },
                     },
                     {
