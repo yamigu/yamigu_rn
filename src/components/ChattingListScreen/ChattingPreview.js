@@ -1,15 +1,28 @@
 import React from 'react';
-import {Text, View, StyleSheet} from 'react-native';
+import {Text, View, StyleSheet, Alert} from 'react-native';
 import palette from '~/lib/styles/palette';
 import {ListItem, Left, Badge, Body, Right} from 'native-base';
 import UserProfileSmall from '../common/UserProfileSmall';
 import {CustomTextMedium, CustomTextRegular} from '../common/CustomText';
 
-const ChattingPreview = ({style, label, navigation}) => (
+const ChattingPreview = ({style, label, navigation, hasVerified}) => (
   <ListItem
     avatar
     style={[styles.chatPreview, style]}
-    onPress={() => navigation.navigate('Chatting')}>
+    onPress={() => {
+      if (hasVerified === 0) {
+        console.log('hasVerified :: ' + hasVerified);
+        Alert.alert('소속인증이 필요한 서비스입니다!');
+        navigation.navigate('BV');
+      } else if (hasVerified === 1) {
+        Alert.alert(
+          '소속인증 중입니다! 30분안에 해드릴게요 잠시만 기다려주세요!',
+        );
+      } else {
+        navigation.navigate('Chatting');
+        console.log('hasVerified :: ' + hasVerified);
+      }
+    }}>
     <Left style={styles.chatPreviewLeft}>
       <UserProfileSmall
         imageSource={require('~/images/test-user-profile-4.png')}

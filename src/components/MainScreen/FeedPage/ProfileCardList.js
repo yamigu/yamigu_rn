@@ -5,7 +5,13 @@ import axios from 'axios';
 import palette from '~/lib/styles/palette';
 import {CustomTextBold} from '~/components/common/CustomText';
 
-const ProfileCardList = ({navigation, profileCardProp, hasProfile}) => {
+const ProfileCardList = ({
+  navigation,
+  profileCardProp,
+  hasProfile,
+  setModalVisible,
+  setModalUrl,
+}) => {
   let nowYear = 20200000;
   useEffect(() => {}, []);
 
@@ -27,6 +33,8 @@ const ProfileCardList = ({navigation, profileCardProp, hasProfile}) => {
             bothLike={false}
             my_feed={false}
             hasProfile={hasProfile}
+            setModalVisible={setModalVisible}
+            setModalUrl={setModalUrl}
           />
         );
       })}

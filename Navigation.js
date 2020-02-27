@@ -53,19 +53,21 @@ const AppStack = createStackNavigator({
           source={require('~/images/yamigu_logo_icon.png')}
         />
       ),
-      headerRight: () => (
-        <TouchableByPlatform
-          onPress={() => navigation.navigate('ChattingList')}>
-          <Image
-            source={require('~/images/chat_bubble_icon.png')}
-            style={{
-              margin: 10,
-              width: 20,
-              height: 18,
-            }}
-          />
-        </TouchableByPlatform>
-      ),
+      headerRight: () => {
+        return (
+          <TouchableByPlatform
+            onPress={() => navigation.navigate('ChattingList')}>
+            <Image
+              source={require('~/images/chat_bubble_icon.png')}
+              style={{
+                margin: 10,
+                width: 20,
+                height: 18,
+              }}
+            />
+          </TouchableByPlatform>
+        );
+      },
       headerMode: 'screen',
       headerStyle: {
         backgroundColor: 'white',

@@ -12,12 +12,17 @@ import axios from 'axios';
 
 const ChattingListScreen = ({navigation}) => {
   const [ref, setRef] = useState(null);
+  const [hasVerified, setHasVerified] = useState(0);
   useEffect(() => {
+    axios
+      .get('http://13.124.126.30:8000/authorization/user/belong_verification/')
+      .then(result => setHasVerified(result.data.verified));
+
     axios
       .get('http://13.124.126.30:8000/authorization/firebase/token/')
       .then(result => {
         const token = result.data;
-        console.log(token);
+        // console.log(token);
         return token;
       })
       .catch(error => console.log(error))
@@ -29,14 +34,18 @@ const ChattingListScreen = ({navigation}) => {
           .database()
           .ref('message')
           .on('child_added', snapshot => {
-            console.log(snapshot.val());
+            // console.log(snapshot.val());
           });
       });
   }, []);
   return (
     <Content showsVerticalScrollIndicator={false} style={styles.root}>
-      <ReceivedList navigation={navigation} />
-      <ChattingList style={{marginTop: 12}} navigation={navigation} />
+      <ReceivedList hasVerified={hasVerified} navigation={navigation} />
+      <ChattingList
+        hasVerified={hasVerified}
+        style={{marginTop: 12}}
+        navigation={navigation}
+      />
     </Content>
   );
 };

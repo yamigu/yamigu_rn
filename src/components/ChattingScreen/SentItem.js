@@ -13,7 +13,7 @@ const ReceivedItem = ({nickname, text, time, uid}) => {
       <Body style={styles.bodySent}>
         <View style={styles.chattingBox}>
           <CustomTextRegular color={palette.black} size={14}>
-            {text}}
+            {text}
           </CustomTextRegular>
         </View>
         <View style={{flexDirection: 'row'}}>
@@ -21,7 +21,7 @@ const ReceivedItem = ({nickname, text, time, uid}) => {
             color={palette.gray}
             size={10}
             style={{alignSelf: 'flex-end'}}>
-            {time}}
+            {time}
           </CustomTextRegular>
         </View>
       </Body>
