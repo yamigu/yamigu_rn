@@ -10,7 +10,7 @@ const ReceivedList = ({style, navigation, hasVerified}) => (
     <ListItem itemDivider style={styles.listItemHeader}>
       <View style={styles.listItemHeaderView}>
         <CustomTextMedium color={palette.black} size={16}>
-          신청 받은 미팅
+          주선된 미팅
         </CustomTextMedium>
         {/* <Badge style={styles.badge}>
           <CustomTextMedium size={12} color="white">

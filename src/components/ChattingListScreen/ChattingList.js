@@ -10,7 +10,7 @@ const ChattingList = ({style, navigation, hasVerified}) => (
     <ListItem itemDivider style={styles.listItemHeader}>
       <View style={styles.listItemHeaderView}>
         <CustomTextMedium color={palette.black} size={16}>
-          대화중인 미팅
+          대화중인 친구
         </CustomTextMedium>
       </View>
     </ListItem>
