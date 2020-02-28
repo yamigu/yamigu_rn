@@ -50,7 +50,7 @@ const MyFeedManage = ({navigation, myFeedManageProp, myFeed, setMyFeed}) => {
       maxWidth: 500,
       maxHeight: 500,
       storageOptions: {
-        skipBackup: true,
+        skipBackup: false,
       },
     };
     ImagePicker.showImagePicker(options, response => {
