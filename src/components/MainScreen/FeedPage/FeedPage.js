@@ -25,6 +25,7 @@ const FeedPage = props => {
     props.navigation.addListener(
       'didFocus',
       () => {
+        if (innerHasProfile === false) return;
         let tmp = [];
         setProfileCardProp(tmp);
         axios
