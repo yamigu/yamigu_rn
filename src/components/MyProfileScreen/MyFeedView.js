@@ -86,9 +86,6 @@ const MyFeedView = ({userInfo, scroll, offsetY}) => {
       quality: 1.0,
       maxWidth: 500,
       maxHeight: 500,
-      storageOptions: {
-        skipBackup: true,
-      },
     };
     ImagePicker.showImagePicker(options, response => {
       if (response.didCancel) {
