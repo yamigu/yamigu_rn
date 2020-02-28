@@ -19,11 +19,11 @@ const ChattingList = ({style, navigation, hasVerified}) => (
       style={{marginVertical: 9}}
       navigation={navigation}
     />
+    {/* <ChattingPreview style={{marginVertical: 9}} navigation={navigation} />
     <ChattingPreview style={{marginVertical: 9}} navigation={navigation} />
     <ChattingPreview style={{marginVertical: 9}} navigation={navigation} />
     <ChattingPreview style={{marginVertical: 9}} navigation={navigation} />
-    <ChattingPreview style={{marginVertical: 9}} navigation={navigation} />
-    <ChattingPreview style={{marginVertical: 9}} navigation={navigation} />
+    <ChattingPreview style={{marginVertical: 9}} navigation={navigation} /> */}
   </List>
 );
 

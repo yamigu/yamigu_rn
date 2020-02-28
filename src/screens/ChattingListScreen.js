@@ -68,14 +68,6 @@ const ChattingListScreen = ({navigation}) => {
           .catch(error => console.log(error))
           .then(token => {
             firebase.auth().signInWithCustomToken(token);
-
-            setRef(firebase.database().ref());
-            firebase
-              .database()
-              .ref('message')
-              .on('child_added', snapshot => {
-                // console.log(snapshot.val());
-              });
           });
       } else {
         console.log(result);
