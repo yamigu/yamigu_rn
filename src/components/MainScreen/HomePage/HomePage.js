@@ -139,6 +139,7 @@ const HomePage = ({navigation}) => {
     } catch (error) {
       console.log(error);
     }
+    return true;
   };
 
   useEffect(() => {
@@ -179,18 +180,19 @@ const HomePage = ({navigation}) => {
       },
       // run function that updates the data on entering the screen
     );
-    axios
-      .get('http://13.124.126.30:8000/authorization/firebase/token/')
-      .then(result => {
-        return result.data;
-      })
-      .catch(error => console.log(error))
-      .then(token => {
-        firebase.auth().signInWithCustomToken(token);
-      });
+
     _retrieveData().then(result => {
       if (!result) return;
       // console.log(memberSelected);
+      axios
+        .get('http://13.124.126.30:8000/authorization/firebase/token/')
+        .then(result => {
+          return result.data;
+        })
+        .catch(error => console.log(error))
+        .then(token => {
+          firebase.auth().signInWithCustomToken(token);
+        });
 
       axios
         .get('http://13.124.126.30:8000/core/match_request/')
