@@ -4,8 +4,27 @@ import palette from '~/lib/styles/palette';
 import {ListItem, Left, Badge, Body, Right} from 'native-base';
 import UserProfileSmall from '../common/UserProfileSmall';
 import {CustomTextMedium, CustomTextRegular} from '../common/CustomText';
+import Moment from 'moment';
+Moment.lang('kr');
 
-const ChattingPreview = ({style, label, navigation, hasVerified}) => (
+const iso_to_string = time => {
+  if (Moment(time).diff(Moment(new Date()), 'date') > 0) {
+    return Moment(time).format('M월 D일');
+  }
+  return Moment(time).format('a h:mm');
+};
+const ChattingPreview = ({
+  style,
+  label,
+  navigation,
+  hasVerified,
+  avata,
+  nickname,
+  lastMessage,
+  created_at,
+  approved,
+  roomId,
+}) => (
   <ListItem
     avatar
     style={[styles.chatPreview, style]}
@@ -19,30 +38,41 @@ const ChattingPreview = ({style, label, navigation, hasVerified}) => (
           '소속인증 중입니다! 30분안에 해드릴게요 잠시만 기다려주세요!',
         );
       } else {
-        navigation.navigate('Chatting');
+        navigation.navigate('Chatting', {
+          partner: {
+            nickname: nickname,
+            avata: avata,
+          },
+          approved: approved,
+          roomId: roomId,
+        });
         console.log('hasVerified :: ' + hasVerified);
       }
     }}>
     <Left style={styles.chatPreviewLeft}>
       <UserProfileSmall
-        imageSource={require('~/images/test-user-profile-4.png')}
+        imageSource={
+          avata === null
+            ? require('~/images/user-default-profile.png')
+            : {uri: avata}
+        }
         badgeComponent={label ? <Badge style={styles.label} /> : null}
       />
     </Left>
     <Body style={styles.chatPreviewBody}>
       <View style={styles.chatPreviewBodyTextView}>
         <CustomTextMedium size={16} color={palette.black}>
-          꿈발라
+          {nickname}
         </CustomTextMedium>
         <CustomTextRegular size={12} color={palette.gray}>
-          미팅 신청이 들어왔어요!
+          {approved ? lastMessage.text : '미팅 신청이 들어왔어요!'}
         </CustomTextRegular>
       </View>
     </Body>
     <Right style={styles.chatPreviewRight}>
       <View style={styles.chatPreviewRightTextView}>
         <CustomTextRegular size={10} color={palette.gray}>
-          오후 2:22
+          {approved ? lastMessage.text : iso_to_string(created_at)}
         </CustomTextRegular>
         {/* <Badge style={styles.badgeUnread}>
           <CustomTextMedium size={10} color="white">

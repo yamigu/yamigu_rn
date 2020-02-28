@@ -1,30 +1,31 @@
 import React from 'react';
 import {Text, View, StyleSheet} from 'react-native';
 import palette from '~/lib/styles/palette';
-import {CustomTextMedium} from '../common/CustomText';
+import {CustomTextMedium, CustomTextBold} from '../common/CustomText';
 import {ListItem, List, Badge} from 'native-base';
 import ChattingPreview from './ChattingPreview';
 
-const ReceivedList = ({style, navigation, hasVerified}) => (
+const ReceivedList = ({style, navigation, chatList}) => (
   <List style={[styles.list, style]}>
-    <ListItem itemDivider style={styles.listItemHeader}>
-      <View style={styles.listItemHeaderView}>
-        <CustomTextMedium color={palette.black} size={16}>
-          주선된 미팅
-        </CustomTextMedium>
-        {/* <Badge style={styles.badge}>
-          <CustomTextMedium size={12} color="white">
-            2
+    {chatList.length > 0 ? (
+      <ListItem itemDivider style={styles.listItemHeader}>
+        <View style={styles.listItemHeaderView}>
+          <CustomTextMedium color={palette.black} size={16}>
+            주선된 미팅
           </CustomTextMedium>
-        </Badge> */}
-      </View>
-    </ListItem>
-    <ChattingPreview
-      hasVerified={hasVerified}
-      label
-      style={{marginVertical: 9}}
-      navigation={navigation}
-    />
+          {/* <Badge style={styles.badge}>
+            <CustomTextMedium size={12} color="white">
+              2
+            </CustomTextMedium>
+          </Badge> */}
+        </View>
+      </ListItem>
+    ) : null}
+    {chatList.map(item => {
+      return (
+        <ChattingPreview style={{marginVertical: 9}} navigation={navigation} />
+      );
+    })}
   </List>
 );
 

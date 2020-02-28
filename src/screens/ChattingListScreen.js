@@ -11,58 +11,91 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-community/async-storage';
 import '~/config';
 const ChattingListScreen = ({navigation}) => {
-  const [hasVerified, setHasVerified] = useState(0);
-
-  const getUserVal = async () => {
-    const userValue = await AsyncStorage.getItem('userValue');
-    const jUserValue = JSON.parse(userValue);
-    if (jUserValue[global.config.user_info_const.TOKEN] === 'token') {
-      Alert.alert('로그인 및 회원가입이 필요한 서비스입니다.', '', [
-        {
-          onPress: () => {
-            navigation.pop();
-            navigation.navigate('Login');
+  const [chatList, setChatList] = useState([]);
+  const [userInfo, setUserInfo] = useState([]);
+  const [receivedList, setReceivedList] = useState([]);
+  const [hasVerified, setHasVeirifed] = useState(0);
+  const getUserVal = () => {
+    return new Promise(async (resolve, reject) => {
+      const userValue = await AsyncStorage.getItem('userValue');
+      const jUserValue = JSON.parse(userValue);
+      setUserInfo(jUserValue);
+      if (jUserValue[global.config.user_info_const.TOKEN] === 'token') {
+        Alert.alert('로그인 및 회원가입이 필요한 서비스입니다.', '', [
+          {
+            onPress: () => {
+              navigation.pop();
+              navigation.navigate('Login');
+            },
           },
-        },
-      ]);
-      return false;
-    } else if (
-      jUserValue[global.config.user_info_const.NICKNAME] === 'nickname'
-    ) {
-      Alert.alert('로그인 및 회원가입이 필요한 서비스입니다.', '', [
-        {
-          onPress: () => {
-            navigation.pop();
-            navigation.navigate('Signup');
+        ]);
+        return false;
+      } else if (
+        jUserValue[global.config.user_info_const.NICKNAME] === 'nickname'
+      ) {
+        Alert.alert('로그인 및 회원가입이 필요한 서비스입니다.', '', [
+          {
+            onPress: () => {
+              navigation.pop();
+              navigation.navigate('Signup');
+            },
           },
-        },
-      ]);
-    } else if (
-      jUserValue[global.config.user_info_const.BIRTHDATE] === 'birthdate'
-    ) {
-      Alert.alert('로그인 및 회원가입이 필요한 서비스입니다.', '', [
-        {
-          onPress: () => {
-            navigation.pop();
-            navigation.navigate('IV');
+        ]);
+      } else if (
+        jUserValue[global.config.user_info_const.BIRTHDATE] === 'birthdate'
+      ) {
+        Alert.alert('로그인 및 회원가입이 필요한 서비스입니다.', '', [
+          {
+            onPress: () => {
+              navigation.pop();
+              navigation.navigate('IV');
+            },
           },
-        },
-      ]);
-    }
-    setHasVerified(jUserValue[global.config.user_info_const.VERIFIED]);
-    return true;
+        ]);
+      }
+      setHasVeirifed(jUserValue[global.config.user_info_const.VERIFIED]);
+      resolve(true);
+    });
   };
 
   useEffect(() => {
-    getUserVal();
+    getUserVal().then(result => {
+      if (!result) return;
+    });
   }, []);
+  useEffect(() => {
+    if (userInfo.length === 0) return;
+    axios.get('http://13.124.126.30:8000/core/chat/').then(result => {
+      const chatlist_data = [];
+      const recvlist_data = [];
+      result.data.chat_list.map(item => {
+        if (
+          item.sender.uid !== userInfo[global.config.user_info_const.UID] ||
+          item.approved_on !== null
+        ) {
+          item.nickname = item.sender.nickname;
+          item.avata = item.sender.avata;
+          item.chat_type === 0
+            ? chatlist_data.push(item)
+            : recvlist_data.push(item);
+        }
+      });
+      setChatList(chatlist_data);
+      setReceivedList(recvlist_data);
+    });
+  }, [userInfo]);
   return (
     <Content showsVerticalScrollIndicator={false} style={styles.root}>
-      <ReceivedList hasVerified={hasVerified} navigation={navigation} />
+      <ReceivedList
+        hasVerified={hasVerified}
+        navigation={navigation}
+        chatList={receivedList}
+      />
       <ChattingList
         hasVerified={hasVerified}
         style={{marginTop: 12}}
         navigation={navigation}
+        chatList={chatList}
       />
     </Content>
   );
