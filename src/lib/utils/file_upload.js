@@ -11,12 +11,12 @@ const file_upload = (formData, url) => {
   })
     .then(res => {
       console.log('file uploaded');
-      console.log(res);
+      // console.log(res);
       return res;
     })
     .catch(err => {
-      console.log('file upload failed');
-      console.log(err);
+      // console.log('file upload failed');
+      // console.log(err);
       return err;
     });
 };

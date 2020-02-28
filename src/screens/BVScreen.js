@@ -1,3 +1,4 @@
+/* eslint-disable no-new */
 /* eslint-disable no-lone-blocks */
 /* eslint-disable react-native/no-inline-styles */
 import React, {useState, useEffect} from 'react';
@@ -38,14 +39,13 @@ const BVScreen = ({navigation}) => {
     axios
       .get('http://13.124.126.30:8000/authorization/user/belong_verification/')
       .then(result => {
-        console.log(result.data);
+        // console.log(result.data);
         return result.data;
       })
       .then(data => {
         if (data.belong === null) {
           console.log('nothing');
         } else {
-          console.log(data.is_student);
           if (data.is_student === true) {
             setToggle(1);
           } else {
@@ -53,63 +53,62 @@ const BVScreen = ({navigation}) => {
           }
           setText1(data.belong);
           data.department === null ? null : setText2(data.department);
-          data.image[0] === undefined
+          // console.log(data.image.src);
+          let source = {
+            uri: data.image.src,
+            name: data.image.src,
+          };
+          data.image.src === undefined
             ? setImageSource(null)
-            : setImageSource(data.image[0]);
+            : setImageSource(source);
         }
       });
-
-    navigation.setParams({
-      doVerify: () => doVerify(),
-      toggle: toggle,
-      text1: text1,
-      text2: text2,
-      imageSource: imageSource,
-    });
-    console.log('useEffect');
+    // console.log('useEffect');
   }, []);
 
   const doVerify = source => {
-    setUploading(true);
-    console.log('doverererer');
-    const formData = new FormData();
-    const image = source;
-    console.log(source);
-    const belong = text1;
-    const department = text2;
-    const studentToggle = toggle;
-
-    if (studentToggle == 1) {
-      formData.append('is_student', true);
-    } else if (studentToggle == 2) {
-      formData.append('is_student', false);
-    }
-    formData.append('belong', belong);
-    formData.append('department', department);
-    if (image === null || image === undefined) {
-      console.log(image);
-      setUploading(false);
-      return;
-    }
-    formData.append('image', {
-      uri: image.uri,
-      type: image.type,
-      name: image.uri,
-    });
     return new Promise((resolve, reject) => {
-      file_upload(
-        formData,
-        'http://13.124.126.30:8000/authorization/user/belong_verification/',
-      )
-        .then(result => {
-          console.log(result.data);
-          setUploading(false);
-          resolve(true);
-        })
-        .catch(error => {
-          setUploading(false);
-          reject(false);
-        });
+      // setUploading(true);
+      // console.log('doverererer');
+      const formData = new FormData();
+      const image = source;
+      // console.log(source);
+      const belong = text1;
+      const department = text2;
+      const studentToggle = toggle;
+
+      if (studentToggle == 1) {
+        formData.append('is_student', true);
+      } else if (studentToggle == 2) {
+        formData.append('is_student', false);
+      }
+      formData.append('belong', belong);
+      formData.append('department', department);
+      if (image === null || image === undefined) {
+        // console.log(image);
+        setUploading(false);
+        return;
+      }
+      formData.append('image', {
+        uri: image.uri,
+        type: image.type,
+        name: image.uri,
+      });
+      resolve(
+        file_upload(
+          formData,
+          'http://13.124.126.30:8000/authorization/user/belong_verification/',
+        )
+          .then(result => {
+            console.log('here result aa');
+            // setUploading(false);
+            return true;
+          })
+          .catch(error => {
+            // setUploading(false);
+            return false;
+          }),
+      );
     });
   };
 
@@ -124,7 +123,7 @@ const BVScreen = ({navigation}) => {
     };
 
     ImagePicker.showImagePicker(options, response => {
-      console.log('Response = ', response);
+      // console.log('Response = ', response);
 
       if (response.didCancel) {
         console.log('User cancelled photo picker');
@@ -135,10 +134,10 @@ const BVScreen = ({navigation}) => {
       } else {
         let source = {
           uri: response.uri,
-          name: response.fileName,
+          name: response.uri,
           type: response.type,
         };
-        console.log('image uri' + response.uri);
+        // console.log('image uri' + response.uri);
         setImageSource(source);
         navigation.setParams({
           doVerify: source => doVerify(source),
@@ -223,10 +222,10 @@ const BVScreen = ({navigation}) => {
                   : 'ex) 삼성전자, 스타트업, 프리랜서'
               }
               onChangeText={value => {
-                console.log(value);
+                // console.log(value);
                 setText1(value);
                 navigation.setParams({
-                  doVerify: imageSource => doVerify(imageSource),
+                  doVerify: source => doVerify(source),
                   toggle: toggle,
                   text1: value,
                   text2: text2,
@@ -256,7 +255,7 @@ const BVScreen = ({navigation}) => {
               onChangeText={value => {
                 setText2(value);
                 navigation.setParams({
-                  doVerify: imageSource => doVerify(imageSource),
+                  doVerify: source => doVerify(source),
                   toggle: toggle,
                   text1: text1,
                   text2: value,
@@ -356,7 +355,7 @@ BVScreen.navigationOptions = ({navigation}) => ({
     </CustomTextRegular>
   ),
   headerRight: () => (
-    <Button
+    <TouchableByPlatform
       disabled={
         navigation.getParam('text1') === '' ||
         navigation.getParam('text2') === '' ||
@@ -371,18 +370,31 @@ BVScreen.navigationOptions = ({navigation}) => ({
         elevation: 0,
       }}
       onPress={() => {
-        {
-          navigation
-            .getParam('doVerify')(navigation.getParam('imageSource'))
-            .then(result => {
-              console.log(result);
-              if (result) {
-                Alert.alert('신청이 완료되었습니다');
-              } else {
-                Alert.alert('ㅜㅜ');
-              }
-            });
-        }
+        let imgsrc = navigation.getParam('imageSource');
+        let tmpDoVerify = navigation.getParam('doVerify');
+        console.log(tmpDoVerify);
+        console.log(imgsrc);
+
+        tmpDoVerify(imgsrc).then(result => {
+          if (result) {
+            Alert.alert(
+              '인증신청되었습니다. 10분 소요 예정입니다!',
+              '',
+              [
+                {
+                  text: '확인',
+                  onPress: () => {
+                    navigation.navigate('Main');
+                    console.log('YES LOGOUT');
+                  },
+                },
+              ],
+              {cancelable: false},
+            );
+          } else {
+            Alert.alert('Failed');
+          }
+        });
       }}>
       <CustomTextRegular
         size={15}
@@ -396,7 +408,7 @@ BVScreen.navigationOptions = ({navigation}) => ({
         }>
         인증
       </CustomTextRegular>
-    </Button>
+    </TouchableByPlatform>
   ),
   headerMode: 'screen',
   headerStyle: {

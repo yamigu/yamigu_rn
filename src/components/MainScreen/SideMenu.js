@@ -172,28 +172,28 @@ const SideMenu = ({navigation}) => {
           </View>
         </View>
         <List style={styles.list}>
-          {/* {sideInfo[global.config.user_info_const.VERIFIED] === 0 ? ( */}
-          <TouchableByPlatform
-            onPress={() => {
-              navigation.navigate('BV');
-              console.log('goto BV');
-            }}>
-            <ListItem icon noIndent style={styles.listItem}>
-              <Left style={styles.listItemLeft}>
-                <Anticon
-                  name="exclamationcircle"
-                  style={styles.iconWarning}
-                  size={deviceWidth * 0.813 * 0.06}
-                />
-              </Left>
-              <Body style={styles.listItemBody}>
-                <CustomTextRegular size={14} color={palette.red}>
-                  소속 인증하기
-                </CustomTextRegular>
-              </Body>
-            </ListItem>
-          </TouchableByPlatform>
-          {/* ) : null} */}
+          {sideInfo[global.config.user_info_const.VERIFIED] === 0 ? (
+            <TouchableByPlatform
+              onPress={() => {
+                navigation.navigate('BV');
+                console.log('goto BV');
+              }}>
+              <ListItem icon noIndent style={styles.listItem}>
+                <Left style={styles.listItemLeft}>
+                  <Anticon
+                    name="exclamationcircle"
+                    style={styles.iconWarning}
+                    size={deviceWidth * 0.813 * 0.06}
+                  />
+                </Left>
+                <Body style={styles.listItemBody}>
+                  <CustomTextRegular size={14} color={palette.red}>
+                    소속 인증하기
+                  </CustomTextRegular>
+                </Body>
+              </ListItem>
+            </TouchableByPlatform>
+          ) : null}
 
           {sideInfo[global.config.user_info_const.BIRTHDATE] === 'birthdate' ? (
             <TouchableByPlatform
@@ -217,7 +217,6 @@ const SideMenu = ({navigation}) => {
               </ListItem>
             </TouchableByPlatform>
           ) : null}
-
           {sideInfo[global.config.user_info_const.AVATA] === 'avata' ? (
             <TouchableByPlatform
               navigation={navigation}
@@ -238,7 +237,6 @@ const SideMenu = ({navigation}) => {
               </ListItem>
             </TouchableByPlatform>
           ) : null}
-
           <TouchableByPlatform
             onPress={() => navigation.navigate('AddFriends')}>
             <ListItem icon noIndent style={styles.listItem}>
@@ -374,7 +372,6 @@ const SideMenu = ({navigation}) => {
               />
             </Right>
           </ListItem>
-
           <ListItem itemDivider style={styles.itemDivider}>
             <CustomTextMedium size={24} color={palette.black}>
               더보기
@@ -431,7 +428,6 @@ const SideMenu = ({navigation}) => {
               </Body>
             </ListItem>
           </TouchableByPlatform>
-
           <ListItem itemDivider style={styles.itemDivider}>
             <CustomTextMedium size={24} color={palette.black}>
               정보

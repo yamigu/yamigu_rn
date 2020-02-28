@@ -84,12 +84,14 @@ const SignupScreen = ({navigation}) => {
               // console.log(department);
               // console.log(belong);
               // console.log(is_student);
+              // console.log(isStudentString);
+              let isStudentString = is_student.toString();
 
               Axios.post(
                 'http://13.124.126.30:8000/authorization/user/signup/',
                 {
                   nickname: nickname,
-                  is_student: is_student,
+                  is_student: isStudentString,
                   department: department,
                   belong: belong,
                 },
