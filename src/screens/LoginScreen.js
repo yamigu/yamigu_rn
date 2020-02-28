@@ -113,6 +113,7 @@ const deviceWidth = Dimensions.get('window').width;
 
 const LoginScreen = ({navigation}) => {
   useEffect(() => {
+    console.log('hererere');
     _retrieveData();
     axios.defaults.headers.common['Authorization'] = '';
     console.log(originValue);
@@ -161,7 +162,7 @@ const LoginScreen = ({navigation}) => {
           tmpValue[0] = key;
           AsyncStorage.setItem('userValue', JSON.stringify(tmpValue));
         })
-        .then(() => navigation.navigate('Main'));
+        .then(() => navigation.navigate('Signup'));
 
       console.log(appleAuthRequestResponse);
       // navigation.navigate('Main');
@@ -200,7 +201,7 @@ const LoginScreen = ({navigation}) => {
         tmpValue[0] = key;
         AsyncStorage.setItem('userValue', JSON.stringify(tmpValue));
       })
-      .then(() => navigation.navigate('Main'))
+      .then(() => navigation.navigate('Signup'))
       .catch(err => {
         if (err.code === 'E_CANCELLED_OPERATION') {
           logCallback(`Login Cancelled:${err.message}`, setLoginLoading(false));
@@ -265,7 +266,7 @@ LoginScreen.navigationOptions = ({navigation}) => ({
       label=" "
       tintColor={palette.black}
       onPress={() => {
-        navigation.goBack();
+        navigation.navigate('Main');
       }}
     />
   ),

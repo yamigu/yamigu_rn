@@ -150,7 +150,7 @@ const SideMenu = ({navigation}) => {
           <View style={styles.belongView}>
             {sideInfo[global.config.user_info_const.BELONG] === 'belong' ? (
               <Button
-                style={{backgroundColor: palette.default_bg}}
+                style={{backgroundColor: palette.default_bg, elevation: 0}}
                 onPress={() => navigation.navigate('Login')}>
                 <CustomTextRegular size={14} color={palette.black}>
                   로그인 하기
@@ -215,7 +215,6 @@ const SideMenu = ({navigation}) => {
               </ListItem>
             </TouchableByPlatform>
           ) : null}
-
           {sideInfo[global.config.user_info_const.AVATA] === 'avata' ? (
             <TouchableByPlatform
               navigation={navigation}
@@ -236,7 +235,6 @@ const SideMenu = ({navigation}) => {
               </ListItem>
             </TouchableByPlatform>
           ) : null}
-
           <TouchableByPlatform
             onPress={() => navigation.navigate('AddFriends')}>
             <ListItem icon noIndent style={styles.listItem}>
@@ -372,7 +370,6 @@ const SideMenu = ({navigation}) => {
               />
             </Right>
           </ListItem>
-
           <ListItem itemDivider style={styles.itemDivider}>
             <CustomTextMedium size={24} color={palette.black}>
               더보기
@@ -420,7 +417,7 @@ const SideMenu = ({navigation}) => {
               </Body>
             </ListItem>
           </TouchableByPlatform>
-          {/* <TouchableByPlatform onPress={() => navigation.navigate('Setting')}>
+          <TouchableByPlatform onPress={() => navigation.navigate('Setting')}>
             <ListItem noIndent style={styles.listItem}>
               <Body style={styles.listItemBody}>
                 <CustomTextRegular size={14} color={palette.black}>
@@ -428,8 +425,7 @@ const SideMenu = ({navigation}) => {
                 </CustomTextRegular>
               </Body>
             </ListItem>
-          </TouchableByPlatform> */}
-
+          </TouchableByPlatform>
           <ListItem itemDivider style={styles.itemDivider}>
             <CustomTextMedium size={24} color={palette.black}>
               정보

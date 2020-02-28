@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {useEffect, useState} from 'react';
-import {View, Image, StyleSheet} from 'react-native';
+import {View, Image, StyleSheet, Alert} from 'react-native';
 import palette from '~/lib/styles/palette';
 import TouchableByPlatform from '~/components/common/TouchableByPlatform';
 import {Icon, Content} from 'native-base';
@@ -9,34 +9,78 @@ import ReceivedList from '~/components/ChattingListScreen/ReceivedList';
 import {HeaderBackButton} from 'react-navigation-stack';
 import firebase from 'react-native-firebase';
 import axios from 'axios';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const ChattingListScreen = ({navigation}) => {
   const [ref, setRef] = useState(null);
   const [hasVerified, setHasVerified] = useState(0);
+
+  const getUserVal = async () => {
+    const userValue = await AsyncStorage.getItem('userValue');
+    const jUserValue = JSON.parse(userValue);
+    if (jUserValue[0] === 'token') {
+      console.log('jUserValue[1]');
+      Alert.alert(
+        '로그인 및 회원가입이 필요한 서비스입니다.',
+        '',
+        () => {
+          navigation.pop();
+          navigation.navigate('Login');
+        },
+        '',
+      );
+      return false;
+    } else if (jUserValue[2] === 'nickname') {
+      console.log('jUserValue[1]');
+      Alert.alert(
+        '로그인 및 회원가입이 필요한 서비스입니다.',
+        '',
+        () => navigation.navigate('Signup'),
+        '',
+      );
+    } else if (jUserValue[4] === 'birthdate') {
+      Alert.alert(
+        '로그인 및 회원가입이 필요한 서비스입니다.',
+        '',
+        () => navigation.navigate('IV', {needBtn: true}),
+        '',
+      );
+    }
+    return true;
+  };
+
   useEffect(() => {
-    axios
-      .get('http://13.124.126.30:8000/authorization/user/belong_verification/')
-      .then(result => setHasVerified(result.data.verified));
+    getUserVal().then(result => {
+      if (result) {
+        axios
+          .get(
+            'http://13.124.126.30:8000/authorization/user/belong_verification/',
+          )
+          .then(result => setHasVerified(result.data.verified));
 
-    axios
-      .get('http://13.124.126.30:8000/authorization/firebase/token/')
-      .then(result => {
-        const token = result.data;
-        // console.log(token);
-        return token;
-      })
-      .catch(error => console.log(error))
-      .then(token => {
-        firebase.auth().signInWithCustomToken(token);
+        axios
+          .get('http://13.124.126.30:8000/authorization/firebase/token/')
+          .then(result => {
+            const token = result.data;
+            // console.log(token);
+            return token;
+          })
+          .catch(error => console.log(error))
+          .then(token => {
+            firebase.auth().signInWithCustomToken(token);
 
-        setRef(firebase.database().ref());
-        firebase
-          .database()
-          .ref('message')
-          .on('child_added', snapshot => {
-            // console.log(snapshot.val());
+            setRef(firebase.database().ref());
+            firebase
+              .database()
+              .ref('message')
+              .on('child_added', snapshot => {
+                // console.log(snapshot.val());
+              });
           });
-      });
+      } else {
+        console.log(result);
+      }
+    });
   }, []);
   return (
     <Content showsVerticalScrollIndicator={false} style={styles.root}>
