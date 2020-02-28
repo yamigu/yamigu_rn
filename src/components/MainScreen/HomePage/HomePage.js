@@ -39,7 +39,7 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import {UserContextConsumer, UserContextProvider} from '~/Context/UserContext';
 import axios from 'axios';
 import AsyncStorage from '@react-native-community/async-storage';
-import {SafeAreaProvider} from 'react-native-safe-area-context';
+import firebase from 'react-native-firebase';
 
 // import CustomLabel from './CustomLabel';
 
@@ -179,6 +179,15 @@ const HomePage = ({navigation}) => {
       },
       // run function that updates the data on entering the screen
     );
+    axios
+      .get('http://13.124.126.30:8000/authorization/firebase/token/')
+      .then(result => {
+        return result.data;
+      })
+      .catch(error => console.log(error))
+      .then(token => {
+        firebase.auth().signInWithCustomToken(token);
+      });
     _retrieveData().then(result => {
       if (!result) return;
       // console.log(memberSelected);
@@ -492,7 +501,7 @@ const HomePage = ({navigation}) => {
           setMemberText(tmpText);
           setMemberModalVisible(false);
         }}>
-        <SafeAreaProvider>
+        <SafeAreaView>
           <TouchableWithoutFeedback
             onPress={() => {
               setMemberModalVisible(false);
@@ -658,7 +667,7 @@ const HomePage = ({navigation}) => {
               </View>
             </View>
           </View>
-        </SafeAreaProvider>
+        </SafeAreaView>
       </Modal>
 
       <Modal
@@ -680,7 +689,7 @@ const HomePage = ({navigation}) => {
           setDateText(tmpText);
           setDateModalVisible(false);
         }}>
-        <SafeAreaProvider>
+        <SafeAreaView>
           <TouchableWithoutFeedback
             onPress={() => {
               setDateModalVisible(false);
@@ -849,7 +858,7 @@ const HomePage = ({navigation}) => {
               </View>
             </View>
           </View>
-        </SafeAreaProvider>
+        </SafeAreaView>
       </Modal>
 
       <Modal
@@ -859,7 +868,7 @@ const HomePage = ({navigation}) => {
         onRequestClose={() => {
           setAgeModalVisible(false);
         }}>
-        <SafeAreaProvider>
+        <SafeAreaView>
           <TouchableWithoutFeedback
             onPress={() => {
               setAgeModalVisible(false);
@@ -956,7 +965,7 @@ const HomePage = ({navigation}) => {
               {/* end of age module  */}
             </View>
           </View>
-        </SafeAreaProvider>
+        </SafeAreaView>
       </Modal>
 
       <View style={styles.topLayout}>
@@ -1112,32 +1121,33 @@ const HomePage = ({navigation}) => {
             <AntDesignIcon name="caretdown" size={12} color={palette.black} />
           </TouchableByPlatform>
         </View>
-
-        <LinearGradient
-          colors={['#FFA022', '#FF6C2B']}
-          style={styles.gradientLayout}>
-          {matchRequested === false ? (
-            <TouchableByPlatform
-              style={styles.mainBtn}
-              onPress={() => requestMatching()}>
-              {/* onPress={() => gotoChat()}> */}
-              <CustomTextMedium size={16} color="white">
-                미팅 주선 신청하기
-              </CustomTextMedium>
-              <CustomTextMedium size={16} color="white">
-                무료 1회
-              </CustomTextMedium>
-            </TouchableByPlatform>
-          ) : (
-            <TouchableByPlatform
-              style={styles.mainBtnCancel}
-              onPress={requestMatching}>
-              <CustomTextMedium size={16} color="white">
-                미팅 주선 취소 하기
-              </CustomTextMedium>
-            </TouchableByPlatform>
-          )}
-        </LinearGradient>
+        <View style={styles.gradientLayoutWrapper}>
+          <LinearGradient
+            colors={['#FFA022', '#FF6C2B']}
+            style={styles.gradientLayout}>
+            {matchRequested === false ? (
+              <TouchableByPlatform
+                style={styles.mainBtn}
+                onPress={() => requestMatching()}>
+                {/* onPress={() => gotoChat()}> */}
+                <CustomTextMedium size={16} color="white">
+                  미팅 주선 신청하기
+                </CustomTextMedium>
+                <CustomTextMedium size={16} color="white">
+                  무료 1회
+                </CustomTextMedium>
+              </TouchableByPlatform>
+            ) : (
+              <TouchableByPlatform
+                style={styles.mainBtnCancel}
+                onPress={requestMatching}>
+                <CustomTextMedium size={16} color="white">
+                  미팅 주선 취소 하기
+                </CustomTextMedium>
+              </TouchableByPlatform>
+            )}
+          </LinearGradient>
+        </View>
       </View>
     </View>
   );
@@ -1164,11 +1174,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'flex-end',
   },
-  gradientLayout: {
+  gradientLayoutWrapper: {
     borderRadius: 10,
     width: dw * 0.9,
     height: 56,
     marginTop: 20,
+    overflow: 'hidden',
+  },
+  gradientLayout: {
+    borderRadius: 10,
+    width: dw * 0.9,
+    height: 56,
   },
   mainCondition: {
     flexDirection: 'row',
@@ -1187,7 +1203,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: dw * 0.56,
     justifyContent: 'space-between',
-    paddingRight: 10,
+    padding: 10,
   },
   mainBtn: {
     width: dw * 0.9,
