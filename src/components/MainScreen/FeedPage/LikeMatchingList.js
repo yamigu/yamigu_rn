@@ -18,6 +18,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     backgroundColor: 'white',
     paddingBottom: 10,
+    marginBottom: 10,
   },
 });
 const LikeMatchingList = ({navigation, likeMatchingProp}) => {

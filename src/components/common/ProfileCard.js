@@ -156,9 +156,10 @@ const ProfileCard = ({
             justifyContent: 'center',
             paddingRight: 10,
           }}>
-          {bothLike === true ? (
+          {/* {bothLike === true ? (
             <Image source={require('~/images/bothlike-icon.png')} />
-          ) : null}
+          ) : null} */}
+          {bothLike && <Image source={require('~/images/bothlike-icon.png')} />}
         </Right>
       </ListItem>
     </List>

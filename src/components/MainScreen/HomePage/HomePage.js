@@ -105,9 +105,20 @@ const HomePage = ({navigation}) => {
                 result.data.gender;
               jUserValue[global.config.user_info_const.VERIFIED] =
                 result.data.verified;
+
               AsyncStorage.setItem('userValue', JSON.stringify(jUserValue));
               setAsyncValue(jUserValue);
               return true;
+            })
+            .then(() => {
+              return axios
+                .get('http://13.124.126.30:8000/authorization/user/yami/')
+                .then(result => {
+                  jUserValue[global.config.user_info_const.YAMI] = result.data;
+                  AsyncStorage.setItem('userValue', JSON.stringify(jUserValue));
+                  setAsyncValue(jUserValue);
+                  return true;
+                });
             })
             .catch(e => {
               if (e.response.status === 401) {

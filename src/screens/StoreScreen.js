@@ -30,10 +30,11 @@ import RNIap, {
   purchaseErrorListener,
   purchaseUpdatedListener,
 } from 'react-native-iap';
-import NativeButton from 'apsl-react-native-button';
-
+import axios from 'axios';
+import '~/config';
+import AsyncStorage from '@react-native-community/async-storage';
 const itemSkus = Platform.select({
-  ios: ['party.yamigu.www.com.ticket_1', 'party.yamigu.www.com.ticket_3'],
+  ios: ['yami_10', 'yami_30', 'yami_50', 'yami_100'],
   android: ['yami_10', 'yami_30', 'yami_50', 'yami_100'],
 });
 
@@ -54,10 +55,28 @@ const StoreScreen = ({navigation}) => {
   const [productList, setProductList] = useState([]);
   const [receipt, setReceipt] = useState('');
   const [availableItemsMessage, setAvailableItemsMessage] = useState('');
+  const [userInfo, setUserInfo] = useState(null);
+  const [yami, setYami] = useState(0);
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
+    //initIap();
+    // getAvailablePurchases();
     getItems();
+    _retrieveData();
   }, []);
-
+  const _retrieveData = async () => {
+    try {
+      const userValue = await AsyncStorage.getItem('userValue');
+      const jUserValue = JSON.parse(userValue);
+      setUserInfo(jUserValue);
+      if (userValue !== null) {
+        setYami(jUserValue[global.config.user_info_const.YAMI]);
+      } else {
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   Number.prototype.format = function() {
     if (this == 0) return 0;
 
@@ -123,10 +142,6 @@ const StoreScreen = ({navigation}) => {
       purchaseErrorSubscription = null;
     }
   };
-  useEffect(() => {
-    initIap();
-  }, []);
-
   const goNext = () => {
     Alert.alert('Receipt', receipt);
   };
@@ -144,16 +159,6 @@ const StoreScreen = ({navigation}) => {
       products[2].discount = 20;
       products[3].discount = 30;
 
-      setProductList(products);
-    } catch (err) {
-      console.warn(err.code, err.message);
-    }
-  };
-
-  const getSubscriptions = async () => {
-    try {
-      const products = await RNIap.getSubscriptions(itemSubs);
-      console.log('Products', products);
       setProductList(products);
     } catch (err) {
       console.warn(err.code, err.message);
@@ -179,97 +184,57 @@ const StoreScreen = ({navigation}) => {
 
   // Version 3 apis
   const requestPurchase = async sku => {
+    if (loading) return;
+    setLoading(true);
     try {
-      RNIap.requestPurchase(sku);
-    } catch (err) {
-      console.warn(err.code, err.message);
-    }
-  };
+      await RNIap.requestPurchase(sku, false).then(result => {
+        axios
+          .post(
+            'http://13.124.126.30:8000/purchase/validate/' + Platform.OS + '/',
+            {
+              payload: JSON.stringify(result),
+            },
+          )
+          .then(async result => {
+            setYami(result.data);
+            const newInfo = userInfo.slice();
+            newInfo[global.config.user_info_const.YAMI] = result.data;
+            setUserInfo(newInfo);
+            AsyncStorage.setItem('userValue', JSON.stringify(newInfo));
 
-  const requestSubscription = async sku => {
-    try {
-      RNIap.requestSubscription(sku);
+            return Platform.OS === 'android'
+              ? await RNIap.consumeAllItemsAndroid().then(result => {
+                  console.log(result);
+                })
+              : await RNIap.finishTransactionIOS().then(result => {
+                  console.log(result);
+                });
+          })
+          .catch(err => {
+            console.log(err);
+            return false;
+          });
+      });
     } catch (err) {
-      Alert.alert(err.message);
+      console.log(err);
+      if (err.code === 'E_USER_CANCELLED') {
+        console.log(err.message);
+      } else if (err.code === 'E_ALREADY_OWNED') {
+        await RNIap.consumeAllItemsAndroid().then(result => {
+          console.log(result);
+        });
+      }
     }
+    setLoading(false);
   };
 
   return (
-    // <View style={styles.container}>
-    //   <View style={styles.header}>
-    //     <Text style={styles.headerTxt}>react-native-iap V3</Text>
-    //   </View>
-    //   <View style={styles.content}>
-    //     <Content style={{alignSelf: 'stretch'}}>
-    //       <View style={{height: 50}} />
-
-    //       <NativeButton
-    //         onPress={getAvailablePurchases}
-    //         activeOpacity={0.5}
-    //         style={styles.btn}
-    //         textStyle={styles.txt}>
-    //         Get available purchases
-    //       </NativeButton>
-
-    //       <Text style={{margin: 5, fontSize: 15, alignSelf: 'center'}}>
-    //         {availableItemsMessage}
-    //       </Text>
-
-    //       <Text style={{margin: 5, fontSize: 9, alignSelf: 'center'}}>
-    //         {receipt}
-    //       </Text>
-
-    //       <NativeButton
-    //         onPress={() => getItems()}
-    //         activeOpacity={0.5}
-    //         style={styles.btn}
-    //         textStyle={styles.txt}>
-    //         Get Products ({productList.length})
-    //       </NativeButton>
-    //       {productList.map((product, i) => {
-    //         return (
-    //           <View
-    //             key={i}
-    //             style={{
-    //               flexDirection: 'column',
-    //             }}>
-    //             <Text
-    //               style={{
-    //                 marginTop: 20,
-    //                 fontSize: 12,
-    //                 color: 'black',
-    //                 minHeight: 100,
-    //                 alignSelf: 'center',
-    //                 paddingHorizontal: 20,
-    //               }}>
-    //               {JSON.stringify(product)}
-    //             </Text>
-    //             <NativeButton
-    //               onPress={() => {
-    //                 requestPurchase(product.productId);
-    //                 console.log('first' + product.productId);
-    //               }}
-    //               // onPress={() => {
-    //               //   requestSubscription(product.productId);
-    //               //   console.log('sencond done');
-    //               // }}
-    //               activeOpacity={0.5}
-    //               style={styles.btn}
-    //               textStyle={styles.txt}>
-    //               Request purchase for above product
-    //             </NativeButton>
-    //           </View>
-    //         );
-    //       })}
-    //     </Content>
-    //   </View>
-    // </View>
     <Content showsVerticalScrollIndicator={false} style={styles.root}>
       <List style={styles.list}>
         <ListItem itemHeader style={styles.listItemHeader}>
           <Body style={styles.listItemHeaderBody}>
             <CustomTextMedium size={14} color={palette.black}>
-              현재 보유 야미
+              현재 보유 야미 {availableItemsMessage} {receipt}
             </CustomTextMedium>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <Image
@@ -277,7 +242,7 @@ const StoreScreen = ({navigation}) => {
                 source={require('~/images/icon-yami.png')}
               />
               <CustomTextRegular size={16} color={palette.black}>
-                10
+                {yami}
               </CustomTextRegular>
             </View>
           </Body>
@@ -285,21 +250,15 @@ const StoreScreen = ({navigation}) => {
         {productList.map((product, i) => {
           return (
             <ListItemWithPrice
-              title={product.description}
+              key={i}
+              title={product.title.split('(')[0]}
               price={product.price.format()}
+              discount={product.discount === 0 ? false : product.discount}
+              hot={product.hot}
+              onPress={() => requestPurchase(product.productId)}
             />
           );
         })}
-        <ListItemWithPrice title="야미 10개" price="8,000" />
-        <ListItemWithPrice
-          hot
-          title="야미 30개"
-          price="21,000"
-          discount={12.5}
-        />
-        <ListItemWithPrice title="야미 50개" price="32,000" discount={20} />
-        <ListItemWithPrice title="야미 100개" price="56,000" discount={30} />
-
         {/* <TouchableByPlatform>
           <Image
             onPress={requestPurchase(product.productId)}

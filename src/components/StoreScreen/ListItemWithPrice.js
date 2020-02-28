@@ -6,8 +6,8 @@ import palette from '~/lib/styles/palette';
 import Anticon from 'react-native-vector-icons/AntDesign';
 import TouchableByPlatform from '../common/TouchableByPlatform';
 
-const ListItemWithPrice = ({title, price, hot, discount}) => (
-  <TouchableByPlatform>
+const ListItemWithPrice = ({title, price, hot, discount, onPress}) => (
+  <TouchableByPlatform onPress={onPress}>
     <ListItem noIndent icon style={styles.listItem}>
       <Left style={styles.listItemLeft}>
         <Image
@@ -82,6 +82,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     width: 38,
     height: 19,
+    paddingTop: 0,
     justifyContent: 'center',
     alignItems: 'center',
     alignSelf: 'center',

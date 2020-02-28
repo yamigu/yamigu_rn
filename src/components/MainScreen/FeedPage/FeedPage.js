@@ -22,7 +22,30 @@ const FeedPage = props => {
   const [] = useState([]);
   useEffect(() => {
     let innerHasProfile = false;
-
+    props.navigation.addListener(
+      'didFocus',
+      () => {
+        let tmp = [];
+        setProfileCardProp(tmp);
+        axios
+          .get('http://13.124.126.30:8000/core/feeds/')
+          .then(result => {
+            let count = 0;
+            result.data.map((item, index) => {
+              if (item.feed_list.length === 0) {
+              } else {
+                tmp[count] = item;
+                count++;
+              }
+            });
+            setProfileCardProp(tmp);
+          })
+          .then(() => {
+            // console.log('axios done');
+          });
+      },
+      // run function that updates the data on entering the screen
+    );
     //axios for myfeedmanage
     axios
       .get('http://13.124.126.30:8000/authorization/user/info/')
@@ -64,8 +87,6 @@ const FeedPage = props => {
       });
       setLikeMatchingProp(tmpBothLike);
     });
-
-    //axios for profilecard
     axios
       .get('http://13.124.126.30:8000/core/feeds/')
       .then(result => {
@@ -92,6 +113,7 @@ const FeedPage = props => {
       .then(() => {
         // console.log('axios done');
       });
+    //axios for profilecard
   }, [props.navigation, modalVisible]);
 
   return (
@@ -146,7 +168,6 @@ const FeedPage = props => {
             setModalUrl={setModalVisible}
             setModalVisible={setModalVisible}
           />
-          <View style={styles.lastScroll} />
         </Content>
       </Container>
     </View>
@@ -169,10 +190,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#D9D9D9',
     height: 0.5,
     marginTop: 12,
-  },
-  lastScroll: {
-    height: 20,
-    flex: 1,
   },
 });
 export default FeedPage;
