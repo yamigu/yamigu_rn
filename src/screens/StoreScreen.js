@@ -32,7 +32,7 @@ import RNIap, {
 } from 'react-native-iap';
 import axios from 'axios';
 import '~/config';
-
+import AsyncStorage from '@react-native-community/async-storage';
 const itemSkus = Platform.select({
   ios: ['yami_10', 'yami_30', 'yami_50', 'yami_100'],
   android: ['yami_10', 'yami_30', 'yami_50', 'yami_100'],
@@ -55,7 +55,9 @@ const StoreScreen = ({navigation}) => {
   const [productList, setProductList] = useState([]);
   const [receipt, setReceipt] = useState('');
   const [availableItemsMessage, setAvailableItemsMessage] = useState('');
+  const [userInfo, setUserInfo] = useState(null);
   const [yami, setYami] = useState(0);
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
     //initIap();
     // getAvailablePurchases();
@@ -66,11 +68,14 @@ const StoreScreen = ({navigation}) => {
     try {
       const userValue = await AsyncStorage.getItem('userValue');
       const jUserValue = JSON.parse(userValue);
+      setUserInfo(jUserValue);
       if (userValue !== null) {
         setYami(jUserValue[global.config.user_info_const.YAMI]);
       } else {
       }
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
   };
   Number.prototype.format = function() {
     if (this == 0) return 0;
@@ -179,16 +184,24 @@ const StoreScreen = ({navigation}) => {
 
   // Version 3 apis
   const requestPurchase = async sku => {
+    if (loading) return;
+    setLoading(true);
     try {
       await RNIap.requestPurchase(sku, false).then(result => {
         axios
           .post(
-            'http://192.168.0.6:8000/purchase/validate/' + Platform.OS + '/',
+            'http://13.124.126.30:8000/purchase/validate/' + Platform.OS + '/',
             {
               payload: JSON.stringify(result),
             },
           )
           .then(async result => {
+            setYami(result.data);
+            const newInfo = userInfo.slice();
+            newInfo[global.config.user_info_const.YAMI] = result.data;
+            setUserInfo(newInfo);
+            AsyncStorage.setItem('userValue', JSON.stringify(newInfo));
+
             return Platform.OS === 'android'
               ? await RNIap.consumeAllItemsAndroid().then(result => {
                   console.log(result);
@@ -212,6 +225,7 @@ const StoreScreen = ({navigation}) => {
         });
       }
     }
+    setLoading(false);
   };
 
   return (
