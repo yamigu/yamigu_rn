@@ -73,8 +73,15 @@ const ChattingListScreen = ({navigation}) => {
           item.sender.uid !== userInfo[global.config.user_info_const.UID] ||
           item.approved_on !== null
         ) {
-          item.nickname = item.sender.nickname;
-          item.avata = item.sender.avata;
+          let partner;
+          if (item.sender.uid === userInfo[global.config.user_info_const.UID]) {
+            partner = item.receiver;
+          } else {
+            partner = item.sender;
+          }
+          console.log(partner);
+          item.nickname = partner.nickname;
+          item.avata = partner.avata;
           item.chat_type === 0
             ? chatlist_data.push(item)
             : recvlist_data.push(item);

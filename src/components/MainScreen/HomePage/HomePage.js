@@ -83,6 +83,7 @@ const HomePage = ({navigation}) => {
         console.log('uservalue not null');
         if (jUserValue[0] === 'token') {
           console.log('token not set yet.');
+          return false;
         } else {
           console.log('token is set' + jUserValue[0]);
           axios.defaults.headers.common['Authorization'] =
