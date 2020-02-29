@@ -14,11 +14,13 @@ const ChattingPreview = ({style, label, navigation, hasVerified}) => (
         console.log('hasVerified :: ' + hasVerified);
         Alert.alert('소속인증이 필요한 서비스입니다!');
         navigation.navigate('BV');
-      } else if (hasVerified === 1) {
-        Alert.alert(
-          '소속인증 중입니다! 30분안에 해드릴게요 잠시만 기다려주세요!',
-        );
-      } else {
+      }
+      // else if (hasVerified === 1) {
+      //   Alert.alert(
+      //     '소속인증 중입니다! 30분안에 해드릴게요 잠시만 기다려주세요!',
+      //   );
+      // }
+      else {
         navigation.navigate('Chatting');
         console.log('hasVerified :: ' + hasVerified);
       }
