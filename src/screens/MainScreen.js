@@ -13,6 +13,7 @@ import TouchableByPlatform from '~/components/common/TouchableByPlatform';
 import axios from 'axios';
 import firebase, {storage} from 'react-native-firebase';
 import ChattingIcon from '~/components/MainScreen/ChattingIcon';
+import {DrawerActions} from 'react-navigation-drawer';
 
 const MainScreenNavigator = createBottomTabNavigator(
   {
