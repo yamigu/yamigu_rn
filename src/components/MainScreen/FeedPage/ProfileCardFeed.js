@@ -7,6 +7,7 @@ import {
   Dimensions,
   Alert,
   TouchableOpacity,
+  Modal,
 } from 'react-native';
 import {
   CustomTextMedium,
@@ -22,6 +23,9 @@ import {
   PagerDotIndicator,
   IndicatorViewPager,
 } from 'react-native-best-viewpager';
+import {Button} from 'native-base';
+import MoreModal from '~/components/common/MoreModal';
+import Call911Modal from '~/components/common/Call911Modal';
 
 // const data = ['2:2 미팅', '3:3 미팅', '4:4 미팅', '날짜는 조율 가능해요'];
 
@@ -156,6 +160,9 @@ const ProfileCardFeed = ({
 }) => {
   const [liked, setLiked] = useState(false);
   const [feedList, setFeedList] = useState([]);
+  const [moreModalVisible, setMoreModalVisible] = useState(false);
+  const [call911ModalVisible, setCall911ModalVisible] = useState(false);
+
   // const [hasChatting, setHasChatting] = useState(false);
 
   useEffect(() => {
@@ -218,6 +225,27 @@ const ProfileCardFeed = ({
   };
   return (
     <View style={styles.container}>
+      <Modal
+        style={{backgroundColor: palette.gold}}
+        visible={moreModalVisible}
+        transparent={true}>
+        <MoreModal
+          setMoreModalVisible={setMoreModalVisible}
+          uid={uid}
+          setCall911ModalVisible={setCall911ModalVisible}
+        />
+      </Modal>
+      {console.log(call911ModalVisible)}
+      <Modal
+        style={{backgroundColor: palette.gold}}
+        visible={call911ModalVisible}
+        transparent={true}>
+        <Call911Modal
+          setCall911ModalVisible={setCall911ModalVisible}
+          uid={uid}
+        />
+      </Modal>
+
       <View style={styles.cardView}>
         <ProfileCard
           size={50}
@@ -229,7 +257,16 @@ const ProfileCardFeed = ({
           department={department}
           bothLike={bothLike}
           rightComponent={
-            <Ionicon name="ios-more" size={26} color={palette.black} />
+            <Button
+              style={{
+                // backgroundColor: palette.gold,
+                backgroundColor: 'white',
+                flexDirection: 'column',
+                paddingTop: 0,
+              }}
+              onPress={() => setMoreModalVisible(true)}>
+              <Ionicon name="ios-more" size={26} color={palette.black} />
+            </Button>
           }
         />
       </View>
@@ -238,6 +275,7 @@ const ProfileCardFeed = ({
           // navigation.setParams('3'); signup screen.js 참고해서 page수 넘겨주기
           navigation.navigate('Profile');
         }}> */}
+
       <IndicatorViewPager
         style={styles.viewPager}
         indicator={_renderDotIndicator()}>

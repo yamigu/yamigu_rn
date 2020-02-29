@@ -19,6 +19,7 @@ import {
   Left,
   Right,
   Body,
+  Button,
 } from 'native-base';
 import {
   PagerDotIndicator,
@@ -35,6 +36,8 @@ import ProfileCard from '~/components/common/ProfileCard';
 import {HeaderBackButton} from 'react-navigation-stack';
 import axios from 'axios';
 import SendChatting from '~/components/common/SendChatting';
+import Call911Modal from '~/components/common/Call911Modal';
+import MoreModal from '~/components/common/MoreModal';
 
 const deviceWidth = Dimensions.get('window').width;
 const nowYear = 20200000;
@@ -54,6 +57,9 @@ const ProfileDetailScreen = ({navigation}) => {
   const [friendList, setFriendList] = useState([]);
   const [feedList, setFeedList] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
+
+  const [moreModalVisible, setMoreModalVisible] = useState(false);
+  const [call911ModalVisible, setCall911ModalVisible] = useState(false);
 
   const postLike = () => {
     console.log('like pressed');
@@ -80,7 +86,13 @@ const ProfileDetailScreen = ({navigation}) => {
     }
   };
 
+  const tmp = () => {
+    setMoreModalVisible(true);
+  };
   useEffect(() => {
+    navigation.setParams({
+      setModal: tmp,
+    });
     console.log(liked);
     setLikedState(liked);
     axios
@@ -133,6 +145,26 @@ const ProfileDetailScreen = ({navigation}) => {
         visible={modalVisible}>
         <SendChatting setModalVisible={setModalVisible} />
       </Modal>
+      <Modal
+        style={{backgroundColor: palette.gold}}
+        visible={moreModalVisible}
+        transparent={true}>
+        <MoreModal
+          setMoreModalVisible={setMoreModalVisible}
+          uid={uid}
+          setCall911ModalVisible={setCall911ModalVisible}
+        />
+      </Modal>
+      <Modal
+        style={{backgroundColor: palette.gold}}
+        visible={call911ModalVisible}
+        transparent={true}>
+        <Call911Modal
+          setCall911ModalVisible={setCall911ModalVisible}
+          uid={uid}
+        />
+      </Modal>
+
       <Container style={styles.container}>
         <Content
           contentContainerStyle={styles.innerView}
@@ -351,6 +383,21 @@ ProfileDetailScreen.navigationOptions = ({navigation}) => ({
     backgroundColor: 'transparent',
     elevation: 0,
   },
+  headerRight: () => (
+    <Button
+      transparent
+      style={{
+        // backgroundColor: palette.gold,
+        flexDirection: 'column',
+        paddingTop: 10,
+        marginRight: 10,
+      }}
+      onPress={() => {
+        navigation.getParam('setModal')();
+      }}>
+      <Ionicon name="ios-more" size={26} color="white" />
+    </Button>
+  ),
 });
 
 const styles = StyleSheet.create({
