@@ -6,7 +6,7 @@ import palette from '~/lib/styles/palette';
 import {CustomTextMedium, CustomTextRegular} from '../common/CustomText';
 
 const deviceWidth = Dimensions.get('window').width;
-const ReceivedItem = ({manager, nickname, text, time, uid}) => {
+const ReceivedItem = ({manager, nickname, text, time, avata}) => {
   // uid 로 avata 가져와서 저장해놓기
 
   return (
@@ -18,7 +18,7 @@ const ReceivedItem = ({manager, nickname, text, time, uid}) => {
             width: 50,
             borderRadius: 25,
           }}
-          source={require('~/images/profile-yamigu.png')}
+          source={{uri: avata}}
         />
       </Left>
       <Body style={styles.bodyReceived}>

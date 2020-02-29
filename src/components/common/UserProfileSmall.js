@@ -35,7 +35,7 @@ const UserProfileSmall = ({style, imageSource, userName, badgeComponent}) => {
           }
           style={styles.image}
         />
-        {/* <View style={styles.badgeWrapper}>{badgeComponent}</View> */}
+        <View style={styles.badgeWrapper}>{badgeComponent}</View>
       </View>
       {userName ? (
         <CustomTextMedium

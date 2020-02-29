@@ -7,80 +7,102 @@ import {Icon, Content} from 'native-base';
 import ChattingList from '~/components/ChattingListScreen/ChattingList';
 import ReceivedList from '~/components/ChattingListScreen/ReceivedList';
 import {HeaderBackButton} from 'react-navigation-stack';
-import firebase from 'react-native-firebase';
 import axios from 'axios';
 import AsyncStorage from '@react-native-community/async-storage';
-
+import '~/config';
 const ChattingListScreen = ({navigation}) => {
-  const [ref, setRef] = useState(null);
-  const [hasVerified, setHasVerified] = useState(0);
-
-  const getUserVal = async () => {
-    const userValue = await AsyncStorage.getItem('userValue');
-    const jUserValue = JSON.parse(userValue);
-    if (jUserValue[0] === 'token') {
-      console.log('jUserValue[1]');
-      Alert.alert(
-        '로그인 및 회원가입이 필요한 서비스입니다.',
-        '',
-        () => {
-          navigation.pop();
-          navigation.navigate('Login');
-        },
-        '',
-      );
-      return false;
-    } else if (jUserValue[2] === 'nickname') {
-      console.log('jUserValue[1]');
-      Alert.alert(
-        '로그인 및 회원가입이 필요한 서비스입니다.',
-        '',
-        () => navigation.navigate('Signup'),
-        '',
-      );
-    } else if (jUserValue[4] === 'birthdate') {
-      Alert.alert(
-        '로그인 및 회원가입이 필요한 서비스입니다.',
-        '',
-        () => navigation.navigate('IV', {needBtn: true}),
-        '',
-      );
-    }
-    return true;
+  const [chatList, setChatList] = useState([]);
+  const [userInfo, setUserInfo] = useState([]);
+  const [receivedList, setReceivedList] = useState([]);
+  const [hasVerified, setHasVeirifed] = useState(0);
+  const getUserVal = () => {
+    return new Promise(async (resolve, reject) => {
+      const userValue = await AsyncStorage.getItem('userValue');
+      const jUserValue = JSON.parse(userValue);
+      setUserInfo(jUserValue);
+      if (jUserValue[global.config.user_info_const.TOKEN] === 'token') {
+        Alert.alert('로그인 및 회원가입이 필요한 서비스입니다.', '', [
+          {
+            onPress: () => {
+              navigation.pop();
+              navigation.navigate('Login');
+            },
+          },
+        ]);
+        return false;
+      } else if (
+        jUserValue[global.config.user_info_const.NICKNAME] === 'nickname'
+      ) {
+        Alert.alert('로그인 및 회원가입이 필요한 서비스입니다.', '', [
+          {
+            onPress: () => {
+              navigation.pop();
+              navigation.navigate('Signup');
+            },
+          },
+        ]);
+      } else if (
+        jUserValue[global.config.user_info_const.BIRTHDATE] === 'birthdate'
+      ) {
+        Alert.alert('로그인 및 회원가입이 필요한 서비스입니다.', '', [
+          {
+            onPress: () => {
+              navigation.pop();
+              navigation.navigate('IV');
+            },
+          },
+        ]);
+      }
+      setHasVeirifed(jUserValue[global.config.user_info_const.VERIFIED]);
+      resolve(true);
+    });
   };
 
   useEffect(() => {
     getUserVal().then(result => {
-      if (result) {
-        axios
-          .get(
-            'http://13.124.126.30:8000/authorization/user/belong_verification/',
-          )
-          .then(result => setHasVerified(result.data.verified));
-
-        axios
-          .get('http://13.124.126.30:8000/authorization/firebase/token/')
-          .then(result => {
-            const token = result.data;
-            // console.log(token);
-            return token;
-          })
-          .catch(error => console.log(error))
-          .then(token => {
-            firebase.auth().signInWithCustomToken(token);
-          });
-      } else {
-        console.log(result);
-      }
+      if (!result) return;
     });
   }, []);
+  useEffect(() => {
+    if (userInfo.length === 0) return;
+    axios.get('http://13.124.126.30:8000/core/chat/').then(result => {
+      const chatlist_data = [];
+      const recvlist_data = [];
+      result.data.chat_list.map(item => {
+        if (
+          item.sender.uid !== userInfo[global.config.user_info_const.UID] ||
+          item.approved_on !== null
+        ) {
+          let partner;
+          if (item.sender.uid === userInfo[global.config.user_info_const.UID]) {
+            partner = item.receiver;
+          } else {
+            partner = item.sender;
+          }
+          console.log(partner);
+          item.nickname = partner.nickname;
+          item.avata = partner.avata;
+          item.chat_type === 0
+            ? chatlist_data.push(item)
+            : recvlist_data.push(item);
+        }
+      });
+      setChatList(chatlist_data);
+      setReceivedList(recvlist_data);
+    });
+  }, [userInfo]);
   return (
     <Content showsVerticalScrollIndicator={false} style={styles.root}>
-      <ReceivedList hasVerified={hasVerified} navigation={navigation} />
+      <ReceivedList
+        hasVerified={hasVerified}
+        navigation={navigation}
+        chatList={receivedList}
+      />
       <ChattingList
         hasVerified={hasVerified}
         style={{marginTop: 12}}
         navigation={navigation}
+        chatList={chatList}
       />
     </Content>
   );
