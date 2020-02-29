@@ -178,6 +178,7 @@ const HomePage = ({navigation}) => {
           if (!result) return;
           console.log('willfocus');
         });
+        navigation.setParams({});
       },
       // run function that updates the data on entering the screen
     );

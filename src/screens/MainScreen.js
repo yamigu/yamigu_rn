@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Icon, View} from 'native-base';
 import {Image} from 'react-native';
 import Materialicon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -9,6 +9,10 @@ import HomePage from '~/components/MainScreen/HomePage/HomePage';
 import FeedPage from '~/components/MainScreen/FeedPage/FeedPage';
 import {createAppContainer} from 'react-navigation';
 import AsyncStorage from '@react-native-community/async-storage';
+import TouchableByPlatform from '~/components/common/TouchableByPlatform';
+import axios from 'axios';
+import firebase, {storage} from 'react-native-firebase';
+import ChattingIcon from '~/components/MainScreen/ChattingIcon';
 
 const MainScreenNavigator = createBottomTabNavigator(
   {
@@ -58,7 +62,6 @@ const MainScreenNavigator = createBottomTabNavigator(
           }
         },
         tabBarOnPress: async ({navigation, defaultHandler}) => {
-          console.log('onPress:');
           const userValue = await AsyncStorage.getItem('userValue');
           const jUserValue = JSON.parse(userValue);
           if (jUserValue[0] === 'token') {
@@ -97,5 +100,34 @@ const MainScreenNavigator = createBottomTabNavigator(
 );
 
 const MainScreen = createAppContainer(MainScreenNavigator);
+
+MainScreen.navigationOptions = ({navigation}) => {
+  return {
+    headerLeft: () => (
+      <TouchableByPlatform
+        onPress={() => navigation.dispatch(DrawerActions.openDrawer())}>
+        <Icon
+          name="menu"
+          style={{
+            color: palette.black,
+            margin: 10,
+          }}
+        />
+      </TouchableByPlatform>
+    ),
+    headerTitle: () => (
+      <Image
+        style={{width: 83, height: 20}}
+        source={require('~/images/yamigu_logo_icon.png')}
+      />
+    ),
+    headerRight: () => <ChattingIcon navigation={navigation} />,
+    headerMode: 'screen',
+    headerStyle: {
+      backgroundColor: 'white',
+    },
+    headerTitleAlign: 'center',
+  };
+};
 
 export default MainScreen;
