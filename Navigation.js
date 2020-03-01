@@ -119,6 +119,7 @@ const DrawerStack = createDrawerNavigator(
   },
   {
     contentComponent: SideMenu,
+    edgeWidth: -100, // this is where the magic happens :))
     drawerWidth: deviceWidth * 0.813,
   },
 );

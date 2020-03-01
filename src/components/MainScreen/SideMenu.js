@@ -319,7 +319,7 @@ const SideMenu = ({navigation}) => {
               </Right>
             </ListItem>
           </TouchableByPlatform>
-          {/* <TouchableByPlatform onPress={() => navigation.navigate('Shield')}>
+          <TouchableByPlatform onPress={() => navigation.navigate('Shield')}>
             <ListItem icon noIndent style={styles.listItem}>
               <Left style={styles.listItemLeft}>
                 <MaterialCommunityicon
@@ -334,8 +334,8 @@ const SideMenu = ({navigation}) => {
                 </CustomTextRegular>
               </Body>
             </ListItem>
-          </TouchableByPlatform> */}
-          <ListItem
+          </TouchableByPlatform>
+          {/* <ListItem
             button
             icon
             noIndent
@@ -356,10 +356,6 @@ const SideMenu = ({navigation}) => {
               </CustomTextRegular>
             </Body>
             <Right style={styles.listItemRight}>
-              {/* <CustomSwitch
-                toggleState={toggle}
-                size={deviceWidth * 0.813 * 0.0524}
-              /> */}
               <Switch
                 value={toggle}
                 onValueChange={() => {
@@ -369,7 +365,7 @@ const SideMenu = ({navigation}) => {
                 trackColor={{false: palette.nonselect, true: palette.orange}}
               />
             </Right>
-          </ListItem>
+          </ListItem> */}
           <ListItem itemDivider style={styles.itemDivider}>
             <CustomTextMedium size={24} color={palette.black}>
               더보기
