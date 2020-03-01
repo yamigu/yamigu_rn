@@ -66,8 +66,8 @@ const MyFeedManage = ({
     ]);
   };
   useEffect(() => {
-    console.log('uid::::::');
-    console.log(myFeedManageProp.uid);
+    // console.log('uid::::::');
+    // console.log(myFeedManageProp.uid);
   }, []);
 
   const _measure = obj => {
@@ -279,6 +279,8 @@ const MyFeedManage = ({
                         ? null
                         : () => {
                             navigation.navigate('Profile', {
+                              location: myFeedManageProp.location,
+                              verified: myFeedManageProp.verified,
                               uid: myFeedManageProp.uid,
                               nickname: myFeedManageProp.nickname,
                               avata: myFeedManageProp.avata,

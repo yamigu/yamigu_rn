@@ -145,6 +145,8 @@ const styles = StyleSheet.create({
   },
 });
 const ProfileCardFeed = ({
+  location,
+  verified,
   navigation,
   uid,
   nickname,
@@ -243,7 +245,7 @@ const ProfileCardFeed = ({
           setCall911ModalVisible={setCall911ModalVisible}
         />
       </Modal>
-      {console.log(call911ModalVisible)}
+      {/* {console.log(call911ModalVisible)} */}
       <Modal
         style={{backgroundColor: palette.gold}}
         visible={call911ModalVisible}
@@ -256,6 +258,7 @@ const ProfileCardFeed = ({
 
       <View style={styles.cardView}>
         <ProfileCard
+          location={location}
           size={50}
           fontSizes={[14, 12, 12]}
           nickname={nickname}
@@ -295,6 +298,8 @@ const ProfileCardFeed = ({
                   if (hasProfile === true) {
                     setChattingModalVisible(false);
                     navigation.navigate('Profile', {
+                      location,
+                      verified,
                       uid,
                       nickname,
                       avata,

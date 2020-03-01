@@ -31,6 +31,7 @@ const dw = Dimensions.get('window').width;
 const dh = Dimensions.get('window').height;
 
 const ProfileCard = ({
+  location,
   size,
   fontSizes,
   nickname,
@@ -143,7 +144,7 @@ const ProfileCard = ({
             </View>
             <View style={styles.secondLine}>
               <CustomTextRegular size={fontSizes[2]} color={palette.sub}>
-                {belong} {department}
+                {belong} {department}, {location}
               </CustomTextRegular>
             </View>
           </View>
