@@ -21,6 +21,7 @@ import java.security.NoSuchAlgorithmException;
 import com.rnfs.RNFSPackage; 
 import io.invertase.firebase.auth.RNFirebaseAuthPackage;
 import io.invertase.firebase.database.RNFirebaseDatabasePackage;
+import com.rt2zz.reactnativecontacts.ReactNativeContacts; 
 
 public class MainApplication extends Application implements ReactApplication {
 
@@ -39,6 +40,7 @@ public class MainApplication extends Application implements ReactApplication {
           // packages.add(new MyReactNativePackage());
           packages.add(new RNFirebaseAuthPackage());
           packages.add(new RNFirebaseDatabasePackage());
+          // packages.add(new ReactNativeContacts());
           return packages;
         }
 

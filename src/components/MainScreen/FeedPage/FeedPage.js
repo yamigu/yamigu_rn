@@ -26,6 +26,7 @@ const FeedPage = props => {
       'didFocus',
       () => {
         if (!hasProfile) return;
+
         let tmp = [];
         setProfileCardProp(tmp);
         axios

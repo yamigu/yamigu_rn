@@ -139,7 +139,6 @@ const LoginScreen = ({navigation}) => {
         console.log('check credentialState');
       },
     );
-    console.log('holy shit');
 
     // use credentialState response to ensure the user is authenticated
     if (credentialState === AppleAuthCredentialState.AUTHORIZED) {
@@ -162,7 +161,15 @@ const LoginScreen = ({navigation}) => {
           tmpValue[0] = key;
           AsyncStorage.setItem('userValue', JSON.stringify(tmpValue));
         })
-        .then(() => navigation.navigate('Signup'));
+        .then(async () => {
+          let userVal = await AsyncStorage.getItem('userValue');
+          console.log(userVal);
+          if (userVal[2] === 'nickname') {
+            navigation.navigate('Signup');
+          } else {
+            navigation.navigate('Main');
+          }
+        });
 
       console.log(appleAuthRequestResponse);
       // navigation.navigate('Main');
@@ -201,7 +208,15 @@ const LoginScreen = ({navigation}) => {
         tmpValue[0] = key;
         AsyncStorage.setItem('userValue', JSON.stringify(tmpValue));
       })
-      .then(() => navigation.navigate('Signup'))
+      .then(async () => {
+        let userVal = await AsyncStorage.getItem('userValue');
+        console.log(userVal);
+        if (userVal[2] === 'nickname') {
+          navigation.navigate('Signup');
+        } else {
+          navigation.navigate('Main');
+        }
+      })
       .catch(err => {
         if (err.code === 'E_CANCELLED_OPERATION') {
           logCallback(`Login Cancelled:${err.message}`, setLoginLoading(false));

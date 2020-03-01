@@ -7,6 +7,7 @@ import {
 } from '~/components/common/CustomText';
 import palette from '~/lib/styles/palette';
 import NicknamePage from '~/components/SignupScreen/NicknamePage';
+import LocationPage from '~/components/SignupScreen/LocationPage';
 import BelongPage from '~/components/SignupScreen/BelongPage';
 import ImagePage from '~/components/SignupScreen/ImagePage';
 import ViewPager from '@react-native-community/viewpager';
@@ -23,6 +24,7 @@ const SignupScreen = ({navigation}) => {
   const [belong, setBelong] = useState('');
   const [department, setDepartment] = useState('');
   const [is_student, setIs_student] = useState('');
+  const [locationText, setLocationText] = useState('');
 
   const [page, setPage] = useState(0);
   const viewPager = createRef();
@@ -49,6 +51,10 @@ const SignupScreen = ({navigation}) => {
     <SafeAreaView style={styles.root}>
       <ViewPager ref={viewPager} style={styles.viewPager} scrollEnabled={false}>
         <NicknamePage setNickname={setNickname} />
+        <LocationPage
+          setLocationText={setLocationText}
+          locationText={locationText}
+        />
         <BelongPage
           setBelong={setBelong}
           setDepartment={setDepartment}
@@ -63,11 +69,11 @@ const SignupScreen = ({navigation}) => {
             style={styles.indicatorText}
             size={12}
             color={palette.gray}>
-            ({page + 1}/3)
+            ({page + 1}/4)
           </CustomTextRegular>
           <View style={styles.indicatorBarBG}>
             <View
-              style={[styles.indicatorBar, {width: (page + 1) * 33.3 + '%'}]}
+              style={[styles.indicatorBar, {width: (page + 1) * 25 + '%'}]}
             />
           </View>
         </View>
@@ -78,13 +84,14 @@ const SignupScreen = ({navigation}) => {
             const jUserValue = JSON.parse(userValue);
             Axios.defaults.headers.common['Authorization'] =
               'Token ' + jUserValue[0];
-            if (page === 1) {
+            if (page === 2) {
               //server로 nickname, belong, department, is_student 보내기
               // console.log(nickname);
               // console.log(department);
               // console.log(belong);
               // console.log(is_student);
               // console.log(isStudentString);
+              console.log(locationText);
               let isStudentString = is_student.toString();
 
               Axios.post(
@@ -96,7 +103,7 @@ const SignupScreen = ({navigation}) => {
                   belong: belong,
                 },
               ).then(() => console.log('done'));
-            } else if (page === 2) {
+            } else if (page === 3) {
               gotoWebView();
               go(0);
               setPage(0);
@@ -105,7 +112,7 @@ const SignupScreen = ({navigation}) => {
             console.log(Axios.defaults.headers.common['Authorization']);
           }}
           style={styles.button}>
-          {page !== 2 ? (
+          {page !== 3 ? (
             <CustomTextRegular size={14} color="white">
               다음
             </CustomTextRegular>
@@ -140,7 +147,7 @@ SignupScreen.navigationOptions = ({navigation}) => ({
         label=" "
         tintColor={palette.black}
         onPress={() => {
-          navigation.goBack();
+          // navigation.goBack();
         }}
       />
     ),
