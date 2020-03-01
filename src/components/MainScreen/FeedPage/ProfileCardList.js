@@ -9,10 +9,10 @@ const ProfileCardList = ({navigation, profileCardProp, hasProfile}) => {
 
   return (
     <View>
-      {profileCardProp.map(item => {
+      {profileCardProp.map((item, index) => {
         return (
           <ProfileCardFeed
-            key={item.id}
+            key={index}
             navigation={navigation}
             uid={item.profile.uid}
             nickname={item.profile.nickname}

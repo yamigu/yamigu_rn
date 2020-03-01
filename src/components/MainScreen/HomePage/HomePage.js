@@ -640,6 +640,7 @@ const HomePage = ({navigation}) => {
                 {memberList.map((item, index) => {
                   return (
                     <Button
+                      key={index}
                       onPress={() => {
                         console.log('pressed');
                         let tmpNo = memberItemNo;
@@ -829,6 +830,7 @@ const HomePage = ({navigation}) => {
                   {dateList.map((item, index) => {
                     return (
                       <Button
+                        key={index}
                         onPress={() => {
                           let tmpNo = dateItemNo;
                           let tmp;

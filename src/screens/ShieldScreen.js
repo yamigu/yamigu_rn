@@ -195,7 +195,7 @@ const ShieldScreen = ({params}) => {
 
       <List style={styles.list}>
         {sheilding.map((item, index) => (
-          <ListItem noIndent style={styles.listItem}>
+          <ListItem key={index} noIndent style={styles.listItem}>
             <Body>
               <CustomTextRegular size={16} color={palette.black}>
                 {item}
