@@ -13,11 +13,12 @@ const FeedPage = props => {
   const [myFeed, setMyFeed] = useState([]);
   const [likeMatchingProp, setLikeMatchingProp] = useState([]);
   const [profileCardProp, setProfileCardProp] = useState([]);
-
+  const [refresh, setRefresh] = useState(true);
   const [hasProfile, setHasProfile] = useState(false);
   const _scroll = useRef();
 
   useEffect(() => {
+    console.log('useEffected');
     let innerHasProfile = false;
     props.navigation.addListener(
       'didFocus',
@@ -61,6 +62,7 @@ const FeedPage = props => {
         return tmpUrl;
       })
       .then(url => {
+        console.log('new feed done');
         axios.get(url).then(result => {
           // console.log('myfeedmanage 1st axios done');
           // console.log(result.data);
@@ -113,7 +115,7 @@ const FeedPage = props => {
         // console.log('axios done');
       });
     //axios for profilecard
-  }, [props.navigation]);
+  }, [props.navigation, refresh]);
 
   return (
     <View style={styles.root}>
@@ -142,6 +144,10 @@ const FeedPage = props => {
                   {cancelable: false},
                 )
               : null;
+          }}
+          onMomentumScrollEnd={() => {
+            console.log(hasProfile);
+            hasProfile === true ? setRefresh(!refresh) : null;
           }}
           contentContainerStyle={styles.innerView}
           showsVerticalScrollIndicator={false}>
