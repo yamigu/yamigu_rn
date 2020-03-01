@@ -56,6 +56,7 @@ const LikeMatchingList = ({navigation, likeMatchingProp}) => {
             <TouchableByPlatform
               onPress={() =>
                 navigation.navigate('Profile', {
+                  location: user.location,
                   verified: user.verified,
                   uid: user.uid,
                   nickname: user.nickname,

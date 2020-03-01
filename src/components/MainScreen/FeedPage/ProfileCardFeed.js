@@ -145,6 +145,7 @@ const styles = StyleSheet.create({
   },
 });
 const ProfileCardFeed = ({
+  location,
   verified,
   navigation,
   uid,
@@ -257,6 +258,7 @@ const ProfileCardFeed = ({
 
       <View style={styles.cardView}>
         <ProfileCard
+          location={location}
           size={50}
           fontSizes={[14, 12, 12]}
           nickname={nickname}
@@ -296,6 +298,7 @@ const ProfileCardFeed = ({
                   if (hasProfile === true) {
                     setChattingModalVisible(false);
                     navigation.navigate('Profile', {
+                      location,
                       verified,
                       uid,
                       nickname,

@@ -279,6 +279,7 @@ const MyFeedManage = ({
                         ? null
                         : () => {
                             navigation.navigate('Profile', {
+                              location: myFeedManageProp.location,
                               verified: myFeedManageProp.verified,
                               uid: myFeedManageProp.uid,
                               nickname: myFeedManageProp.nickname,

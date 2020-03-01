@@ -61,7 +61,7 @@ let initUserValue = [
   'belong',
   'department',
   'profile_list',
-  'feed_list',
+  'location',
   'friend_list',
   'yami_number',
 ];
@@ -108,6 +108,7 @@ const HomePage = ({navigation}) => {
                   result.data.gender;
                 jUserValue[global.config.user_info_const.VERIFIED] =
                   result.data.verified;
+                jUserValue[8] = result.data.location;
 
                 AsyncStorage.setItem('userValue', JSON.stringify(jUserValue));
                 setAsyncValue(jUserValue);

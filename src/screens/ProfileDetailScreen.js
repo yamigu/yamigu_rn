@@ -53,6 +53,7 @@ const ProfileDetailScreen = ({navigation}) => {
   const myFeed = navigation.getParam('my_feed');
   const liked = navigation.getParam('liked');
   const verified = navigation.getParam('verified');
+  const location = navigation.getParam('location');
 
   const [likedState, setLikedState] = useState(false);
   const [friendList, setFriendList] = useState([]);
@@ -198,7 +199,7 @@ const ProfileDetailScreen = ({navigation}) => {
               belong={belong}
               department={department}
               bothLike={bothLike}
-              // location="서울"
+              location={location}
             />
             {/* <MeetingSettingPane data={meeting_setting_data} /> */}
             <View style={styles.horizontalDivider} />
