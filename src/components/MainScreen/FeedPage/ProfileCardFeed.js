@@ -145,6 +145,7 @@ const styles = StyleSheet.create({
   },
 });
 const ProfileCardFeed = ({
+  verified,
   navigation,
   uid,
   nickname,
@@ -295,6 +296,7 @@ const ProfileCardFeed = ({
                   if (hasProfile === true) {
                     setChattingModalVisible(false);
                     navigation.navigate('Profile', {
+                      verified,
                       uid,
                       nickname,
                       avata,

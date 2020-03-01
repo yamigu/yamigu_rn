@@ -4,7 +4,7 @@ import palette from '~/lib/styles/palette';
 import ProfileCardList from './ProfileCardList';
 import LikeMatchingList from './LikeMatchingList';
 import MyFeedManage from './MyFeedManage';
-import {Content, Container} from 'native-base';
+import {Content, Container, RefreshControl} from 'native-base';
 import axios from 'axios';
 import SendChatting from '~/components/common/SendChatting';
 
@@ -13,7 +13,7 @@ const FeedPage = props => {
   const [myFeed, setMyFeed] = useState([]);
   const [likeMatchingProp, setLikeMatchingProp] = useState([]);
   const [profileCardProp, setProfileCardProp] = useState([]);
-  const [refresh, setRefresh] = useState(true);
+  // const [refreshing, setRefreshing] = useState(true);
   const [hasProfile, setHasProfile] = useState(false);
   const _scroll = useRef();
 
@@ -110,12 +110,13 @@ const FeedPage = props => {
         } else {
           setProfileCardProp(tmp);
         }
+        // console.log();
       })
       .then(() => {
         // console.log('axios done');
       });
     //axios for profilecard
-  }, [props.navigation, refresh]);
+  }, [props.navigation]);
 
   return (
     <View style={styles.root}>
@@ -123,7 +124,7 @@ const FeedPage = props => {
         <Content
           ref={_scroll}
           onMomentumScrollBegin={() => {
-            console.log(hasProfile);
+            // console.log(hasProfile);
             hasProfile === false
               ? Alert.alert(
                   '프로필 등록하면 모든 유저 피드 다볼수있다?',
@@ -145,9 +146,10 @@ const FeedPage = props => {
                 )
               : null;
           }}
-          onMomentumScrollEnd={() => {
+          onScrollToTop={() => {
             console.log(hasProfile);
-            hasProfile === true ? setRefresh(!refresh) : null;
+            console.log('scroll to top');
+            // hasProfile === true ? setRefresh(!refresh) : null;
           }}
           contentContainerStyle={styles.innerView}
           showsVerticalScrollIndicator={false}>

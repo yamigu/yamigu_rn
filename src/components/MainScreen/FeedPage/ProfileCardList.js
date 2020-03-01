@@ -10,8 +10,10 @@ const ProfileCardList = ({navigation, profileCardProp, hasProfile}) => {
   return (
     <View>
       {profileCardProp.map(item => {
+        console.log(item);
         return (
           <ProfileCardFeed
+            verified={item.profile.verified}
             key={item.id}
             navigation={navigation}
             uid={item.profile.uid}
