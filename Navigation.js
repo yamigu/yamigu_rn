@@ -35,47 +35,6 @@ const deviceWidth = Dimensions.get('window').width;
 const AppStack = createStackNavigator({
   Main: {
     screen: MainScreen, // MainScreen 컴포넌트를 네비게이터에 등록
-    navigationOptions: ({navigation}) => ({
-      headerLeft: () => (
-        <TouchableByPlatform
-          onPress={() => navigation.dispatch(DrawerActions.openDrawer())}>
-          <Icon
-            name="menu"
-            style={{
-              color: palette.black,
-              margin: 10,
-            }}
-          />
-        </TouchableByPlatform>
-      ),
-      headerTitle: () => (
-        <Image
-          style={{width: 83, height: 20}}
-          source={require('~/images/yamigu_logo_icon.png')}
-        />
-      ),
-      headerRight: () => {
-        // console.log(jUserValue);
-        return (
-          <TouchableByPlatform
-            onPress={() => navigation.navigate('ChattingList')}>
-            <Image
-              source={require('~/images/chat_bubble_icon.png')}
-              style={{
-                margin: 10,
-                width: 20,
-                height: 18,
-              }}
-            />
-          </TouchableByPlatform>
-        );
-      },
-      headerMode: 'screen',
-      headerStyle: {
-        backgroundColor: 'white',
-      },
-      headerTitleAlign: 'center',
-    }),
   },
 
   Profile: {
@@ -164,6 +123,7 @@ const DrawerStack = createDrawerNavigator(
   },
   {
     contentComponent: SideMenu,
+    edgeWidth: -100, // this is where the magic happens :))
     drawerWidth: deviceWidth * 0.813,
   },
 );

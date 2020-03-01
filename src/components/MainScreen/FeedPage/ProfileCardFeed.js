@@ -182,7 +182,9 @@ const ProfileCardFeed = ({
   }, []);
 
   const alertAddProfile = () => {
-    Alert.alert('프로필 등록하셈', '', navigation.navigate('MyProfile'), '');
+    Alert.alert('프로필 등록하셈', '', [
+      {onPress: () => navigation.navigate('MyProfile')},
+    ]);
   };
 
   const postLike = () => {
