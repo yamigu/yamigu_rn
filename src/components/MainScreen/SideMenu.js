@@ -102,6 +102,7 @@ const SideMenu = ({navigation}) => {
             style={{backgroundColor: palette.default_bg, height: 150}}></View>
           <View style={styles.thumbnailWrapper}>
             <TouchableByPlatform
+              style={{backgroundColor: palette.default_bg}}
               onPress={() => navigation.navigate('MyProfile')}>
               <Thumbnail
                 style={styles.thumbnail}
@@ -113,6 +114,16 @@ const SideMenu = ({navigation}) => {
                 }
               />
             </TouchableByPlatform>
+            <Image
+              source={require('~/images/pencil.png')}
+              style={{
+                position: 'absolute',
+                zIndex: 1,
+                width: deviceWidth * 0.813 * 0.3934 * 0.25,
+                height: deviceWidth * 0.813 * 0.3934 * 0.25,
+                alignSelf: 'flex-end',
+              }}
+            />
           </View>
           <View style={styles.nameAndAgeView}>
             <CustomTextBold size={18} color={palette.black}>
@@ -220,6 +231,7 @@ const SideMenu = ({navigation}) => {
               </ListItem>
             </TouchableByPlatform>
           ) : null}
+
           {sideInfo[global.config.user_info_const.AVATA] === 'avata' ? (
             <TouchableByPlatform
               navigation={navigation}
@@ -490,14 +502,18 @@ const styles = StyleSheet.create({
     marginTop: deviceWidth * 0.813 * 0.702 * 0.037,
   },
   thumbnailWrapper: {
+    backgroundColor: palette.blue,
     width: deviceWidth * 0.813 * 0.3934,
     height: deviceWidth * 0.813 * 0.3934,
-    borderRadius: deviceWidth * 0.813 * 0.3934 * 0.5,
+    // borderRadius: deviceWidth * 0.813 * 0.3934 * 0.5,
     alignSelf: 'center',
     overflow: 'hidden',
     marginTop: -deviceWidth * 0.813 * 0.3934 * 0.75,
+    flexDirection: 'column',
+    justifyContent: 'flex-end',
   },
   thumbnail: {
+    borderRadius: deviceWidth * 0.813 * 0.3934 * 0.5,
     width: deviceWidth * 0.813 * 0.3934,
     height: deviceWidth * 0.813 * 0.3934,
     alignSelf: 'center',

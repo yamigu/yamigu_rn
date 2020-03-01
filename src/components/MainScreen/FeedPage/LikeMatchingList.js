@@ -2,12 +2,9 @@
 import React, {useEffect, useState} from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
 import {List, ListItem} from 'native-base';
-import {CustomTextMedium} from '~/components/common/CustomText';
-import palette from '~/lib/styles/palette';
 import LikeMatching from './LikeMatching';
 import UserProfileSmall from '~/components/common/UserProfileSmall';
 import GoldBadge from '~/components/common/GoldBadge';
-import axios from 'axios';
 import TouchableByPlatform from '~/components/common/TouchableByPlatform';
 
 const nowYear = 20200000;
