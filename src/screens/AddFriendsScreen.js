@@ -141,8 +141,8 @@ const AddFriendsScreen = ({navigation}) => {
       </CustomTextMedium>
       {friendList.length > 0 ? (
         <List>
-          {friendList.map(friend => (
-            <ListItem noIndent style={styles.friendsListItem}>
+          {friendList.map((friend, index) => (
+            <ListItem key={index} noIndent style={styles.friendsListItem}>
               <Body>
                 {friend.approved === true ? (
                   <ProfileCard

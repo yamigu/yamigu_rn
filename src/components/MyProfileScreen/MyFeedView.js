@@ -247,7 +247,7 @@ const MyFeedView = ({userInfo, scroll, offsetY}) => {
           {feed_list.map((item, index) => {
             // console.log(item);
             return (
-              <View>
+              <View key={index}>
                 <Image
                   style={styles.viewPage}
                   key={index + 2}

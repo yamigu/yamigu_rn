@@ -13,6 +13,7 @@ const ProfileCardList = ({navigation, profileCardProp, hasProfile}) => {
         console.log(item.feed_list.length);
         return (
           <ProfileCardFeed
+            key={index}
             location={item.profile.location}
             verified={item.profile.verified}
             key={item.id}

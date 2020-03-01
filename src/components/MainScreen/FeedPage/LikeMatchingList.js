@@ -47,13 +47,14 @@ const LikeMatchingList = ({navigation, likeMatchingProp}) => {
         style={styles.scrollView}>
         <LikeMatching />
 
-        {likeMatchingProp.map(user => {
+        {likeMatchingProp.map((user, index) => {
           let intAge =
             Math.floor((nowYear - parseInt(user.birthdate)) / 10000) + 2;
           // console.log('usersrrrrr');
           // console.log(user);
           return (
             <TouchableByPlatform
+              key={index}
               onPress={() =>
                 navigation.navigate('Profile', {
                   location: user.location,

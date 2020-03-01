@@ -63,9 +63,7 @@ const ChattingIcon = ({navigation}) => {
         });
     });
   }, [navigation]);
-  useEffect(() => {
-    console.log(hasNew);
-  }, [hasNew]);
+  useEffect(() => {}, [hasNew]);
   useEffect(() => {
     return () => {
       chatList.map(item => {
