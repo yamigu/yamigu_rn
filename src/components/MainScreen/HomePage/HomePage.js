@@ -40,6 +40,7 @@ import {UserContextConsumer, UserContextProvider} from '~/Context/UserContext';
 import axios from 'axios';
 import AsyncStorage from '@react-native-community/async-storage';
 import firebase from 'react-native-firebase';
+import {SafeAreaProvider} from 'react-native-safe-area-context';
 
 // import CustomLabel from './CustomLabel';
 
@@ -512,7 +513,7 @@ const HomePage = ({navigation}) => {
           setMemberText(tmpText);
           setMemberModalVisible(false);
         }}>
-        <SafeAreaView>
+        <SafeAreaProvider>
           <TouchableWithoutFeedback
             onPress={() => {
               setMemberModalVisible(false);
@@ -678,7 +679,7 @@ const HomePage = ({navigation}) => {
               </View>
             </View>
           </View>
-        </SafeAreaView>
+        </SafeAreaProvider>
       </Modal>
 
       <Modal
@@ -700,7 +701,7 @@ const HomePage = ({navigation}) => {
           setDateText(tmpText);
           setDateModalVisible(false);
         }}>
-        <SafeAreaView>
+        <SafeAreaProvider>
           <TouchableWithoutFeedback
             onPress={() => {
               setDateModalVisible(false);
@@ -869,7 +870,7 @@ const HomePage = ({navigation}) => {
               </View>
             </View>
           </View>
-        </SafeAreaView>
+        </SafeAreaProvider>
       </Modal>
 
       <Modal
@@ -879,7 +880,7 @@ const HomePage = ({navigation}) => {
         onRequestClose={() => {
           setAgeModalVisible(false);
         }}>
-        <SafeAreaView>
+        <SafeAreaProvider>
           <TouchableWithoutFeedback
             onPress={() => {
               setAgeModalVisible(false);
@@ -976,7 +977,7 @@ const HomePage = ({navigation}) => {
               {/* end of age module  */}
             </View>
           </View>
-        </SafeAreaView>
+        </SafeAreaProvider>
       </Modal>
 
       <View style={styles.topLayout}>
