@@ -14,8 +14,7 @@ import {Thumbnail, Input, Button} from 'native-base';
 import TouchableByPlatform from '~/components/common/TouchableByPlatform';
 import ImagePicker from 'react-native-image-picker';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
-import MaterialCommuniticons from 'react-native-vector-icons/MaterialCommunityIcons';
-import axios from 'axios';
+import Octionicon from 'react-native-vector-icons/Octicons';
 
 import {
   IndicatorViewPager,
@@ -28,7 +27,7 @@ import {
   CustomTextBold,
 } from '~/components/common/CustomText';
 import file_upload from '~/lib/utils/file_upload';
-
+import axios from 'axios';
 const dw = Dimensions.get('window').width;
 const dh = Dimensions.get('window').height;
 const nowYear = 20200000;
@@ -46,10 +45,31 @@ const MyFeedManage = ({
   const [feedDisplay, setFeedDisplay] = useState(false);
   const [btnMeasure, setBtnMeasure] = useState(null);
   const _imageButton = useRef();
+  const _viewPager = useRef();
+
+  const deleteFeed = () => {
+    Alert.alert('정말 피드를 삭제하시겠습니까?', '', [
+      {
+        text: '네',
+        onPress: () => {
+          const fid = myFeed[_viewPager.current._currentIndex].id;
+          axios
+            .patch('http://13.124.126.30:8000/core/feed/' + fid + '/delete/')
+            .then(result => {
+              let temp = myFeed.slice();
+              temp.splice(_viewPager.current._currentIndex, 1);
+              setMyFeed(temp);
+            });
+        },
+      },
+      {text: '아니오', onPress: () => console.log('Cancel Pressed')},
+    ]);
+  };
   useEffect(() => {
     console.log('uid::::::');
     console.log(myFeedManageProp.uid);
   }, []);
+
   const _measure = obj => {
     obj.current.measure((x, y, width, height, pagex, pagey) => {
       const location = {
@@ -247,6 +267,7 @@ const MyFeedManage = ({
           <Image style={styles.viewPager} source={imageSource} />
         ) : (
           <IndicatorViewPager
+            ref={_viewPager}
             style={styles.viewPager}
             indicator={_renderDotIndicator()}>
             {myFeed.map(item => {
@@ -278,6 +299,11 @@ const MyFeedManage = ({
                         item.img_src === null ? null : {uri: item.img_src}
                       }
                     />
+                    <View style={styles.roundWrapper}>
+                      <Button style={styles.deleteBtn} onPress={deleteFeed}>
+                        <Octionicon name="x" size={24} style={styles.iconX} />
+                      </Button>
+                    </View>
                   </TouchableOpacity>
                 </View>
               );
@@ -384,6 +410,26 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginHorizontal: 10,
     marginBottom: 10,
+  },
+  roundWrapper: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
+    width: 35,
+    height: 35,
+    borderRadius: 17.5,
+    overflow: 'hidden',
+  },
+  deleteBtn: {
+    justifyContent: 'center',
+    alignContent: 'center',
+    width: 35,
+    height: 35,
+    borderRadius: 17.5,
+    backgroundColor: '#00000077',
+  },
+  iconX: {
+    color: '#ffffffAA',
   },
 });
 
