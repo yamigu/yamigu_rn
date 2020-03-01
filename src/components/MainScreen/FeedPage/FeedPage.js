@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useRef} from 'react';
 import {Text, View, StyleSheet, Alert, Modal} from 'react-native';
 import palette from '~/lib/styles/palette';
 import ProfileCardList from './ProfileCardList';
@@ -15,8 +15,8 @@ const FeedPage = props => {
   const [profileCardProp, setProfileCardProp] = useState([]);
 
   const [hasProfile, setHasProfile] = useState(false);
+  const _scroll = useRef();
 
-  const [] = useState([]);
   useEffect(() => {
     let innerHasProfile = false;
     props.navigation.addListener(
@@ -119,6 +119,7 @@ const FeedPage = props => {
     <View style={styles.root}>
       <Container style={styles.container}>
         <Content
+          ref={_scroll}
           onMomentumScrollBegin={() => {
             console.log(hasProfile);
             hasProfile === false
@@ -150,6 +151,7 @@ const FeedPage = props => {
               myFeedManageProp={myFeedManageProp}
               myFeed={myFeed}
               setMyFeed={setMyFeed}
+              scroll={_scroll}
             />
           ) : null}
           <LikeMatchingList
