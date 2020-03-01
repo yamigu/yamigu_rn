@@ -4,13 +4,24 @@ import {Text, View, SafeAreaView, Dimensions, Alert} from 'react-native';
 import {Button, Toast} from 'native-base';
 import {CustomTextMedium, CustomTextRegular} from './CustomText';
 import palette from '~/lib/styles/palette';
+import axios from 'axios';
+
 const dh = Dimensions.get('window').height;
 const dw = Dimensions.get('window').width;
 
 const MoreModal = ({setMoreModalVisible, setCall911ModalVisible, uid}) => {
+  const requestBlock = () => {
+    axios
+      .post('http://13.124.126.30:8000/core/block/', {
+        who: uid,
+      })
+      .then(() => {
+        setMoreModalVisible(false);
+      });
+  };
   const pressBlock = () => {
     Alert.alert(
-      '정말 차단하시겠어요?' + uid,
+      '정말 차단하시겠어요?',
       '차단시 서로를 더 이상 볼 수 없어요',
       [
         {
@@ -23,10 +34,7 @@ const MoreModal = ({setMoreModalVisible, setCall911ModalVisible, uid}) => {
         {
           text: '차단하기',
           style: 'destructive',
-          onPress: () => {
-            console.log('YES LOGOUT');
-            setMoreModalVisible(false);
-          },
+          onPress: requestBlock,
         },
       ],
       '',
@@ -36,8 +44,6 @@ const MoreModal = ({setMoreModalVisible, setCall911ModalVisible, uid}) => {
   const pressCall911 = () => {
     setCall911ModalVisible(true);
     setMoreModalVisible(false);
-
-    console.log('asd');
   };
 
   const pressCancel = () => {
