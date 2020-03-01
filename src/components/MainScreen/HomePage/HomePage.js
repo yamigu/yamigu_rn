@@ -108,7 +108,9 @@ const HomePage = ({navigation}) => {
                   result.data.gender;
                 jUserValue[global.config.user_info_const.VERIFIED] =
                   result.data.verified;
-                jUserValue[8] = result.data.location;
+                jUserValue[10] = result.data.location;
+                console.log(result.data.location);
+                console.log(jUserValue);
 
                 AsyncStorage.setItem('userValue', JSON.stringify(jUserValue));
                 setAsyncValue(jUserValue);

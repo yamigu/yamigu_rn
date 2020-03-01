@@ -168,9 +168,9 @@ const SideMenu = ({navigation}) => {
                 : sideInfo[global.config.user_info_const.DEPARTMENT]}
             </CustomTextRegular>
             <CustomTextRegular size={14} color={palette.gray}>
-              {sideInfo[8] === null || sideInfo[8] === undefined
+              {sideInfo[10] === null || sideInfo[10] === undefined
                 ? null
-                : ', ' + sideInfo[8]}
+                : ', ' + sideInfo[10]}
             </CustomTextRegular>
           </View>
         </View>
