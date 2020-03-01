@@ -57,6 +57,8 @@ const LikeMatchingList = ({navigation, likeMatchingProp}) => {
               key={index}
               onPress={() =>
                 navigation.navigate('Profile', {
+                  location: user.location,
+                  verified: user.verified,
                   uid: user.uid,
                   nickname: user.nickname,
                   avata: user.avata,

@@ -1,7 +1,14 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable react-native/no-inline-styles */
 import React, {useState} from 'react';
-import {Text, View, SafeAreaView, Dimensions, Alert} from 'react-native';
+import {
+  Text,
+  View,
+  SafeAreaView,
+  Dimensions,
+  Alert,
+  TouchableWithoutFeedback,
+} from 'react-native';
 import {Button, Toast} from 'native-base';
 import {CustomTextMedium, CustomTextRegular} from './CustomText';
 import palette from '~/lib/styles/palette';
@@ -35,74 +42,89 @@ const Call911Modal = ({setCall911ModalVisible, uid}) => {
         //   alignItems: 'center',
         justifyContent: 'flex-end',
       }}>
-      <View
-        style={{
-          height: dh,
-          width: dw,
-          backgroundColor: 'rgba(0,0,0,0.7)',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
+      <TouchableWithoutFeedback
+        onPress={() => {
+          setCall911ModalVisible(false);
         }}>
         <View
           style={{
-            backgroundColor: 'white',
-            // width: 270,
-            // height: 270,
+            height: dh,
+            width: dw,
+            backgroundColor: 'rgba(0,0,0,0.7)',
             flexDirection: 'column',
             justifyContent: 'center',
             alignItems: 'center',
           }}>
-          <CustomTextRegular size={16} style={{padding: 15}}>
-            어떤 문제가 있나요?
-          </CustomTextRegular>
           <View
             style={{
-              backgroundColor: palette.gray,
-              height: 0.5,
-              width: 270,
-            }}
-          />
-          {list911.map((item, index) => {
-            return (
-              <Button
-                key={index}
-                style={styles.btn}
-                onPress={() => {
-                  let tmp = [0, 0, 0, 0];
-                  tmp[index] = 1;
-                  setListState(tmp);
-                  setListTrue(true);
-                }}>
-                <CustomTextRegular
-                  size={14}
-                  color={
-                    listState[index] === 0 ? palette.black : palette.orange
-                  }>
-                  {item}
-                </CustomTextRegular>
-              </Button>
-            );
-          })}
-          <View
-            style={{
-              backgroundColor: palette.gray,
-              height: 0.5,
-              width: 270,
-            }}
-          />
+              backgroundColor: 'white',
+              // width: 270,
+              // height: 270,
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <CustomTextRegular size={16} style={{padding: 15}}>
+              어떤 문제가 있나요?
 
-          <Button
-            style={{padding: 12, backgroundColor: 'white'}}
-            onPress={reportRequest}>
-            <CustomTextRegular
-              size={16}
-              color={listTrue === false ? palette.black : palette.orange}>
-              신고하기
             </CustomTextRegular>
-          </Button>
+            <View
+              style={{
+                backgroundColor: palette.gray,
+                height: 0.5,
+                width: 270,
+              }}
+            />
+            {list911.map((item, index) => {
+              return (
+                <Button
+                  style={styles.btn}
+                  onPress={() => {
+                    let tmp = [0, 0, 0, 0];
+                    tmp[index] = 1;
+                    setListState(tmp);
+                    setListTrue(true);
+                  }}>
+                  <CustomTextRegular
+                    size={14}
+                    color={
+                      listState[index] === 0 ? palette.black : palette.orange
+                    }>
+                    {item}
+                  </CustomTextRegular>
+                </Button>
+              );
+            })}
+            <View
+              style={{
+                backgroundColor: palette.gray,
+                height: 0.5,
+                width: 270,
+              }}
+            />
+
+            <Button
+              style={{
+                width: 200,
+                padding: 12,
+                backgroundColor: 'white',
+                flexDirection: 'column',
+                justifyContent: 'center',
+              }}
+              onPress={() => {
+                if (listTrue === false) {
+                    onPress={reportRequest}>
+                } else setCall911ModalVisible(false);
+              }}>
+              <CustomTextRegular
+                size={16}
+                color={listTrue === false ? palette.black : palette.orange}>
+                신고하기
+              </CustomTextRegular>
+            </Button>
+          </View>
         </View>
-      </View>
+      </TouchableWithoutFeedback>
     </SafeAreaView>
   );
 };
@@ -110,7 +132,7 @@ const styles = StyleSheet.create({
   btn: {
     paddingVertical: 0,
     paddingTop: 0,
-
+    width: 200,
     height: 40,
     flexDirection: 'column',
     alignItems: 'center',

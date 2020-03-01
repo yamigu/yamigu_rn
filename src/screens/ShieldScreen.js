@@ -189,9 +189,11 @@ const ShieldScreen = ({params}) => {
         </View>
         <Button
           style={styles.buttonBig}
+
           onPress={() => {
             enrolling === 2 ? setEnrolling(0) : setEnrolling(2);
           }}>
+
           <CustomTextMedium size={14} color={palette.orange}>
             피하고 싶은 소속 등록
           </CustomTextMedium>

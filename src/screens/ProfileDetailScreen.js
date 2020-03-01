@@ -52,6 +52,8 @@ const ProfileDetailScreen = ({navigation}) => {
   const bothLike = navigation.getParam('bothLike');
   const myFeed = navigation.getParam('my_feed');
   const liked = navigation.getParam('liked');
+  const verified = navigation.getParam('verified');
+  const location = navigation.getParam('location');
 
   const [likedState, setLikedState] = useState(false);
   const [friendList, setFriendList] = useState([]);
@@ -197,7 +199,7 @@ const ProfileDetailScreen = ({navigation}) => {
               belong={belong}
               department={department}
               bothLike={bothLike}
-              // location="서울"
+              location={location}
             />
             {/* <MeetingSettingPane data={meeting_setting_data} /> */}
             <View style={styles.horizontalDivider} />
@@ -216,7 +218,7 @@ const ProfileDetailScreen = ({navigation}) => {
                   size={14}
                   color={palette.sub}
                   style={{marginLeft: 4}}>
-                  청
+                  대화 신청 하기
                 </CustomTextMedium>
               </View>
             </TouchableByPlatform>
@@ -323,8 +325,10 @@ const ProfileDetailScreen = ({navigation}) => {
                 </CustomTextRegular>
               </Left>
               <Right>
-                <CustomTextRegular size={14} color={palette.red}>
-                  미완료
+                <CustomTextRegular
+                  size={14}
+                  color={verified === 2 ? palette.blue : palette.red}>
+                  {verified === 2 ? '완료' : '미완료'}
                 </CustomTextRegular>
               </Right>
             </ListItem>

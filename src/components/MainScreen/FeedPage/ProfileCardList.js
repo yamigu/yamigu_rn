@@ -5,14 +5,18 @@ import axios from 'axios';
 
 const ProfileCardList = ({navigation, profileCardProp, hasProfile}) => {
   let nowYear = 20200000;
-  useEffect(() => {}, []);
+  useEffect(() => {}, [profileCardProp]);
 
   return (
     <View>
-      {profileCardProp.map((item, index) => {
+      {profileCardProp.map(item => {
+        console.log(item.feed_list.length);
         return (
           <ProfileCardFeed
             key={index}
+            location={item.profile.location}
+            verified={item.profile.verified}
+            key={item.id}
             navigation={navigation}
             uid={item.profile.uid}
             nickname={item.profile.nickname}
