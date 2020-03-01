@@ -5,19 +5,14 @@
 import React, {useState, useEffect} from 'react';
 import '~/config';
 import {
-  Text,
   View,
   StyleSheet,
   Dimensions,
   Modal,
   Alert,
   TouchableWithoutFeedback,
-  TouchableOpacity,
   Animated,
   Easing,
-  TouchableHighlight,
-  TouchableNativeFeedbackComponent,
-  SafeAreaView,
 } from 'react-native';
 import palette from '~/lib/styles/palette';
 import {
@@ -29,14 +24,11 @@ import {Button, Row} from 'native-base';
 import LinearGradient from 'react-native-linear-gradient';
 import TouchableByPlatform from '~/components/common/TouchableByPlatform';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
-import RoundBorderOrangeText from '~/components/MeetingSettingScreen/RoundBorderOrangeText';
-import Slider from '@react-native-community/slider';
 import MultiSlider from './MultiSlider';
 import CustomMarker from './CustomMarker';
 import Moment from 'moment';
 import 'moment/locale/ko';
 import Spinner from 'react-native-loading-spinner-overlay';
-import {UserContextConsumer, UserContextProvider} from '~/Context/UserContext';
 import axios from 'axios';
 import AsyncStorage from '@react-native-community/async-storage';
 import firebase from 'react-native-firebase';
@@ -78,8 +70,8 @@ const HomePage = ({navigation}) => {
       try {
         const userValue = await AsyncStorage.getItem('userValue');
         const jUserValue = JSON.parse(userValue);
-        console.log('juse::');
-        console.log(jUserValue);
+        // console.log('juse::');
+        // console.log(jUserValue);
         if (userValue !== null) {
           console.log('uservalue not null');
           if (jUserValue[0] === 'token') {
@@ -109,8 +101,6 @@ const HomePage = ({navigation}) => {
                 jUserValue[global.config.user_info_const.VERIFIED] =
                   result.data.verified;
                 jUserValue[10] = result.data.location;
-                console.log(result.data.location);
-                console.log(jUserValue);
 
                 AsyncStorage.setItem('userValue', JSON.stringify(jUserValue));
                 setAsyncValue(jUserValue);
@@ -196,7 +186,7 @@ const HomePage = ({navigation}) => {
 
     _retrieveData().then(result => {
       if (!result) return;
-      console.log(memberSelected);
+      // console.log(memberSelected);
       axios
         .get('http://13.124.126.30:8000/authorization/firebase/token/')
         .then(result => {
@@ -228,7 +218,7 @@ const HomePage = ({navigation}) => {
             }
             setMemberMainSelected(tmpMemSelected[0]);
             setMemberSelected(tmpMemSelected.slice(1, 3));
-            console.log(tmpMemSelected);
+            // console.log(tmpMemSelected);
             // setText when ongoing
             let tmpMemText = '';
             if (tmpMemSelected[0] === 1 || result.data.personnel_selected === 0)
@@ -247,7 +237,7 @@ const HomePage = ({navigation}) => {
               }
             }
             setOnMemText(tmpMemText);
-            console.log(tmpMemText);
+            // console.log(tmpMemText);
 
             // result.data.date_select 처리 후 memberSelected에 넣기, dateText설정
             let tmpDateInt = result.data.date_selected;
@@ -262,14 +252,14 @@ const HomePage = ({navigation}) => {
               false,
               false,
             ];
-            console.log(tmpDateInt);
+            // console.log(tmpDateInt);
             for (let i = 0; i < 9; i++) {
               tmpDateSelected[i] = Math.floor(tmpDateInt % 2);
               tmpDateInt /= 2;
             }
             setDateMainSelected(tmpDateSelected[0]);
             setDateSelected(tmpDateSelected.slice(1, 8));
-            console.log(tmpDateSelected);
+            // console.log(tmpDateSelected);
             //setText when ongoing
             let tmpDateText = '';
             if (tmpDateSelected[0] === 1 || result.data.date_selected === 0)
@@ -279,7 +269,7 @@ const HomePage = ({navigation}) => {
                 if (tmpDateSelected[index] === 1) {
                   tmpDateText = tmpDateText + wow[index - 1] + ', ';
                 }
-                console.log(dateList);
+                // console.log(dateList);
               });
               tmpDateText = tmpDateText.substring(0, tmpDateText.length - 2);
               if (tmpDateText.length > 20) {
@@ -288,7 +278,7 @@ const HomePage = ({navigation}) => {
               }
             }
             setOnDateText(tmpDateText);
-            console.log(tmpDateText);
+            // console.log(tmpDateText);
 
             // result.date.max,min처리
             let tmpAge = [result.data.min_age, result.data.max_age];
@@ -303,7 +293,7 @@ const HomePage = ({navigation}) => {
     console.log('***jsuer');
     const userValue = await AsyncStorage.getItem('userValue');
     const jUserValue = JSON.parse(userValue);
-    console.log(jUserValue);
+    // console.log(jUserValue);
 
     // 'token',     'uid',        'nickname',   'avata',
     // 'birhdate',  'belong',     'department', 'profile_list',

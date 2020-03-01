@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Text, View, StyleSheet} from 'react-native';
+import {Text, View, StyleSheet, SafeAreaView} from 'react-native';
 import {CustomTextMedium, CustomTextRegular} from '../common/CustomText';
 import palette from '~/lib/styles/palette';
 import {List, ListItem, Left, Right, Body} from 'native-base';
@@ -7,6 +7,7 @@ import Anticon from 'react-native-vector-icons/AntDesign';
 import TouchableByPlatform from '../common/TouchableByPlatform';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import '~/config';
+import {SafeAreaProvider} from 'react-native-safe-area-context';
 const InfoView = ({navigation, userInfo}) => {
   const [info, setInfo] = useState([]);
   const nowYear = 20200000;
@@ -95,26 +96,29 @@ const InfoView = ({navigation, userInfo}) => {
             ) : null}
           </Body>
         </ListItem>
-        {/* <ListItem noIndent style={styles.listItem}>
-        <Left>
-          <CustomTextRegular size={16} color={palette.black}>
-            지역
-          </CustomTextRegular>
-        </Left>
-        <Right>
-          <TouchableOpacity style={styles.listItemRight}>
-            <CustomTextRegular size={16} color={palette.red}>
-              설정하기
+        <ListItem noIndent style={styles.listItem}>
+          <Left>
+            <CustomTextRegular size={16} color={palette.black}>
+              지역
             </CustomTextRegular>
-            <Anticon
-              name="exclamationcircle"
-              style={styles.iconWarning}
-              size={18}
-            />
-          </TouchableOpacity>
-        </Right>
-      </ListItem>
-      <ListItem noIndent style={styles.listItem}>
+          </Left>
+          <Right>
+            <CustomTextRegular size={16} color={palette.gray}>
+              {info[10]}{' '}
+            </CustomTextRegular>
+            {/* <TouchableOpacity style={styles.listItemRight}>
+              <CustomTextRegular size={16} color={palette.red}>
+                설정하기
+              </CustomTextRegular>
+              <Anticon
+                name="exclamationcircle"
+                style={styles.iconWarning}
+                size={18}
+              />
+            </TouchableOpacity> */}
+          </Right>
+        </ListItem>
+        {/*<ListItem noIndent style={styles.listItem}>
         <Left>
           <CustomTextRegular size={16} color={palette.black}>
             키

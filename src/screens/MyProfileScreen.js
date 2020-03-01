@@ -8,6 +8,7 @@ import {
   Alert,
   TouchableWithoutFeedback,
   Dimensions,
+  SafeAreaView,
 } from 'react-native';
 import {HeaderBackButton} from 'react-navigation-stack';
 import {
