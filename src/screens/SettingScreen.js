@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {Text, View, StyleSheet, Switch, Alert} from 'react-native';
 import {HeaderBackButton} from 'react-navigation-stack';
 import {
@@ -16,25 +16,6 @@ import appleAuth, {
 import AsyncStorage from '@react-native-community/async-storage';
 import axios from 'axios';
 
-// async function onLogout() {
-// const appleAuthRequestResponse = await appleAuth.performRequest({
-//   requestedOperation: AppleAuthRequestOperation.LOGOUT,
-// });
-
-// // get current authentication state for user
-// const credentialState = await appleAuth.getCredentialStateForUser(
-//   appleAuthRequestResponse.user,
-// );
-
-// // use credentialState response to ensure the user credential's have been revoked
-// if (credentialState === AppleAuthCredentialState.REVOKED) {
-//   // user is unauthenticated
-//   console.log('un... auth');
-// } else {
-//   console.log('auth..!?');
-// }
-// }
-
 const initUserValue = [
   'token',
   'uid',
@@ -50,15 +31,35 @@ const initUserValue = [
 ];
 
 const SettingScreen = ({navigation}) => {
-  const [toggleLike, setToggleLike] = useState(true);
-  const [toggleLikeMatch, setToggleLikeMatch] = useState(true);
-  const [toggleMeeting, setToggleMeeting] = useState(true);
-  const [toggleMatch, setToggleMatch] = useState(true);
-  const [toggleChatting, setToggleChatting] = useState(true);
+  const [notiBoolList, setNotiBoolList] = useState([
+    true,
+    true,
+    true,
+    true,
+    true,
+  ]);
+  const notiTypeList = [
+    '좋아요',
+    '좋아요 매칭',
+    '대화 신청',
+    '매칭 성공',
+    '채팅',
+  ];
 
   const logout = async () => {
     axios.defaults.headers.common['Authorization'] = '';
     AsyncStorage.setItem('userValue', JSON.stringify(initUserValue));
+  };
+
+  useEffect(() => {
+    //axios.get(auth/user/noti).then(()=>setNotiBoolList)
+  }, []);
+
+  const notiStatusChanged = index => {
+    let tmpList = [...notiBoolList];
+    tmpList[index] = !tmpList[index];
+    setNotiBoolList(tmpList);
+    //axios.patch(auth/user/noti, {code===index})
   };
 
   return (
@@ -70,111 +71,33 @@ const SettingScreen = ({navigation}) => {
           </CustomTextMedium>
         </ListItem>
 
-        <ListItem
-          noIndent
-          button
-          style={styles.listItem}
-          onPress={() => setToggleLike(!toggleLike)}>
-          <Body style={styles.listItemBody}>
-            <CustomTextRegular size={14} color={palette.black}>
-              좋아요
-            </CustomTextRegular>
-          </Body>
-          <Right style={styles.listItemRight}>
-            <Switch
-              value={toggleLike}
-              onValueChange={() => {
-                setToggleLike(!toggleLike);
-              }}
-              thumbColor="white"
-              trackColor={{false: palette.nonselect, true: palette.orange}}
-            />
-          </Right>
-        </ListItem>
-        <ListItem
-          noIndent
-          button
-          style={styles.listItem}
-          onPress={() => setToggleLikeMatch(!toggleLikeMatch)}>
-          <Body style={styles.listItemBody}>
-            <CustomTextRegular size={14} color={palette.black}>
-              좋아요 매칭
-            </CustomTextRegular>
-          </Body>
-          <Right style={styles.listItemRight}>
-            <Switch
-              value={toggleLikeMatch}
-              onValueChange={() => {
-                setToggleLikeMatch(!toggleLikeMatch);
-              }}
-              thumbColor="white"
-              trackColor={{false: palette.nonselect, true: palette.orange}}
-            />
-          </Right>
-        </ListItem>
-        <ListItem
-          noIndent
-          button
-          style={styles.listItem}
-          onPress={() => setToggleMeeting(!toggleMeeting)}>
-          <Body style={styles.listItemBody}>
-            <CustomTextRegular size={14} color={palette.black}>
-              미팅 신청
-            </CustomTextRegular>
-          </Body>
-          <Right style={styles.listItemRight}>
-            <Switch
-              value={toggleMeeting}
-              onValueChange={() => {
-                setToggleMeeting(!toggleMeeting);
-              }}
-              thumbColor="white"
-              trackColor={{false: palette.nonselect, true: palette.orange}}
-            />
-          </Right>
-        </ListItem>
-        <ListItem
-          noIndent
-          button
-          style={styles.listItem}
-          onPress={() => setToggleMatch(!toggleMatch)}>
-          <Body style={styles.listItemBody}>
-            <CustomTextRegular size={14} color={palette.black}>
-              매칭 성공
-            </CustomTextRegular>
-          </Body>
-          <Right style={styles.listItemRight}>
-            <Switch
-              value={toggleMatch}
-              onValueChange={() => {
-                setToggleMatch(!toggleMatch);
-              }}
-              thumbColor="white"
-              trackColor={{false: palette.nonselect, true: palette.orange}}
-            />
-          </Right>
-        </ListItem>
-        <ListItem
-          noIndent
-          button
-          style={styles.listItem}
-          onPress={() => setToggleChatting(!toggleChatting)}>
-          <Body style={styles.listItemBody}>
-            <CustomTextRegular size={14} color={palette.black}>
-              채팅
-            </CustomTextRegular>
-          </Body>
-          <Right style={styles.listItemRight}>
-            <Switch
-              value={toggleChatting}
-              onValueChange={() => {
-                setToggleChatting(!toggleChatting);
-              }}
-              thumbColor="white"
-              trackColor={{false: palette.nonselect, true: palette.orange}}
-            />
-          </Right>
-        </ListItem>
+        {notiTypeList.map((item, index) => {
+          return (
+            <ListItem
+              noIndent
+              button
+              style={styles.listItem}
+              onPress={() => {
+                notiStatusChanged(index);
+              }}>
+              <Body style={styles.listItemBody}>
+                <CustomTextRegular size={14} color={palette.black}>
+                  {item}
+                </CustomTextRegular>
+              </Body>
+              <Right style={styles.listItemRight}>
+                <Switch
+                  value={notiBoolList[index]}
+                  onValueChange={() => {
+                    notiStatusChanged(index);
+                  }}
+                  thumbColor="white"
+                  trackColor={{false: palette.nonselect, true: palette.orange}}
+                />
+              </Right>
+            </ListItem>
+          );
+        })}
         <ListItem header noIndent style={styles.listItemHeader}>
           <CustomTextMedium size={18} color={palette.black}>
             계정 설정
@@ -224,7 +147,7 @@ const SettingScreen = ({navigation}) => {
                       text: '네',
                       onPress: () => {
                         navigation.navigate('Main');
-                        onLogout();
+                        //axios로 서버에 쏴주기
                         console.log('YES LOGOUT');
                       },
                     },
