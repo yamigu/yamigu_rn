@@ -26,6 +26,7 @@ import {
 import {Button} from 'native-base';
 import MoreModal from '~/components/common/MoreModal';
 import Call911Modal from '~/components/common/Call911Modal';
+import SendChatting from '~/components/common/SendChatting';
 
 // const data = ['2:2 미팅', '3:3 미팅', '4:4 미팅', '날짜는 조율 가능해요'];
 
@@ -154,14 +155,12 @@ const ProfileCardFeed = ({
   bothLike,
   likedByServer,
   hasProfile,
-
-  setModalUrl,
-  setModalVisible,
 }) => {
   const [liked, setLiked] = useState(false);
   const [feedList, setFeedList] = useState([]);
   const [moreModalVisible, setMoreModalVisible] = useState(false);
   const [call911ModalVisible, setCall911ModalVisible] = useState(false);
+  const [chattingModalVisible, setChattingModalVisible] = useState(false);
 
   // const [hasChatting, setHasChatting] = useState(false);
 
@@ -227,6 +226,13 @@ const ProfileCardFeed = ({
   };
   return (
     <View style={styles.container}>
+      <Modal visible={chattingModalVisible} transparent={true}>
+        <SendChatting
+          setModalVisible={setChattingModalVisible}
+          avata={avata}
+          uid={uid}
+        />
+      </Modal>
       <Modal
         style={{backgroundColor: palette.gold}}
         visible={moreModalVisible}
@@ -287,7 +293,7 @@ const ProfileCardFeed = ({
               <TouchableOpacity
                 onPress={() => {
                   if (hasProfile === true) {
-                    setModalVisible(false);
+                    setChattingModalVisible(false);
                     navigation.navigate('Profile', {
                       uid,
                       nickname,
@@ -339,8 +345,7 @@ const ProfileCardFeed = ({
           style={styles.touchable}
           onPress={() => {
             console.log('asd');
-            setModalVisible(true);
-            console.log(setModalVisible);
+            setChattingModalVisible(true);
             console.log('done');
             hasProfile === true ? null : alertAddProfile();
           }}>

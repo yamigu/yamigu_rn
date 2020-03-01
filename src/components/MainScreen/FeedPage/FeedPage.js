@@ -14,9 +14,6 @@ const FeedPage = props => {
   const [likeMatchingProp, setLikeMatchingProp] = useState([]);
   const [profileCardProp, setProfileCardProp] = useState([]);
 
-  const [modalVisible, setModalVisible] = useState(false);
-  const [modalUrl, setModalUrl] = useState('asd');
-
   const [hasProfile, setHasProfile] = useState(false);
 
   const [] = useState([]);
@@ -116,14 +113,10 @@ const FeedPage = props => {
         // console.log('axios done');
       });
     //axios for profilecard
-  }, [props.navigation, modalVisible]);
+  }, [props.navigation]);
 
   return (
     <View style={styles.root}>
-      <Modal animationType="none" transparent={true} visible={modalVisible}>
-        <SendChatting setModalVisible={setModalVisible} />
-      </Modal>
-
       <Container style={styles.container}>
         <Content
           onMomentumScrollBegin={() => {
@@ -167,8 +160,6 @@ const FeedPage = props => {
             navigation={props.navigation}
             profileCardProp={profileCardProp}
             hasProfile={hasProfile}
-            setModalUrl={setModalVisible}
-            setModalVisible={setModalVisible}
           />
         </Content>
       </Container>

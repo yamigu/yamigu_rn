@@ -18,8 +18,13 @@ const ChattingIcon = ({navigation}) => {
       resolve(storage);
     });
   };
+
   useEffect(() => {
     getStorage().then(storage => {
+      if (storage === null || storage === undefined) {
+        console.log(storage);
+        return;
+      }
       axios
         .get('http://13.124.126.30:8000/authorization/firebase/token/')
         .then(result => {

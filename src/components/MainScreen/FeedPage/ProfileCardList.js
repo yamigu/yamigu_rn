@@ -2,16 +2,8 @@ import React, {useState, useEffect} from 'react';
 import {View} from 'react-native';
 import ProfileCardFeed from './ProfileCardFeed';
 import axios from 'axios';
-import palette from '~/lib/styles/palette';
-import {CustomTextBold} from '~/components/common/CustomText';
 
-const ProfileCardList = ({
-  navigation,
-  profileCardProp,
-  hasProfile,
-  setModalVisible,
-  setModalUrl,
-}) => {
+const ProfileCardList = ({navigation, profileCardProp, hasProfile}) => {
   let nowYear = 20200000;
   useEffect(() => {}, []);
 
@@ -33,8 +25,6 @@ const ProfileCardList = ({
             bothLike={false}
             my_feed={false}
             hasProfile={hasProfile}
-            setModalVisible={setModalVisible}
-            setModalUrl={setModalUrl}
           />
         );
       })}
