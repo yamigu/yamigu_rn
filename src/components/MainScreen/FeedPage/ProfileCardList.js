@@ -12,6 +12,7 @@ const ProfileCardList = ({navigation, profileCardProp, hasProfile}) => {
       {profileCardProp.map(item => {
         return (
           <ProfileCardFeed
+            key={item.id}
             navigation={navigation}
             uid={item.profile.uid}
             nickname={item.profile.nickname}

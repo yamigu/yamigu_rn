@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, {useState, useEffect, createRef} from 'react';
+import React, {useState, useEffect, createRef, useRef} from 'react';
 import {
   View,
   StyleSheet,
@@ -24,6 +24,7 @@ import TouchableByPlatform from '../common/TouchableByPlatform';
 import ImagePicker from 'react-native-image-picker';
 import {Button} from 'native-base';
 import axios from 'axios';
+import Octionicon from 'react-native-vector-icons/Octicons';
 import '~/config';
 import file_upload from '~/lib/utils/file_upload';
 const dw = Dimensions.get('window').width;
@@ -35,12 +36,28 @@ const MyFeedView = ({userInfo, scroll, offsetY}) => {
   const [feed_list, setFeed_list] = useState([]);
   const [btnMeasure, setBtnMeasure] = useState(null);
 
-  const _image = createRef();
-  const measureView = event => {
-    // console.log(`*** event: ${JSON.stringify(event.nativeEvent)}`);
-    // you'll get something like this here:
-    // {"target":1105,"layout":{"y":0,"width":256,"x":32,"height":54.5}}
+  const _image = useRef();
+  const _viewPager = useRef();
+
+  const deleteFeed = () => {
+    Alert.alert('정말 피드를 삭제하시겠습니까?', '', [
+      {
+        text: '네',
+        onPress: () => {
+          const fid = feed_list[_viewPager.current._currentIndex - 1].id;
+          axios
+            .patch('http://13.124.126.30:8000/core/feed/' + fid + '/delete/')
+            .then(result => {
+              let temp = feed_list.slice();
+              temp.splice(_viewPager.current._currentIndex - 1, 1);
+              setFeed_list(temp);
+            });
+        },
+      },
+      {text: '아니오', onPress: () => console.log('Cancel Pressed')},
+    ]);
   };
+  const measureView = event => {};
   const _measure = obj => {
     obj.current.measure((x, y, width, height, pagex, pagey) => {
       const location = {
@@ -197,6 +214,7 @@ const MyFeedView = ({userInfo, scroll, offsetY}) => {
       </CustomTextMedium>
       {imageSource === null ? (
         <IndicatorViewPager
+          ref={_viewPager}
           style={styles.viewPager}
           indicator={_renderDotIndicator()}>
           <ImageBackground
@@ -235,6 +253,11 @@ const MyFeedView = ({userInfo, scroll, offsetY}) => {
                   key={index + 2}
                   source={item.img_src === null ? null : {uri: item.img_src}}
                 />
+                <View style={styles.roundWrapper}>
+                  <Button style={styles.deleteBtn} onPress={deleteFeed}>
+                    <Octionicon name="x" size={24} style={styles.iconX} />
+                  </Button>
+                </View>
               </View>
             );
           })}
@@ -290,6 +313,26 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingHorizontal: 10,
     marginBottom: 10,
+  },
+  roundWrapper: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
+    width: 35,
+    height: 35,
+    borderRadius: 17.5,
+    overflow: 'hidden',
+  },
+  deleteBtn: {
+    justifyContent: 'center',
+    alignContent: 'center',
+    width: 35,
+    height: 35,
+    borderRadius: 17.5,
+    backgroundColor: '#00000077',
+  },
+  iconX: {
+    color: '#ffffffAA',
   },
 });
 
