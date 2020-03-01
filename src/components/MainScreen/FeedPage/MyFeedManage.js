@@ -8,7 +8,7 @@ import {
   Modal,
   TouchableOpacity,
 } from 'react-native';
-import React, {useState, useReducer, useEffect} from 'react';
+import React, {useState, useReducer, useEffect, useRef} from 'react';
 import palette from '~/lib/styles/palette';
 import {Thumbnail, Input, Button} from 'native-base';
 import TouchableByPlatform from '~/components/common/TouchableByPlatform';
@@ -33,18 +33,54 @@ const dw = Dimensions.get('window').width;
 const dh = Dimensions.get('window').height;
 const nowYear = 20200000;
 
-const MyFeedManage = ({navigation, myFeedManageProp, myFeed, setMyFeed}) => {
+const MyFeedManage = ({
+  navigation,
+  myFeedManageProp,
+  myFeed,
+  setMyFeed,
+  scroll,
+}) => {
   const [imageSource, setImageSource] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
 
   const [feedDisplay, setFeedDisplay] = useState(false);
-
+  const [btnMeasure, setBtnMeasure] = useState(null);
+  const _imageButton = useRef();
   useEffect(() => {
     console.log('uid::::::');
     console.log(myFeedManageProp.uid);
   }, []);
-
+  const _measure = obj => {
+    obj.current.measure((x, y, width, height, pagex, pagey) => {
+      const location = {
+        fx: x,
+        fy: y,
+        px: pagex,
+        py: pagey,
+        width: width,
+        height: height,
+      };
+      _scrollTop();
+      setBtnMeasure(location);
+    });
+  };
+  const measureView = event => {
+    // console.log(`*** event: ${JSON.stringify(event.nativeEvent)}`);
+    // you'll get something like this here:
+    // {"target":1105,"layout":{"y":0,"width":256,"x":32,"height":54.5}}
+  };
+  const _scrollTop = () => {
+    Object.keys(scroll.current._root).map(item => {
+      console.log(item);
+    });
+    // console.log(scroll);
+    setTimeout(() => {
+      scroll.current._root.scrollToPosition(0, 0);
+    }, 50);
+  };
   const selectPhotoTapped = () => {
+    if (modalVisible) return;
+    _measure(_imageButton);
     const options = {
       quality: 1.0,
       maxWidth: 500,
@@ -150,13 +186,30 @@ const MyFeedManage = ({navigation, myFeedManageProp, myFeed, setMyFeed}) => {
             </CustomTextBold>
           </Button>
         </View>
+        {btnMeasure !== null && btnMeasure !== undefined ? (
+          <View
+            style={{
+              position: 'absolute',
+              zIndex: 2,
+              width: dw,
+              height: dw / 1.618,
+              top: btnMeasure.py + btnMeasure.height,
+            }}>
+            <Image style={styles.viewPage} source={imageSource} />
+          </View>
+        ) : null}
       </Modal>
 
       <View style={styles.actionDiv}>
         <TouchableByPlatform
           style={styles.touchable}
           onPress={selectPhotoTapped}>
-          <View style={styles.button}>
+          <View
+            style={styles.button}
+            onLayout={event => {
+              measureView(event);
+            }}
+            ref={_imageButton}>
             <AntDesignIcon name="picture" size={18} style={{marginRight: 5}} />
             <CustomTextRegular size={14} color={palette.black}>
               사진

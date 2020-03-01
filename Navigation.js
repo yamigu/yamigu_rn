@@ -20,15 +20,11 @@ import GuideScreen from '~/screens/GuideScreen';
 import TermsScreen from '~/screens/TermsScreen';
 import PrivacyScreen from '~/screens/PrivacyScreen';
 import MyProfileScreen from '~/screens/MyProfileScreen';
-import TouchableByPlatform from '~/components/common/TouchableByPlatform';
-import {Icon} from 'native-base';
-import palette from '~/lib/styles/palette';
 import AddFriendsScreen from '~/screens/AddFriendsScreen';
 import StoreScreen from '~/screens/StoreScreen';
 import ShieldScreen from '~/screens/ShieldScreen';
 import SettingScreen from '~/screens/SettingScreen';
 import HomeGuideScreen from '~/screens/HomeGuideScreen';
-import AsyncStorage from '@react-native-community/async-storage';
 
 const deviceWidth = Dimensions.get('window').width;
 
