@@ -70,77 +70,84 @@ const HomePage = ({navigation}) => {
   const [tmpSt, setTmpSt] = useState('');
   const [matchRequested, setMatchRequested] = useState(false);
 
-  const _retrieveData = async () => {
+  const _retrieveData = () => {
     console.log('retrieve');
     // axios.defaults.headers.common['Authorization'] = '';
+    return new Promise(async (resolve, reject) => {
+      try {
+        const userValue = await AsyncStorage.getItem('userValue');
+        const jUserValue = JSON.parse(userValue);
+        console.log('juse::');
+        console.log(jUserValue);
+        if (userValue !== null) {
+          console.log('uservalue not null');
+          if (jUserValue[0] === 'token') {
+            console.log('token not set yet.');
+            resolve(false);
+          } else {
+            console.log('token is set' + jUserValue[0]);
+            axios.defaults.headers.common['Authorization'] =
+              'Token ' + jUserValue[0];
+            axios
+              .get('http://13.124.126.30:8000/authorization/user/info/')
+              .then(result => {
+                // console.log(result.status);
+                jUserValue[global.config.user_info_const.UID] = result.data.uid;
+                jUserValue[global.config.user_info_const.NICKNAME] =
+                  result.data.nickname;
+                jUserValue[global.config.user_info_const.AVATA] =
+                  result.data.avata;
+                jUserValue[global.config.user_info_const.BIRTHDATE] =
+                  result.data.birthdate;
+                jUserValue[global.config.user_info_const.BELONG] =
+                  result.data.belong;
+                jUserValue[global.config.user_info_const.DEPARTMENT] =
+                  result.data.department;
+                jUserValue[global.config.user_info_const.GENDER] =
+                  result.data.gender;
+                jUserValue[global.config.user_info_const.VERIFIED] =
+                  result.data.verified;
 
-    try {
-      const userValue = await AsyncStorage.getItem('userValue');
-      const jUserValue = JSON.parse(userValue);
-      console.log('juse::');
-      console.log(jUserValue);
-      if (userValue !== null) {
-        console.log('uservalue not null');
-        if (jUserValue[0] === 'token') {
-          console.log('token not set yet.');
-          return false;
+                AsyncStorage.setItem('userValue', JSON.stringify(jUserValue));
+                setAsyncValue(jUserValue);
+                resolve(true);
+              })
+              .then(() => {
+                return axios
+                  .get('http://13.124.126.30:8000/authorization/user/yami/')
+                  .then(result => {
+                    jUserValue[global.config.user_info_const.YAMI] =
+                      result.data;
+                    AsyncStorage.setItem(
+                      'userValue',
+                      JSON.stringify(jUserValue),
+                    );
+                    setAsyncValue(jUserValue);
+                    resolve(true);
+                  });
+              })
+              .catch(e => {
+                if (e.response.status === 401) {
+                  AsyncStorage.setItem(
+                    'userValue',
+                    JSON.stringify(initUserValue),
+                  );
+                }
+                resolve(false);
+              });
+          }
         } else {
-          console.log('token is set' + jUserValue[0]);
-          axios.defaults.headers.common['Authorization'] =
-            'Token ' + jUserValue[0];
-          axios
-            .get('http://13.124.126.30:8000/authorization/user/info/')
-            .then(result => {
-              // console.log(result.status);
-              jUserValue[global.config.user_info_const.UID] = result.data.uid;
-              jUserValue[global.config.user_info_const.NICKNAME] =
-                result.data.nickname;
-              jUserValue[global.config.user_info_const.AVATA] =
-                result.data.avata;
-              jUserValue[global.config.user_info_const.BIRTHDATE] =
-                result.data.birthdate;
-              jUserValue[global.config.user_info_const.BELONG] =
-                result.data.belong;
-              jUserValue[global.config.user_info_const.DEPARTMENT] =
-                result.data.department;
-              jUserValue[global.config.user_info_const.GENDER] =
-                result.data.gender;
-              jUserValue[global.config.user_info_const.VERIFIED] =
-                result.data.verified;
-
-              AsyncStorage.setItem('userValue', JSON.stringify(jUserValue));
-              setAsyncValue(jUserValue);
-              return true;
-            })
-            .then(() => {
-              return axios
-                .get('http://13.124.126.30:8000/authorization/user/yami/')
-                .then(result => {
-                  jUserValue[global.config.user_info_const.YAMI] = result.data;
-                  AsyncStorage.setItem('userValue', JSON.stringify(jUserValue));
-                  setAsyncValue(jUserValue);
-                  return true;
-                });
-            })
-            .catch(e => {
-              if (e.response.status === 401) {
-                AsyncStorage.setItem(
-                  'userValue',
-                  JSON.stringify(initUserValue),
-                );
-              }
-              return false;
-            });
+          AsyncStorage.setItem('userValue', JSON.stringify(initUserValue));
+          setAsyncValue(jUserValue);
+          resolve(false);
+          // console.log('first user, async init');
         }
-      } else {
-        AsyncStorage.setItem('userValue', JSON.stringify(initUserValue));
-        setAsyncValue(jUserValue);
-        // console.log('first user, async init');
+      } catch (error) {
+        console.log(error);
+        resolve(false);
       }
-    } catch (error) {
-      console.log(error);
-    }
-    return true;
+      resolve(true);
+    });
   };
 
   useEffect(() => {
@@ -185,7 +192,7 @@ const HomePage = ({navigation}) => {
 
     _retrieveData().then(result => {
       if (!result) return;
-      // console.log(memberSelected);
+      console.log(memberSelected);
       axios
         .get('http://13.124.126.30:8000/authorization/firebase/token/')
         .then(result => {

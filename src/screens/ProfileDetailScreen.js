@@ -143,7 +143,11 @@ const ProfileDetailScreen = ({navigation}) => {
         animationType="none"
         transparent={true}
         visible={modalVisible}>
-        <SendChatting setModalVisible={setModalVisible} />
+        <SendChatting
+          setModalVisible={setModalVisible}
+          uid={uid}
+          avata={avata}
+        />
       </Modal>
       <Modal
         style={{backgroundColor: palette.gold}}
