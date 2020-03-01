@@ -66,7 +66,6 @@ const Call911Modal = ({setCall911ModalVisible, uid}) => {
             }}>
             <CustomTextRegular size={16} style={{padding: 15}}>
               어떤 문제가 있나요?
-
             </CustomTextRegular>
             <View
               style={{
@@ -113,7 +112,7 @@ const Call911Modal = ({setCall911ModalVisible, uid}) => {
               }}
               onPress={() => {
                 if (listTrue === false) {
-                    onPress={reportRequest}>
+                  onPress = {reportRequest};
                 } else setCall911ModalVisible(false);
               }}>
               <CustomTextRegular
