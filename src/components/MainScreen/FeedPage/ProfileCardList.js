@@ -5,12 +5,12 @@ import axios from 'axios';
 
 const ProfileCardList = ({navigation, profileCardProp, hasProfile}) => {
   let nowYear = 20200000;
-  useEffect(() => {}, []);
+  useEffect(() => {}, [profileCardProp]);
 
   return (
     <View>
       {profileCardProp.map(item => {
-        console.log(item);
+        console.log(item.feed_list.length);
         return (
           <ProfileCardFeed
             verified={item.profile.verified}

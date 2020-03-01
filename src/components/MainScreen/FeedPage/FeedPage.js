@@ -4,21 +4,22 @@ import palette from '~/lib/styles/palette';
 import ProfileCardList from './ProfileCardList';
 import LikeMatchingList from './LikeMatchingList';
 import MyFeedManage from './MyFeedManage';
-import {Content, Container, RefreshControl} from 'native-base';
+import {Content, Container} from 'native-base';
 import axios from 'axios';
-import SendChatting from '~/components/common/SendChatting';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 const FeedPage = props => {
   const [myFeedManageProp, setMyFeedManageProp] = useState([]);
   const [myFeed, setMyFeed] = useState([]);
   const [likeMatchingProp, setLikeMatchingProp] = useState([]);
   const [profileCardProp, setProfileCardProp] = useState([]);
-  // const [refreshing, setRefreshing] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+  const [tmpState, setTmpState] = useState(false);
   const [hasProfile, setHasProfile] = useState(false);
   const _scroll = useRef();
 
   useEffect(() => {
-    console.log('useEffected');
+    // console.log('useEffected');
     let innerHasProfile = false;
     props.navigation.addListener(
       'didFocus',
@@ -110,16 +111,17 @@ const FeedPage = props => {
         } else {
           setProfileCardProp(tmp);
         }
-        // console.log();
       })
       .then(() => {
-        // console.log('axios done');
+        setRefreshing(false);
+        console.log('effect done');
       });
     //axios for profilecard
-  }, [props.navigation]);
+  }, [props.navigation, tmpState]);
 
   return (
     <View style={styles.root}>
+      <Spinner visible={refreshing} textContent={'refreshing...'} />
       <Container style={styles.container}>
         <Content
           ref={_scroll}
@@ -146,10 +148,13 @@ const FeedPage = props => {
                 )
               : null;
           }}
-          onScrollToTop={() => {
-            console.log(hasProfile);
-            console.log('scroll to top');
-            // hasProfile === true ? setRefresh(!refresh) : null;
+          onMomentumScrollEnd={() => {}}
+          onScroll={event => {
+            if (event.nativeEvent.contentOffset.y === 0) {
+              console.log('now');
+              setTmpState(!tmpState);
+              // setRefreshing(true);
+            }
           }}
           contentContainerStyle={styles.innerView}
           showsVerticalScrollIndicator={false}>

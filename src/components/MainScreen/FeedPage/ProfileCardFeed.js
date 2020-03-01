@@ -244,7 +244,7 @@ const ProfileCardFeed = ({
           setCall911ModalVisible={setCall911ModalVisible}
         />
       </Modal>
-      {console.log(call911ModalVisible)}
+      {/* {console.log(call911ModalVisible)} */}
       <Modal
         style={{backgroundColor: palette.gold}}
         visible={call911ModalVisible}

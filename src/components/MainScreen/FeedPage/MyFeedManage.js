@@ -66,8 +66,8 @@ const MyFeedManage = ({
     ]);
   };
   useEffect(() => {
-    console.log('uid::::::');
-    console.log(myFeedManageProp.uid);
+    // console.log('uid::::::');
+    // console.log(myFeedManageProp.uid);
   }, []);
 
   const _measure = obj => {
