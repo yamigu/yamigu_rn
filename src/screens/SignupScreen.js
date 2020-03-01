@@ -101,6 +101,7 @@ const SignupScreen = ({navigation}) => {
                   is_student: isStudentString,
                   department: department,
                   belong: belong,
+                  location: locationText,
                 },
               ).then(() => console.log('done'));
             } else if (page === 3) {
