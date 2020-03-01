@@ -6,6 +6,8 @@ import {Button, Toast} from 'native-base';
 import {CustomTextMedium, CustomTextRegular} from './CustomText';
 import palette from '~/lib/styles/palette';
 import {StyleSheet} from 'react-native';
+import axios from 'axios';
+
 const dh = Dimensions.get('window').height;
 const dw = Dimensions.get('window').width;
 
@@ -13,7 +15,19 @@ const Call911Modal = ({setCall911ModalVisible, uid}) => {
   const list911 = ['부적절한 사진', '허위 프로필', '사진도용', '욕설 및 비방'];
   const [listState, setListState] = useState([0, 0, 0, 0]);
   const [listTrue, setListTrue] = useState(false);
+  const reportRequest = () => {
+    const index = listState.findIndex(value => value === 1);
+    if (index === -1) return;
 
+    axios
+      .post('http://13.124.126.30:8000/core/report/', {
+        who: uid,
+        why: list911[index],
+      })
+      .then(() => {
+        setCall911ModalVisible(false);
+      });
+  };
   return (
     <SafeAreaView
       style={{
@@ -52,6 +66,7 @@ const Call911Modal = ({setCall911ModalVisible, uid}) => {
           {list911.map((item, index) => {
             return (
               <Button
+                key={index}
                 style={styles.btn}
                 onPress={() => {
                   let tmp = [0, 0, 0, 0];
@@ -79,7 +94,7 @@ const Call911Modal = ({setCall911ModalVisible, uid}) => {
 
           <Button
             style={{padding: 12, backgroundColor: 'white'}}
-            onPress={() => setCall911ModalVisible(false)}>
+            onPress={reportRequest}>
             <CustomTextRegular
               size={16}
               color={listTrue === false ? palette.black : palette.orange}>

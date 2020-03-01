@@ -22,16 +22,19 @@ import axios from 'axios';
 import Spinner from 'react-native-loading-spinner-overlay';
 import Contacts from 'react-native-contacts';
 import {PermissionsAndroid} from 'react-native';
-
 const pf = Platform.OS;
 
 const deviceWidth = Dimensions.get('window').width;
+
+const replaceAll = (str, searchStr, replaceStr) => {
+  return str.split(searchStr).join(replaceStr);
+};
 const ShieldScreen = ({params}) => {
   const [loading, setLoading] = useState(false);
 
-  const [enrolling, setEnrolling] = useState(false);
+  const [enrolling, setEnrolling] = useState(0);
   const [inputText, setInputText] = useState('');
-
+  const [focused, setFocused] = useState(false);
   const [sheilding, setSheilding] = useState([]);
 
   const [phonebook, setPhonebook] = useState([]);
@@ -39,16 +42,37 @@ const ShieldScreen = ({params}) => {
   useEffect(() => {
     //axios.get(아는 사람 피하기 목록 가져오기)
     //setSheilding(result.data);
-    let tmp = ['1', '2', '3'];
-    setSheilding(tmp);
+    axios.get('http://13.124.126.30:8000/core/shield/').then(result => {
+      setSheilding(result.data.reverse());
+    });
   }, []);
 
-  const sendStringtoServer = asd => {
+  const requestShield = data => {
     //server로 보내기
-    Alert.alert(asd);
-    setInputText('');
+    axios.post('http://13.124.126.30:8000/core/shield/', data).then(result => {
+      const newData = sheilding.slice();
+      result.data.map(item => {
+        newData.unshift(item);
+      });
+      setSheilding(newData);
+      setEnrolling(0);
+      setFocused(false);
+      setInputText('');
+    });
   };
-
+  const deleteShield = (data, index) => {
+    axios
+      .patch('http://13.124.126.30:8000/core/shield/', data)
+      .then(result => {
+        console.log(result.data);
+        const newData = sheilding.slice();
+        newData.splice(index, 1);
+        setSheilding(newData);
+      })
+      .catch(error => {
+        console.log(error.response);
+      });
+  };
   const getting = () => {
     return new Promise((resolve, reject) => {
       Contacts.checkPermission((err, permission) => {
@@ -79,8 +103,8 @@ const ShieldScreen = ({params}) => {
 
         // console.log(contacts.phoneNumbers[2]);
         let tmpPhonebook = [];
+        const data = new FormData();
         contacts.map((item, index) => {
-          console.log(item.company);
           if (
             (item.phoneNumbers[0] === null) |
             (item.phoneNumbers[0] === undefined)
@@ -88,10 +112,15 @@ const ShieldScreen = ({params}) => {
             // console.log('null');
           } else {
             // console.log(item.phoneNumbers[0].number);
-            tmpPhonebook.push(item.phoneNumbers[0].number);
+            data.append(
+              'phoneno',
+              replaceAll(item.phoneNumbers[0].number, '-', ''),
+            );
           }
         });
-        console.log(tmpPhonebook);
+        console.log(data);
+
+        requestShield(data);
         // axios.post(~~tmpPhonebook)
         // setLoading(false);
         return contacts;
@@ -122,9 +151,6 @@ const ShieldScreen = ({params}) => {
     // setLoading(false);
   };
 
-  const sendCancellingToServer = asd => {
-    Alert.alert(asd);
-  };
   return (
     <Content showsVerticalScrollIndicator={false} style={styles.root}>
       <Spinner
@@ -134,7 +160,7 @@ const ShieldScreen = ({params}) => {
       />
       <View style={styles.container}>
         <CustomTextMedium size={18} color={palette.black}>
-          혹시 아는 사람 만날까봐 걱정되시나요?
+          혹시 아는 제람 만날까봐 걱정되시나요?
         </CustomTextMedium>
         <CustomTextRegular
           size={12}
@@ -148,7 +174,9 @@ const ShieldScreen = ({params}) => {
         <View style={styles.buttonView}>
           <Button
             style={styles.buttonSmall}
-            onPress={() => setEnrolling(!enrolling)}>
+            onPress={() => {
+              enrolling === 1 ? setEnrolling(0) : setEnrolling(1);
+            }}>
             <CustomTextMedium size={14} color="white">
               번호 직접 등록
             </CustomTextMedium>
@@ -159,23 +187,38 @@ const ShieldScreen = ({params}) => {
             </CustomTextMedium>
           </Button>
         </View>
-        <Button style={styles.buttonBig}>
+        <Button
+          style={styles.buttonBig}
+          onPress={() => {
+            enrolling === 2 ? setEnrolling(0) : setEnrolling(2);
+          }}>
           <CustomTextMedium size={14} color={palette.orange}>
             피하고 싶은 소속 등록
           </CustomTextMedium>
         </Button>
-        {enrolling === true ? (
+        {enrolling !== 0 ? (
           <View>
             <Input
               onChangeText={value => {
                 setInputText(value);
               }}
               value={inputText}
+              focused={focused}
               placeholderTextSize={10}
-              placeholder="피하고 싶은 소속이나 번호를 입력해보세요"
+              placeholder={
+                enrolling === 1 ? '번호를 입력하세요' : '소속을 입력하세요'
+              }
               style={{backgroundColor: 'white', borderRadius: 10}}></Input>
             <Button
-              onPress={() => sendStringtoServer(inputText)}
+              onPress={() => {
+                const data = new FormData();
+
+                enrolling === 1
+                  ? data.append('phoneno', replaceAll(inputText, '-', ''))
+                  : data.append('belong', inputText);
+
+                requestShield(data);
+              }}
               style={{
                 backgroundColor: palette.orange,
                 flexDirection: 'column',
@@ -198,18 +241,22 @@ const ShieldScreen = ({params}) => {
           <ListItem key={index} noIndent style={styles.listItem}>
             <Body>
               <CustomTextRegular size={16} color={palette.black}>
-                {item}
+                {item.phoneno || item.belong}
               </CustomTextRegular>
             </Body>
             <Right>
               <Button
+                transparent
                 style={{
                   width: 20,
                   height: 30,
-                  backgroundColor: 'white',
                 }}
                 onPress={() => {
-                  sendCancellingToServer(index.toString());
+                  const data = new FormData();
+                  item.phoneno !== null && item.phoneno !== ''
+                    ? data.append('phoneno', item.phoneno)
+                    : data.append('belong', item.belong);
+                  deleteShield(data, index);
                 }}>
                 <Octionicon name="x" size={15} style={styles.iconX} />
               </Button>
