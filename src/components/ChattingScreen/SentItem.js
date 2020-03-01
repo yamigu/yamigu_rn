@@ -32,7 +32,7 @@ const ReceivedItem = ({nickname, text, time, uid}) => {
 const styles = StyleSheet.create({
   listItem: {
     marginLeft: 15,
-    marginTop: 15,
+    marginBottom: 15,
     paddingTop: 0,
     paddingLeft: 0,
     paddingBottom: 0,

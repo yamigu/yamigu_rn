@@ -50,8 +50,10 @@ const ChattingPreview = ({
           console.log(result.val());
           setLastMessage(result.val());
           if (
+            storage === null ||
+            storage === undefined ||
             result.val().time >
-            storage['room' + roomId][storage['room' + roomId].length - 1].time
+              storage['room' + roomId][storage['room' + roomId].length - 1].time
           ) {
             setIsNew(true);
           }

@@ -151,10 +151,17 @@ const ChattingScreen = ({navigation}) => {
                   ? Moment(parseInt(item.time)).format('M월 DD일 a h:mm')
                   : Moment(parseInt(item.time)).format('a h:mm');
               if (item.idSender === myId)
-                return <SentItem text={item.message} time={fortime} />;
+                return (
+                  <SentItem
+                    key={item.time + item.idSender}
+                    text={item.message}
+                    time={fortime}
+                  />
+                );
               else
                 return (
                   <ReceivedItem
+                    key={item.time + item.idSender}
                     nickname={partnerInfo.nickname}
                     text={item.message}
                     time={fortime}
@@ -280,6 +287,7 @@ const styles = StyleSheet.create({
     padding: 0,
     margin: 0,
     flex: 1,
+    paddingTop: 15,
   },
   container: {
     flexDirection: 'column',
