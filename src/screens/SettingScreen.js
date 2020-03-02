@@ -103,66 +103,68 @@ const SettingScreen = ({navigation}) => {
             계정 설정
           </CustomTextMedium>
         </ListItem>
-        <ListItem noIndent button style={styles.listItem}>
+        <ListItem
+          noIndent
+          button
+          style={styles.listItem}
+          onPress={() =>
+            Alert.alert(
+              '정말 로그아웃 하시겠습니까?',
+              '',
+              [
+                {
+                  text: '네',
+                  onPress: () => {
+                    logout().then(() => {
+                      navigation.navigate('Main');
+                      Alert.alert('로그아웃 되었습니다.');
+                      console.log('YES LOGOUT');
+                    });
+                  },
+                },
+                {
+                  text: '아니오',
+                  onPress: () => console.log('NOPE'),
+                },
+              ],
+              {cancelable: false},
+            )
+          }>
           <Body style={styles.listItemBody}>
-            <TouchableByPlatform
-              onPress={() =>
-                Alert.alert(
-                  '정말 로그아웃 하시겠습니까?',
-                  '',
-                  [
-                    {
-                      text: '네',
-                      onPress: () => {
-                        logout().then(() => {
-                          navigation.navigate('Main');
-                          Alert.alert('로그아웃 되었습니다.');
-                          console.log('YES LOGOUT');
-                        });
-                      },
-                    },
-                    {
-                      text: '아니오',
-                      onPress: () => console.log('NOPE'),
-                    },
-                  ],
-                  {cancelable: false},
-                )
-              }>
-              <CustomTextRegular size={14} color={palette.black}>
-                로그아웃
-              </CustomTextRegular>
-            </TouchableByPlatform>
+            <CustomTextRegular size={14} color={palette.black}>
+              로그아웃
+            </CustomTextRegular>
           </Body>
         </ListItem>
-        <ListItem noIndent button style={styles.listItem}>
+        <ListItem
+          noIndent
+          button
+          style={styles.listItem}
+          onPress={() =>
+            Alert.alert(
+              '정말 탈퇴.. 하시겠습니까?',
+              '',
+              [
+                {
+                  text: '네',
+                  onPress: () => {
+                    navigation.navigate('Main');
+                    //axios로 서버에 쏴주기
+                    console.log('YES LOGOUT');
+                  },
+                },
+                {
+                  text: '아니오',
+                  onPress: () => console.log('NOPE'),
+                },
+              ],
+              {cancelable: false},
+            )
+          }>
           <Body style={styles.listItemBody}>
-            <TouchableByPlatform
-              onPress={() =>
-                Alert.alert(
-                  '정말 탈퇴.. 하시겠습니까?',
-                  '',
-                  [
-                    {
-                      text: '네',
-                      onPress: () => {
-                        navigation.navigate('Main');
-                        //axios로 서버에 쏴주기
-                        console.log('YES LOGOUT');
-                      },
-                    },
-                    {
-                      text: '아니오',
-                      onPress: () => console.log('NOPE'),
-                    },
-                  ],
-                  {cancelable: false},
-                )
-              }>
-              <CustomTextRegular size={14} color={palette.black}>
-                계정 탈퇴
-              </CustomTextRegular>
-            </TouchableByPlatform>
+            <CustomTextRegular size={14} color={palette.black}>
+              계정 탈퇴
+            </CustomTextRegular>
           </Body>
         </ListItem>
       </List>
@@ -209,7 +211,9 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0,
     backgroundColor: palette.default_bg,
   },
-  listItemBody: {},
+  listItemBody: {
+    paddingTop: 0,
+  },
   listItemRight: {},
 });
 export default SettingScreen;

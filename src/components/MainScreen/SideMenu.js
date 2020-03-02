@@ -99,36 +99,42 @@ const SideMenu = ({navigation}) => {
               />
             </ImageBackground>
           </TouchableByPlatform> */}
-          <View
-            style={{backgroundColor: palette.default_bg, height: 150}}></View>
-          <View style={styles.thumbnailWrapper}>
-            <TouchableByPlatform
-              onPress={() =>
-                sideInfo[global.config.user_info_const.NICKNAME] === 'nickname'
-                  ? navigation.navigate('Login')
-                  : navigation.navigate('MyProfile')
-              }>
-              <Thumbnail
-                style={styles.thumbnail}
-                source={
-                  sideInfo[global.config.user_info_const.AVATA] === 'avata' ||
-                  sideInfo[global.config.user_info_const.AVATA] === null
-                    ? require('~/images/user-default-profile.png')
-                    : {uri: sideInfo[global.config.user_info_const.AVATA]}
-                }
+          <View style={styles.profilePane}>
+            <View style={styles.profileWrapper}>
+              <View style={styles.thumbnailWrapper}>
+                <TouchableByPlatform
+                  onPress={() =>
+                    sideInfo[global.config.user_info_const.NICKNAME] ===
+                    'nickname'
+                      ? navigation.navigate('Login')
+                      : navigation.navigate('MyProfile')
+                  }>
+                  <Thumbnail
+                    style={styles.thumbnail}
+                    source={
+                      sideInfo[global.config.user_info_const.AVATA] ===
+                        'avata' ||
+                      sideInfo[global.config.user_info_const.AVATA] === null
+                        ? require('~/images/user-default-profile.png')
+                        : {uri: sideInfo[global.config.user_info_const.AVATA]}
+                    }
+                  />
+                </TouchableByPlatform>
+              </View>
+              <Image
+                source={require('~/images/pencil.png')}
+                style={{
+                  position: 'absolute',
+                  zIndex: 1,
+                  width: deviceWidth * 0.813 * 0.3934 * 0.25,
+                  height: deviceWidth * 0.813 * 0.3934 * 0.25,
+                  bottom: 0,
+                  alignSelf: 'flex-end',
+                }}
               />
-            </TouchableByPlatform>
-            <Image
-              source={require('~/images/pencil.png')}
-              style={{
-                position: 'absolute',
-                zIndex: 1,
-                width: deviceWidth * 0.813 * 0.3934 * 0.25,
-                height: deviceWidth * 0.813 * 0.3934 * 0.25,
-                alignSelf: 'flex-end',
-              }}
-            />
+            </View>
           </View>
+
           <View style={styles.nameAndAgeView}>
             <CustomTextBold size={18} color={palette.black}>
               {sideInfo[global.config.user_info_const.NICKNAME] ===
@@ -537,16 +543,25 @@ const styles = StyleSheet.create({
   icon: {
     marginTop: deviceWidth * 0.813 * 0.702 * 0.037,
   },
+  profilePane: {
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingTop: 70,
+  },
+  profileWrapper: {
+    width: deviceWidth * 0.813 * 0.3934,
+    height: deviceWidth * 0.813 * 0.3934,
+  },
   thumbnailWrapper: {
     backgroundColor: palette.default_bg,
     width: deviceWidth * 0.813 * 0.3934,
     height: deviceWidth * 0.813 * 0.3934,
-    // borderRadius: deviceWidth * 0.813 * 0.3934 * 0.5,
-    alignSelf: 'center',
+    borderRadius: deviceWidth * 0.813 * 0.3934 * 0.5,
+    alignItems: 'center',
     overflow: 'hidden',
-    marginTop: -deviceWidth * 0.813 * 0.3934 * 0.75,
     flexDirection: 'column',
-    justifyContent: 'flex-end',
+    justifyContent: 'center',
   },
   thumbnail: {
     borderRadius: deviceWidth * 0.813 * 0.3934 * 0.5,
