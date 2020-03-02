@@ -15,8 +15,15 @@ const FriendsView = ({navigation}) => {
 
   useEffect(() => {
     axios.get('http://13.124.126.30:8000/core/friends/').then(result => {
+      let tmpNo = 0;
+      console.log(result.data);
+      result.data.map(item => {
+        if (item.approved === true) {
+          tmpNo++;
+        }
+      });
+      setNumOfFriends(tmpNo);
       setFriendList(result.data);
-      setNumOfFriends(result.data.length);
     });
   }, []);
 
@@ -55,8 +62,8 @@ const FriendsView = ({navigation}) => {
         style={{marginLeft: 21}}>
         내 친구들
       </CustomTextMedium>
-      {numOfFriends > 0 ? (
-        <List style={{paddingBottom: 12}}>
+      {friendList.length > 0 ? (
+        <List>
           {friendList.map((friend, index) => (
             <ListItem key={index} noIndent style={styles.friendsListItem}>
               <Body>
@@ -81,7 +88,7 @@ const FriendsView = ({navigation}) => {
                   <ProfileCard
                     size={66}
                     fontSizes={[16, 14, 14]}
-                    nickname="상대방의 수락을 기다리는 중입니다."
+                    nickname="친구 수락중"
                     image={require('~/images/test-user-profile-girl.png')}
                     age=""
                     belong=""
@@ -126,18 +133,8 @@ const FriendsView = ({navigation}) => {
                   </View>
                 ) : (
                   <TouchableByPlatform
-                    style={{
-                      width: 30,
-                      height: 30,
-                      borderWidth: 1,
-                      borderRadius: 10,
-                      borderColor: palette.default_bg,
-                      flexDirection: 'column',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                    }}
                     onPress={() => patchFriendStatus(friend.id, 'CANCEL')}>
-                    <Octionicon name="x" style={styles.iconX} size={12} />
+                    <Octionicon name="x" style={styles.iconX} />
                   </TouchableByPlatform>
                 )}
               </Right>

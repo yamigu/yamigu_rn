@@ -22,7 +22,7 @@ const AddFriendsScreen = ({navigation}) => {
 
   const [friendList, setFriendList] = useState([]);
   const nowYear = 20200000;
-  const [numOfFriends, setNumOfFriends] = useState(1);
+  const [numOfFriends, setNumOfFriends] = useState(0);
 
   const logCallback = (log, callback) => {
     console.log(log);
