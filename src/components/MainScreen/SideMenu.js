@@ -63,7 +63,7 @@ const SideMenu = ({navigation}) => {
   // 'birhdate',  'belong',     'department', 'profile_list',
   // 'feed_list', 'friend_list','yami_number',
   const _retrieveData = async () => {
-    console.log('retriv!!');
+    console.log('sidemenu retrieve!!');
     try {
       const userValue = await AsyncStorage.getItem('userValue');
       const jUserValue = JSON.parse(userValue);
@@ -76,6 +76,7 @@ const SideMenu = ({navigation}) => {
     } catch (error) {}
   };
   useEffect(() => {
+    console.log('sidemenu');
     if (navigation.state.isDrawerOpen) {
       _retrieveData();
     }
@@ -537,7 +538,7 @@ const styles = StyleSheet.create({
     marginTop: deviceWidth * 0.813 * 0.702 * 0.037,
   },
   thumbnailWrapper: {
-    backgroundColor: palette.blue,
+    backgroundColor: palette.default_bg,
     width: deviceWidth * 0.813 * 0.3934,
     height: deviceWidth * 0.813 * 0.3934,
     // borderRadius: deviceWidth * 0.813 * 0.3934 * 0.5,

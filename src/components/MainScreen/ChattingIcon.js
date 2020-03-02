@@ -7,10 +7,20 @@ import firebase from 'react-native-firebase';
 import {View} from 'react-native';
 import {Badge} from 'native-base';
 import palette from '~/lib/styles/palette';
-
+import '~/config';
 const ChattingIcon = ({navigation}) => {
   const [chatList, setChatList] = useState([]);
   const [hasNew, setHasNew] = useState(false);
+  const [userInfo, setUserInfo] = useState(null);
+
+  const getUserInfo = () => {
+    return new Promise(async (resolve, reject) => {
+      let info = await AsyncStorage.getItem('userValue');
+      info = JSON.parse(info);
+      setUserInfo(info);
+      resolve(info);
+    });
+  };
   const getStorage = () => {
     return new Promise(async (resolve, reject) => {
       let storage = await AsyncStorage.getItem('chatStorage');
@@ -20,47 +30,56 @@ const ChattingIcon = ({navigation}) => {
   };
 
   useEffect(() => {
-    getStorage().then(storage => {
-      if (storage === null || storage === undefined) {
-        console.log(storage);
+    getUserInfo().then(userVal => {
+      if (
+        userVal === null ||
+        userVal === undefined ||
+        userVal[global.config.user_info_const.TOKEN] === 'token' ||
+        userVal[global.config.user_info_const.TOKEN] === ''
+      )
         return;
-      }
-      axios
-        .get('http://13.124.126.30:8000/authorization/firebase/token/')
-        .then(result => {
-          return result.data;
-        })
-        .catch(error => console.log(error))
-        .then(token => {
-          firebase.auth().signInWithCustomToken(token);
-        })
-        .then(() => {
-          axios.get('http://13.124.126.30:8000/core/chat/').then(result => {
-            result.data.chat_list.map(item => {
-              firebase
-                .database()
-                .ref('message/' + item.id)
-                .limitToLast(1)
-                .on('child_added', result => {
-                  try {
-                    if (
-                      result.val().time >
-                      storage['room' + item.id][
-                        storage['room' + item.id].length - 1
-                      ].time
-                    ) {
-                      setHasNew(true);
+      getStorage().then(storage => {
+        if (storage === null || storage === undefined) {
+          console.log(storage);
+          return;
+        }
+        axios
+          .get('http://13.124.126.30:8000/authorization/firebase/token/')
+          .then(result => {
+            return result.data;
+          })
+          .catch(error => console.log(error))
+          .then(token => {
+            firebase.auth().signInWithCustomToken(token);
+          })
+          .then(() => {
+            axios.get('http://13.124.126.30:8000/core/chat/').then(result => {
+              result.data.chat_list.map(item => {
+                firebase
+                  .database()
+                  .ref('message/' + item.id)
+                  .limitToLast(1)
+                  .on('child_added', result => {
+                    try {
+                      if (
+                        result.val().time >
+                        storage['room' + item.id][
+                          storage['room' + item.id].length - 1
+                        ].time
+                      ) {
+                        setHasNew(true);
+                      }
+                    } catch (error) {
+                      console.log(error);
                     }
-                  } catch (error) {
-                    console.log(error);
-                  }
-                });
-              const temp = chatList.slice();
-              temp.push(item);
-              setChatList(temp);
+                  });
+                const temp = chatList.slice();
+                temp.push(item);
+                setChatList(temp);
+              });
             });
           });
-        });
+      });
     });
   }, [navigation]);
   useEffect(() => {}, [hasNew]);
