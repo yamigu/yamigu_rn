@@ -121,8 +121,8 @@ MainScreen.navigationOptions = ({navigation}) => {
           <Icon
             name="menu"
             style={{
+              size: 25,
               color: palette.black,
-              margin: 10,
             }}
           />
         </TouchableByPlatform>

@@ -13,6 +13,7 @@ import {
   TouchableWithoutFeedback,
   Animated,
   Easing,
+  Platform,
 } from 'react-native';
 import palette from '~/lib/styles/palette';
 import {
@@ -32,6 +33,7 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import axios from 'axios';
 import AsyncStorage from '@react-native-community/async-storage';
 import firebase from 'react-native-firebase';
+import DeviceInfo from 'react-native-device-info';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 
 // import CustomLabel from './CustomLabel';
@@ -90,6 +92,7 @@ const HomePage = ({navigation}) => {
               .get('http://13.124.126.30:8000/authorization/user/info/')
               .then(result => {
                 // console.log(result.status);
+                console.log('Successfully get user info, set UserInfo');
                 jUserValue[global.config.user_info_const.UID] = result.data.uid;
                 jUserValue[global.config.user_info_const.NICKNAME] =
                   result.data.nickname;
@@ -109,21 +112,24 @@ const HomePage = ({navigation}) => {
 
                 AsyncStorage.setItem('userValue', JSON.stringify(jUserValue));
                 setAsyncValue(jUserValue);
-                resolve(true);
               })
               .then(() => {
-                return axios
-                  .get('http://13.124.126.30:8000/authorization/user/yami/')
-                  .then(result => {
-                    jUserValue[global.config.user_info_const.YAMI] =
-                      result.data;
-                    AsyncStorage.setItem(
-                      'userValue',
-                      JSON.stringify(jUserValue),
-                    );
-                    setAsyncValue(jUserValue);
-                    resolve(true);
-                  });
+                console.log('Get num of available yami');
+                resolve(
+                  axios
+                    .get('http://13.124.126.30:8000/authorization/user/yami/')
+                    .then(result => {
+                      jUserValue[global.config.user_info_const.YAMI] =
+                        result.data;
+                      AsyncStorage.setItem(
+                        'userValue',
+                        JSON.stringify(jUserValue),
+                      );
+                      setAsyncValue(jUserValue);
+                      console.log('available yami: ' + result.data);
+                      return true;
+                    }),
+                );
               })
               .catch(e => {
                 if (e.response.status === 401) {
@@ -132,7 +138,7 @@ const HomePage = ({navigation}) => {
                     JSON.stringify(initUserValue),
                   );
                 }
-                return;
+                resolve(false);
               });
           }
         } else {
@@ -145,7 +151,7 @@ const HomePage = ({navigation}) => {
         console.log(error);
         resolve(false);
       }
-      resolve(false);
+      resolve(true);
     });
   };
 
@@ -177,25 +183,56 @@ const HomePage = ({navigation}) => {
     ];
     setDateList(wow);
 
-    navigation.addListener(
+    const listener = navigation.addListener(
       'didFocus',
       () => {
         _retrieveData().then(result => {
-          console.log('didfocus');
+          console.log(result);
           if (!result) return;
-          console.log('willfocus');
+          registerFCMDevice();
+          retrieveFirebaseToken();
+          retrieveMatchRequestStatus();
         });
         navigation.setParams({});
       },
       // run function that updates the data on entering the screen
     );
+    const retrieveFCMToken = async () => {
+      const fcm_token = await firebase.messaging().getToken();
+      const device_id = await DeviceInfo.getUniqueId();
 
-    _retrieveData().then(result => {
-      console.log('up');
-      if (!result) return;
-      console.log('down');
-
-      // console.log(memberSelected);
+      return new Promise((resolve, reject) =>
+        resolve({
+          type: Platform.OS,
+          registration_id: fcm_token,
+          device_id: device_id,
+        }),
+      );
+    };
+    const registerFCMDevice = () => {
+      retrieveFCMToken().then(data => {
+        axios
+          .post(
+            'http://13.124.126.30:8000/authorization/fcm/check_device/',
+            data,
+          )
+          .then(result => {
+            if (result.status === 204) {
+              axios
+                .post(
+                  'http://13.124.126.30:8000/authorization/fcm/register_device/',
+                  data,
+                )
+                .then(result => {
+                  console.log(result.data);
+                });
+            } else if (result.status === 200) {
+              console.log('aleady registerd device');
+            }
+          });
+      });
+    };
+    const retrieveFirebaseToken = () => {
       axios
         .get('http://13.124.126.30:8000/authorization/firebase/token/')
         .then(result => {
@@ -205,7 +242,8 @@ const HomePage = ({navigation}) => {
         .then(token => {
           firebase.auth().signInWithCustomToken(token);
         });
-
+    };
+    const retrieveMatchRequestStatus = () => {
       axios
         .get('http://13.124.126.30:8000/core/match_request/')
         .then(result => {
@@ -295,9 +333,9 @@ const HomePage = ({navigation}) => {
           }
           return result.data;
         });
-    });
-  }, [memberSelected, dateSelected]);
-
+    };
+    return () => listener();
+  }, []);
   const requestMatching = async () => {
     console.log('***jsuer');
     const userValue = await AsyncStorage.getItem('userValue');
