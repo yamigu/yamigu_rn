@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   StyleSheet,
@@ -19,6 +19,7 @@ import {
 import palette from '~/lib/styles/palette';
 import TouchableByPlatform from '~/components/common/TouchableByPlatform';
 import {Button, Row} from 'native-base';
+import LikeNumModal from './LikeNumModal';
 
 const dh = Dimensions.get('window').height;
 
@@ -67,7 +68,12 @@ const styles = StyleSheet.create({
 });
 const LikeMatching = () => {
   const [modalVisible, setModalVisible] = useState(false);
+  const [likeNumModalVisible, setLikeNumModalVisible] = useState(false);
+  const [likeNum, setLikeNum] = useState(0);
 
+  useEffect(() => {
+    //axios.get(likeNum개수 받아오기, set해주기)
+  }, []);
   return (
     <View style={styles.container}>
       <Modal
@@ -111,13 +117,18 @@ const LikeMatching = () => {
         </TouchableWithoutFeedback>
       </Modal>
 
+      <Modal visible={likeNumModalVisible} transparent="true">
+        <LikeNumModal
+          setLikeNumModalVisible={setLikeNumModalVisible}
+          likeNum={likeNum}
+        />
+      </Modal>
+
       <View style={styles.wrapper}>
         <TouchableByPlatform
           styles={styles.touchable}
           onPress={() => {
-            Alert.alert(
-              '마음에 드는 이성친구 피드에 좋아요를 눌러보세요! 서로 좋아요를 한 친구들을 알려준답니다 ㅎㅎ',
-            );
+            setLikeNumModalVisible(true);
             // console.log('inin');
           }}>
           <ImageBackground
@@ -126,9 +137,9 @@ const LikeMatching = () => {
             <ImageBackground
               source={require('~/images/gold-like.png')}
               style={styles.goldLike}>
-              {/* <CustomTextLight size={16} color="white">
-                16
-              </CustomTextLight> */}
+              <CustomTextLight size={16} color="white">
+                {likeNum}
+              </CustomTextLight>
             </ImageBackground>
           </ImageBackground>
         </TouchableByPlatform>
