@@ -14,6 +14,7 @@ import {
   Animated,
   Easing,
   Platform,
+  SafeAreaView,
 } from 'react-native';
 import palette from '~/lib/styles/palette';
 import {
@@ -612,11 +613,7 @@ const HomePage = ({navigation}) => {
               </View>
               <Button
                 transparent={true}
-                style={{
-                  height: 30,
-                  backgroundColor: '#F3F2F2',
-                  elevation: 0,
-                }}
+                style={styles.completeBtn}
                 onPress={() => {
                   console.log('완료눌림');
                   setMemberModalVisible(false);
@@ -633,7 +630,10 @@ const HomePage = ({navigation}) => {
                   }
                   setMemberText(tmpText);
                 }}>
-                <CustomTextMedium color={palette.orange} size={13}>
+                <CustomTextMedium
+                  style={{paddingTop: 0, paddingBottom: 0}}
+                  color={palette.orange}
+                  size={13}>
                   완료
                 </CustomTextMedium>
               </Button>
@@ -799,11 +799,7 @@ const HomePage = ({navigation}) => {
                   </CustomTextRegular>
                 </View>
                 <Button
-                  style={{
-                    height: 30,
-                    backgroundColor: '#F3F2F2',
-                    elevation: 0,
-                  }}
+                  style={styles.completeBtn}
                   onPress={() => {
                     setDateModalVisible(false);
                     let tmpText = '';
@@ -819,7 +815,10 @@ const HomePage = ({navigation}) => {
                     }
                     setDateText(tmpText);
                   }}>
-                  <CustomTextMedium color={palette.orange} size={13}>
+                  <CustomTextMedium
+                    style={{paddingTop: 0, paddingBottom: 0}}
+                    color={palette.orange}
+                    size={13}>
                     완료
                   </CustomTextMedium>
                 </Button>
@@ -959,15 +958,14 @@ const HomePage = ({navigation}) => {
                   </CustomTextRegular>
                 </View>
                 <Button
-                  style={{
-                    height: 30,
-                    backgroundColor: '#F3F2F2',
-                    elevation: 0,
-                  }}
+                  style={styles.completeBtn}
                   onPress={() => {
                     setAgeModalVisible(false);
                   }}>
-                  <CustomTextMedium color={palette.orange} size={13}>
+                  <CustomTextMedium
+                    style={{paddingTop: 0, paddingBottom: 0}}
+                    color={palette.orange}
+                    size={13}>
                     완료
                   </CustomTextMedium>
                 </Button>
@@ -1397,7 +1395,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   text: {
-    width: dw * 0.86,
+    // backgroundColor: palette.gold,
+    width: dw * 0.9,
     marginTop: 0,
     paddingTop: 0,
     flexDirection: 'row',
@@ -1405,6 +1404,15 @@ const styles = StyleSheet.create({
   },
   spinnerTextStyle: {
     color: '#FFF',
+  },
+  completeBtn: {
+    height: 30,
+    backgroundColor: '#F3F2F2',
+    elevation: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingTop: 0,
+    paddingBottom: 0,
   },
 });
 export default HomePage;

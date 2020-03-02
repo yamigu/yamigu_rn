@@ -124,6 +124,8 @@ const LoginScreen = ({navigation}) => {
   const onAppleButtonPress = async () => {
     console.log('onAppleButtonPress pressed');
     // performs login request
+    logCallback('Login Start', setLoginLoading(true));
+
     const appleAuthRequestResponse = await appleAuth.performRequest({
       requestedOperation: AppleAuthRequestOperation.LOGIN,
       requestedScopes: [
@@ -162,6 +164,7 @@ const LoginScreen = ({navigation}) => {
           AsyncStorage.setItem('userValue', JSON.stringify(tmpValue));
         })
         .then(async () => {
+          setLoginLoading(false);
           let userVal = await AsyncStorage.getItem('userValue');
           console.log(userVal);
           if (userVal[2] === 'nickname') {
@@ -173,8 +176,9 @@ const LoginScreen = ({navigation}) => {
 
       console.log(appleAuthRequestResponse);
       // navigation.navigate('Main');
-      Alert.alert('authed!');
+      // Alert.alert('authed!');
     } else {
+      setLoginLoading(false);
       console.log('user not auth');
     }
   };

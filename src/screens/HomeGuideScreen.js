@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import {Text, View, Image, ScrollView, Dimensions} from 'react-native';
 import {SafeAreaView} from 'react-navigation';
@@ -11,12 +12,26 @@ const HomeGuideScreen = ({navigation}) => (
     style={{
       flex: 1,
       width: '100%',
-      paddingVertical: 30,
+      paddingVertical: 0,
       backgroundColor: palette.default_bg,
     }}
-    contentContainerStyle={{alignItems: 'center'}}>
+    contentContainerStyle={{
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+    }}>
     {/* <CustomTextBold size={100}>asd</CustomTextBold> */}
     <Image
+      style={{
+        width: deviceWidth * 0.9,
+        // height: '100%',
+        // width: (deviceWidth * 317) / 375,
+        // height:
+        resizeMode: 'repeat',
+      }}
+      source={require('~/images/guide.png')}
+    />
+    {/* <Image
       style={{
         width: (deviceWidth * 317) / 375,
         height: (deviceWidth * 317) / 375,
@@ -103,7 +118,7 @@ const HomeGuideScreen = ({navigation}) => (
         resizeMode: 'cover',
       }}
       source={require('~/images/homeguidescreen-6.png')}
-    />
+    /> */}
     {/* <CustomTextBold size={100}>asd</CustomTextBold> */}
   </Content>
 );
