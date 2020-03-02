@@ -63,6 +63,7 @@
 		3F0937DA23FC329A00606791 /* yamigu.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = yamigu.entitlements; path = yamigu/yamigu.entitlements; sourceTree = "<group>"; };
 		3F2CB62523E8506600D482C4 /* KakaoOpenSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = KakaoOpenSDK.framework; sourceTree = "<group>"; };
 		3F544B4124066736003E3F7E /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		3FCEDC65240D509C0067466E /* UserNotifications.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotifications.framework; path = System/Library/Frameworks/UserNotifications.framework; sourceTree = SDKROOT; };
 		3FE4BAFA23E9A45400511EED /* Fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Fonts; sourceTree = "<group>"; };
 		4177BE91C5DB5A56ED6FCCF1 /* Pods-yamigu-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-yamigu-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-yamigu-tvOS/Pods-yamigu-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
 		64133A8B5D5DF611DF362ABE /* Pods-yamigu.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-yamigu.release.xcconfig"; path = "Target Support Files/Pods-yamigu/Pods-yamigu.release.xcconfig"; sourceTree = "<group>"; };
@@ -147,6 +148,7 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				3FCEDC65240D509C0067466E /* UserNotifications.framework */,
 				3F2CB62523E8506600D482C4 /* KakaoOpenSDK.framework */,
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				ED2971642150620600B7C4FE /* JavaScriptCore.framework */,
