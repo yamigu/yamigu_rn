@@ -232,11 +232,11 @@ const LoginScreen = ({navigation}) => {
     <SafeAreaView style={styles.root}>
       <View style={styles.container}>
         <View style={styles.topContainer}>
-          <CustomTextMedium size={20} color={palette.black}>
+          <CustomTextMedium size={24} color={palette.black}>
             안녕하세요
           </CustomTextMedium>
-          <CustomTextMedium size={20} color={palette.black}>
-            야미구 이용에 로그인이 필요합니다
+          <CustomTextMedium size={24} color={palette.black}>
+            먼저 로그인이 필요해요!
           </CustomTextMedium>
 
           <Spinner
@@ -246,6 +246,13 @@ const LoginScreen = ({navigation}) => {
           />
         </View>
         <View style={styles.bottomContainer}>
+          <CustomTextRegular
+            size={16}
+            color={palette.gray}
+            style={{marginBottom: 9}}>
+            간편하게 로그인하세요 :)
+          </CustomTextRegular>
+
           <View style={styles.buttonContainerWrapper}>
             <ButtonContainerbyPlatform
               kakaoLogin={kakaoLogin}
@@ -254,13 +261,13 @@ const LoginScreen = ({navigation}) => {
           </View>
           <View style={styles.policyContainer}>
             <CustomTextRegular size={10}>로그인시 </CustomTextRegular>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate('Terms')}>
               <CustomTextBold decoLine="underline" size={10}>
                 이용약관
               </CustomTextBold>
             </TouchableOpacity>
             <CustomTextRegular size={10}> & </CustomTextRegular>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate('Privacy')}>
               <CustomTextBold decoLine="underline" size={10}>
                 개인정보 취급방침
               </CustomTextBold>
