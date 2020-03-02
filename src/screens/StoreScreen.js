@@ -242,7 +242,7 @@ const StoreScreen = ({navigation}) => {
                 source={require('~/images/icon-yami.png')}
               />
               <CustomTextRegular size={16} color={palette.black}>
-                {yami}
+                {yami === 'yami' ? null : yami}
               </CustomTextRegular>
             </View>
           </Body>

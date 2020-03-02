@@ -9,10 +9,11 @@ const ProfileCardList = ({navigation, profileCardProp, hasProfile}) => {
 
   return (
     <View>
-      {profileCardProp.map(item => {
+      {profileCardProp.map((item, index) => {
         console.log(item.feed_list.length);
         return (
           <ProfileCardFeed
+            key={index}
             location={item.profile.location}
             verified={item.profile.verified}
             key={item.id}

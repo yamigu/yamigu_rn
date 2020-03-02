@@ -292,7 +292,7 @@ const ProfileCardFeed = ({
         indicator={_renderDotIndicator()}>
         {feedList.map((item, index) => {
           return (
-            <View>
+            <View key={index}>
               <TouchableOpacity
                 onPress={() => {
                   if (hasProfile === true) {
@@ -334,11 +334,11 @@ const ProfileCardFeed = ({
             <Ionicon
               name="ios-heart-empty"
               size={18}
-              color={liked === false ? '#898989' : palette.orange}
+              color={liked === false ? '#898989' : palette.orange[0]}
             />
             <CustomTextMedium
               size={14}
-              color={liked === false ? '#898989' : palette.orange}
+              color={liked === false ? '#898989' : palette.orange[0]}
               style={{marginLeft: 4}}>
               좋아요
             </CustomTextMedium>
@@ -349,9 +349,7 @@ const ProfileCardFeed = ({
         <TouchableByPlatform
           style={styles.touchable}
           onPress={() => {
-            console.log('asd');
             setChattingModalVisible(true);
-            console.log('done');
             hasProfile === true ? null : alertAddProfile();
           }}>
           <View style={styles.button}>

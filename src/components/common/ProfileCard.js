@@ -42,70 +42,11 @@ const ProfileCard = ({
   bothLike,
   rightComponent,
 }) => {
-  const [modalVisible, setModalVisible] = useState(false);
-  const [moreModalVisible, setMoreModalVisible] = useState(false);
   useEffect(() => {
     console.log(avata);
   }, []);
   return (
     <List style={{height: size}}>
-      <Modal
-        animationType="none"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {
-          Alert.alert('Modal has been closed.');
-        }}>
-        <TouchableWithoutFeedback
-          onPress={() => {
-            setModalVisible(false);
-          }}>
-          <View
-            style={{
-              height: '100%',
-              backgroundColor: 'rgba(0,0,0,0.7)',
-              flexDirection: 'column',
-              justifyContent: 'flex-end',
-            }}>
-            <View style={styles.modalBtnContainer}>
-              <Button
-                style={styles.modalButtonMultiple}
-                onPress={() => {
-                  Alert.alert('상대를 차단 하시겠슴미까?');
-                }}>
-                <CustomTextRegular size={17} color={palette.red}>
-                  차단
-                </CustomTextRegular>
-              </Button>
-              <View
-                style={{
-                  height: 1,
-                  width: dw - 20,
-                  backgroundColor: palette.black,
-                }}
-              />
-              <Button
-                style={styles.modalButtonMultiple}
-                onPress={() => {
-                  Alert.alert('상대를 신고 하시겠슴미까?');
-                }}>
-                <CustomTextRegular size={17} color={palette.black}>
-                  신고
-                </CustomTextRegular>
-              </Button>
-            </View>
-
-            <Button
-              style={styles.modalButtonCancle}
-              onPress={() => setModalVisible(!modalVisible)}>
-              <CustomTextBold size={17} color={palette.black}>
-                취소
-              </CustomTextBold>
-            </Button>
-          </View>
-        </TouchableWithoutFeedback>
-      </Modal>
-
       <ListItem avatar style={{marginLeft: 0}}>
         <Left style={{paddingTop: 0, paddingBottom: 0}}>
           <Thumbnail

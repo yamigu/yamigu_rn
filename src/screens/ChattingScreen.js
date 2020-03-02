@@ -152,16 +152,12 @@ const ChattingScreen = ({navigation}) => {
                   : Moment(parseInt(item.time)).format('a h:mm');
               if (item.idSender === myId)
                 return (
-                  <SentItem
-                    key={item.time + item.idSender}
-                    text={item.message}
-                    time={fortime}
-                  />
+                  <SentItem key={index} text={item.message} time={fortime} />
                 );
               else
                 return (
                   <ReceivedItem
-                    key={item.time + item.idSender}
+                    key={index}
                     nickname={partnerInfo.nickname}
                     text={item.message}
                     time={fortime}

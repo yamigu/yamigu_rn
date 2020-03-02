@@ -2,12 +2,18 @@ import React from 'react';
 import {View, Image, StyleSheet} from 'react-native';
 import {CustomTextMedium} from './CustomText';
 import palette from '~/lib/styles/palette';
+import TouchableByPlatform from './TouchableByPlatform';
 
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
   },
-  imageContainer: {},
+  imageContainer: {
+    width: 66,
+    height: 66,
+    borderRadius: 33,
+    overflow: 'hidden',
+  },
   image: {
     width: 66,
     height: 66,
@@ -27,14 +33,16 @@ const UserProfileSmall = ({style, imageSource, userName, badgeComponent}) => {
   return (
     <View style={[styles.container, style]}>
       <View style={styles.imageContainer}>
-        <Image
-          source={
-            imageSource === null
-              ? require('~/images/test-user-profile-girl.png')
-              : imageSource
-          }
-          style={styles.image}
-        />
+        <TouchableByPlatform>
+          <Image
+            source={
+              imageSource === null
+                ? require('~/images/test-user-profile-girl.png')
+                : imageSource
+            }
+            style={styles.image}
+          />
+        </TouchableByPlatform>
         <View style={styles.badgeWrapper}>{badgeComponent}</View>
       </View>
       {userName ? (

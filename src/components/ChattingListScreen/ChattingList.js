@@ -14,9 +14,10 @@ const ChattingList = ({style, navigation, chatList, hasVerified}) => (
         </CustomTextMedium>
       </View>
     </ListItem>
-    {chatList.map(item => {
+    {chatList.map((item, index) => {
       return (
         <ChattingPreview
+          key={index}
           hasVerified={hasVerified}
           style={{marginVertical: 9}}
           navigation={navigation}

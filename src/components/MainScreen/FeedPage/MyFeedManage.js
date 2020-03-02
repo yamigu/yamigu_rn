@@ -239,28 +239,26 @@ const MyFeedManage = ({
 
         <View style={styles.verticalDivider} />
 
-        <View style={styles.touchable}>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => setFeedDisplay(!feedDisplay)}>
-            <CustomTextRegular size={14} color={palette.black}>
-              내 피드
-            </CustomTextRegular>
-            {feedDisplay === true ? (
-              <AntDesignIcon
-                name="caretup"
-                size={12}
-                style={{marginLeft: 5, color: palette.orange}}
-              />
-            ) : (
-              <AntDesignIcon
-                name="caretdown"
-                size={12}
-                style={{marginLeft: 5, color: palette.orange}}
-              />
-            )}
-          </TouchableOpacity>
-        </View>
+        <TouchableByPlatform
+          style={styles.touchable}
+          onPress={() => setFeedDisplay(!feedDisplay)}>
+          <CustomTextRegular size={14} color={palette.black}>
+            내 피드
+          </CustomTextRegular>
+          {feedDisplay === true ? (
+            <AntDesignIcon
+              name="caretup"
+              size={12}
+              style={{marginLeft: 5, color: palette.orange}}
+            />
+          ) : (
+            <AntDesignIcon
+              name="caretdown"
+              size={12}
+              style={{marginLeft: 5, color: palette.orange}}
+            />
+          )}
+        </TouchableByPlatform>
       </View>
       {feedDisplay === true ? (
         imageSource !== null ? (
@@ -355,6 +353,7 @@ const styles = StyleSheet.create({
     height: 46,
     alignItems: 'center',
     justifyContent: 'center',
+    flexDirection: 'row',
   },
   button: {
     height: 40,

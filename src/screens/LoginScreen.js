@@ -43,13 +43,13 @@ let tmpValue = [
   'uid',
   'nickname',
   'avata',
-  'birhdate',
+  'birthdate',
   'belong',
   'department',
-  'profile_list',
-  'feed_list',
-  'friend_list',
-  'yami_number',
+  'gender',
+  'verified',
+  'yami',
+  'location',
 ];
 let originValue = [];
 const _retrieveData = async () => {

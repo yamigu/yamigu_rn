@@ -57,8 +57,8 @@ const FriendsView = ({navigation}) => {
       </CustomTextMedium>
       {numOfFriends > 0 ? (
         <List style={{paddingBottom: 12}}>
-          {friendList.map(friend => (
-            <ListItem noIndent style={styles.friendsListItem}>
+          {friendList.map((friend, index) => (
+            <ListItem key={index} noIndent style={styles.friendsListItem}>
               <Body>
                 {friend.approved === true ? (
                   <ProfileCard

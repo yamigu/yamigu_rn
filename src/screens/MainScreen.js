@@ -105,16 +105,26 @@ const MainScreen = createAppContainer(MainScreenNavigator);
 MainScreen.navigationOptions = ({navigation}) => {
   return {
     headerLeft: () => (
-      <TouchableByPlatform
-        onPress={() => navigation.dispatch(DrawerActions.openDrawer())}>
-        <Icon
-          name="menu"
-          style={{
-            color: palette.black,
-            margin: 10,
-          }}
-        />
-      </TouchableByPlatform>
+      <View
+        style={{
+          width: 40,
+          height: 40,
+          borderRadius: 100,
+          overflow: 'hidden',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>
+        <TouchableByPlatform
+          onPress={() => navigation.dispatch(DrawerActions.openDrawer())}>
+          <Icon
+            name="menu"
+            style={{
+              color: palette.black,
+              margin: 10,
+            }}
+          />
+        </TouchableByPlatform>
+      </View>
     ),
     headerTitle: () => (
       <Image
