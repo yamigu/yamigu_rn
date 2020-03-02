@@ -52,10 +52,10 @@ let initUserValue = [
   'birthdate',
   'belong',
   'department',
-  'profile_list',
+  'gender',
+  'verified',
+  'yami',
   'location',
-  'friend_list',
-  'yami_number',
 ];
 
 const HomePage = ({navigation}) => {
@@ -72,7 +72,12 @@ const HomePage = ({navigation}) => {
         const jUserValue = JSON.parse(userValue);
         // console.log('juse::');
         // console.log(jUserValue);
-        if (userValue !== null) {
+        if (
+          userValue !== null &&
+          userValue[global.config.user_info_const.NICKNAME] !== 'nickname' &&
+          userValue[global.config.user_info_const.NICKNAME] !== '' &&
+          userValue[global.config.user_info_const.NICKNAME] !== null
+        ) {
           console.log('uservalue not null');
           if (jUserValue[0] === 'token') {
             console.log('token not set yet.');

@@ -208,10 +208,11 @@ const SideMenu = ({navigation}) => {
             </TouchableByPlatform>
           ) : null}
 
-          {sideInfo[global.config.user_info_const.BIRTHDATE] === 'birthdate' ? (
+          {sideInfo[global.config.user_info_const.NICKNAME] !== 'nickname' &&
+          sideInfo[global.config.user_info_const.BIRTHDATE] === 'birthdate' ? (
             <TouchableByPlatform
               onPress={() => {
-                navigation.navigate('IV', {btnNeeded: true});
+                navigation.navigate('IV', {needBtn: true});
                 console.log('goto IV');
               }}>
               <ListItem icon noIndent style={styles.listItem}>
