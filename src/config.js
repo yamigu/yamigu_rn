@@ -1,5 +1,5 @@
 module.exports = global.config = {
-  app_version: '1.0.0',
+  app_version: '2.0.0',
   user_info_const: {
     TOKEN: 0,
     UID: 1,
@@ -11,5 +11,6 @@ module.exports = global.config = {
     GENDER: 7,
     VERIFIED: 8,
     YAMI: 9,
+    LOCATION: 10,
   },
 };

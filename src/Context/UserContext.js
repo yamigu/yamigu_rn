@@ -42,9 +42,10 @@ const UserContextProvider = ({children}) => {
     'birthdate',
     'belong',
     'department',
-    'profile_list',
-    'friend_list',
-    'yami_number',
+    'gender',
+    'verified',
+    'yami',
+    'location',
   ]);
 
   const changeValue = (type, newValue) => {

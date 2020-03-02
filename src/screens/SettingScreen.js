@@ -43,10 +43,10 @@ const initUserValue = [
   'birthdate',
   'belong',
   'department',
-  'profile_list',
-  'feed_list',
-  'friend_list',
-  'yami_number',
+  'gender',
+  'verified',
+  'yami',
+  'location',
 ];
 
 const SettingScreen = ({navigation}) => {

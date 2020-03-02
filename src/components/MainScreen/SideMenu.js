@@ -158,7 +158,9 @@ const SideMenu = ({navigation}) => {
               </Button>
             ) : (
               <CustomTextRegular size={14} color={palette.gray}>
-                {sideInfo[global.config.user_info_const.BELONG] + ' '}
+                {sideInfo[global.config.user_info_const.BELONG] === 'belong'
+                  ? null
+                  : sideInfo[global.config.user_info_const.BELONG] + ' '}
               </CustomTextRegular>
             )}
             <CustomTextRegular size={14} color={palette.gray}>
@@ -168,7 +170,10 @@ const SideMenu = ({navigation}) => {
                 : sideInfo[global.config.user_info_const.DEPARTMENT]}
             </CustomTextRegular>
             <CustomTextRegular size={14} color={palette.gray}>
-              {sideInfo[10] === null || sideInfo[10] === undefined
+              {sideInfo[global.config.user_info_const.LOCATION] ===
+                'location' ||
+              sideInfo[global.config.user_info_const.LOCATION] === null ||
+              sideInfo[global.config.user_info_const.LOCATION] === undefined
                 ? null
                 : ', ' + sideInfo[10]}
             </CustomTextRegular>
@@ -290,7 +295,7 @@ const SideMenu = ({navigation}) => {
               )}
             </Body>
           </ListItem>
-          <TouchableByPlatform onPress={() => navigation.navigate('Signup')}>
+          {/* <TouchableByPlatform onPress={() => navigation.navigate('Signup')}>
             <ListItem icon noIndent style={styles.listItem}>
               <Body style={styles.listItemBody}>
                 <CustomTextRegular size={14} color={palette.black}>
@@ -298,7 +303,7 @@ const SideMenu = ({navigation}) => {
                 </CustomTextRegular>
               </Body>
             </ListItem>
-          </TouchableByPlatform>
+          </TouchableByPlatform> */}
           <TouchableByPlatform onPress={() => navigation.navigate('Store')}>
             <ListItem icon noIndent style={styles.listItem}>
               <Left style={styles.listItemLeft}>
@@ -319,7 +324,9 @@ const SideMenu = ({navigation}) => {
                   source={require('~/images/yami_icon.png')}
                 />
                 <CustomTextRegular size={12} color={palette.black}>
-                  {sideInfo[global.config.user_info_const.YAMI]}
+                  {sideInfo[global.config.user_info_const.YAMI] === 'yami'
+                    ? null
+                    : sideInfo[global.config.user_info_const.YAMI]}
                 </CustomTextRegular>
               </Right>
             </ListItem>
@@ -400,7 +407,7 @@ const SideMenu = ({navigation}) => {
               </Right>
             </ListItem>
           </TouchableByPlatform>
-          <TouchableByPlatform onPress={() => navigation.navigate('Login')}>
+          {/* <TouchableByPlatform onPress={() => navigation.navigate('Login')}>
             <ListItem noIndent style={styles.listItem}>
               <Body style={styles.listItemBody}>
                 <CustomTextRegular size={14} color={palette.black}>
@@ -408,7 +415,7 @@ const SideMenu = ({navigation}) => {
                 </CustomTextRegular>
               </Body>
             </ListItem>
-          </TouchableByPlatform>
+          </TouchableByPlatform> */}
           <TouchableByPlatform onPress={() => navigation.navigate('Notice')}>
             <ListItem noIndent style={styles.listItem}>
               <Body style={styles.listItemBody}>
