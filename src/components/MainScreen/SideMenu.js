@@ -102,7 +102,11 @@ const SideMenu = ({navigation}) => {
             style={{backgroundColor: palette.default_bg, height: 150}}></View>
           <View style={styles.thumbnailWrapper}>
             <TouchableByPlatform
-              onPress={() => navigation.navigate('MyProfile')}>
+              onPress={() =>
+                sideInfo[global.config.user_info_const.NICKNAME] === 'nickname'
+                  ? navigation.navigate('Login')
+                  : navigation.navigate('MyProfile')
+              }>
               <Thumbnail
                 style={styles.thumbnail}
                 source={
@@ -148,7 +152,7 @@ const SideMenu = ({navigation}) => {
             </CustomTextMedium> */}
           </View>
           <View style={styles.belongView}>
-            {sideInfo[global.config.user_info_const.BELONG] === 'belong' ? (
+            {sideInfo[global.config.user_info_const.NICKNAME] === 'nickname' ? (
               <Button
                 style={{backgroundColor: palette.default_bg, elevation: 0}}
                 onPress={() => navigation.navigate('Login')}>
@@ -183,8 +187,9 @@ const SideMenu = ({navigation}) => {
           {sideInfo[global.config.user_info_const.VERIFIED] === 0 ? (
             <TouchableByPlatform
               onPress={() => {
-                navigation.navigate('BV');
-                console.log('goto BV');
+                sideInfo[global.config.user_info_const.NICKNAME] === 'nickname'
+                  ? navigation.navigate('Login')
+                  : navigation.navigate('BV');
               }}>
               <ListItem icon noIndent style={styles.listItem}>
                 <Left style={styles.listItemLeft}>
@@ -228,7 +233,11 @@ const SideMenu = ({navigation}) => {
           {sideInfo[global.config.user_info_const.AVATA] === 'avata' ? (
             <TouchableByPlatform
               navigation={navigation}
-              onPress={() => navigation.navigate('MyProfile')}>
+              onPress={() =>
+                sideInfo[global.config.user_info_const.NICKNAME] === 'nickname'
+                  ? navigation.navigate('Login')
+                  : navigation.navigate('MyProfile')
+              }>
               <ListItem icon noIndent style={styles.listItem}>
                 <Left style={styles.listItemLeft}>
                   <Anticon
@@ -246,7 +255,11 @@ const SideMenu = ({navigation}) => {
             </TouchableByPlatform>
           ) : null}
           <TouchableByPlatform
-            onPress={() => navigation.navigate('AddFriends')}>
+            onPress={() =>
+              sideInfo[global.config.user_info_const.NICKNAME] === 'nickname'
+                ? navigation.navigate('Login')
+                : navigation.navigate('AddFriends')
+            }>
             <ListItem icon noIndent style={styles.listItem}>
               <Left style={styles.listItemLeft}>
                 <Image
@@ -304,7 +317,12 @@ const SideMenu = ({navigation}) => {
               </Body>
             </ListItem>
           </TouchableByPlatform> */}
-          <TouchableByPlatform onPress={() => navigation.navigate('Store')}>
+          <TouchableByPlatform
+            onPress={() =>
+              sideInfo[global.config.user_info_const.NICKNAME] === 'nickname'
+                ? navigation.navigate('Login')
+                : navigation.navigate('Store')
+            }>
             <ListItem icon noIndent style={styles.listItem}>
               <Left style={styles.listItemLeft}>
                 <Materialicon
@@ -331,7 +349,12 @@ const SideMenu = ({navigation}) => {
               </Right>
             </ListItem>
           </TouchableByPlatform>
-          <TouchableByPlatform onPress={() => navigation.navigate('Shield')}>
+          <TouchableByPlatform
+            onPress={() =>
+              sideInfo[global.config.user_info_const.NICKNAME] === 'nickname'
+                ? navigation.navigate('Login')
+                : navigation.navigate('Shield')
+            }>
             <ListItem icon noIndent style={styles.listItem}>
               <Left style={styles.listItemLeft}>
                 <MaterialCommunityicon
@@ -425,7 +448,12 @@ const SideMenu = ({navigation}) => {
               </Body>
             </ListItem>
           </TouchableByPlatform>
-          <TouchableByPlatform onPress={() => navigation.navigate('Setting')}>
+          <TouchableByPlatform
+            onPress={() =>
+              sideInfo[global.config.user_info_const.NICKNAME] === 'nickname'
+                ? navigation.navigate('Login')
+                : navigation.navigate('Setting')
+            }>
             <ListItem noIndent style={styles.listItem}>
               <Body style={styles.listItemBody}>
                 <CustomTextRegular size={14} color={palette.black}>
