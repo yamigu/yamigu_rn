@@ -43,8 +43,8 @@ const UserProfileSmall = ({style, imageSource, userName, badgeComponent}) => {
             style={styles.image}
           />
         </TouchableByPlatform>
-        <View style={styles.badgeWrapper}>{badgeComponent}</View>
       </View>
+      <View style={styles.badgeWrapper}>{badgeComponent}</View>
       {userName ? (
         <CustomTextMedium
           size={12}
