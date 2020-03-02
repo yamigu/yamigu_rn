@@ -42,7 +42,9 @@ const MainScreenNavigator = createBottomTabNavigator(
         },
       },
     },
+
     Feed: {
+      lazy: true,
       screen: FeedPage,
       navigationOptions: ({navigation}) => ({
         tabBarIcon: ({focused}) => {

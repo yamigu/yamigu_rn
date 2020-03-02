@@ -127,7 +127,7 @@ const HomePage = ({navigation}) => {
                     JSON.stringify(initUserValue),
                   );
                 }
-                resolve(false);
+                return;
               });
           }
         } else {
@@ -140,7 +140,7 @@ const HomePage = ({navigation}) => {
         console.log(error);
         resolve(false);
       }
-      resolve(true);
+      resolve(false);
     });
   };
 
@@ -176,6 +176,7 @@ const HomePage = ({navigation}) => {
       'didFocus',
       () => {
         _retrieveData().then(result => {
+          console.log('didfocus');
           if (!result) return;
           console.log('willfocus');
         });
@@ -185,7 +186,10 @@ const HomePage = ({navigation}) => {
     );
 
     _retrieveData().then(result => {
+      console.log('up');
       if (!result) return;
+      console.log('down');
+
       // console.log(memberSelected);
       axios
         .get('http://13.124.126.30:8000/authorization/firebase/token/')
@@ -633,7 +637,6 @@ const HomePage = ({navigation}) => {
                 {memberList.map((item, index) => {
                   return (
                     <Button
-                      key={index}
                       onPress={() => {
                         console.log('pressed');
                         let tmpNo = memberItemNo;
@@ -823,7 +826,6 @@ const HomePage = ({navigation}) => {
                   {dateList.map((item, index) => {
                     return (
                       <Button
-                        key={index}
                         onPress={() => {
                           let tmpNo = dateItemNo;
                           let tmp;
@@ -1147,7 +1149,7 @@ const HomePage = ({navigation}) => {
             ) : (
               <TouchableByPlatform
                 style={styles.mainBtnCancel}
-                onPress={requestMatching}>
+                onPress={() => requestMatching()}>
                 <CustomTextMedium size={16} color="white">
                   미팅 주선 취소 하기
                 </CustomTextMedium>

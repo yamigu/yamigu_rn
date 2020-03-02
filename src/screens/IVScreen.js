@@ -27,24 +27,26 @@ const IVScreen = ({navigation}) => {
     <SafeAreaView style={styles.container}>
       <View
         style={{
-          padding: 20,
+          padding: 0,
           backgroundColor: palette.ornage,
           flexDirection: 'column',
         }}>
         <View style={styles.dividerLine} />
-        <CustomTextBold size={24}>본인인증 부탁드려요..!</CustomTextBold>
+        <CustomTextMedium size={20}>
+          마지막으로 본인인증 부탁드려요..!
+        </CustomTextMedium>
         <CustomTextMedium size={16} color={palette.gray}>
           *번거롭더라도 안전한 미팅을 위해 꼭 필요해요
         </CustomTextMedium>
-        <CustomTextLight size={12} color={palette.orange}>
+        {/* <CustomTextLight size={12} color={palette.orange}>
           실제 이름, 휴대폰 번호는 절대 다른 회원들에게 공개되지 않습니다.
-        </CustomTextLight>
+        </CustomTextLight> */}
       </View>
       {btnNeeded === true ? (
         <View>
           <Button style={styles.button} onPress={gotoWebView}>
             <CustomTextMedium size={16} color="white">
-              본인인증 진행하기
+              본인인증 하고 시작하기
             </CustomTextMedium>
           </Button>
           <CustomTextMedium
@@ -58,23 +60,23 @@ const IVScreen = ({navigation}) => {
     </SafeAreaView>
   );
 };
-// IVScreen.navigationOptions = ({navigation}) => ({
-//   headerLeft: () => (
-//     <HeaderBackButton
-//       label=" "
-//       tintColor={palette.black}
-//       onPress={() => {
-//         navigation.goBack();
-//       }}
-//     />
-//   ),
-//   headerTitle: () => (
-//     <>
-//       <CustomTextRegular>본인인증</CustomTextRegular>
-//     </>
-//   ),
-//   headerTitleAlign: 'center',
-// });
+IVScreen.navigationOptions = ({navigation}) => ({
+  headerLeft: () => (
+    <HeaderBackButton
+      label=" "
+      tintColor={palette.black}
+      onPress={() => {
+        navigation.goBack();
+      }}
+    />
+  ),
+  headerTitle: () => (
+    <>
+      <CustomTextRegular>본인인증</CustomTextRegular>
+    </>
+  ),
+  headerTitleAlign: 'center',
+});
 
 const styles = StyleSheet.create({
   dividerLine: {

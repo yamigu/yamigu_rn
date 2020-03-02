@@ -19,6 +19,8 @@ const FeedPage = props => {
   const _scroll = useRef();
 
   useEffect(() => {
+    console.log('feedpage useeffect');
+
     // console.log('useEffected');
     let innerHasProfile = false;
     props.navigation.addListener(
@@ -118,7 +120,6 @@ const FeedPage = props => {
       });
     //axios for profilecard
   }, [props.navigation, tmpState]);
-
   return (
     <View style={styles.root}>
       <Spinner visible={refreshing} textContent={'refreshing...'} />
