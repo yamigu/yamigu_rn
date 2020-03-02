@@ -33,6 +33,7 @@
     "react-native-action-button": "^2.8.5",
     "react-native-best-viewpager": "^1.0.2",
     "react-native-contacts": "5.0.7",
+    "react-native-device-info": "^5.5.3",
     "react-native-elements": "^1.2.7",
     "react-native-fab": "^1.0.9",
     "react-native-firebase": "5.6.0",

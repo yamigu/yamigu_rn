@@ -54,13 +54,15 @@ const BVScreen = ({navigation}) => {
           setText1(data.belong);
           data.department === null ? null : setText2(data.department);
           // console.log(data.image.src);
-          let source = {
-            uri: data.image.src,
-            name: data.image.src,
-          };
-          data.image.src === undefined
-            ? setImageSource(null)
-            : setImageSource(source);
+          if (data.image !== null) {
+            let source = {
+              uri: data.image.src,
+              name: data.image.src,
+            };
+            setImageSource(source);
+          } else {
+            setImageSource(null);
+          }
         }
       });
     // console.log('useEffect');
