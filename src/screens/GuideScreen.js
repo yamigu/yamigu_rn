@@ -65,8 +65,8 @@ const NoticeScreen = () => {
           </CustomTextMedium>
         </Button>
         <CustomTextRegular style={{margin: 5}} size={16} color={palette.black}>
-          웰컴 선물로 무료로 미팅 상대를 주선받을 수 있어요. 깜짝 무료 미팅
-          주선도 기대하세요!
+          매주 무료로 미팅 상대를 주선받을 수 있어요. 월요일마다 무료 미팅
+          횟수가 리셋됩니다.
         </CustomTextRegular>
         <Button style={styles.oBtn}>
           <CustomTextMedium color="#FF8826" size={12}>

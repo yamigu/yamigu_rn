@@ -293,15 +293,19 @@ const SideMenu = ({navigation}) => {
               </Body>
             </ListItem>
           </TouchableByPlatform>
+
           <ListItem noIndent style={styles.friendListPane}>
             <Body style={styles.listItemBody}>
-              {numOfFreinds === 0 ? (
-                <View style={styles.noFriend}>
-                  <CustomTextRegular size={12} color={palette.black}>
-                    야미가 부족하세요? 친구를 등록하고 받아가세요!
-                  </CustomTextRegular>
-                </View>
-              ) : (
+              {/* {numOfFreinds === 0 ? ( */}
+              <View style={styles.noFriend}>
+                <CustomTextRegular
+                  size={12}
+                  color={palette.black}
+                  style={{marginBottom: 5}}>
+                  야미가 부족하세요? 친구를 등록하고 받아가세요!
+                </CustomTextRegular>
+              </View>
+              {/* ) : (
                 <Content contentContainerStyle={styles.friendList}>
                   <Thumbnail
                     source={require('~/images/test-user-profile-2.png')}
@@ -324,10 +328,10 @@ const SideMenu = ({navigation}) => {
                     size={deviceWidth * 0.81 * 0.163}
                   />
                 </Content>
-              )}
+              )} */}
             </Body>
           </ListItem>
-          {/* <TouchableByPlatform onPress={() => navigation.navigate('Signup')}>
+          <TouchableByPlatform onPress={() => navigation.navigate('Signup')}>
             <ListItem icon noIndent style={styles.listItem}>
               <Body style={styles.listItemBody}>
                 <CustomTextRegular size={14} color={palette.black}>
@@ -335,7 +339,7 @@ const SideMenu = ({navigation}) => {
                 </CustomTextRegular>
               </Body>
             </ListItem>
-          </TouchableByPlatform> */}
+          </TouchableByPlatform>
           <TouchableByPlatform
             onPress={() =>
               sideInfo[global.config.user_info_const.NICKNAME] === 'nickname'
@@ -420,8 +424,12 @@ const SideMenu = ({navigation}) => {
               />
             </Right>
           </ListItem> */}
+
           <ListItem itemDivider style={styles.itemDivider}>
-            <CustomTextMedium size={24} color={palette.black}>
+            <CustomTextMedium
+              size={24}
+              color={palette.black}
+              style={{paddingTop: 25}}>
               더보기
             </CustomTextMedium>
           </ListItem>
@@ -429,7 +437,7 @@ const SideMenu = ({navigation}) => {
             <ListItem noIndent style={styles.listItem}>
               <Body style={styles.listItemBody}>
                 <CustomTextRegular size={14} color={palette.black}>
-                  미팅하는 방법
+                  야미구 이용 방법
                 </CustomTextRegular>
               </Body>
             </ListItem>
@@ -481,8 +489,12 @@ const SideMenu = ({navigation}) => {
               </Body>
             </ListItem>
           </TouchableByPlatform>
+
           <ListItem itemDivider style={styles.itemDivider}>
-            <CustomTextMedium size={24} color={palette.black}>
+            <CustomTextMedium
+              size={24}
+              color={palette.black}
+              style={{paddingTop: 25}}>
               정보
             </CustomTextMedium>
           </ListItem>

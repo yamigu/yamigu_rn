@@ -28,14 +28,14 @@ const MainScreenNavigator = createBottomTabNavigator(
             return (
               <Image
                 style={{width: 30, height: 30}}
-                source={require('~/images/homepage_tab_selected.png')}
+                source={require('~/images/nav_home_icon_selected.png')}
               />
             );
           } else {
             return (
               <Image
                 style={{width: 30, height: 30}}
-                source={require('~/images/homepage_tab.png')}
+                source={require('~/images/nav_home_icon.png')}
               />
             );
           }
@@ -52,14 +52,14 @@ const MainScreenNavigator = createBottomTabNavigator(
             return (
               <Image
                 style={{width: 30, height: 30}}
-                source={require('~/images/feed_icon.png')}
+                source={require('~/images/nav_feed_icon_selected.png')}
               />
             );
           } else {
             return (
               <Image
                 style={{width: 30, height: 30}}
-                source={require('~/images/feed_icon_nonselected.png')}
+                source={require('~/images/nav_feed_icon.png')}
               />
             );
           }

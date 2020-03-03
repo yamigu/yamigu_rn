@@ -13,7 +13,7 @@ const ListItemWithNavigation = ({title, toGo, toGoDisplay}) => (
       <Left style={styles.listItemLeft}>
         <Image
           style={styles.iconYami}
-          source={require('~/images/icon-yami.png')}
+          source={require('~/images/yami_icon.png')}
         />
       </Left>
       <Body style={styles.listItemBody}>
@@ -67,6 +67,12 @@ const styles = StyleSheet.create({
   iconForward: {
     marginLeft: 2,
     color: palette.gray,
+  },
+  iconYami: {
+    width: 16.67,
+    height: 20,
+    marginRight: 5,
+    resizeMode: 'contain',
   },
 });
 export default ListItemWithNavigation;

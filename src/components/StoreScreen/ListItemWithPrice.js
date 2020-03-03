@@ -12,7 +12,7 @@ const ListItemWithPrice = ({title, price, hot, discount, onPress}) => (
       <Left style={styles.listItemLeft}>
         <Image
           style={styles.iconYami}
-          source={require('~/images/icon-yami.png')}
+          source={require('~/images/yami_icon.png')}
         />
       </Left>
       <Body style={styles.listItemBody}>
@@ -87,6 +87,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     alignSelf: 'center',
     marginLeft: 7,
+  },
+  iconYami: {
+    width: 16.67,
+    height: 20,
+    marginRight: 5,
+    resizeMode: 'contain',
   },
 });
 export default ListItemWithPrice;
