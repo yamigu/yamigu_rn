@@ -59,6 +59,7 @@ const LikeMatchingList = ({navigation, likeMatchingProp}) => {
               imageSource={user.avata === null ? null : {uri: user.avata}}
               onPress={() =>
                 navigation.navigate('Profile', {
+                  viewpagerIndex: index,
                   location: user.location,
                   verified: user.verified,
                   uid: user.uid,

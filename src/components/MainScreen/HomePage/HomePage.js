@@ -193,6 +193,10 @@ const HomePage = ({navigation}) => {
         console.log('get user info');
         const result = await _retrieveData();
         console.log('done');
+
+        console.log('get match request status');
+        const result6 = await retrieveMatchRequestStatus();
+
         if (!result) return;
         console.log('get fcm token');
         const result2 = await retrieveFCMToken();
@@ -210,8 +214,7 @@ const HomePage = ({navigation}) => {
         console.log('get firebase token');
         const result5 = await retrieveFirebaseToken();
         console.log('done');
-        console.log('get match request status');
-        const result6 = await retrieveMatchRequestStatus();
+
         console.log('done');
         navigation.setParams({});
       },
@@ -786,7 +789,7 @@ const HomePage = ({navigation}) => {
                 color="#B9B9B9"
                 size={12}
                 style={{marginLeft: 6, marginTop: 10}}>
-                *인원은 상대방과 대화를 통해 조율해도 괜찮아요.{' '}
+                *함께 미팅할 친구들은 직접 구해야해요!
               </CustomTextRegular>
             </View>
           </View>
@@ -1111,8 +1114,8 @@ const HomePage = ({navigation}) => {
             style={{
               transform: [{rotate: spin}],
               marginTop: 20,
-              width: 50,
-              height: 60,
+              width: 24,
+              height: 30,
             }}
             source={require('~/images/rotation_icon.png')}
           />

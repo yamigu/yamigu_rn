@@ -69,6 +69,7 @@ const FriendsView = ({navigation}) => {
               <Body>
                 {friend.approved === true ? (
                   <ProfileCard
+                    addF={true}
                     size={66}
                     fontSizes={[16, 14, 14]}
                     nickname={friend.user_info.nickname}
@@ -86,20 +87,22 @@ const FriendsView = ({navigation}) => {
                   />
                 ) : friend.you_sent === true ? (
                   <ProfileCard
+                    addF={true}
                     size={66}
                     fontSizes={[16, 14, 14]}
                     nickname="친구 수락중"
-                    image={require('~/images/test-user-profile-girl.png')}
+                    // image={require('~/images/test-user-profile-girl.png')}
                     age=""
                     belong=""
                     department={friend.phoneno}
                   />
                 ) : (
                   <ProfileCard
+                    addF={true}
                     size={66}
                     fontSizes={[16, 14, 14]}
                     nickname="친구가 맞나요??"
-                    image={require('~/images/test-user-profile-girl.png')}
+                    // image={require('~/images/test-user-profile-girl.png')}
                     age=""
                     belong=""
                     department={friend.phoneno}
@@ -213,38 +216,4 @@ const styles = StyleSheet.create({
     elevation: 0,
   },
 });
-const frineds_list_data = [
-  {
-    name: '상큼한 딸기',
-    age: 24,
-    belong: '삼성물산',
-    department: '',
-    location: '서울',
-    image: require('~/images/test-user-profile-6.png'),
-  },
-  {
-    name: '안암불주먹',
-    age: 24,
-    belong: '고려대',
-    department: '의과병원',
-    location: '서울',
-    image: require('~/images/test-user-profile-7.png'),
-  },
-  {
-    name: '연남도끼',
-    age: 24,
-    belong: '프리랜서',
-    department: '디자이너',
-    location: '서울',
-    image: require('~/images/test-user-profile-8.png'),
-  },
-  {
-    name: 'Jane Park',
-    age: 24,
-    belong: '5급 공무원',
-    department: '',
-    location: '서울',
-    image: require('~/images/test-user-profile-6.png'),
-  },
-];
 export default FriendsView;

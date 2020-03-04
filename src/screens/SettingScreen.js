@@ -152,27 +152,7 @@ const SettingScreen = ({navigation}) => {
           noIndent
           button
           style={styles.listItem}
-          onPress={() =>
-            Alert.alert(
-              '정말 탈퇴.. 하시겠습니까?',
-              '',
-              [
-                {
-                  text: '네',
-                  onPress: () => {
-                    navigation.navigate('Main');
-                    //axios로 서버에 쏴주기
-                    console.log('YES LOGOUT');
-                  },
-                },
-                {
-                  text: '아니오',
-                  onPress: () => console.log('NOPE'),
-                },
-              ],
-              {cancelable: false},
-            )
-          }>
+          onPress={() => navigation.navigate('Getout')}>
           <Body style={styles.listItemBody}>
             <CustomTextRegular size={14} color={palette.black}>
               계정 탈퇴

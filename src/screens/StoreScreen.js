@@ -33,6 +33,8 @@ import RNIap, {
 import axios from 'axios';
 import '~/config';
 import AsyncStorage from '@react-native-community/async-storage';
+import Spinner from 'react-native-loading-spinner-overlay';
+
 const itemSkus = Platform.select({
   ios: ['yami_10', 'yami_30', 'yami_50', 'yami_100'],
   android: ['yami_10', 'yami_30', 'yami_50', 'yami_100'],
@@ -58,6 +60,8 @@ const StoreScreen = ({navigation}) => {
   const [userInfo, setUserInfo] = useState(null);
   const [yami, setYami] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [spinnerLoading, setSpinnerLoading] = useState(false);
+
   useEffect(() => {
     //initIap();
     // getAvailablePurchases();
@@ -68,6 +72,7 @@ const StoreScreen = ({navigation}) => {
     try {
       const userValue = await AsyncStorage.getItem('userValue');
       const jUserValue = JSON.parse(userValue);
+
       setUserInfo(jUserValue);
       if (userValue !== null) {
         setYami(jUserValue[global.config.user_info_const.YAMI]);
@@ -148,6 +153,7 @@ const StoreScreen = ({navigation}) => {
 
   const getItems = async () => {
     try {
+      setSpinnerLoading(true);
       const products = await RNIap.getProducts(itemSkus);
       products.sort((a, b) => parseInt(a.price) - parseInt(b.price));
       products.map(item => {
@@ -155,11 +161,12 @@ const StoreScreen = ({navigation}) => {
         item['discount'] = 0;
       });
       products[1].hot = true;
-      products[1].discount = 12.5;
-      products[2].discount = 20;
-      products[3].discount = 30;
+      products[1].discount = 7;
+      products[2].discount = 15;
+      products[3].discount = 27;
 
       setProductList(products);
+      await setSpinnerLoading(false);
     } catch (err) {
       console.warn(err.code, err.message);
     }
@@ -230,6 +237,11 @@ const StoreScreen = ({navigation}) => {
 
   return (
     <Content showsVerticalScrollIndicator={false} style={styles.root}>
+      <Spinner
+        visible={spinnerLoading}
+        textContent={''}
+        textStyle={styles.spinnerTextStyle}
+      />
       <List style={styles.list}>
         <ListItem itemHeader style={styles.listItemHeader}>
           <Body style={styles.listItemHeaderBody}>
@@ -267,7 +279,10 @@ const StoreScreen = ({navigation}) => {
           />
         </TouchableByPlatform> */}
         <ListItem itemDivider>
-          <CustomTextMedium size={18} color={palette.black}>
+          <CustomTextMedium
+            size={18}
+            color={palette.black}
+            style={{marginTop: 20, marginBottom: 10}}>
             무료로 야미 받기
           </CustomTextMedium>
         </ListItem>
@@ -275,20 +290,28 @@ const StoreScreen = ({navigation}) => {
         {/* Async로 usevalue불러와서 각 분기별 null 처리 */}
         <ListItemWithNavigation
           title="야미 10개 무료"
-          toGoDisplay="친구 등록"
+          toGoDisplay="친구 추가"
           toGo={() => navigation.navigate('AddFriends')}
         />
-        <ListItemWithNavigation
-          title="야미 5개 무료"
-          toGoDisplay="소속 인증하기"
-          toGo={() => navigation.navigate('BV')}
-        />
-        <ListItemWithNavigation
-          title="야미 3개 무료"
-          toGoDisplay="프로필 사진 등록하기"
-          toGo={() => navigation.navigate('MyProfile')}
-        />
+        {userInfo === null ? null : userInfo.avata === null ? (
+          <ListItemWithNavigation
+            title="야미 5개 무료"
+            toGoDisplay="소속 인증하기"
+            toGo={() => navigation.navigate('BV')}
+          />
+        ) : null}
+
+        {userInfo === null ? null : userInfo.verified === null ? (
+          <ListItemWithNavigation
+            title="야미 5개 무료"
+            toGoDisplay="프로필 사진 등록하기"
+            toGo={() => navigation.navigate('MyProfile')}
+          />
+        ) : null}
       </List>
+      <View
+        style={{width: 1, height: 30, backgroundColor: palette.default_bg}}
+      />
     </Content>
   );
 };

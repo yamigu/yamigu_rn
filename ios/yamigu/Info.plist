@@ -68,11 +68,9 @@
 		</dict>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string>Need Camera to Capture Image.</string>
+	<string></string>
 	<key>NSContactsUsageDescription</key>
 	<string>Reason for accessing contacts</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Access Gallery to Pick images.</string>
 	<key>UIAppFonts</key>

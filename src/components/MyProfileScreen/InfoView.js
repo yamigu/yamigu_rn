@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Text, View, StyleSheet, SafeAreaView} from 'react-native';
+import {Text, View, StyleSheet, SafeAreaView, Modal} from 'react-native';
 import {CustomTextMedium, CustomTextRegular} from '../common/CustomText';
 import palette from '~/lib/styles/palette';
 import {List, ListItem, Left, Right, Body} from 'native-base';
@@ -8,9 +8,14 @@ import TouchableByPlatform from '../common/TouchableByPlatform';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import '~/config';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
+import LocationModal from '../SignupScreen/LocationModal';
+import HeightModal from '~/components/MyProfileScreen/HeightModal';
 const InfoView = ({navigation, userInfo}) => {
   const [info, setInfo] = useState([]);
   const nowYear = 20200000;
+
+  const [locationModalVisible, setLocationModalVisible] = useState(false);
+  const [heightModalVisible, setHightModalVisible] = useState(false);
 
   useEffect(() => {
     if (userInfo[global.config.user_info_const.NICKNAME] !== undefined) {
@@ -19,6 +24,15 @@ const InfoView = ({navigation, userInfo}) => {
   }, [userInfo]);
   return (
     <View style={styles.container}>
+      <Modal visible={locationModalVisible} transparent>
+        <LocationModal
+          setLocationModalVisible={setLocationModalVisible}
+          fromProfile={true}
+        />
+      </Modal>
+      <Modal visible={heightModalVisible} transparent>
+        <HeightModal setHightModalVisible={setHightModalVisible} />
+      </Modal>
       <CustomTextMedium
         size={18}
         color={palette.black}
@@ -75,7 +89,11 @@ const InfoView = ({navigation, userInfo}) => {
               <TouchableOpacity
                 style={styles.listItemRight}
                 onPress={() => navigation.navigate('BV')}>
-                <CustomTextRegular size={16} color={palette.red}>
+                <CustomTextRegular
+                  size={16}
+                  color={palette.red}
+                  // style={{backgroundColor: palette.blue}}
+                >
                   인증하기
                 </CustomTextRegular>
                 <Anticon
@@ -103,40 +121,35 @@ const InfoView = ({navigation, userInfo}) => {
             </CustomTextRegular>
           </Left>
           <Right>
-            <CustomTextRegular size={16} color={palette.gray}>
-              {info[10]}{' '}
-            </CustomTextRegular>
-            {/* <TouchableOpacity style={styles.listItemRight}>
-              <CustomTextRegular size={16} color={palette.red}>
-                설정하기
+            <TouchableByPlatform
+              onPress={() => {
+                setLocationModalVisible(true);
+              }}>
+              <CustomTextRegular size={16} color={palette.orange}>
+                {info[10]}
               </CustomTextRegular>
-              <Anticon
-                name="exclamationcircle"
-                style={styles.iconWarning}
-                size={18}
-              />
-            </TouchableOpacity> */}
+            </TouchableByPlatform>
           </Right>
         </ListItem>
-        {/*<ListItem noIndent style={styles.listItem}>
-        <Left>
-          <CustomTextRegular size={16} color={palette.black}>
-            키
-          </CustomTextRegular>
-        </Left>
-        <Right>
-          <TouchableOpacity style={styles.listItemRight}>
-            <CustomTextRegular size={16} color={palette.red}>
-              설정하기
+
+        <ListItem noIndent style={styles.listItem}>
+          <Left>
+            <CustomTextRegular size={16} color={palette.black}>
+              키
             </CustomTextRegular>
-            <Anticon
-              name="exclamationcircle"
-              style={styles.iconWarning}
-              size={18}
-            />
-          </TouchableOpacity>
-        </Right>
-      </ListItem> */}
+          </Left>
+          <Right>
+            <TouchableOpacity
+              style={styles.listItemRight}
+              onPress={() => {
+                setHightModalVisible(true);
+              }}>
+              <CustomTextRegular size={16} color={palette.orange}>
+                미입력
+              </CustomTextRegular>
+            </TouchableOpacity>
+          </Right>
+        </ListItem>
       </List>
     </View>
   );
@@ -154,8 +167,12 @@ const styles = StyleSheet.create({
   listItemRight: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
   },
   iconWarning: {
+    alignSelf: 'center',
+    paddingTop: 4,
+    // backgroundColor: palette.gold,
     color: palette.red,
     marginLeft: 3,
   },

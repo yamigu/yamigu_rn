@@ -31,6 +31,12 @@ const dw = Dimensions.get('window').width;
 const dh = Dimensions.get('window').height;
 
 const ProfileCard = ({
+  noTouch,
+  verified,
+  uid,
+  setLiked,
+  liked,
+  navigation,
   location,
   size,
   fontSizes,
@@ -41,6 +47,7 @@ const ProfileCard = ({
   department,
   bothLike,
   rightComponent,
+  addF,
 }) => {
   useEffect(() => {
     console.log(avata);
@@ -57,19 +64,38 @@ const ProfileCard = ({
           paddingLeft: 0,
         }}>
         <Left style={{paddingTop: 0, paddingBottom: 0}}>
-          <Thumbnail
-            style={{
-              alignSelf: 'center',
-              height: size,
-              width: size,
-              borderRadius: size / 2,
-            }}
-            source={
-              avata
-                ? {uri: avata.uri}
-                : require('~/images/user-default-profile.png')
-            }
-          />
+          <TouchableByPlatform
+            onPress={() => {
+              if (noTouch !== true) {
+                navigation.navigate('Profile', {
+                  viewpagerIndex: 0,
+                  location,
+                  verified,
+                  uid,
+                  nickname,
+                  avata: avata.uri,
+                  age,
+                  belong,
+                  department,
+                  liked,
+                  setLiked: value => setLiked(value),
+                });
+              }
+            }}>
+            <Thumbnail
+              style={{
+                alignSelf: 'center',
+                height: size,
+                width: size,
+                borderRadius: size / 2,
+              }}
+              source={
+                avata
+                  ? {uri: avata.uri}
+                  : require('~/images/user-default-profile.png')
+              }
+            />
+          </TouchableByPlatform>
         </Left>
         <Body
           style={{
@@ -97,12 +123,15 @@ const ProfileCard = ({
               </CustomTextMedium>
             </View>
             <View style={styles.secondLine}>
-              <CustomTextRegular
-                size={fontSizes[2]}
-                color={palette.sub}
-                style={{}}>
-                {belong} {department}, {location}
-              </CustomTextRegular>
+              {addF === true ? (
+                <CustomTextRegular size={fontSizes[2]} color={palette.sub}>
+                  {belong} {department}
+                </CustomTextRegular>
+              ) : (
+                <CustomTextRegular size={fontSizes[2]} color={palette.sub}>
+                  {belong} {department}, {location}
+                </CustomTextRegular>
+              )}
             </View>
           </View>
         </Body>
@@ -111,16 +140,26 @@ const ProfileCard = ({
           style={{
             borderBottomWidth: 0,
             height: '100%',
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'center',
-            paddingRight: 10,
+            flexDirection: 'column',
+            alignItems: 'flex-start',
+            justifyContent: 'flex-end',
+            paddingRight: 0,
+            // backgroundColor: palette.gray,
           }}>
           {/* {bothLike === true ? (
             <Image source={require('~/images/bothlike-icon.png')} />
           ) : null} */}
           {rightComponent}
-          {bothLike && <Image source={require('~/images/bothlike-icon.png')} />}
+          {bothLike && (
+            <Image
+              style={{
+                width: 50,
+                height: 50,
+                // backgroundColor: palette.blue
+              }}
+              source={require('~/images/bothlike-icon.png')}
+            />
+          )}
         </Right>
       </ListItem>
     </List>

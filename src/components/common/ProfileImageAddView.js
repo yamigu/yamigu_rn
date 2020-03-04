@@ -127,6 +127,10 @@ const ProfileImageAddView = ({scroll, offsetY}) => {
     if (number === 1) setBtnMeasure(_measure(_imageLeft, number));
     else setBtnMeasureRight(_measure(_imageRight, number));
     const options = {
+      title: null,
+      cancelButtonTitle: '취소',
+      takePhotoButtonTitle: '카메라',
+      chooseFromLibraryButtonTitle: '사진 앨범',
       quality: 1.0,
       maxWidth: 500,
       maxHeight: 500,
@@ -183,7 +187,7 @@ const ProfileImageAddView = ({scroll, offsetY}) => {
             <Image style={styles.fill} source={{uri: pfImageTempList[0].src}} />
             <Image
               style={styles.mainButtonCameraIcon}
-              source={require('~/images/icon-camera-circle.png')}
+              source={require('~/images/profile_camera.png')}
             />
           </View>
         ) : null}
@@ -307,7 +311,7 @@ const ProfileImageAddView = ({scroll, offsetY}) => {
           )}
           <Image
             style={styles.mainButtonCameraIcon}
-            source={require('~/images/icon-camera-circle.png')}
+            source={require('~/images/profile_camera.png')}
           />
         </Button>
         <View

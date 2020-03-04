@@ -101,6 +101,10 @@ const MyFeedView = ({userInfo, scroll, offsetY}) => {
     if (modalVisible) return;
     _measure(_image);
     const options = {
+      title: null,
+      cancelButtonTitle: '취소',
+      takePhotoButtonTitle: '카메라',
+      chooseFromLibraryButtonTitle: '사진 앨범',
       quality: 1.0,
       maxWidth: 500,
       maxHeight: 500,
@@ -255,8 +259,11 @@ const MyFeedView = ({userInfo, scroll, offsetY}) => {
                   source={item.img_src === null ? null : {uri: item.img_src}}
                 />
                 <View style={styles.roundWrapper}>
-                  <Button style={styles.deleteBtn} onPress={deleteFeed}>
-                    <Octionicon name="x" size={24} style={styles.iconX} />
+                  <Button
+                    transparent
+                    style={styles.deleteBtn}
+                    onPress={deleteFeed}>
+                    <Octionicon name="x" size={20} style={styles.iconX} />
                   </Button>
                 </View>
               </View>
@@ -330,10 +337,10 @@ const styles = StyleSheet.create({
     width: 35,
     height: 35,
     borderRadius: 17.5,
-    backgroundColor: '#00000077',
+    // backgroundColor: '#00000077',
   },
   iconX: {
-    color: '#ffffffAA',
+    color: 'white',
   },
 });
 
