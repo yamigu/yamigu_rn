@@ -59,12 +59,14 @@ const ChattingListScreen = ({navigation}) => {
   };
 
   useEffect(() => {
-    getUserVal().then(result => {
-      if (!result) return;
+    const listener = navigation.addListener('didFocus', () => {
+      getUserVal().then(result => {
+        if (!result) return;
+      });
     });
+    return () => listener.remove();
   }, []);
   useEffect(() => {
-    console.log('chattingList?');
     if (userInfo.length === 0) return;
     axios.get('http://13.124.126.30:8000/core/chat/').then(result => {
       const chatlist_data = [];

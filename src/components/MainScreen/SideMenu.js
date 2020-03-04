@@ -333,7 +333,7 @@ const SideMenu = ({navigation}) => {
               )} */}
             </Body>
           </ListItem>
-          <TouchableByPlatform onPress={() => navigation.navigate('IV')}>
+          <TouchableByPlatform onPress={() => navigation.navigate('Signup')}>
             <ListItem icon noIndent style={styles.listItem}>
               <Body style={styles.listItemBody}>
                 <CustomTextRegular size={14} color={palette.black}>

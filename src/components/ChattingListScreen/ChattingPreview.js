@@ -8,7 +8,6 @@ import Moment from 'moment';
 import firebase from 'react-native-firebase';
 import AsyncStorage from '@react-native-community/async-storage';
 
-
 Moment.lang('kr');
 
 const iso_to_string = time => {
@@ -53,6 +52,7 @@ const ChattingPreview = ({
           if (
             storage === null ||
             storage === undefined ||
+            storage['room' + roomId] === undefined ||
             result.val().time >
               storage['room' + roomId][storage['room' + roomId].length - 1].time
           ) {

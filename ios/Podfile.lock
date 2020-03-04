@@ -313,7 +313,9 @@ PODS:
   - React-jsinspector (0.61.5)
   - react-native-contacts (5.0.7):
     - React
-  - react-native-image-picker (2.3.0):
+  - react-native-image-picker (2.3.1):
+    - React
+  - react-native-image-resizer (1.2.0):
     - React
   - react-native-safe-area-context (0.6.4):
     - React
@@ -420,6 +422,7 @@ DEPENDENCIES:
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - react-native-contacts (from `../node_modules/react-native-contacts`)
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
+  - react-native-image-resizer (from `../node_modules/react-native-image-resizer`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - "react-native-slider (from `../node_modules/@react-native-community/slider`)"
   - react-native-splash-screen (from `../node_modules/react-native-splash-screen`)
@@ -518,6 +521,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-contacts"
   react-native-image-picker:
     :path: "../node_modules/react-native-image-picker"
+  react-native-image-resizer:
+    :path: "../node_modules/react-native-image-resizer"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
   react-native-slider:
@@ -617,7 +622,8 @@ SPEC CHECKSUMS:
   React-jsiexecutor: d5525f9ed5f782fdbacb64b9b01a43a9323d2386
   React-jsinspector: fa0ecc501688c3c4c34f28834a76302233e29dc0
   react-native-contacts: a30bebe23ddeda7c34bf97cfa5f952201efc5329
-  react-native-image-picker: c8a4faf0e75ef3619f215463394388f1c222236b
+  react-native-image-picker: 6a850c41f57f0848d918c2a77aedd7aa272ffa30
+  react-native-image-resizer: efae8dd718cbd47755df95aa45ad859e701ad7d8
   react-native-safe-area-context: 52342d2d80ea8faadd0ffa76d83b6051f20c5329
   react-native-slider: 3a1cfd00c9c31068251b536822f7192e8d1d6b6f
   react-native-splash-screen: 200d11d188e2e78cea3ad319964f6142b6384865
@@ -648,4 +654,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: e2435f4848e09418c27bb9df792f913e043cab94
 
-COCOAPODS: 1.8.3
+COCOAPODS: 1.8.4
