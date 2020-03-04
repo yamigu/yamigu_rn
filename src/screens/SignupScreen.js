@@ -161,6 +161,14 @@ const SignupScreen = ({navigation}) => {
             </CustomTextMedium>
           )}
         </Button>
+        {page === 3 ? (
+          <CustomTextRegular
+            size={10}
+            color={palette.black}
+            style={{alignSelf: 'center'}}>
+            본인임을 확인하고 정확한 나이와 성별을 알 수 있어요!
+          </CustomTextRegular>
+        ) : null}
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
@@ -209,6 +217,7 @@ const styles = StyleSheet.create({
   bottomView: {
     padding: 20,
     paddingTop: 0,
+    flexDirection: 'column',
   },
   indicator: {
     marginBottom: 14,

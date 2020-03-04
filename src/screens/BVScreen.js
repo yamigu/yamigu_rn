@@ -18,6 +18,7 @@ import palette from '~/lib/styles/palette';
 import {Button, Form, Item, Label, Input, Content} from 'native-base';
 import MaterialCommunityicon from 'react-native-vector-icons/MaterialCommunityIcons';
 import ImagePicker from 'react-native-image-picker';
+import ImageResizer from 'react-native-image-resizer';
 import TouchableByPlatform from '~/components/common/TouchableByPlatform';
 import {HeaderBackButton} from 'react-navigation-stack';
 import Spinner from 'react-native-loading-spinner-overlay';
@@ -36,6 +37,13 @@ const BVScreen = ({navigation}) => {
   const [focus2, setFocus2] = useState(false);
 
   useEffect(() => {
+    navigation.setParams({
+      doVerify: source => doVerify(source),
+      toggle: toggle,
+      text1: text1,
+      text2: text2,
+      imageSource: imageSource,
+    });
     axios
       .get('http://13.124.126.30:8000/authorization/user/belong_verification/')
       .then(result => {
@@ -79,9 +87,9 @@ const BVScreen = ({navigation}) => {
       const department = text2;
       const studentToggle = toggle;
 
-      if (studentToggle == 1) {
+      if (studentToggle === 1) {
         formData.append('is_student', true);
-      } else if (studentToggle == 2) {
+      } else if (studentToggle === 2) {
         formData.append('is_student', false);
       }
       formData.append('belong', belong);
@@ -96,6 +104,7 @@ const BVScreen = ({navigation}) => {
         type: image.type,
         name: image.uri,
       });
+      console.log(formData);
       resolve(
         file_upload(
           formData,
@@ -136,15 +145,44 @@ const BVScreen = ({navigation}) => {
           name: response.uri,
           type: response.type,
         };
+        let rotation = 0;
+        if (response.width < response.height) {
+          rotation = 90;
+        }
+        console.log(rotation);
+        ImageResizer.createResizedImage(
+          response.uri,
+          response.width,
+          response.height,
+          'JPEG',
+          100,
+          rotation,
+        )
+          .then(result => {
+            const {uri, name, type} = result;
+            const rotated_source = {
+              uri: uri,
+              name: a,
+              type: type,
+            };
+            setImageSource(source);
+            navigation.setParams({
+              doVerify: source => doVerify(source),
+              toggle: toggle,
+              text1: text1,
+              text2: text2,
+              imageSource: rotated_source,
+            });
+          })
+          .catch(err => {
+            console.log(err);
+
+            return Alert.alert(
+              'Unable to resize the photo',
+              'Please try again!',
+            );
+          });
         // console.log('image uri' + response.uri);
-        setImageSource(source);
-        navigation.setParams({
-          doVerify: source => doVerify(source),
-          toggle: toggle,
-          text1: text1,
-          text2: text2,
-          imageSource: source,
-        });
       }
     });
   };
@@ -174,7 +212,7 @@ const BVScreen = ({navigation}) => {
         textStyle={styles.spinnerTextStyle}
       />
       <CustomTextMedium size={20} color={palette.black}>
-        소속을 인증 해 주세요
+        소속을 인증해주세요
       </CustomTextMedium>
       <CustomTextRegular size={16} color={palette.gray}>
         *소속이 있는 회원만 가입이 가능합니다.
@@ -234,7 +272,6 @@ const BVScreen = ({navigation}) => {
               value={text1}
               selectionColor={palette.orange[0]}
               placeholderTextColor={palette.nonselect}
-              caretHidden={true}
               onFocus={setFocus1}
             />
           </Item>
@@ -264,7 +301,6 @@ const BVScreen = ({navigation}) => {
               value={text2}
               selectionColor={palette.orange[0]}
               placeholderTextColor={palette.nonselect}
-              caretHidden={true}
               onFocus={setFocus2}
             />
           </Item>
@@ -279,13 +315,14 @@ const BVScreen = ({navigation}) => {
         onPress={selectPhotoTapped}
         style={{
           flex: 1,
-          borderWidth: 1,
           borderColor: palette.nonselect,
-          backgroundColor: palette.default_bg,
+          backgroundColor: 'white',
           borderRadius: 5,
           width: dw * 0.9,
           height: dw * 0.41,
           elevation: 0,
+          paddingTop: 0,
+          paddingBottom: 0,
         }}>
         {imageSource === null ? (
           <View
@@ -293,7 +330,7 @@ const BVScreen = ({navigation}) => {
               flex: 1,
               borderWidth: 1,
               borderColor: palette.nonselect,
-              backgroundColor: palette.default_bg,
+              backgroundColor: 'white',
               borderRadius: 5,
               width: dw * 0.9,
               height: dw * 0.41,
@@ -310,7 +347,9 @@ const BVScreen = ({navigation}) => {
               인증하기
             </CustomTextRegular>
             <CustomTextRegular size={11} color={palette.nonselect}>
-              * 사원증, 명함, 사업자등록증 등을 첨부해주세요
+              {toggle === 1
+                ? '* 학생증이나 전자학생증을 첨부해주세요!'
+                : '* 사원증, 명함, 사업자등록증 등을 첨부해주세요'}
             </CustomTextRegular>
           </View>
         ) : (
@@ -354,19 +393,21 @@ BVScreen.navigationOptions = ({navigation}) => ({
     </CustomTextRegular>
   ),
   headerRight: () => (
-    <TouchableByPlatform
+    <Button
       disabled={
         navigation.getParam('text1') === '' ||
-        navigation.getParam('text2') === '' ||
         navigation.getParam('toggle') === 0 ||
         navigation.getParam('imageSource') === null
       }
       transparent
       style={{
-        backgroundColor: 'white',
         marginRight: 10,
         height: 40,
         elevation: 0,
+        paddingTop: 0,
+        paddingBottom: 0,
+        justifyContent: 'center',
+        alignItems: 'center',
       }}
       onPress={() => {
         let imgsrc = navigation.getParam('imageSource');
@@ -399,7 +440,6 @@ BVScreen.navigationOptions = ({navigation}) => ({
         size={15}
         color={
           navigation.getParam('text1') === '' ||
-          navigation.getParam('text2') === '' ||
           navigation.getParam('toggle') === 0 ||
           navigation.getParam('imageSource') === null
             ? palette.nonselect
@@ -407,7 +447,7 @@ BVScreen.navigationOptions = ({navigation}) => ({
         }>
         인증
       </CustomTextRegular>
-    </TouchableByPlatform>
+    </Button>
   ),
   headerMode: 'screen',
   headerStyle: {
@@ -420,13 +460,13 @@ const styles = StyleSheet.create({
   root: {
     padding: 20,
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: palette.default_bg,
     flexDirection: 'column',
   },
   attachBox: {
     width: dw * 0.9,
     borderRadius: 5,
-    backgroundColor: palette.default_bg,
+    backgroundColor: 'white',
   },
   buttonView: {
     flex: 1,
@@ -439,7 +479,7 @@ const styles = StyleSheet.create({
     height: 40,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: palette.default_bg,
+    backgroundColor: 'white',
     elevation: 0,
     borderWidth: 1,
     borderColor: palette.nonselect,
@@ -455,7 +495,7 @@ const styles = StyleSheet.create({
     height: 40,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: palette.default_bg,
+    backgroundColor: 'white',
     elevation: 0,
     borderWidth: 1,
     borderColor: palette.orange[0],
@@ -475,14 +515,14 @@ const styles = StyleSheet.create({
     borderLeftWidth: 0.5,
   },
   ImageContainer: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
     borderWidth: 1,
     borderColor: palette.nonselect,
-    backgroundColor: palette.default_bg,
-    borderRadius: 5,
-    width: dw * 0.9,
-    height: dw * 0.41,
     flexDirection: 'column',
     justifyContent: 'center',
+    resizeMode: 'cover',
   },
   form: {
     flex: 1,
@@ -498,7 +538,6 @@ const styles = StyleSheet.create({
     marginTop: 8,
     fontSize: 14,
     textAlignVertical: 'bottom',
-    lineHeight: 14,
     fontFamily: 'NotoSansCJKkr-Medium',
     paddingBottom: 0,
     color: palette.gray,
@@ -506,7 +545,6 @@ const styles = StyleSheet.create({
   input: {
     fontSize: 14,
     textAlignVertical: 'bottom',
-    lineHeight: 14,
     fontFamily: 'NotoSansCJKkr-Regular',
     paddingBottom: 0,
     color: palette.black,

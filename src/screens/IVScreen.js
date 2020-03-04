@@ -42,7 +42,7 @@ const IVScreen = ({navigation}) => {
           flexDirection: 'column',
         }}>
         <CustomTextMedium size={24} color={palette.black}>
-          마지막으로 본인인증 부탁드려요..!
+          본인인증 부탁드려요..!
         </CustomTextMedium>
         <CustomTextMedium size={16} color={palette.gray}>
           *번거롭더라도 안전한 미팅을 위해 꼭 필요해요

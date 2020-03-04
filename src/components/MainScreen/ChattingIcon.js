@@ -42,11 +42,14 @@ const ChattingIcon = ({navigation}) => {
         return;
       axios.defaults.headers.common['Authorization'] =
         'Token ' + userVal[global.config.user_info_const.TOKEN];
+      let storageData;
       getStorage().then(storage => {
         if (storage === null || storage === undefined) {
           console.log(storage);
           return;
         }
+        storageData = storage;
+
         axios
           .get('http://13.124.126.30:8000/authorization/firebase/token/')
           .then(result => {
@@ -54,6 +57,7 @@ const ChattingIcon = ({navigation}) => {
           })
           .catch(error => console.log(error))
           .then(token => {
+            console.log('signin');
             firebase.auth().signInWithCustomToken(token);
           })
           .then(() => {
@@ -67,8 +71,8 @@ const ChattingIcon = ({navigation}) => {
                     try {
                       if (
                         result.val().time >
-                        storage['room' + item.id][
-                          storage['room' + item.id].length - 1
+                        storageData['room' + item.id][
+                          storageData['room' + item.id].length - 1
                         ].time
                       ) {
                         setHasNew(true);
@@ -116,8 +120,8 @@ const ChattingIcon = ({navigation}) => {
           source={require('~/images/chat_bubble_icon.png')}
           style={{
             margin: 10,
-            width: 20,
-            height: 18,
+            width: 25,
+            height: 22,
           }}
         />
       </TouchableByPlatform>
@@ -125,11 +129,11 @@ const ChattingIcon = ({navigation}) => {
         <View
           style={{
             position: 'absolute',
-            width: 10,
-            height: 10,
+            width: 12,
+            height: 12,
             borderRadius: 5,
-            top: 7,
-            right: 7,
+            top: 4,
+            right: 4,
             zIndex: 2,
           }}>
           <Badge
