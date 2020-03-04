@@ -125,18 +125,18 @@ const SettingScreen = ({navigation}) => {
               '',
               [
                 {
+                  text: '아니오',
+                  onPress: () => console.log('NOPE'),
+                },
+                {
                   text: '네',
                   onPress: () => {
                     logout().then(() => {
-                      navigation.navigate('Main');
+                      navigation.navigate('Login');
                       Alert.alert('로그아웃 되었습니다.');
                       console.log('YES LOGOUT');
                     });
                   },
-                },
-                {
-                  text: '아니오',
-                  onPress: () => console.log('NOPE'),
                 },
               ],
               {cancelable: false},

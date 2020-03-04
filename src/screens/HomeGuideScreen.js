@@ -1,22 +1,36 @@
+/* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import {Text, View, Image, ScrollView, Dimensions} from 'react-native';
 import {SafeAreaView} from 'react-navigation';
 import palette from '~/lib/styles/palette';
-import {Content} from 'native-base';
+import {Content, Button} from 'native-base';
 import {CustomTextBold, CustomTextMedium} from '~/components/common/CustomText';
 import {HeaderBackButton} from 'react-navigation-stack';
-const deviceWidth = Dimensions.get('window').width;
+const dw = Dimensions.get('window').width;
 const HomeGuideScreen = ({navigation}) => (
-  <Content
+  <ScrollView
     style={{
-      flex: 1,
-      width: '100%',
-      paddingVertical: 30,
-      backgroundColor: palette.default_bg,
+      // backgroundColor: palette.default_bg,
+      paddingTop: 0,
+      // backgroundColor: palette.gold,
     }}
-    contentContainerStyle={{alignItems: 'center'}}>
-    {/* <CustomTextBold size={100}>asd</CustomTextBold> */}
+    contentContainerStyle={{
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'flex-start',
+    }}>
     <Image
+      style={{
+        paddingTop: 0,
+        marginTop: 0,
+        // width: 100,
+        height: 1500,
+        // backgroundColor: palette.blue,
+        resizeMode: 'contain',
+      }}
+      source={require('~/images/guide.png')}
+    />
+    {/* <Image
       style={{
         width: (deviceWidth * 317) / 375,
         height: (deviceWidth * 317) / 375,
@@ -103,9 +117,9 @@ const HomeGuideScreen = ({navigation}) => (
         resizeMode: 'cover',
       }}
       source={require('~/images/homeguidescreen-6.png')}
-    />
+    /> */}
     {/* <CustomTextBold size={100}>asd</CustomTextBold> */}
-  </Content>
+  </ScrollView>
 );
 
 HomeGuideScreen.navigationOptions = ({navigation}) => ({

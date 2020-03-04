@@ -14,6 +14,7 @@ import {
   Animated,
   Easing,
   Platform,
+  SafeAreaView,
 } from 'react-native';
 import palette from '~/lib/styles/palette';
 import {
@@ -159,24 +160,27 @@ const HomePage = ({navigation}) => {
     const wow = [
       Moment(today)
         .add(1, 'days')
-        .format('MM월 DD일 (ddd)'),
+        .format('MM/DD (ddd)'),
       Moment(today)
         .add(2, 'days')
-        .format('MM월 DD일 (ddd)'),
+        .format('MM/DD (ddd)'),
       Moment(today)
         .add(3, 'days')
-        .format('MM월 DD일 (ddd)'),
+        .format('MM/DD (ddd)'),
       Moment(today)
         .add(4, 'days')
-        .format('MM월 DD일 (ddd)'),
+        .format('MM/DD (ddd)'),
       Moment(today)
         .add(5, 'days')
-        .format('MM월 DD일 (ddd)'),
+        .format('MM/DD (ddd)'),
       Moment(today)
         .add(6, 'days')
-        .format('MM월 DD일 (ddd)'),
-      '금요일만',
-      '토요일만',
+        .format('MM/DD (ddd)'),
+      Moment(today)
+        .add(7, 'days')
+        .format('MM/DD (ddd)'),
+      '금요일',
+      '토요일',
     ];
     setDateList(wow);
 
@@ -385,37 +389,56 @@ const HomePage = ({navigation}) => {
       navigation.navigate('IV', {needBtn: true});
     } else {
       if (matchRequested === true) {
-        // console.log('came true');
-        logCallback('match request', setLoginLoading(false));
-        setMatchRequested(false);
+        Alert.alert(
+          '미팅 주선을 취소하시겠어요?',
+          '무료 횟수가 차감됩니다.',
+          [
+            {
+              text: '네',
+              onPress: () => {
+                // console.log('came true');
+                logCallback('match request', setLoginLoading(false));
+                setMatchRequested(false);
 
-        setMemberItemNo(0);
-        setMemberMainSelected(true);
-        let tmselected = [false, false, false];
-        setMemberSelected(tmselected);
+                setMemberItemNo(0);
+                setMemberMainSelected(true);
+                let tmselected = [false, false, false];
+                setMemberSelected(tmselected);
 
-        setDateItemNo(0);
-        setDateMainSelected(true);
-        let tdselected = [
-          false,
-          false,
-          false,
-          false,
-          false,
-          false,
-          false,
-          false,
-        ];
-        setDateSelected(tdselected);
+                setDateItemNo(0);
+                setDateMainSelected(true);
+                let tdselected = [
+                  false,
+                  false,
+                  false,
+                  false,
+                  false,
+                  false,
+                  false,
+                  false,
+                ];
+                setDateSelected(tdselected);
 
-        //이미 매칭중인데 누르면 취소니까
-        axios
-          .patch('http://13.124.126.30:8000/core/match_request/')
-          .then(() => {
-            setLoginLoading(false);
-          })
-          .then(() => console.log('cancleed'));
+                //이미 매칭중인데 누르면 취소니까
+                axios
+                  .patch('http://13.124.126.30:8000/core/match_request/')
+                  .then(() => {
+                    setLoginLoading(false);
+                  })
+                  .then(() => console.log('cancleed'));
+              },
+            },
+            {
+              text: '아니오',
+              onPress: () => console.log('Cancel Pressed'),
+              style: 'cancel',
+            },
+          ],
+          {cancelable: false},
+        );
       } else {
+        setLoginLoading(true);
+
         console.log('sending?');
         //아직 매칭 안한거고, 이제 보내야지
         //날짜, 멤버, 나이 계산해서 아래 형식에 맞게 넣어주기
@@ -473,14 +496,19 @@ const HomePage = ({navigation}) => {
           .then(result => {
             console.log(memInt + ' ' + dateInt);
             console.log(result.data);
-            setMatchRequested(!matchRequested);
           })
           .catch(e => {
             if (e.response.status === 401) {
               AsyncStorage.setItem('userValue', JSON.stringify(initUserValue));
             }
           })
-          .then(setLoginLoading(false));
+          .then(() =>
+            setTimeout(() => {
+              setLoginLoading(false);
+              setMatchRequested(!matchRequested);
+              console.log('here');
+            }, 500),
+          );
       }
     }
   };
@@ -554,9 +582,15 @@ const HomePage = ({navigation}) => {
   const sliderOneValuesChangeStart = () => setSliderOneChanging(true);
   let sliderOneValuesChangeFinish = () => setSliderOneChanging(false);
 
-  let multiSliderValuesChange = values => setMultiSliderValue(values);
-  let nonCollidingMultiSliderValuesChange = values =>
+  let multiSliderValuesChange = values => {
+    if (values[0] + 3 > values[1]) {
+      console.log('too small');
+    }
+    setMultiSliderValue(values);
+  };
+  let nonCollidingMultiSliderValuesChange = values => {
     setNonCollidingMultiSliderValue(values);
+  };
 
   return (
     <View style={styles.root}>
@@ -643,11 +677,7 @@ const HomePage = ({navigation}) => {
               </View>
               <Button
                 transparent={true}
-                style={{
-                  height: 30,
-                  backgroundColor: '#F3F2F2',
-                  elevation: 0,
-                }}
+                style={styles.completeBtn}
                 onPress={() => {
                   console.log('완료눌림');
                   setMemberModalVisible(false);
@@ -664,7 +694,10 @@ const HomePage = ({navigation}) => {
                   }
                   setMemberText(tmpText);
                 }}>
-                <CustomTextMedium color={palette.orange} size={13}>
+                <CustomTextMedium
+                  style={{paddingTop: 0, paddingBottom: 0}}
+                  color={palette.orange}
+                  size={13}>
                   완료
                 </CustomTextMedium>
               </Button>
@@ -830,11 +863,7 @@ const HomePage = ({navigation}) => {
                   </CustomTextRegular>
                 </View>
                 <Button
-                  style={{
-                    height: 30,
-                    backgroundColor: '#F3F2F2',
-                    elevation: 0,
-                  }}
+                  style={styles.completeBtn}
                   onPress={() => {
                     setDateModalVisible(false);
                     let tmpText = '';
@@ -850,7 +879,10 @@ const HomePage = ({navigation}) => {
                     }
                     setDateText(tmpText);
                   }}>
-                  <CustomTextMedium color={palette.orange} size={13}>
+                  <CustomTextMedium
+                    style={{paddingTop: 0, paddingBottom: 0}}
+                    color={palette.orange}
+                    size={13}>
                     완료
                   </CustomTextMedium>
                 </Button>
@@ -882,6 +914,11 @@ const HomePage = ({navigation}) => {
                       : styles.dateMainBtnUnselected
                   }>
                   <CustomTextRegular
+                    style={{
+                      paddingTop: 0,
+                      paddingBottom: 0,
+                      backgroundColor: 'white',
+                    }}
                     size={12}
                     color={
                       dateMainSelected === true ? palette.orange : palette.black
@@ -959,7 +996,7 @@ const HomePage = ({navigation}) => {
             }}>
             <View
               style={{
-                height: dh - 146,
+                height: dh - 165,
                 backgroundColor: 'rgba(0,0,0,0.7)',
                 flexDirection: 'column',
                 justifyContent: 'flex-start',
@@ -968,14 +1005,14 @@ const HomePage = ({navigation}) => {
           </TouchableWithoutFeedback>
           <View
             style={{
-              height: 146,
+              height: 165,
               backgroundColor: 'rgba(0,0,0,0.7)',
               flexDirection: 'column',
               justifyContent: 'flex-start',
             }}>
             <View
               style={{
-                height: 146,
+                height: 165,
                 width: dw,
                 backgroundColor: 'white',
                 borderTopRightRadius: 10,
@@ -990,15 +1027,14 @@ const HomePage = ({navigation}) => {
                   </CustomTextRegular>
                 </View>
                 <Button
-                  style={{
-                    height: 30,
-                    backgroundColor: '#F3F2F2',
-                    elevation: 0,
-                  }}
+                  style={styles.completeBtn}
                   onPress={() => {
                     setAgeModalVisible(false);
                   }}>
-                  <CustomTextMedium color={palette.orange} size={13}>
+                  <CustomTextMedium
+                    style={{paddingTop: 0, paddingBottom: 0}}
+                    color={palette.orange}
+                    size={13}>
                     완료
                   </CustomTextMedium>
                 </Button>
@@ -1019,12 +1055,12 @@ const HomePage = ({navigation}) => {
                     height: 1,
                   }}
                   values={[multiSliderValue[0], multiSliderValue[1]]}
-                  sliderLength={dw * 0.86}
+                  sliderLength={dw * 0.8}
                   onValuesChange={multiSliderValuesChange}
                   min={20}
                   max={30}
                   step={1}
-                  allowOverlap
+                  // allowOverlap
                   snapped
                   // customLabel={CustomLabel}
                   customMarker={CustomMarker}
@@ -1054,7 +1090,7 @@ const HomePage = ({navigation}) => {
       <View style={styles.topLayout}>
         {/* <CustomTextBold>{asyncValue[1]}</CustomTextBold> */}
         <CustomTextBold size={24} color={palette.black}>
-          미팅 주선
+          {matchRequested === true ? '미팅 주선 중' : '미팅 주선'}
         </CustomTextBold>
 
         {matchRequested === true ? (
@@ -1068,8 +1104,8 @@ const HomePage = ({navigation}) => {
             source={require('~/images/rotation_icon.png')}
           />
         ) : (
-          <CustomTextRegular size={20} color="#646363">
-            매력적인 이성과의 미팅
+          <CustomTextRegular size={16} color="#646363">
+            미팅하고 싶은 날, 미팅 하면 돼
           </CustomTextRegular>
         )}
       </View>
@@ -1112,7 +1148,10 @@ const HomePage = ({navigation}) => {
           <CustomTextBold
             size={14}
             color={palette.gray}
-            style={{paddingLeft: 6}}>
+            style={{
+              paddingLeft: 6,
+              paddingTop: 0.5,
+            }}>
             인원
           </CustomTextBold>
           <TouchableByPlatform
@@ -1130,7 +1169,10 @@ const HomePage = ({navigation}) => {
                 }
               }
             }}>
-            <CustomTextMedium size={14} color={palette.black}>
+            <CustomTextMedium
+              size={14}
+              color={palette.black}
+              style={{paddingtop: 0}}>
               {matchRequested === true
                 ? onMemText
                 : memberMainSelected === true
@@ -1146,7 +1188,7 @@ const HomePage = ({navigation}) => {
           <CustomTextBold
             size={14}
             color={palette.gray}
-            style={{paddingLeft: 6}}>
+            style={{paddingLeft: 6, paddingTop: 0.5}}>
             날짜
           </CustomTextBold>
           <TouchableByPlatform
@@ -1180,7 +1222,7 @@ const HomePage = ({navigation}) => {
           <CustomTextBold
             size={14}
             color={palette.gray}
-            style={{paddingLeft: 6}}>
+            style={{paddingLeft: 6, paddingTop: 0.5}}>
             선호 나이
           </CustomTextBold>
           <TouchableByPlatform
@@ -1217,7 +1259,7 @@ const HomePage = ({navigation}) => {
                   미팅 주선 신청하기
                 </CustomTextMedium>
                 <CustomTextMedium size={16} color="white">
-                  무료 1회
+                  무료
                 </CustomTextMedium>
               </TouchableByPlatform>
             ) : (
@@ -1239,21 +1281,23 @@ const styles = StyleSheet.create({
   root: {
     flex: 1,
     width: dw,
-    backgroundColor: palette.default_bg,
+    // backgroundColor: palette.default_bg,
+    // backgroundColor: palette.gold,
+
     flexDirection: 'column',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-start',
   },
   topLayout: {
-    flex: 1,
     width: dw,
+    height: dh * 0.3,
+    // backgroundColor: palette.blue,
     alignItems: 'center',
     justifyContent: 'center',
   },
   bottomLayout: {
-    flex: 1,
     width: dw,
-    marginBottom: 75,
+    // marginBottom: 75,
     alignItems: 'center',
     justifyContent: 'flex-end',
   },
@@ -1273,20 +1317,22 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    height: 50,
+    height: 40,
     borderBottomWidth: 1,
     borderBottomColor: '#D9D9D9D9',
     width: dw * 0.87,
     marginTop: 21,
     paddingBottom: 10,
+    paddingTop: 0,
+    // backgroundColor: palette.gold,
   },
   touch: {
-    height: 40,
+    // backgroundColor: palette.blue,
     flexDirection: 'row',
     alignItems: 'center',
-    width: dw * 0.56,
+    width: dw * 0.6,
     justifyContent: 'space-between',
-    padding: 10,
+    paddingTop: 0,
   },
   mainBtn: {
     width: dw * 0.9,
@@ -1323,19 +1369,23 @@ const styles = StyleSheet.create({
   memberMainBtnSelected: {
     elevation: 0,
     paddingHorizontal: 16,
-    paddingVertical: 8,
+    // paddingVertical: 8,
     marginTop: 12,
     borderWidth: 1,
+    height: 35,
     borderColor: palette.orange,
     borderRadius: 20,
     backgroundColor: 'white',
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
+    alignSelf: 'flex-start',
   },
   memberMainBtnUnselected: {
     elevation: 0,
     marginTop: 12,
+    paddingHorizontal: 16,
+    height: 35,
     borderWidth: 1,
     borderColor: palette.black,
     borderRadius: 20,
@@ -1343,30 +1393,39 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
+    alignSelf: 'flex-start',
   },
   dateMainBtnSelected: {
     elevation: 0,
     paddingHorizontal: 16,
-    paddingVertical: 8,
+    paddingTop: 0,
+    paddingBottom: 0,
     marginTop: 12,
     borderWidth: 1,
+    height: 35,
     borderColor: palette.orange,
     borderRadius: 20,
     backgroundColor: 'white',
+
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
+    alignSelf: 'flex-start',
   },
   dateMainBtnUnselected: {
     elevation: 0,
     marginTop: 12,
+    paddingHorizontal: 16,
+    paddingVertical: 0,
     borderWidth: 1,
+    height: 35,
     borderColor: palette.black,
     borderRadius: 20,
     backgroundColor: 'white',
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
+    alignSelf: 'flex-start',
   },
   memeberListBtnSelected: {
     elevation: 0,
@@ -1399,11 +1458,11 @@ const styles = StyleSheet.create({
     marginRight: 12,
     marginTop: 12,
     borderWidth: 1,
+    paddingHorizontal: 14,
     borderColor: palette.orange,
     borderRadius: 20,
     backgroundColor: 'white',
     height: 35,
-    width: 92,
     flexDirection: 'column',
     justifyContent: 'center',
   },
@@ -1412,23 +1471,25 @@ const styles = StyleSheet.create({
     marginRight: 12,
     marginTop: 12,
     borderWidth: 1,
+    paddingHorizontal: 14,
     borderColor: palette.black,
     borderRadius: 20,
     backgroundColor: 'white',
     height: 35,
-    width: 92,
     flexDirection: 'column',
     justifyContent: 'center',
   },
   container: {
+    marginTop: 15,
     flex: 1,
-    width: dw * 0.86,
+    width: dw,
     flexDirection: 'column',
     alignSelf: 'center',
     alignItems: 'center',
   },
   text: {
-    width: dw * 0.86,
+    // backgroundColor: palette.gold,
+    width: dw * 0.85,
     marginTop: 0,
     paddingTop: 0,
     flexDirection: 'row',
@@ -1436,6 +1497,15 @@ const styles = StyleSheet.create({
   },
   spinnerTextStyle: {
     color: '#FFF',
+  },
+  completeBtn: {
+    height: 30,
+    backgroundColor: '#F3F2F2',
+    elevation: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingTop: 0,
+    paddingBottom: 0,
   },
 });
 export default HomePage;

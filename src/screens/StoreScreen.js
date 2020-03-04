@@ -239,7 +239,7 @@ const StoreScreen = ({navigation}) => {
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <Image
                 style={styles.iconYami}
-                source={require('~/images/icon-yami.png')}
+                source={require('~/images/yami_icon.png')}
               />
               <CustomTextRegular size={16} color={palette.black}>
                 {yami === 'yami' ? null : yami}

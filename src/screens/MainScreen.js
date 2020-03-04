@@ -27,15 +27,15 @@ const MainScreenNavigator = createBottomTabNavigator(
           if (focused === true) {
             return (
               <Image
-                style={{width: 30, height: 25}}
-                source={require('~/images/homepage_tab_selected.png')}
+                style={{width: 30, height: 30}}
+                source={require('~/images/nav_home_icon_selected.png')}
               />
             );
           } else {
             return (
               <Image
-                style={{width: 30, height: 25}}
-                source={require('~/images/homepage_tab.png')}
+                style={{width: 30, height: 30}}
+                source={require('~/images/nav_home_icon.png')}
               />
             );
           }
@@ -52,14 +52,14 @@ const MainScreenNavigator = createBottomTabNavigator(
             return (
               <Image
                 style={{width: 30, height: 30}}
-                source={require('~/images/feed_icon.png')}
+                source={require('~/images/nav_feed_icon_selected.png')}
               />
             );
           } else {
             return (
               <Image
                 style={{width: 30, height: 30}}
-                source={require('~/images/feed_icon_nonselected.png')}
+                source={require('~/images/nav_feed_icon.png')}
               />
             );
           }
@@ -111,10 +111,12 @@ MainScreen.navigationOptions = ({navigation}) => {
         style={{
           width: 40,
           height: 40,
+          // backgroundColor: palette.blue,
           borderRadius: 100,
           overflow: 'hidden',
           justifyContent: 'center',
           alignItems: 'center',
+          paddingBottom: 0,
         }}>
         <TouchableByPlatform
           onPress={() => navigation.dispatch(DrawerActions.openDrawer())}>

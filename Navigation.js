@@ -104,6 +104,12 @@ const AuthStack = createStackNavigator({
       headerShown: true,
     },
   },
+  Terms: {
+    screen: TermsScreen,
+  },
+  Privacy: {
+    screen: PrivacyScreen,
+  },
 });
 
 const DrawerStack = createDrawerNavigator(
