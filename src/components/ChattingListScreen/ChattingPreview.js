@@ -21,6 +21,7 @@ const ChattingPreview = ({
   label,
   navigation,
   hasVerified,
+  uid,
   avata,
   nickname,
   created_at,
@@ -53,8 +54,10 @@ const ChattingPreview = ({
             storage === null ||
             storage === undefined ||
             storage['room' + roomId] === undefined ||
-            result.val().time >
-              storage['room' + roomId][storage['room' + roomId].length - 1].time
+            (result.val().idSender !== uid &&
+              result.val().time >
+                storage['room' + roomId][storage['room' + roomId].length - 1]
+                  .time)
           ) {
             setIsNew(true);
           }

@@ -102,6 +102,7 @@ const ChattingListScreen = ({navigation}) => {
         chatList={receivedList}
       />
       <ChattingList
+        uid={userInfo[global.config.user_info_const.UID]}
         hasVerified={hasVerified}
         style={{marginTop: 12}}
         navigation={navigation}

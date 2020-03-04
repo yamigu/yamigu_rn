@@ -113,6 +113,31 @@ const ChattingScreen = ({navigation}) => {
       //.ref('message/474')
       .off('child_added');
   };
+  const getStorage = async room => {
+    let storage = await AsyncStorage.getItem('chatStorage');
+    console.log('iiisdalsdlqwkejqlkwejlkqwejlqwejlqkwjelk');
+    console.log(storage);
+    return new Promise((resolve, reject) => {
+      storage = JSON.parse(storage);
+      if (storage !== null) {
+        setAsyncData(storage);
+        if (storage['room' + room] !== undefined) {
+          global_messageList = storage['room' + room].slice();
+          const unique = global_messageList.filter((item, i) => {
+            return (
+              global_messageList.findIndex((item2, j) => {
+                return item.key === item2.key;
+              }) === i
+            );
+          });
+          global_messageList = unique;
+          setMessageList(unique);
+          resolve(true);
+        }
+        resolve(false);
+      }
+    });
+  };
   useEffect(() => {
     const room = navigation.getParam('roomId', -1);
     setRoomId(room);
@@ -128,28 +153,9 @@ const ChattingScreen = ({navigation}) => {
     getUid().then(async result => {
       const room = navigation.getParam('roomId', -1);
 
-      let storage = await AsyncStorage.getItem('chatStorage');
-      storage = JSON.parse(storage);
-      if (storage !== null) {
-        setAsyncData(storage);
-
-        if (storage['room' + room] !== undefined) {
-          global_messageList = storage['room' + room].slice();
-          console.log(storage['room' + room]);
-          const unique = global_messageList.filter((item, i) => {
-            return (
-              global_messageList.findIndex((item2, j) => {
-                return item.key === item2.key;
-              }) === i
-            );
-          });
-          global_messageList = unique;
-          setMessageList(unique);
-        }
-      }
-
+      const storage_result = await getStorage(room);
       setMyId(result[1]);
-      listener = firebase
+      const listener = firebase
         .database()
         .ref('message/' + room)
         //.ref('message/474')
@@ -171,20 +177,17 @@ const ChattingScreen = ({navigation}) => {
             temp['room' + room] = global_messageList.slice();
             console.log(temp);
             setAsyncData(temp);
+            AsyncStorage.setItem('chatStorage', JSON.stringify(temp));
           }
         });
     });
 
     return () => {
       disconnectFirebase();
+      console.log('채팅 내역 저장');
+      console.log(asyncData);
     };
   }, []);
-  useEffect(() => {
-    return () => {
-      console.log('채팅 내역 저장');
-      AsyncStorage.setItem('chatStorage', JSON.stringify(asyncData));
-    };
-  }, [asyncData]);
   //behavior : position ###
   return (
     <SafeAreaView style={styles.root}>
