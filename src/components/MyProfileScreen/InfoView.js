@@ -89,7 +89,11 @@ const InfoView = ({navigation, userInfo}) => {
               <TouchableOpacity
                 style={styles.listItemRight}
                 onPress={() => navigation.navigate('BV')}>
-                <CustomTextRegular size={16} color={palette.red}>
+                <CustomTextRegular
+                  size={16}
+                  color={palette.red}
+                  // style={{backgroundColor: palette.blue}}
+                >
                   인증하기
                 </CustomTextRegular>
                 <Anticon
@@ -163,8 +167,12 @@ const styles = StyleSheet.create({
   listItemRight: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
   },
   iconWarning: {
+    alignSelf: 'center',
+    paddingTop: 4,
+    // backgroundColor: palette.gold,
     color: palette.red,
     marginLeft: 3,
   },

@@ -786,7 +786,7 @@ const HomePage = ({navigation}) => {
                 color="#B9B9B9"
                 size={12}
                 style={{marginLeft: 6, marginTop: 10}}>
-                *인원은 상대방과 대화를 통해 조율해도 괜찮아요.{' '}
+                *함께 미팅할 친구들은 직접 구해야해요!
               </CustomTextRegular>
             </View>
           </View>

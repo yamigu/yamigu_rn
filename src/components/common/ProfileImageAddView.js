@@ -183,7 +183,7 @@ const ProfileImageAddView = ({scroll, offsetY}) => {
             <Image style={styles.fill} source={{uri: pfImageTempList[0].src}} />
             <Image
               style={styles.mainButtonCameraIcon}
-              source={require('~/images/icon-camera-circle.png')}
+              source={require('~/images/profile_camera.png')}
             />
           </View>
         ) : null}
@@ -307,7 +307,7 @@ const ProfileImageAddView = ({scroll, offsetY}) => {
           )}
           <Image
             style={styles.mainButtonCameraIcon}
-            source={require('~/images/icon-camera-circle.png')}
+            source={require('~/images/profile_camera.png')}
           />
         </Button>
         <View

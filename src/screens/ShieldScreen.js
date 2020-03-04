@@ -165,7 +165,7 @@ const ShieldScreen = ({params}) => {
       />
       <View style={styles.container}>
         <CustomTextMedium size={18} color={palette.black}>
-          혹시 아는 제람 만날까봐 걱정되시나요?
+          혹시 아는 사람 만날까봐 걱정되시나요?
         </CustomTextMedium>
         <CustomTextRegular
           size={12}

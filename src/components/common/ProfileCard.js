@@ -31,6 +31,12 @@ const dw = Dimensions.get('window').width;
 const dh = Dimensions.get('window').height;
 
 const ProfileCard = ({
+  noTouch,
+  verified,
+  uid,
+  setLiked,
+  liked,
+  navigation,
   location,
   size,
   fontSizes,
@@ -58,19 +64,38 @@ const ProfileCard = ({
           paddingLeft: 0,
         }}>
         <Left style={{paddingTop: 0, paddingBottom: 0}}>
-          <Thumbnail
-            style={{
-              alignSelf: 'center',
-              height: size,
-              width: size,
-              borderRadius: size / 2,
-            }}
-            source={
-              avata
-                ? {uri: avata.uri}
-                : require('~/images/user-default-profile.png')
-            }
-          />
+          <TouchableByPlatform
+            onPress={() => {
+              if (noTouch !== true) {
+                navigation.navigate('Profile', {
+                  viewpagerIndex: 0,
+                  location,
+                  verified,
+                  uid,
+                  nickname,
+                  avata: avata.uri,
+                  age,
+                  belong,
+                  department,
+                  liked,
+                  setLiked: value => setLiked(value),
+                });
+              }
+            }}>
+            <Thumbnail
+              style={{
+                alignSelf: 'center',
+                height: size,
+                width: size,
+                borderRadius: size / 2,
+              }}
+              source={
+                avata
+                  ? {uri: avata.uri}
+                  : require('~/images/user-default-profile.png')
+              }
+            />
+          </TouchableByPlatform>
         </Left>
         <Body
           style={{

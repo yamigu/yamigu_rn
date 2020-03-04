@@ -248,7 +248,7 @@ const MyFeedManage = ({
           style={styles.touchable}
           onPress={() => setFeedDisplay(!feedDisplay)}>
           <CustomTextRegular size={14} color={palette.black}>
-            내 피드
+            내 사진들
           </CustomTextRegular>
           {feedDisplay === true ? (
             <AntDesignIcon
@@ -282,6 +282,7 @@ const MyFeedManage = ({
                         ? null
                         : () => {
                             navigation.navigate('Profile', {
+                              viewpagerIndex: 0,
                               location: myFeedManageProp.location,
                               verified: myFeedManageProp.verified,
                               uid: myFeedManageProp.uid,
@@ -305,8 +306,16 @@ const MyFeedManage = ({
                       }
                     />
                     <View style={styles.roundWrapper}>
-                      <Button style={styles.deleteBtn} onPress={deleteFeed}>
-                        <Octionicon name="x" size={24} style={styles.iconX} />
+                      <Button
+                        transparent
+                        style={styles.deleteBtn}
+                        onPress={deleteFeed}>
+                        <Octionicon
+                          name="x"
+                          size={20}
+                          style={styles.iconX}
+                          color="white"
+                        />
                       </Button>
                     </View>
                   </TouchableOpacity>
@@ -432,10 +441,10 @@ const styles = StyleSheet.create({
     width: 35,
     height: 35,
     borderRadius: 17.5,
-    backgroundColor: '#00000077',
+    // backgroundColor: '#00000077',
   },
   iconX: {
-    color: '#ffffffAA',
+    color: 'white',
   },
 });
 

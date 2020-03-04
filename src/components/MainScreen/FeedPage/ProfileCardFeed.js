@@ -269,6 +269,8 @@ const ProfileCardFeed = ({
 
       <View style={styles.cardView}>
         <ProfileCard
+          uid={uid}
+          verified={verified}
           location={location}
           size={50}
           fontSizes={[14, 12, 12]}
@@ -278,6 +280,9 @@ const ProfileCardFeed = ({
           belong={belong}
           department={department}
           bothLike={bothLike}
+          navigation={navigation}
+          setLiked={setLiked}
+          liked={likedByServer}
           rightComponent={
             <Button
               style={{
@@ -309,9 +314,11 @@ const ProfileCardFeed = ({
             <View key={index}>
               <TouchableOpacity
                 onPress={() => {
+                  console.log('page : ' + index);
                   if (hasProfile === true) {
                     setChattingModalVisible(false);
                     navigation.navigate('Profile', {
+                      viewpagerIndex: index,
                       location,
                       verified,
                       uid,

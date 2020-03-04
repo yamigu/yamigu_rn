@@ -58,6 +58,7 @@ const StoreScreen = ({navigation}) => {
   const [userInfo, setUserInfo] = useState(null);
   const [yami, setYami] = useState(0);
   const [loading, setLoading] = useState(false);
+
   useEffect(() => {
     //initIap();
     // getAvailablePurchases();
@@ -68,6 +69,7 @@ const StoreScreen = ({navigation}) => {
     try {
       const userValue = await AsyncStorage.getItem('userValue');
       const jUserValue = JSON.parse(userValue);
+
       setUserInfo(jUserValue);
       if (userValue !== null) {
         setYami(jUserValue[global.config.user_info_const.YAMI]);
@@ -278,19 +280,24 @@ const StoreScreen = ({navigation}) => {
         {/* Async로 usevalue불러와서 각 분기별 null 처리 */}
         <ListItemWithNavigation
           title="야미 10개 무료"
-          toGoDisplay="친구 등록"
+          toGoDisplay="친구 추가"
           toGo={() => navigation.navigate('AddFriends')}
         />
-        <ListItemWithNavigation
-          title="야미 5개 무료"
-          toGoDisplay="소속 인증하기"
-          toGo={() => navigation.navigate('BV')}
-        />
-        <ListItemWithNavigation
-          title="야미 5개 무료"
-          toGoDisplay="프로필 사진 등록하기"
-          toGo={() => navigation.navigate('MyProfile')}
-        />
+        {userInfo === null ? null : userInfo.avata === null ? (
+          <ListItemWithNavigation
+            title="야미 5개 무료"
+            toGoDisplay="소속 인증하기"
+            toGo={() => navigation.navigate('BV')}
+          />
+        ) : null}
+
+        {userInfo === null ? null : userInfo.verified === null ? (
+          <ListItemWithNavigation
+            title="야미 5개 무료"
+            toGoDisplay="프로필 사진 등록하기"
+            toGo={() => navigation.navigate('MyProfile')}
+          />
+        ) : null}
       </List>
       <View
         style={{width: 1, height: 30, backgroundColor: palette.default_bg}}

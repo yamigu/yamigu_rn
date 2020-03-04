@@ -8,7 +8,6 @@ import Moment from 'moment';
 import firebase from 'react-native-firebase';
 import AsyncStorage from '@react-native-community/async-storage';
 
-
 Moment.lang('kr');
 
 const iso_to_string = time => {
@@ -74,12 +73,21 @@ const ChattingPreview = ({
       onPress={() => {
         if (hasVerified === 0) {
           console.log('hasVerified :: ' + hasVerified);
-          Alert.alert('소속인증이 필요한 서비스입니다!');
+          Alert.alert(
+            '대화를 위해 소속인증이 필요해요!',
+            '사진 한장으로 빠르게 인증하세요!',
+            [
+              {
+                text: '인증하기',
+                onPress: () => {
+                  navigation.navigate('BV');
+                },
+              },
+            ],
+          );
           navigation.navigate('BV');
         } else if (hasVerified === 1) {
-          Alert.alert(
-            '소속인증 중입니다! 30분안에 해드릴게요 잠시만 기다려주세요!',
-          );
+          Alert.alert('소속인증이 진행중입니다!', '잠시만 기다려주세요');
         } else {
           setIsNew(false);
           navigation.navigate('Chatting', {

@@ -304,7 +304,7 @@ const SideMenu = ({navigation}) => {
                   size={12}
                   color={palette.black}
                   style={{marginBottom: 5}}>
-                  야미가 부족하세요? 친구를 등록하고 받아가세요!
+                  친구 추가하고 무료야미 받아가세요!
                 </CustomTextRegular>
               </View>
               {/* ) : (

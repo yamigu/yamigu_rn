@@ -377,8 +377,8 @@ BVScreen.navigationOptions = ({navigation}) => ({
         tmpDoVerify(imgsrc).then(result => {
           if (result) {
             Alert.alert(
-              '인증신청되었습니다. 10분 소요 예정입니다!',
-              '',
+              '인증 신청이 완료 되었어요',
+              '완료되면 알림 보내드릴게요!',
               [
                 {
                   text: '확인',

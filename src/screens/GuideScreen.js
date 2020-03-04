@@ -70,7 +70,7 @@ const NoticeScreen = () => {
         </CustomTextRegular>
         <Button style={styles.oBtn}>
           <CustomTextMedium color="#FF8826" size={12}>
-            # 미팅, 과팅, 직장인 미팅
+            미팅 설정
           </CustomTextMedium>
         </Button>
         <CustomTextRegular style={{margin: 5}} size={16} color={palette.black}>
