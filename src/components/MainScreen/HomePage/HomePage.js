@@ -66,6 +66,8 @@ const HomePage = ({navigation}) => {
   const [tmpSt, setTmpSt] = useState('');
   const [matchRequested, setMatchRequested] = useState(false);
 
+  const [freeTicket, setFreeTicket] = useState(0);
+
   const _retrieveData = () => {
     console.log('retrieve');
     // axios.defaults.headers.common['Authorization'] = '';
@@ -638,7 +640,7 @@ const HomePage = ({navigation}) => {
             }}>
             <View
               style={{
-                height: dh - 200,
+                height: dh - 220,
                 backgroundColor: 'rgba(0,0,0,0.7)',
                 flexDirection: 'column',
                 justifyContent: 'flex-start',
@@ -655,7 +657,7 @@ const HomePage = ({navigation}) => {
           }}> */}
           <View
             style={{
-              height: 200,
+              height: 220,
               width: dw,
               backgroundColor: 'white',
               borderTopRightRadius: 10,
@@ -737,7 +739,6 @@ const HomePage = ({navigation}) => {
 
               <View
                 style={{
-                  height: 35,
                   flexDirection: 'row',
                   flexWrap: 'wrap',
                 }}>
@@ -781,6 +782,12 @@ const HomePage = ({navigation}) => {
                   );
                 })}
               </View>
+              <CustomTextRegular
+                color="#B9B9B9"
+                size={12}
+                style={{marginLeft: 6, marginTop: 10}}>
+                *인원은 상대방과 대화를 통해 조율해도 괜찮아요.{' '}
+              </CustomTextRegular>
             </View>
           </View>
         </SafeAreaProvider>
@@ -826,7 +833,7 @@ const HomePage = ({navigation}) => {
             }}>
             <View
               style={{
-                height: dh - 300,
+                height: dh - 330,
                 backgroundColor: 'rgba(0,0,0,0.7)',
                 flexDirection: 'column',
                 justifyContent: 'flex-start',
@@ -835,14 +842,14 @@ const HomePage = ({navigation}) => {
           </TouchableWithoutFeedback>
           <View
             style={{
-              height: 300,
+              height: 330,
               backgroundColor: 'rgba(0,0,0,0.7)',
               flexDirection: 'column',
               justifyContent: 'flex-start',
             }}>
             <View
               style={{
-                height: 300,
+                height: 330,
                 width: dw,
                 backgroundColor: 'white',
                 borderTopRightRadius: 10,
@@ -930,7 +937,7 @@ const HomePage = ({navigation}) => {
                 <View
                   style={{
                     backgroundColor: 'white',
-                    height: 200,
+                    // backgroundColor: palette.gold,
                     flexDirection: 'row',
                     flexWrap: 'wrap',
                   }}>
@@ -975,6 +982,12 @@ const HomePage = ({navigation}) => {
                     );
                   })}
                 </View>
+                <CustomTextRegular
+                  color="#B9B9B9"
+                  size={12}
+                  style={{marginLeft: 6, marginTop: 10}}>
+                  *같은 날짜를 선택한 이성을 주선해주니 신중하게 선택하세요!
+                </CustomTextRegular>
               </View>
             </View>
           </View>
@@ -1273,6 +1286,11 @@ const HomePage = ({navigation}) => {
             )}
           </LinearGradient>
         </View>
+        <CustomTextRegular size={12} color="#646363" style={{marginTop: 5}}>
+          {freeTicket === 0
+            ? '무료 미팅 횟수: 3회'
+            : '무료 미팅 주선은 매주 월요일에 리셋됩니다.'}
+        </CustomTextRegular>
       </View>
     </View>
   );
@@ -1387,7 +1405,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     height: 35,
     borderWidth: 1,
-    borderColor: palette.black,
+    borderColor: palette.gray,
     borderRadius: 20,
     backgroundColor: 'white',
     flexDirection: 'column',
@@ -1419,7 +1437,7 @@ const styles = StyleSheet.create({
     paddingVertical: 0,
     borderWidth: 1,
     height: 35,
-    borderColor: palette.black,
+    borderColor: palette.gray,
     borderRadius: 20,
     backgroundColor: 'white',
     flexDirection: 'column',
@@ -1445,7 +1463,7 @@ const styles = StyleSheet.create({
     marginRight: 12,
     marginTop: 12,
     borderWidth: 1,
-    borderColor: palette.black,
+    borderColor: palette.gray,
     borderRadius: 20,
     backgroundColor: 'white',
     height: 35,
@@ -1472,7 +1490,7 @@ const styles = StyleSheet.create({
     marginTop: 12,
     borderWidth: 1,
     paddingHorizontal: 14,
-    borderColor: palette.black,
+    borderColor: palette.gray,
     borderRadius: 20,
     backgroundColor: 'white',
     height: 35,

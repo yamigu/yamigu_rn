@@ -41,8 +41,9 @@ const MyFeedView = ({userInfo, scroll, offsetY}) => {
 
   const deleteFeed = () => {
     Alert.alert('정말 피드를 삭제하시겠습니까?', '', [
+      {text: '취소', onPress: () => console.log('Cancel Pressed')},
       {
-        text: '네',
+        text: '삭제',
         onPress: () => {
           const fid = feed_list[_viewPager.current._currentIndex - 1].id;
           axios
@@ -53,8 +54,8 @@ const MyFeedView = ({userInfo, scroll, offsetY}) => {
               setFeed_list(temp);
             });
         },
+        style: 'destructive',
       },
-      {text: '아니오', onPress: () => console.log('Cancel Pressed')},
     ]);
   };
   const measureView = event => {};
@@ -210,7 +211,7 @@ const MyFeedView = ({userInfo, scroll, offsetY}) => {
         size={18}
         color={palette.black}
         style={{marginLeft: 30, marginBottom: 20, marginTop: 16}}>
-        내 피드
+        내 사진들
       </CustomTextMedium>
       {imageSource === null ? (
         <IndicatorViewPager
@@ -239,7 +240,7 @@ const MyFeedView = ({userInfo, scroll, offsetY}) => {
                   +
                 </CustomTextRegular>
                 <CustomTextRegular color="white" size={20} style={styles.feedT}>
-                  내 피드 추가하기
+                  친구들 사진 올리기
                 </CustomTextRegular>
               </View>
             </TouchableByPlatform>

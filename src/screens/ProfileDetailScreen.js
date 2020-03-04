@@ -211,7 +211,7 @@ const ProfileDetailScreen = ({navigation}) => {
               onPress={() => setModalVisible(true)}>
               <View style={styles.button}>
                 <Image
-                  source={require('~/images/chat-bubble2-outline.png')}
+                  source={require('~/images/chat_send.png')}
                   style={{height: 16, width: 16}}
                 />
                 <CustomTextMedium
@@ -234,6 +234,7 @@ const ProfileDetailScreen = ({navigation}) => {
                     name="ios-heart-empty"
                     size={18}
                     color={likedState === false ? '#898989' : palette.orange}
+                    style={{marginTop: 3}}
                   />
                   <CustomTextMedium
                     size={14}
@@ -247,17 +248,27 @@ const ProfileDetailScreen = ({navigation}) => {
 
               <TouchableByPlatform
                 style={styles.touchable}
-                onPress={() => setModalVisible(true)}>
+                onPress={() => {
+                  setModalVisible(true);
+                }}>
                 <View style={styles.button}>
-                  <Image
-                    source={require('~/images/chat-bubble2-outline.png')}
-                    style={{height: 16, width: 16}}
-                  />
+                  <View style={{paddingTop: 2}}>
+                    <Image
+                      source={require('~/images/chat_send.png')}
+                      style={{
+                        width: 18,
+                        height: 18,
+                      }}
+                    />
+                  </View>
                   <CustomTextMedium
                     size={14}
-                    color={palette.sub}
-                    style={{marginLeft: 4}}>
-                    미팅 신청
+                    color="#898989"
+                    style={{
+                      marginLeft: 4,
+                      // backgroundColor: palette.gray
+                    }}>
+                    대화 신청
                   </CustomTextMedium>
                 </View>
               </TouchableByPlatform>
@@ -268,7 +279,7 @@ const ProfileDetailScreen = ({navigation}) => {
               onPress={() => navigation.navigate('MyProfile')}>
               <View style={styles.button}>
                 <Image
-                  source={require('~/images/chat-bubble2-outline.png')}
+                  source={require('~/images/chat_send.png')}
                   style={{height: 16, width: 16}}
                 />
                 <CustomTextMedium
@@ -420,6 +431,8 @@ const styles = StyleSheet.create({
   },
   cardView: {
     backgroundColor: 'white',
+    // backgroundColor: ,
+
     padding: 22,
     paddingBottom: 0,
     paddingTop: 12,
@@ -450,7 +463,7 @@ const styles = StyleSheet.create({
     height: 1,
     flex: 1,
     backgroundColor: palette.divider,
-    marginTop: 6,
+    marginTop: 12,
   },
   verticalDivider: {
     width: 1,
@@ -464,6 +477,7 @@ const styles = StyleSheet.create({
     height: 46,
     alignItems: 'center',
     backgroundColor: 'white',
+    paddingBottom: 2,
   },
   touchable: {
     width: deviceWidth / 2,

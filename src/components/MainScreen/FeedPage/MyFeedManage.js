@@ -49,8 +49,10 @@ const MyFeedManage = ({
 
   const deleteFeed = () => {
     Alert.alert('정말 피드를 삭제하시겠습니까?', '', [
+      {text: '취소', onPress: () => console.log('Cancel Pressed')},
       {
-        text: '네',
+        text: '삭제',
+        style: 'destructive',
         onPress: () => {
           const fid = myFeed[_viewPager.current._currentIndex].id;
           axios
@@ -62,7 +64,6 @@ const MyFeedManage = ({
             });
         },
       },
-      {text: '아니오', onPress: () => console.log('Cancel Pressed')},
     ]);
   };
   useEffect(() => {
@@ -230,9 +231,13 @@ const MyFeedManage = ({
               measureView(event);
             }}
             ref={_imageButton}>
-            <AntDesignIcon name="picture" size={18} style={{marginRight: 5}} />
+            <AntDesignIcon
+              name="picture"
+              size={18}
+              style={{marginRight: 5, marginTop: 3}}
+            />
             <CustomTextRegular size={14} color={palette.black}>
-              사진
+              사진 올리기
             </CustomTextRegular>
           </View>
         </TouchableByPlatform>
@@ -249,13 +254,13 @@ const MyFeedManage = ({
             <AntDesignIcon
               name="caretup"
               size={12}
-              style={{marginLeft: 5, color: palette.orange}}
+              style={{marginLeft: 5, color: palette.orange, marginTop: 5}}
             />
           ) : (
             <AntDesignIcon
               name="caretdown"
               size={12}
-              style={{marginLeft: 5, color: palette.orange}}
+              style={{marginLeft: 5, color: palette.black}}
             />
           )}
         </TouchableByPlatform>
