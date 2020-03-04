@@ -15,7 +15,11 @@ import {CustomTextMedium} from './CustomText';
 import palette from '~/lib/styles/palette';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 import {KeyboardAvoidingView} from 'react-native';
+
+
+import axios from 'axios';
 import AsyncStorage from '@react-native-community/async-storage';
+import '~/config';
 
 const dh = Dimensions.get('window').height;
 const dw = Dimensions.get('window').width;
@@ -23,9 +27,9 @@ const dw = Dimensions.get('window').width;
 const SendChatting = ({avata, uid, setModalVisible, navigation}) => {
   // axios.get().then((result)=>console.log(result.data));
   const [focused, setFocused] = useState(false);
-  const [inputText, setInputText] = useState('');
 
-  const SV = useRef();
+  const [inputText, setInputText] = useState('');
+  const [userInfo, setUserInfo] = useState(null);
   const gotoBot = () => {};
 
   const getStorage = () => {
@@ -55,11 +59,42 @@ const SendChatting = ({avata, uid, setModalVisible, navigation}) => {
           '',
         );
       } else {
-        //axios 대화 만들기
+        requestChat();
       }
     });
+
+
+  useEffect(() => {
+    retrieveUserInfo();
+  }, []);
+
+  const retrieveUserInfo = async () => {
+    const userValue = await AsyncStorage.getItem('userValue');
+    const jUserValue = JSON.parse(userValue);
+    setUserInfo(jUserValue);
   };
 
+  const requestChat = () => {
+    axios
+      .post('http://13.124.126.30:8000/core/chat/', {
+        target_uid: uid,
+      })
+      .then(() => {
+        userInfo[global.config.user_info_const.YAMI] -= 3;
+        AsyncStorage.setItem('userValue', JSON.stringify(userInfo));
+        setModalVisible(false);
+      })
+      .catch(error => {
+        Alert.alert('이미 대화중이에요', '', [
+          {
+            text: '확인',
+            onPress: () => {
+              setModalVisible(false);
+            },
+          },
+        ]);
+      });
+  };
   return (
     <SafeAreaView
       style={{
@@ -171,6 +206,7 @@ const SendChatting = ({avata, uid, setModalVisible, navigation}) => {
             onPress={() => {
               // setFocused(false);
               makeChat();
+
             }}
             style={{
               alignSelf: 'center',

@@ -25,7 +25,7 @@ import firebase from 'react-native-firebase';
 import AsyncStorage from '@react-native-community/async-storage';
 import ListItem from '~/components/common/ListItem';
 import Moment from 'moment';
-
+import axios from 'axios';
 const deviceWidth = Dimensions.get('window').width;
 const buttonWidth = deviceWidth * 0.9;
 const dw = Dimensions.get('window').width;
@@ -68,16 +68,43 @@ const ChattingScreen = ({navigation}) => {
   const sendMessage = () => {
     if (inputMessage === '') return;
     console.log(inputMessage);
+    const key = firebase
+      .database()
+      .ref('message/' + roomId)
+      .push().key;
     firebase
       .database()
       .ref('message/' + roomId)
-      .push({
+      .child(key)
+      .update({
+        key: key,
         idSender: myId,
         message: inputMessage,
         time: Moment.now(),
       });
     setInputMessage('');
     gotoBot();
+  };
+  const requestApprove = () => {
+    axios
+      .patch('http://13.124.126.30:8000/core/chat/', {
+        room_id: roomId,
+        action: 'APPROVE',
+      })
+      .then(() => {
+        setApprovoed(true);
+      });
+  };
+  const requestDecline = room => {
+    console.log(room);
+    axios
+      .patch('http://13.124.126.30:8000/core/chat/', {
+        room_id: room,
+        action: 'DECLINE',
+      })
+      .then(() => {
+        navigation.goBack();
+      });
   };
   const disconnectFirebase = () => {
     firebase
@@ -86,12 +113,38 @@ const ChattingScreen = ({navigation}) => {
       //.ref('message/474')
       .off('child_added');
   };
+  const getStorage = async room => {
+    let storage = await AsyncStorage.getItem('chatStorage');
+    console.log('iiisdalsdlqwkejqlkwejlkqwejlqwejlqkwjelk');
+    console.log(storage);
+    return new Promise((resolve, reject) => {
+      storage = JSON.parse(storage);
+      if (storage !== null) {
+        setAsyncData(storage);
+        if (storage['room' + room] !== undefined) {
+          global_messageList = storage['room' + room].slice();
+          const unique = global_messageList.filter((item, i) => {
+            return (
+              global_messageList.findIndex((item2, j) => {
+                return item.key === item2.key;
+              }) === i
+            );
+          });
+          global_messageList = unique;
+          setMessageList(unique);
+          resolve(true);
+        }
+        resolve(false);
+      }
+    });
+  };
   useEffect(() => {
     const room = navigation.getParam('roomId', -1);
     setRoomId(room);
     navigation.setParams({
       partner: navigation.getParam('partner', ''),
       approved: navigation.getParam('approved', false),
+      requestDecline: () => requestDecline(room),
     });
 
     setApprovoed(navigation.getParam('approved', false));
@@ -99,33 +152,30 @@ const ChattingScreen = ({navigation}) => {
     global_messageList.length = 0; // 배열 초기화
     getUid().then(async result => {
       const room = navigation.getParam('roomId', -1);
-      let storage = await AsyncStorage.getItem('chatStorage');
-      storage = JSON.parse(storage);
-      if (storage !== null) {
-        setAsyncData(storage);
-        if (storage['room' + room] !== undefined) {
-          global_messageList = storage['room' + room].slice();
-          setMessageList(storage['room' + room]);
-          global_storage_data = storage['room' + room];
-        }
-      }
 
+      const storage_result = await getStorage(room);
       setMyId(result[1]);
-      firebase
+      const listener = firebase
         .database()
         .ref('message/' + room)
         //.ref('message/474')
         .on('child_added', result => {
-          if (
-            global_storage_data.length === 0 ||
-            result.val().time >
-              global_storage_data[global_storage_data.length - 1].time
-          ) {
+          let check_new = false;
+          try {
+            check_new =
+              global_messageList.length === 0 ||
+              result.val().time >
+                global_messageList[global_messageList.length - 1].time;
+          } catch {
+            check_new = true;
+          }
+          if (check_new) {
             console.log('new chat');
             global_messageList.push(result.val());
             setMessageList(global_messageList.slice());
             const temp = {...asyncData};
             temp['room' + room] = global_messageList.slice();
+            console.log(temp);
             setAsyncData(temp);
             AsyncStorage.setItem('chatStorage', JSON.stringify(temp));
           }
@@ -134,6 +184,8 @@ const ChattingScreen = ({navigation}) => {
 
     return () => {
       disconnectFirebase();
+      console.log('채팅 내역 저장');
+      console.log(asyncData);
     };
   }, []);
   //behavior : position ###
@@ -174,7 +226,7 @@ const ChattingScreen = ({navigation}) => {
         {!approved ? (
           <Button
             onPress={() => {
-              setApprovoed(true);
+              requestApprove();
             }}
             style={{
               flexDirection: 'column',
@@ -182,6 +234,7 @@ const ChattingScreen = ({navigation}) => {
               justifyContent: 'center',
               margin: 10,
               paddingTop: 0,
+              paddingBotto: 0,
               height: 40,
               width: buttonWidth,
               backgroundColor: palette.orange[0],
@@ -243,7 +296,10 @@ ChattingScreen.navigationOptions = ({navigation}) => {
               '',
               [
                 {text: '아니요', onPress: () => navigation.goBack()},
-                {text: '거절하기', onPress: () => navigation.goBack()},
+                {
+                  text: '거절하기',
+                  onPress: () => navigation.getParam('requestDecline')(),
+                },
               ],
               '',
             );
