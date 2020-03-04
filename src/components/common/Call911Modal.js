@@ -22,6 +22,7 @@ const Call911Modal = ({setCall911ModalVisible, uid}) => {
   const list911 = ['부적절한 사진', '허위 프로필', '사진도용', '욕설 및 비방'];
   const [listState, setListState] = useState([0, 0, 0, 0]);
   const [listTrue, setListTrue] = useState(false);
+
   const reportRequest = () => {
     const index = listState.findIndex(value => value === 1);
     console.log(index);
@@ -34,6 +35,7 @@ const Call911Modal = ({setCall911ModalVisible, uid}) => {
       })
       .then(() => {
         setCall911ModalVisible(false);
+        Alert.alert('신고가 접수되었습니다');
       });
   };
   return (

@@ -1111,8 +1111,8 @@ const HomePage = ({navigation}) => {
             style={{
               transform: [{rotate: spin}],
               marginTop: 20,
-              width: 50,
-              height: 60,
+              width: 24,
+              height: 30,
             }}
             source={require('~/images/rotation_icon.png')}
           />

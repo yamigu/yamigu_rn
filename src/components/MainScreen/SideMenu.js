@@ -290,7 +290,7 @@ const SideMenu = ({navigation}) => {
               </Left>
               <Body style={styles.listItemBody}>
                 <CustomTextRegular size={14} color={palette.orange}>
-                  내 친구 등록하기
+                  내 친구 추가하기
                 </CustomTextRegular>
               </Body>
             </ListItem>

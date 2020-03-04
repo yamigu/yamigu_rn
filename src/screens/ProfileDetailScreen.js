@@ -38,6 +38,7 @@ import axios from 'axios';
 import SendChatting from '~/components/common/SendChatting';
 import Call911Modal from '~/components/common/Call911Modal';
 import MoreModal from '~/components/common/MoreModal';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const deviceWidth = Dimensions.get('window').width;
 const nowYear = 20200000;
@@ -91,6 +92,14 @@ const ProfileDetailScreen = ({navigation}) => {
   const tmp = () => {
     setMoreModalVisible(true);
   };
+  const getStorage = () => {
+    return new Promise(async (resolve, reject) => {
+      let storage = await AsyncStorage.getItem('userValue');
+      storage = JSON.parse(storage);
+      resolve(storage);
+    });
+  };
+
   useEffect(() => {
     navigation.setParams({
       setModal: tmp,
@@ -146,6 +155,7 @@ const ProfileDetailScreen = ({navigation}) => {
         transparent={true}
         visible={modalVisible}>
         <SendChatting
+          navigation={navigation}
           setModalVisible={setModalVisible}
           uid={uid}
           avata={avata}
@@ -208,17 +218,54 @@ const ProfileDetailScreen = ({navigation}) => {
           {bothLike === true ? (
             <TouchableByPlatform
               style={styles.soleAction}
-              onPress={() => setModalVisible(true)}>
+              onPress={() => {
+                getStorage().then(result => {
+                  Alert.alert(
+                    '대화를 시작하시겠어요?',
+                    '야미 3개가 필요합니다!',
+                    [
+                      {
+                        text: '취소',
+                      },
+                      {
+                        text: '대화하기',
+                        onPress: () => {
+                          if (result[9] < 3) {
+                            Alert.alert(
+                              '야미가 부족합니다.',
+                              '스토어에서 야미를 구입하시겠어요?',
+                              [
+                                {text: '취소'},
+                                {
+                                  text: '스토어 가기',
+                                  onPress: () => {
+                                    navigation.navigate('Store');
+                                    setModalVisible(false);
+                                  },
+                                },
+                              ],
+                              '',
+                            );
+                          } else {
+                            //대화방 만들기~~
+                          }
+                        },
+                      },
+                    ],
+                    '',
+                  );
+                });
+              }}>
               <View style={styles.button}>
                 <Image
                   source={require('~/images/chat_send.png')}
-                  style={{height: 16, width: 16}}
+                  style={{height: 16, width: 16, marginTop: 2}}
                 />
                 <CustomTextMedium
                   size={14}
                   color={palette.sub}
                   style={{marginLeft: 4}}>
-                  대화 신청 하기
+                  대화하기
                 </CustomTextMedium>
               </View>
             </TouchableByPlatform>
@@ -305,7 +352,20 @@ const ProfileDetailScreen = ({navigation}) => {
                 </CustomTextRegular>
               </Right>
             </ListItem> */}
-            {/* <ListItem noIndent style={styles.detailListItem}>
+
+            <ListItem noIndent style={styles.detailListItem}>
+              <Left>
+                <CustomTextRegular size={14} color={palette.black}>
+                  지역
+                </CustomTextRegular>
+              </Left>
+              <Right>
+                <CustomTextRegular size={14} color={palette.gray}>
+                  {location}
+                </CustomTextRegular>
+              </Right>
+            </ListItem>
+            <ListItem noIndent style={styles.detailListItem}>
               <Left>
                 <CustomTextRegular size={14} color={palette.black}>
                   키
@@ -316,11 +376,11 @@ const ProfileDetailScreen = ({navigation}) => {
                   182cm
                 </CustomTextRegular>
               </Right>
-            </ListItem> */}
+            </ListItem>
             <ListItem noIndent style={styles.detailListItem}>
               <Left>
                 <CustomTextRegular size={14} color={palette.black}>
-                  본인인증
+                  본인 인증
                 </CustomTextRegular>
               </Left>
               <Right>
@@ -344,6 +404,7 @@ const ProfileDetailScreen = ({navigation}) => {
               </Right>
             </ListItem>
           </List>
+
           <List style={styles.friendsList}>
             <ListItem noIndent style={styles.friendsListHeader}>
               <CustomTextRegular size={14} color={palette.black}>

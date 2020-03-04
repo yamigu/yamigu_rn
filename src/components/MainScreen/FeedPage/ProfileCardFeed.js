@@ -28,6 +28,7 @@ import MoreModal from '~/components/common/MoreModal';
 import Call911Modal from '~/components/common/Call911Modal';
 import SendChatting from '~/components/common/SendChatting';
 import MaterialCommunityicon from 'react-native-vector-icons/MaterialCommunityIcons';
+import AsyncStorage from '@react-native-community/async-storage';
 
 // const data = ['2:2 미팅', '3:3 미팅', '4:4 미팅', '날짜는 조율 가능해요'];
 
@@ -189,6 +190,13 @@ const ProfileCardFeed = ({
       {onPress: () => navigation.navigate('MyProfile')},
     ]);
   };
+  const getStorage = () => {
+    return new Promise(async (resolve, reject) => {
+      let storage = await AsyncStorage.getItem('userValue');
+      storage = JSON.parse(storage);
+      resolve(storage);
+    });
+  };
 
   const postLike = () => {
     console.log('like pressed');
@@ -232,6 +240,7 @@ const ProfileCardFeed = ({
     <View style={styles.container}>
       <Modal visible={chattingModalVisible} transparent={true}>
         <SendChatting
+          navigation={navigation}
           setModalVisible={setChattingModalVisible}
           avata={avata}
           uid={uid}
@@ -274,7 +283,10 @@ const ProfileCardFeed = ({
               style={{
                 // backgroundColor: palette.gold,
                 backgroundColor: 'white',
+                paddingRight: 5,
                 flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
                 paddingTop: 0,
               }}
               onPress={() => setMoreModalVisible(true)}>
@@ -358,8 +370,11 @@ const ProfileCardFeed = ({
         <TouchableByPlatform
           style={styles.touchable}
           onPress={() => {
-            setChattingModalVisible(true);
-            hasProfile === true ? null : alertAddProfile();
+            if (hasProfile === true) {
+              setChattingModalVisible(true);
+            } else {
+              alertAddProfile();
+            }
           }}>
           <View style={styles.button}>
             <View style={{paddingTop: 2}}>

@@ -16,27 +16,52 @@ import palette from '~/lib/styles/palette';
 const dh = Dimensions.get('window').height;
 const dw = Dimensions.get('window').width;
 
-const LocationModal = ({
-  setLocationModalVisible,
-  setLocationText,
-  fromProfile,
-}) => {
-  const locationList = [
-    '서울',
-    '경기 북부',
-    '경기 남부',
-    '인천',
-    '부산',
-    '전남 & 광주',
-    '대전 & 세종',
-    '충북 & 충남',
-    '경북 & 대구',
-    '경남 & 울산',
-    '전북 & 전주',
-    '강원',
-    '제주',
+const HeightModal = ({setHightModalVisible}) => {
+  const HeightList = [
+    '150cm 이하',
+    '151cm',
+    '152cm',
+    '153cm',
+    '154cm',
+    '155cm',
+    '156cm',
+    '157cm',
+    '158cm',
+    '159cm',
+    '160cm',
+    '161cm',
+    '162cm',
+    '163cm',
+    '164cm',
+    '165cm',
+    '166cm',
+    '167cm',
+    '168cm',
+    '169cm',
+    '170cm',
+    '171cm',
+    '172cm',
+    '173cm',
+    '174cm',
+    '175cm',
+    '176cm',
+    '177cm',
+    '178cm',
+    '179cm',
+    '180cm',
+    '181cm',
+    '182cm',
+    '183cm',
+    '184cm',
+    '185cm',
+    '186cm',
+    '187cm',
+    '188cm',
+    '189cm',
+    '190cm 이상',
   ];
 
+  console.log(HeightList);
   return (
     <SafeAreaView
       style={{
@@ -63,7 +88,7 @@ const LocationModal = ({
             alignItems: 'center',
           }}>
           <CustomTextBold size={16} style={{padding: 15}}>
-            지역 선택
+            키 선택
           </CustomTextBold>
           <View
             style={{
@@ -78,19 +103,15 @@ const LocationModal = ({
               width: 270,
               //   backgroundColor: palette.gold,
             }}>
-            {locationList.map((item, index) => {
+            {HeightList.map((item, index) => {
               return (
                 <Button
                   key={index}
                   transparent
                   style={styles.btn}
                   onPress={() => {
-                    setLocationModalVisible(false);
-                    if (fromProfile !== true) {
-                      setLocationText(item);
-                    } else {
-                      //location patch
-                    }
+                    //height patch
+                    setHightModalVisible(false);
                   }}>
                   <CustomTextRegular size={14}>{item}</CustomTextRegular>
                 </Button>
@@ -132,4 +153,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LocationModal;
+export default HeightModal;

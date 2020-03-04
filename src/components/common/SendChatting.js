@@ -8,23 +8,56 @@ import {
   TouchableWithoutFeedback,
   ScrollView,
   Alert,
+  TextInput,
 } from 'react-native';
 import {Button, Input, Content} from 'native-base';
 import {CustomTextMedium} from './CustomText';
 import palette from '~/lib/styles/palette';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 import {KeyboardAvoidingView} from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const dh = Dimensions.get('window').height;
 const dw = Dimensions.get('window').width;
 
-const SendChatting = ({avata, uid, setModalVisible}) => {
+const SendChatting = ({avata, uid, setModalVisible, navigation}) => {
   // axios.get().then((result)=>console.log(result.data));
   const [focused, setFocused] = useState(false);
+  const [inputText, setInputText] = useState('');
 
   const SV = useRef();
-  const gotoBot = () => {
-    // SV.current._root.scrollToPosition(0, 0);
+  const gotoBot = () => {};
+
+  const getStorage = () => {
+    return new Promise(async (resolve, reject) => {
+      let storage = await AsyncStorage.getItem('userValue');
+      storage = JSON.parse(storage);
+      resolve(storage);
+    });
+  };
+
+  const makeChat = () => {
+    getStorage().then(result => {
+      if (result[9] < 3) {
+        Alert.alert(
+          '야미가 부족합니다.',
+          '스토어에서 야미를 구입하시겠어요?',
+          [
+            {text: '취소'},
+            {
+              text: '스토어 가기',
+              onPress: () => {
+                navigation.navigate('Store');
+                setModalVisible(false);
+              },
+            },
+          ],
+          '',
+        );
+      } else {
+        //axios 대화 만들기
+      }
+    });
   };
 
   return (
@@ -45,55 +78,34 @@ const SendChatting = ({avata, uid, setModalVisible}) => {
           flexDirection: 'row',
           justifyContent: 'flex-end',
           alignItems: 'center',
+          paddingTop: 50,
         }}>
         <Button
           transparent
-          style={{elevation: 0}}
+          style={{elevation: 0, padding: 30}}
           onPress={() => {
-            // setPdModalVisible(false);
-            setModalVisible(false);
-            console.log(setModalVisible);
+            if (
+              inputText === '' ||
+              inputText === null ||
+              inputText === undefined
+            ) {
+              setModalVisible(false);
+            } else {
+              Alert.alert(
+                '대화 신청을 취소할까요?',
+                ' 지금 입력한 메세지는 삭제됩니다.',
+                [
+                  {text: '취소'},
+                  {text: '확인', onPress: () => setModalVisible(false)},
+                ],
+                '',
+              );
+            }
           }}>
           <AntDesignIcon name="closecircle" size={30} color="white" />
         </Button>
       </View>
-      {/* <KeyboardAvoidingView
-        behavior="height"
-        enabled
-        style={{
-          backgroundColor: palette.gray,
-          width: dw,
-          height: dh - 200,
-          flexDirection: 'column',
-          justifyContent: 'space-between',
-        }}>
-        <Input
-          placeholder=" 대화 메세지를 작성해보세요! (선택)"
-          multiline={true}
-          style={{
-            height: dw * 0.7 * 0.3,
-            maxHeight: dw * 0.7 * 0.25,
-            minHeight: dw * 0.7 * 0.25,
 
-            width: dw * 0.7,
-            maxWidth: dw * 0.7,
-
-            backgroundColor: 'white',
-            borderBottomRightRadius: 10,
-            borderBottomLeftRadius: 10,
-          }}
-          onBlur={() => {}}
-          onFocus={() => {}}
-        />
-        <View
-          style={{
-            margin: 10,
-            backgroundColor: palette.gold,
-            width: 100,
-            height: 100,
-          }}
-        />
-      </KeyboardAvoidingView> */}
       <ScrollView>
         <KeyboardAvoidingView
           behavior="position"
@@ -127,8 +139,13 @@ const SendChatting = ({avata, uid, setModalVisible}) => {
                 : {uri: avata}
             }
           />
-          <Input
+          <TextInput
             placeholder=" 대화 메세지를 작성해보세요! (선택)"
+            placeholderTextColor={palette.gray}
+            value={inputText}
+            onChange={item => {
+              setInputText(item.nativeEvent.text);
+            }}
             multiline={true}
             style={{
               alignSelf: 'center',
@@ -142,6 +159,10 @@ const SendChatting = ({avata, uid, setModalVisible}) => {
               backgroundColor: 'white',
               borderBottomRightRadius: 10,
               borderBottomLeftRadius: 10,
+
+              // fontSize: 13,
+              padding: 10,
+              paddingTop: 10,
             }}
             onBlur={() => {}}
             onFocus={() => {}}
@@ -149,7 +170,7 @@ const SendChatting = ({avata, uid, setModalVisible}) => {
           <Button
             onPress={() => {
               // setFocused(false);
-              Alert.alert('신청각? to ' + uid);
+              makeChat();
             }}
             style={{
               alignSelf: 'center',
@@ -168,103 +189,10 @@ const SendChatting = ({avata, uid, setModalVisible}) => {
             color="white"
             size={12}
             style={{alignSelf: 'center'}}>
-            야미 3개가 필요합니다.
+            야미 3개가 필요합니다!
           </CustomTextMedium>
-          {/* <View
-            style={{
-              margin: 10,
-              backgroundColor: palette.gold,
-              width: 100,
-              height: 100,
-            }}
-          />
-          <View
-            style={{
-              margin: 10,
-              backgroundColor: palette.gold,
-              width: 100,
-              height: 100,
-            }}
-          /> */}
         </KeyboardAvoidingView>
       </ScrollView>
-      {/* 
-      <KeyboardAvoidingView>
-        <ScrollView
-          ref={_scrollToBottomY}
-          contentContainerStyle={{
-            flexDirection: 'column',
-            justifyContent: focused ? 'flex-start' : 'center',
-            alignItems: 'center',
-            width: dw,
-          }}>
-          <View
-            style={{
-              height: '100%',
-              flexDirection: 'column',
-              justifyContent: focused ? 'flex-start' : 'center',
-              alignItems: 'center',
-            }}>
-            <View style={{height: 50, width: 1}} />
-            <Image
-              style={{
-                width: dw * 0.7,
-                height: dw * 0.7,
-                maxHeight: dw * 0.7,
-                borderTopRightRadius: 10,
-                borderTopLeftRadius: 10,
-              }}
-              source={
-                avata === null || avata === undefined || avata === 'avata'
-                  ? require('~/images/user-default-profile.png')
-                  : {uri: avata}
-              }
-            />
-            <Input
-              placeholder=" 대화 메세지를 작성해보세요! (선택)"
-              multiline={true}
-              style={{
-                height: dw * 0.7 * 0.3,
-                maxHeight: dw * 0.7 * 0.25,
-                maxWidth: dw * 0.7,
-                minHeight: dw * 0.7 * 0.25,
-                width: dw * 0.7,
-                backgroundColor: 'white',
-                borderBottomRightRadius: 10,
-                borderBottomLeftRadius: 10,
-              }}
-              onBlur={() => {
-                setFocused(false);
-              }}
-              onFocus={() => {
-                setFocused(true);
-              }}
-            />
-            <Button
-              onPress={() => {
-                // setFocused(false);
-                Alert.alert('신청각? to ' + uid);
-              }}
-              style={{
-                marginTop: 20,
-                width: 130,
-                height: 44,
-                backgroundColor: 'white',
-                flexDirection: 'column',
-                justifyContent: 'center',
-              }}>
-              <CustomTextMedium size={16} color={palette.orange}>
-                대화 신청하기
-              </CustomTextMedium>
-            </Button>
-            <CustomTextMedium color="white" size={12}>
-              야미 3개가 필요합니다.
-            </CustomTextMedium>
-            <View style={{height: 200, width: 1}} />
-            {focused === true ? <View style={{height: 300, width: 1}} /> : null}
-          </View>
-        </ScrollView>
-      </KeyboardAvoidingView> */}
     </SafeAreaView>
   );
 };

@@ -267,7 +267,10 @@ const StoreScreen = ({navigation}) => {
           />
         </TouchableByPlatform> */}
         <ListItem itemDivider>
-          <CustomTextMedium size={18} color={palette.black}>
+          <CustomTextMedium
+            size={18}
+            color={palette.black}
+            style={{marginTop: 20, marginBottom: 10}}>
             무료로 야미 받기
           </CustomTextMedium>
         </ListItem>
@@ -284,11 +287,14 @@ const StoreScreen = ({navigation}) => {
           toGo={() => navigation.navigate('BV')}
         />
         <ListItemWithNavigation
-          title="야미 3개 무료"
+          title="야미 5개 무료"
           toGoDisplay="프로필 사진 등록하기"
           toGo={() => navigation.navigate('MyProfile')}
         />
       </List>
+      <View
+        style={{width: 1, height: 30, backgroundColor: palette.default_bg}}
+      />
     </Content>
   );
 };

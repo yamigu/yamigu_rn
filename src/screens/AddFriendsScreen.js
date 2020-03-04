@@ -48,7 +48,13 @@ const AddFriendsScreen = ({navigation}) => {
       '',
       [
         {
-          text: '네',
+          text: '취소',
+          onPress: () => console.log('Cancel Pressed'),
+        },
+        {
+          text: '삭제',
+          style: 'destructive',
+
           onPress: () => {
             console.log('OK Pressed');
             axios
@@ -63,7 +69,6 @@ const AddFriendsScreen = ({navigation}) => {
               });
           },
         },
-        {text: '아니오', onPress: () => console.log('Cancel Pressed')},
       ],
       {cancelable: false},
     );
@@ -101,24 +106,24 @@ const AddFriendsScreen = ({navigation}) => {
         textStyle={styles.spinnerTextStyle}
       />
       <CustomTextMedium size={18} color={palette.black}>
-        친구를 등록해서
+        친구를 추가해서
       </CustomTextMedium>
       <CustomTextMedium size={18} color={palette.black}>
         야미도 받고 친구 자랑도 해보세요!
       </CustomTextMedium>
       <View style={styles.descTextView}>
         <CustomTextRegular size={12} color={palette.sub}>
-          등록한 번호의 친구가 가입 승인이 완료되면{' '}
+          친구가 수락하면{' '}
         </CustomTextRegular>
         <CustomTextRegular size={12} color={palette.orange}>
-          야미 10개씩 드려요.
+          1명당 야미 10개를 드려요.
         </CustomTextRegular>
         <CustomTextRegular size={12} color={palette.sub}>
-          실제 친구 등록을 위해 연락처를 사용하고 있어요.
+          실제 친구 추가를 위해 번호를 사용하고 있어요.
         </CustomTextRegular>
       </View>
       <Input
-        placeholder=" 친구 번호를 등록 해 주세요"
+        placeholder=" 친구 번호를 추가해주세요"
         color="#eeeeee"
         style={styles.messageInput}
         value={inputValue}
@@ -133,7 +138,7 @@ const AddFriendsScreen = ({navigation}) => {
       />
       <Button style={styles.button} onPress={() => addFriend(inputValue)}>
         <CustomTextMedium size={14} color="white">
-          친구 등록하기
+          친구 추가하기
         </CustomTextMedium>
       </Button>
       <CustomTextMedium size={18} color={palette.black} style={{marginTop: 5}}>
@@ -160,26 +165,29 @@ const AddFriendsScreen = ({navigation}) => {
                     )}
                     belong={friend.user_info.belong}
                     department={friend.user_info.department}
+                    addF={true}
                   />
                 ) : friend.you_sent === true ? (
                   <ProfileCard
                     size={66}
                     fontSizes={[16, 14, 14]}
                     nickname="친구 수락중"
-                    image={require('~/images/test-user-profile-girl.png')}
+                    // image={require('~/images/test-user-profile-girl.png')}
                     age=""
                     belong=""
                     department={friend.phoneno}
+                    addF={true}
                   />
                 ) : (
                   <ProfileCard
                     size={66}
                     fontSizes={[16, 14, 14]}
                     nickname="친구가 맞나요??"
-                    image={require('~/images/test-user-profile-girl.png')}
+                    // image={require('~/images/test-user-profile-girl.png')}
                     age=""
                     belong=""
                     department={friend.phoneno}
+                    addF={true}
                   />
                 )}
               </Body>
@@ -223,7 +231,7 @@ const AddFriendsScreen = ({navigation}) => {
           size={14}
           color={palette.black}
           style={{alignSelf: 'center', paddingVertical: 12}}>
-          친구를 등록하고 내 친구도 자랑하세요!
+          친구를 추가하고 내 친구도 자랑하세요!
         </CustomTextRegular>
       )}
     </Content>
@@ -241,7 +249,7 @@ AddFriendsScreen.navigationOptions = ({navigation}) => ({
   ),
   headerTitle: () => (
     <CustomTextMedium size={16} color={palette.black}>
-      내 친구 등록하기
+      내 친구 추가하기
     </CustomTextMedium>
   ),
   headerStyle: {
@@ -320,42 +328,4 @@ const styles = StyleSheet.create({
   },
 });
 
-const frineds_list_data = [
-  {
-    name: '상큼한 딸기',
-    age: 24,
-    belong: '삼성물산',
-    department: '',
-    location: '서울',
-    image: require('~/images/test-user-profile-6.png'),
-    accepted: true,
-  },
-  {
-    name: '안암불주먹',
-    age: 24,
-    belong: '고려대',
-    department: '의과병원',
-    location: '서울',
-    image: require('~/images/test-user-profile-7.png'),
-    accepted: true,
-  },
-  {
-    name: '연남도끼',
-    age: 24,
-    belong: '프리랜서',
-    department: '디자이너',
-    location: '서울',
-    image: require('~/images/test-user-profile-8.png'),
-    accepted: false,
-  },
-  {
-    name: 'Jane Park',
-    age: 24,
-    belong: '5급 공무원',
-    department: '',
-    location: '서울',
-    image: require('~/images/test-user-profile-6.png'),
-    accepted: true,
-  },
-];
 export default AddFriendsScreen;
