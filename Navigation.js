@@ -25,6 +25,7 @@ import StoreScreen from '~/screens/StoreScreen';
 import ShieldScreen from '~/screens/ShieldScreen';
 import SettingScreen from '~/screens/SettingScreen';
 import HomeGuideScreen from '~/screens/HomeGuideScreen';
+import GetoutScreen from '~/screens/GetoutScreen';
 
 const deviceWidth = Dimensions.get('window').width;
 
@@ -77,6 +78,9 @@ const AppStack = createStackNavigator({
   },
   HomeGuideScreen: {
     screen: HomeGuideScreen,
+  },
+  Getout: {
+    screen: GetoutScreen,
   },
 });
 const AuthStack = createStackNavigator({
