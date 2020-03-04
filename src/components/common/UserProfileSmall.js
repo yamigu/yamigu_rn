@@ -27,13 +27,19 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-end',
   },
 });
-const UserProfileSmall = ({style, imageSource, userName, badgeComponent}) => {
+const UserProfileSmall = ({
+  style,
+  imageSource,
+  userName,
+  badgeComponent,
+  onPress,
+}) => {
   // console.log('profile small');
   // console.log(imageSource);
   return (
     <View style={[styles.container, style]}>
       <View style={styles.imageContainer}>
-        <TouchableByPlatform>
+        <TouchableByPlatform onPress={onPress}>
           <Image
             source={
               imageSource === null

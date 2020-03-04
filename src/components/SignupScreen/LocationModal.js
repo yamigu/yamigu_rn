@@ -77,6 +77,7 @@ const LocationModal = ({setLocationModalVisible, setLocationText}) => {
             {locationList.map((item, index) => {
               return (
                 <Button
+                  key={index}
                   transparent
                   style={styles.btn}
                   onPress={() => {

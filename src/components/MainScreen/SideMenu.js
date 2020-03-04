@@ -333,7 +333,7 @@ const SideMenu = ({navigation}) => {
               )} */}
             </Body>
           </ListItem>
-          <TouchableByPlatform onPress={() => navigation.navigate('Signup')}>
+          <TouchableByPlatform onPress={() => navigation.navigate('IV')}>
             <ListItem icon noIndent style={styles.listItem}>
               <Body style={styles.listItemBody}>
                 <CustomTextRegular size={14} color={palette.black}>
@@ -603,7 +603,6 @@ const styles = StyleSheet.create({
   },
   listItem: {
     width: deviceWidth * 0.813,
-    marginTop: deviceWidth * 0.81 * 0.009,
     paddingRight: 0,
     borderBottomWidth: 3,
     borderColor: palette.default_bg,
@@ -650,6 +649,8 @@ const styles = StyleSheet.create({
     color: palette.black,
   },
   friendListPane: {
+    borderWidth: 0,
+    borderTopWidth: 0,
     borderBottomWidth: 0,
     paddingLeft: 0,
     paddingRight: 0,
@@ -667,6 +668,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  itemDivider: {},
+  itemDivider: {
+    borderWidth: 0,
+    borderTopWidth: 0,
+    borderBottomWidth: 0,
+  },
 });
 export default SideMenu;

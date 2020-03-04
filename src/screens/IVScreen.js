@@ -10,6 +10,7 @@ import {
 import palette from '~/lib/styles/palette';
 import {WebView} from 'react-native-webview'; // for webview
 import {HeaderBackButton} from 'react-navigation-stack';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 
 // import TouchableByPlatform from '~/components/common/TouchableByPlatform';
 
@@ -24,15 +25,23 @@ const IVScreen = ({navigation}) => {
     navigation.navigate('WebView');
   };
   return (
-    <SafeAreaView style={styles.container}>
+    <KeyboardAwareScrollView
+      contentContainerStyle={
+        btnNeeded && {
+          flex: 1,
+          justifyContent: 'flex-end',
+        }
+      }>
       <View
         style={{
+          flex: 1,
           paddingTop: btnNeeded ? 20 : 0,
           paddingHorizontal: 20,
+          height: '100%',
           backgroundColor: palette.default_bg,
           flexDirection: 'column',
         }}>
-        <CustomTextMedium size={20}>
+        <CustomTextMedium size={24} color={palette.black}>
           마지막으로 본인인증 부탁드려요..!
         </CustomTextMedium>
         <CustomTextMedium size={16} color={palette.gray}>
@@ -43,10 +52,10 @@ const IVScreen = ({navigation}) => {
         </CustomTextLight> */}
       </View>
       {btnNeeded === true ? (
-        <View>
+        <View style={{padding: 20}}>
           <Button style={styles.button} onPress={gotoWebView}>
             <CustomTextMedium size={16} color="white">
-              본인인증 하고 시작하기
+              본인인증하고 시작하기!
             </CustomTextMedium>
           </Button>
           <CustomTextMedium
@@ -57,7 +66,7 @@ const IVScreen = ({navigation}) => {
           </CustomTextMedium>
         </View>
       ) : null}
-    </SafeAreaView>
+    </KeyboardAwareScrollView>
   );
 };
 IVScreen.navigationOptions = ({navigation}) => ({
@@ -87,6 +96,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
+    backgroundColor: 'red',
     justifyContent: 'space-between',
     marginLeft: 18,
     marginRight: 18,

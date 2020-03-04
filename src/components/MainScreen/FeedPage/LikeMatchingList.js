@@ -50,8 +50,13 @@ const LikeMatchingList = ({navigation, likeMatchingProp}) => {
           // console.log('usersrrrrr');
           // console.log(user);
           return (
-            <TouchableByPlatform
-              key={index}
+            <UserProfileSmall
+              style={{
+                marginRight: 12,
+                paddingTop: 13,
+              }}
+              userName={user.nickname}
+              imageSource={user.avata === null ? null : {uri: user.avata}}
               onPress={() =>
                 navigation.navigate('Profile', {
                   location: user.location,
@@ -64,19 +69,11 @@ const LikeMatchingList = ({navigation, likeMatchingProp}) => {
                   department: user.department,
                   bothLike: true,
                 })
-              }>
-              <UserProfileSmall
-                style={{
-                  marginRight: 12,
-                  paddingTop: 13,
-                }}
-                userName={user.nickname}
-                imageSource={user.avata === null ? null : {uri: user.avata}}
-                // badgeComponent={
-                //   user.isUnread === true ? <GoldBadge /> : null
-                // }
-              />
-            </TouchableByPlatform>
+              }
+              // badgeComponent={
+              //   user.isUnread === true ? <GoldBadge /> : null
+              // }
+            />
           );
         })}
       </ScrollView>
