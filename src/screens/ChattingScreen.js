@@ -67,7 +67,7 @@ const ChattingScreen = ({navigation}) => {
   };
   const sendMessage = () => {
     if (inputMessage === '') return;
-    console.log(inputMessage);
+    // console.log(inputMessage);
     const key = firebase
       .database()
       .ref('message/' + roomId)
@@ -115,12 +115,10 @@ const ChattingScreen = ({navigation}) => {
   };
   const getStorage = async room => {
     let storage = await AsyncStorage.getItem('chatStorage');
-    console.log('iiisdalsdlqwkejqlkwejlkqwejlqwejlqkwjelk');
-    console.log(storage);
+    // console.log(storage);
     return new Promise((resolve, reject) => {
       storage = JSON.parse(storage);
       if (storage !== null) {
-        setAsyncData(storage);
         if (storage['room' + room] !== undefined) {
           global_messageList = storage['room' + room].slice();
           const unique = global_messageList.filter((item, i) => {
@@ -132,9 +130,11 @@ const ChattingScreen = ({navigation}) => {
           });
           global_messageList = unique;
           setMessageList(unique);
-          resolve(true);
+          Object.keys(storage).map(item => {
+            console.log(item);
+          });
         }
-        resolve(false);
+        resolve(storage);
       }
     });
   };
@@ -154,6 +154,7 @@ const ChattingScreen = ({navigation}) => {
       const room = navigation.getParam('roomId', -1);
 
       const storage_result = await getStorage(room);
+      global_storage_data = storage_result;
       setMyId(result[1]);
       const listener = firebase
         .database()
@@ -163,6 +164,9 @@ const ChattingScreen = ({navigation}) => {
           let check_new = false;
           try {
             check_new =
+              global_messageList.findIndex((item, index) => {
+                return item.key === result.val().key;
+              }) < 0 ||
               global_messageList.length === 0 ||
               result.val().time >
                 global_messageList[global_messageList.length - 1].time;
@@ -173,19 +177,16 @@ const ChattingScreen = ({navigation}) => {
             console.log('new chat');
             global_messageList.push(result.val());
             setMessageList(global_messageList.slice());
-            const temp = {...asyncData};
+            const temp = {...global_storage_data};
             temp['room' + room] = global_messageList.slice();
-            console.log(temp);
-            setAsyncData(temp);
-            AsyncStorage.setItem('chatStorage', JSON.stringify(temp));
+            global_storage_data = {...temp};
           }
         });
     });
 
     return () => {
       disconnectFirebase();
-      console.log('채팅 내역 저장');
-      console.log(asyncData);
+      AsyncStorage.setItem('chatStorage', JSON.stringify(global_storage_data));
     };
   }, []);
   //behavior : position ###

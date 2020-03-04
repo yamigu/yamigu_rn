@@ -16,7 +16,6 @@ import palette from '~/lib/styles/palette';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 import {KeyboardAvoidingView} from 'react-native';
 
-
 import axios from 'axios';
 import AsyncStorage from '@react-native-community/async-storage';
 import '~/config';
@@ -62,7 +61,7 @@ const SendChatting = ({avata, uid, setModalVisible, navigation}) => {
         requestChat();
       }
     });
-
+  };
 
   useEffect(() => {
     retrieveUserInfo();
@@ -206,7 +205,6 @@ const SendChatting = ({avata, uid, setModalVisible, navigation}) => {
             onPress={() => {
               // setFocused(false);
               makeChat();
-
             }}
             style={{
               alignSelf: 'center',
