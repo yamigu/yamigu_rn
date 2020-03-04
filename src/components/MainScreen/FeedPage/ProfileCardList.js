@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import {View} from 'react-native';
 import ProfileCardFeed from './ProfileCardFeed';
 import axios from 'axios';
+import palette from '~/lib/styles/palette';
 
 const ProfileCardList = ({navigation, profileCardProp, hasProfile}) => {
   let nowYear = 20200000;
@@ -13,10 +14,10 @@ const ProfileCardList = ({navigation, profileCardProp, hasProfile}) => {
         console.log(item.feed_list.length);
         return (
           <ProfileCardFeed
+            style={{marginTop: 0}}
             key={index}
             location={item.profile.location}
             verified={item.profile.verified}
-            key={item.id}
             navigation={navigation}
             uid={item.profile.uid}
             nickname={item.profile.nickname}

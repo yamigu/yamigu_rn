@@ -47,7 +47,15 @@ const ProfileCard = ({
   }, []);
   return (
     <List style={{height: size}}>
-      <ListItem avatar style={{marginLeft: 0}}>
+      <ListItem
+        avatar
+        style={{
+          marginLeft: 0,
+          marginTop: 0,
+          // backgroundColor: palette.gold,
+          paddingTop: 0,
+          paddingLeft: 0,
+        }}>
         <Left style={{paddingTop: 0, paddingBottom: 0}}>
           <Thumbnail
             style={{
@@ -65,16 +73,21 @@ const ProfileCard = ({
         </Left>
         <Body
           style={{
-            justifyContent: 'center',
+            justifyContent: size === 66 ? 'center' : null,
             height: '100%',
             borderBottomWidth: 0,
             paddingTop: 0,
-            paddingBottom: 0,
+            marginTop: 0,
+            // backgroundColor: palette.blue,
           }}>
           <View style={styles.textView}>
             <View style={styles.firstLine}>
               <CustomTextBold
-                style={{marginRight: 8}}
+                style={{
+                  marginRight: 8,
+                  paddingTop: 0,
+                  marginTop: 0,
+                }}
                 size={fontSizes[0]}
                 color={palette.black}>
                 {nickname}
@@ -84,7 +97,10 @@ const ProfileCard = ({
               </CustomTextMedium>
             </View>
             <View style={styles.secondLine}>
-              <CustomTextRegular size={fontSizes[2]} color={palette.sub}>
+              <CustomTextRegular
+                size={fontSizes[2]}
+                color={palette.sub}
+                style={{}}>
                 {belong} {department}, {location}
               </CustomTextRegular>
             </View>
@@ -112,9 +128,14 @@ const ProfileCard = ({
 };
 const styles = StyleSheet.create({
   textView: {
+    flexDirection: 'column',
     justifyContent: 'center',
+    paddingTop: 0,
+    marginTop: 0,
   },
   firstLine: {
+    marginTop: 0,
+    paddingTop: 0,
     flexDirection: 'row',
     alignItems: 'flex-end',
   },

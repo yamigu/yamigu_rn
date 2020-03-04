@@ -49,16 +49,21 @@ const ShieldScreen = ({params}) => {
 
   const requestShield = data => {
     //server로 보내기
-    axios.post('http://13.124.126.30:8000/core/shield/', data).then(result => {
-      const newData = sheilding.slice();
-      result.data.map(item => {
-        newData.unshift(item);
-      });
-      setSheilding(newData);
-      setEnrolling(0);
-      setFocused(false);
-      setInputText('');
-    });
+    if (data === '' || data === null || data === undefined) return;
+    else {
+      axios
+        .post('http://13.124.126.30:8000/core/shield/', data)
+        .then(result => {
+          const newData = sheilding.slice();
+          result.data.map(item => {
+            newData.unshift(item);
+          });
+          setSheilding(newData);
+          setEnrolling(0);
+          setFocused(false);
+          setInputText('');
+        });
+    }
   };
   const deleteShield = (data, index) => {
     axios
@@ -189,11 +194,9 @@ const ShieldScreen = ({params}) => {
         </View>
         <Button
           style={styles.buttonBig}
-
           onPress={() => {
             enrolling === 2 ? setEnrolling(0) : setEnrolling(2);
           }}>
-
           <CustomTextMedium size={14} color={palette.orange}>
             피하고 싶은 소속 등록
           </CustomTextMedium>
@@ -214,12 +217,21 @@ const ShieldScreen = ({params}) => {
             <Button
               onPress={() => {
                 const data = new FormData();
+                if (
+                  inputText === null ||
+                  inputText === '' ||
+                  inputText === undefined
+                ) {
+                  Alert.alert('한 글자 이상 입력해주세요');
+                  console.log('none');
+                } else {
+                  enrolling === 1
+                    ? data.append('phoneno', replaceAll(inputText, '-', ''))
+                    : data.append('belong', inputText);
+                  console.log('asd');
 
-                enrolling === 1
-                  ? data.append('phoneno', replaceAll(inputText, '-', ''))
-                  : data.append('belong', inputText);
-
-                requestShield(data);
+                  requestShield(data);
+                }
               }}
               style={{
                 backgroundColor: palette.orange,

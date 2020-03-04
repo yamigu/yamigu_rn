@@ -27,6 +27,7 @@ import {Button} from 'native-base';
 import MoreModal from '~/components/common/MoreModal';
 import Call911Modal from '~/components/common/Call911Modal';
 import SendChatting from '~/components/common/SendChatting';
+import MaterialCommunityicon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 // const data = ['2:2 미팅', '3:3 미팅', '4:4 미팅', '날짜는 조율 가능해요'];
 
@@ -111,8 +112,9 @@ const styles = StyleSheet.create({
   },
   cardView: {
     backgroundColor: 'white',
-    padding: 12,
-    paddingVertical: 10,
+    padding: 10,
+    // paddingTop: 10,
+    // paddingVertical: 10,
   },
   viewPage: {
     width: '100%',
@@ -335,11 +337,18 @@ const ProfileCardFeed = ({
               name="ios-heart-empty"
               size={18}
               color={liked === false ? '#898989' : palette.orange[0]}
+              style={{
+                // backgroundColor: palette.blue,
+                paddingTop: 3,
+              }}
             />
             <CustomTextMedium
               size={14}
               color={liked === false ? '#898989' : palette.orange[0]}
-              style={{marginLeft: 4}}>
+              style={{
+                marginLeft: 4,
+                // backgroundColor: palette.blue
+              }}>
               좋아요
             </CustomTextMedium>
           </View>
@@ -353,12 +362,23 @@ const ProfileCardFeed = ({
             hasProfile === true ? null : alertAddProfile();
           }}>
           <View style={styles.button}>
-            <Image
-              source={require('~/images/chat_bubble_icon.png')}
-              style={{height: 17, width: 18}}
-            />
-            <CustomTextMedium size={14} color="#898989" style={{marginLeft: 4}}>
-              미팅 신청
+            <View style={{paddingTop: 2}}>
+              <Image
+                source={require('~/images/chat_send.png')}
+                style={{
+                  width: 18,
+                  height: 18,
+                }}
+              />
+            </View>
+            <CustomTextMedium
+              size={14}
+              color="#898989"
+              style={{
+                marginLeft: 4,
+                // backgroundColor: palette.gray
+              }}>
+              대화 신청
             </CustomTextMedium>
           </View>
         </TouchableByPlatform>
