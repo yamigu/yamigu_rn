@@ -120,8 +120,8 @@ const ChattingIcon = ({navigation}) => {
           source={require('~/images/chat_bubble_icon.png')}
           style={{
             margin: 10,
-            width: 25,
-            height: 22,
+            width: 20,
+            height: 18,
           }}
         />
       </TouchableByPlatform>
@@ -129,22 +129,14 @@ const ChattingIcon = ({navigation}) => {
         <View
           style={{
             position: 'absolute',
-            width: 12,
-            height: 12,
-            borderRadius: 5,
-            top: 4,
-            right: 4,
+            width: 8,
+            height: 8,
+            borderRadius: 4,
+            top: 7,
+            right: 7,
             zIndex: 2,
-          }}>
-          <Badge
-            style={{
-              width: 12,
-              height: 12,
-              borderRadius: 6,
-              backgroundColor: palette.orange[0],
-            }}
-          />
-        </View>
+            backgroundColor: palette.orange[0],
+          }}></View>
       ) : null}
     </View>
   );
