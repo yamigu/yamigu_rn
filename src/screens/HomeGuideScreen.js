@@ -10,7 +10,7 @@ const dw = Dimensions.get('window').width;
 const HomeGuideScreen = ({navigation}) => (
   <ScrollView
     style={{
-      // backgroundColor: palette.default_bg,
+      backgroundColor: palette.default_bg,
       paddingTop: 0,
       // backgroundColor: palette.gold,
     }}
