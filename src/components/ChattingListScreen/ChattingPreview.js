@@ -79,9 +79,7 @@ const ChattingPreview = ({
             [
               {
                 text: '인증하기',
-                onPress: () => {
-                  navigation.navigate('BV');
-                },
+                onPress: () => navigation.navigate('BV'),
               },
             ],
           );

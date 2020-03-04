@@ -33,6 +33,8 @@ import RNIap, {
 import axios from 'axios';
 import '~/config';
 import AsyncStorage from '@react-native-community/async-storage';
+import Spinner from 'react-native-loading-spinner-overlay';
+
 const itemSkus = Platform.select({
   ios: ['yami_10', 'yami_30', 'yami_50', 'yami_100'],
   android: ['yami_10', 'yami_30', 'yami_50', 'yami_100'],
@@ -58,6 +60,7 @@ const StoreScreen = ({navigation}) => {
   const [userInfo, setUserInfo] = useState(null);
   const [yami, setYami] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [spinnerLoading, setSpinnerLoading] = useState(false);
 
   useEffect(() => {
     //initIap();
@@ -150,6 +153,7 @@ const StoreScreen = ({navigation}) => {
 
   const getItems = async () => {
     try {
+      setSpinnerLoading(true);
       const products = await RNIap.getProducts(itemSkus);
       products.sort((a, b) => parseInt(a.price) - parseInt(b.price));
       products.map(item => {
@@ -157,11 +161,12 @@ const StoreScreen = ({navigation}) => {
         item['discount'] = 0;
       });
       products[1].hot = true;
-      products[1].discount = 12.5;
-      products[2].discount = 20;
-      products[3].discount = 30;
+      products[1].discount = 7;
+      products[2].discount = 15;
+      products[3].discount = 27;
 
       setProductList(products);
+      await setSpinnerLoading(false);
     } catch (err) {
       console.warn(err.code, err.message);
     }
@@ -232,6 +237,11 @@ const StoreScreen = ({navigation}) => {
 
   return (
     <Content showsVerticalScrollIndicator={false} style={styles.root}>
+      <Spinner
+        visible={spinnerLoading}
+        textContent={''}
+        textStyle={styles.spinnerTextStyle}
+      />
       <List style={styles.list}>
         <ListItem itemHeader style={styles.listItemHeader}>
           <Body style={styles.listItemHeaderBody}>

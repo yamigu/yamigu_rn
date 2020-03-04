@@ -193,6 +193,10 @@ const HomePage = ({navigation}) => {
         console.log('get user info');
         const result = await _retrieveData();
         console.log('done');
+
+        console.log('get match request status');
+        const result6 = await retrieveMatchRequestStatus();
+
         if (!result) return;
         console.log('get fcm token');
         const result2 = await retrieveFCMToken();
@@ -210,8 +214,7 @@ const HomePage = ({navigation}) => {
         console.log('get firebase token');
         const result5 = await retrieveFirebaseToken();
         console.log('done');
-        console.log('get match request status');
-        const result6 = await retrieveMatchRequestStatus();
+
         console.log('done');
         navigation.setParams({});
       },

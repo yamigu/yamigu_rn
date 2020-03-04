@@ -116,6 +116,10 @@ const BVScreen = ({navigation}) => {
 
   const selectPhotoTapped = () => {
     const options = {
+      title: null,
+      cancelButtonTitle: '취소',
+      takePhotoButtonTitle: '카메라',
+      chooseFromLibraryButtonTitle: '사진 앨범',
       quality: 1.0,
       maxWidth: 500,
       maxHeight: 500,
