@@ -153,39 +153,46 @@ const BVScreen = ({navigation}) => {
         if (response.width < response.height) {
           rotation = 90;
         }
-        console.log(rotation);
-        ImageResizer.createResizedImage(
-          response.uri,
-          response.width,
-          response.height,
-          'JPEG',
-          100,
-          rotation,
-        )
-          .then(result => {
-            const {uri, name, type} = result;
-            const rotated_source = {
-              uri: uri,
-              name: a,
-              type: type,
-            };
-            setImageSource(source);
-            navigation.setParams({
-              doVerify: source => doVerify(source),
-              toggle: toggle,
-              text1: text1,
-              text2: text2,
-              imageSource: rotated_source,
-            });
-          })
-          .catch(err => {
-            console.log(err);
+        setImageSource(source);
+        navigation.setParams({
+          doVerify: source => doVerify(source),
+          toggle: toggle,
+          text1: text1,
+          text2: text2,
+          imageSource: source,
+        });
+        // ImageResizer.createResizedImage(
+        //   response.uri,
+        //   response.width,
+        //   response.height,
+        //   'JPEG',
+        //   100,
+        //   rotation,
+        // )
+        //   .then(result => {
+        //     const {uri, name, type} = result;
+        //     const rotated_source = {
+        //       uri: uri,
+        //       name: a,
+        //       type: type,
+        //     };
+        //     setImageSource(source);
+        //     navigation.setParams({
+        //       doVerify: source => doVerify(source),
+        //       toggle: toggle,
+        //       text1: text1,
+        //       text2: text2,
+        //       imageSource: rotated_source,
+        //     });
+        //   })
+        //   .catch(err => {
+        //     console.log(err);
 
-            return Alert.alert(
-              'Unable to resize the photo',
-              'Please try again!',
-            );
-          });
+        //     return Alert.alert(
+        //       'Unable to resize the photo',
+        //       'Please try again!',
+        //     );
+        //   });
         // console.log('image uri' + response.uri);
       }
     });
