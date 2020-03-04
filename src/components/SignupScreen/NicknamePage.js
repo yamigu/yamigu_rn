@@ -1,16 +1,37 @@
 import React, {useState} from 'react';
-import {View, StyleSheet, Dimensions} from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Dimensions,
+  KeyboardAvoidingView,
+  TouchableWithoutFeedbackBase,
+} from 'react-native';
 import {CustomTextMedium, CustomTextRegular} from '../common/CustomText';
 import palette from '~/lib/styles/palette';
 import {Item, Input} from 'native-base';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import axios from 'axios';
 
-const deviceWidth = Dimensions.get('window').width;
-const NicknamePage = ({setNickname}) => {
+const NicknamePage = ({
+  setNickname,
+  nicknameAvailable,
+  setNicknameAvailable,
+}) => {
   const [text, setText] = useState('');
   const [focus, setFocus] = useState(false);
-
+  const check_validation = value => {
+    return new Promise(async (resolve, reject) => {
+      const avail = await axios
+        .post('http://13.124.126.30:8000/authorization/validation/nickname/', {
+          nickname: value,
+        })
+        .then(() => true)
+        .catch(() => false);
+      resolve(avail);
+    });
+  };
   return (
-    <View style={styles.root}>
+    <KeyboardAwareScrollView style={styles.root}>
       <CustomTextMedium size={20} color={palette.black}>
         닉네임을 작성해주세요
       </CustomTextMedium>
@@ -21,30 +42,40 @@ const NicknamePage = ({setNickname}) => {
         <Input
           style={styles.input}
           placeholder={focus ? '' : '한글, 영문, 숫자만 입력 가능'}
-          onChangeText={value => {
+          onChangeText={async value => {
             setText(value);
             setNickname(value);
+            const avail = await check_validation(value);
+            setNicknameAvailable(avail);
           }}
+          focus={focus}
           value={text}
           onFocus={() => setFocus(true)}
           onBlur={() => setFocus(false)}
           selectionColor={palette.orange[0]}
           placeholderTextColor={palette.nonselect}
-          caretHidden={true}
         />
         <View style={styles.inputRightView}>
-          <CustomTextRegular size={9} color={palette.blue}>
-            사용 가능합니다.
-          </CustomTextRegular>
+          {text !== '' ? (
+            nicknameAvailable ? (
+              <CustomTextRegular size={9} color={palette.blue}>
+                사용 가능합니다.
+              </CustomTextRegular>
+            ) : (
+              <CustomTextRegular size={9} color={palette.red}>
+                사용 불가능합니다.
+              </CustomTextRegular>
+            )
+          ) : null}
         </View>
       </Item>
-    </View>
+    </KeyboardAwareScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   root: {
-    padding: 20,
+    paddingHorizontal: 20,
     backgroundColor: palette.default_bg,
     flexDirection: 'column',
   },
@@ -56,11 +87,9 @@ const styles = StyleSheet.create({
   input: {
     fontSize: 14,
     textAlignVertical: 'bottom',
-    lineHeight: 14,
     fontFamily: 'NotoSansCJKkr-Regular',
     paddingTop: 0,
     paddingBottom: 0,
-    marginBottom: -10,
     color: palette.black,
   },
   inputRightView: {

@@ -150,7 +150,9 @@ const SideMenu = ({navigation}) => {
               size={14}
               color={palette.black}
               style={{marginLeft: 6}}>
-              {sideInfo[global.config.user_info_const.BIRTHDATE] === 'birthdate'
+              {sideInfo[global.config.user_info_const.BIRTHDATE] ===
+                'birthdate' ||
+              sideInfo[global.config.user_info_const.BIRTHDATE] === ''
                 ? null
                 : Math.floor(
                     (20200000 -

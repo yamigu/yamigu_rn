@@ -29,6 +29,7 @@ const LocationPage = ({setLocationText, locationText}) => {
       </CustomTextRegular>
 
       <Button
+        transparent
         style={{
           backgroundColor: palette.default_bg,
           //   backgroundColor: palette.gold,
@@ -60,7 +61,7 @@ const LocationPage = ({setLocationText, locationText}) => {
 };
 const styles = StyleSheet.create({
   root: {
-    padding: 20,
+    paddingHorizontal: 20,
     flex: 1,
     backgroundColor: palette.default_bg,
     flexDirection: 'column',

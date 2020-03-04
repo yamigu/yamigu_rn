@@ -119,7 +119,7 @@ const FeedPage = props => {
         console.log('effect done');
       });
     //axios for profilecard
-  }, [props.navigation, tmpState]);
+  }, [props.navigation]);
   return (
     <View style={styles.root}>
       <Spinner visible={refreshing} textContent={'refreshing...'} />

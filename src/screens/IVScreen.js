@@ -27,11 +27,11 @@ const IVScreen = ({navigation}) => {
     <SafeAreaView style={styles.container}>
       <View
         style={{
-          padding: 0,
-          backgroundColor: palette.ornage,
+          paddingTop: btnNeeded ? 20 : 0,
+          paddingHorizontal: 20,
+          backgroundColor: palette.default_bg,
           flexDirection: 'column',
         }}>
-        <View style={styles.dividerLine} />
         <CustomTextMedium size={20}>
           마지막으로 본인인증 부탁드려요..!
         </CustomTextMedium>
@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
   button: {
     elevation: 0,
     borderRadius: 5,
-    backgroundColor: '#60BAFF',
+    backgroundColor: palette.orange[0],
     justifyContent: 'center',
   },
   center: {

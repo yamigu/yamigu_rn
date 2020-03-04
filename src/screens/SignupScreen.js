@@ -1,5 +1,5 @@
-import React, {useState, createRef} from 'react';
-import {Text, View, StyleSheet} from 'react-native';
+import React, {useState, createRef, useEffect} from 'react';
+import {Text, View, StyleSheet, Keyboard} from 'react-native';
 import {HeaderBackButton} from 'react-navigation-stack';
 import {
   CustomTextMedium,
@@ -17,7 +17,6 @@ import PersonalInfoPage from '~/components/SignupScreen/PersonalInfoPage';
 import IVScreen from './IVScreen';
 import Axios from 'axios';
 import AsyncStorage from '@react-native-community/async-storage';
-
 let global_viewPager;
 const SignupScreen = ({navigation}) => {
   const [nickname, setNickname] = useState('');
@@ -25,9 +24,12 @@ const SignupScreen = ({navigation}) => {
   const [department, setDepartment] = useState('');
   const [is_student, setIs_student] = useState('');
   const [locationText, setLocationText] = useState('');
-
+  const [nicknameAvailable, setNicknameAvailable] = useState(false);
   const [page, setPage] = useState(0);
   const viewPager = createRef();
+  useEffect(() => {
+    global_viewPager = viewPager;
+  }, []);
   global_viewPager = viewPager;
   const go = next_page => {
     viewPager.current.setPage(next_page);
@@ -39,6 +41,7 @@ const SignupScreen = ({navigation}) => {
     });
   };
   const move = delta => {
+    Keyboard.dismiss();
     go(page + delta);
   };
 
@@ -46,11 +49,22 @@ const SignupScreen = ({navigation}) => {
     console.log('button clicked');
     navigation.navigate('WebView');
   };
-
+  const checkActivation = () => {
+    return (
+      (page === 0 && nicknameAvailable) ||
+      (page === 1 && locationText !== '') ||
+      (page === 2 && belong !== '') ||
+      page === 3
+    );
+  };
   return (
     <SafeAreaView style={styles.root}>
       <ViewPager ref={viewPager} style={styles.viewPager} scrollEnabled={false}>
-        <NicknamePage setNickname={setNickname} />
+        <NicknamePage
+          setNickname={setNickname}
+          nicknameAvailable={nicknameAvailable}
+          setNicknameAvailable={setNicknameAvailable}
+        />
         <LocationPage
           setLocationText={setLocationText}
           locationText={locationText}
@@ -77,11 +91,12 @@ const SignupScreen = ({navigation}) => {
             />
           </View>
         </View>
-
         <Button
           onPress={async () => {
+            if (!checkActivation()) return;
             const userValue = await AsyncStorage.getItem('userValue');
             const jUserValue = JSON.parse(userValue);
+            console.log(userValue);
             Axios.defaults.headers.common['Authorization'] =
               'Token ' + jUserValue[0];
             if (page === 2) {
@@ -112,7 +127,7 @@ const SignupScreen = ({navigation}) => {
             move(1);
             console.log(Axios.defaults.headers.common['Authorization']);
           }}
-          style={styles.button}>
+          style={checkActivation() ? styles.buttonActive : styles.button}>
           {page !== 3 ? (
             <CustomTextRegular size={14} color="white">
               다음
@@ -165,6 +180,7 @@ SignupScreen.navigationOptions = ({navigation}) => ({
 
 const styles = StyleSheet.create({
   root: {
+    paddingTop: 20,
     flex: 1,
     backgroundColor: palette.default_bg,
     justifyContent: 'space-between',
@@ -195,6 +211,13 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: palette.nonselect,
+    borderRadius: 5,
+    justifyContent: 'center',
+    alignItems: 'center',
+    elevation: 0,
+  },
+  buttonActive: {
+    backgroundColor: palette.orange[0],
     borderRadius: 5,
     justifyContent: 'center',
     alignItems: 'center',

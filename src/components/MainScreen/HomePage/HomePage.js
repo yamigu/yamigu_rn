@@ -183,6 +183,7 @@ const HomePage = ({navigation}) => {
     const listener = navigation.addListener(
       'didFocus',
       async () => {
+        setMatchRequested(false);
         console.log('get user info');
         const result = await _retrieveData();
         console.log('done');
