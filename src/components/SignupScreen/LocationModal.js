@@ -77,6 +77,7 @@ const LocationModal = ({setLocationModalVisible, setLocationText}) => {
             {locationList.map((item, index) => {
               return (
                 <Button
+                  transparent
                   style={styles.btn}
                   onPress={() => {
                     setLocationModalVisible(false);
@@ -114,7 +115,6 @@ const styles = StyleSheet.create({
   btn: {
     paddingVertical: 0,
     paddingTop: 0,
-
     height: 40,
     flexDirection: 'column',
     alignItems: 'center',

@@ -31,6 +31,8 @@ const ChattingIcon = ({navigation}) => {
 
   useEffect(() => {
     getUserInfo().then(userVal => {
+      console.log('ChattingIcon');
+      console.log(userVal);
       if (
         userVal === null ||
         userVal === undefined ||
@@ -38,6 +40,8 @@ const ChattingIcon = ({navigation}) => {
         userVal[global.config.user_info_const.TOKEN] === ''
       )
         return;
+      axios.defaults.headers.common['Authorization'] =
+        'Token ' + userVal[global.config.user_info_const.TOKEN];
       getStorage().then(storage => {
         if (storage === null || storage === undefined) {
           console.log(storage);

@@ -116,21 +116,19 @@ const HomePage = ({navigation}) => {
               })
               .then(() => {
                 console.log('Get num of available yami');
-                resolve(
-                  axios
-                    .get('http://13.124.126.30:8000/authorization/user/yami/')
-                    .then(result => {
-                      jUserValue[global.config.user_info_const.YAMI] =
-                        result.data;
-                      AsyncStorage.setItem(
-                        'userValue',
-                        JSON.stringify(jUserValue),
-                      );
-                      setAsyncValue(jUserValue);
-                      console.log('available yami: ' + result.data);
-                      return true;
-                    }),
-                );
+                axios
+                  .get('http://13.124.126.30:8000/authorization/user/yami/')
+                  .then(result => {
+                    jUserValue[global.config.user_info_const.YAMI] =
+                      result.data;
+                    AsyncStorage.setItem(
+                      'userValue',
+                      JSON.stringify(jUserValue),
+                    );
+                    setAsyncValue(jUserValue);
+                    console.log('available yami: ' + result.data);
+                    resolve(true);
+                  });
               })
               .catch(e => {
                 if (e.response.status === 401) {
@@ -152,7 +150,6 @@ const HomePage = ({navigation}) => {
         console.log(error);
         resolve(false);
       }
-      resolve(true);
     });
   };
 
@@ -189,21 +186,38 @@ const HomePage = ({navigation}) => {
 
     const listener = navigation.addListener(
       'didFocus',
-      () => {
-        _retrieveData().then(result => {
-          console.log(result);
-          if (!result) return;
-          registerFCMDevice();
-          retrieveFirebaseToken();
-          retrieveMatchRequestStatus();
-        });
+      async () => {
+        setMatchRequested(false);
+        console.log('get user info');
+        const result = await _retrieveData();
+        console.log('done');
+        if (!result) return;
+        console.log('get fcm token');
+        const result2 = await retrieveFCMToken();
+        console.log('done');
+
+        console.log('check fcm device');
+        const result3 = await checkFCMDevice(result2);
+        console.log('done');
+
+        if (result3 === true) {
+          console.log('register fcm device');
+          const result4 = await registerFCMDevice(result2);
+          console.log('done');
+        }
+        console.log('get firebase token');
+        const result5 = await retrieveFirebaseToken();
+        console.log('done');
+        console.log('get match request status');
+        const result6 = await retrieveMatchRequestStatus();
+        console.log('done');
         navigation.setParams({});
       },
       // run function that updates the data on entering the screen
     );
     const retrieveFCMToken = async () => {
       const fcm_token = await firebase.messaging().getToken();
-      const device_id = await DeviceInfo.getUniqueId();
+      const device_id = DeviceInfo.getUniqueId();
 
       return new Promise((resolve, reject) =>
         resolve({
@@ -213,132 +227,149 @@ const HomePage = ({navigation}) => {
         }),
       );
     };
-    const registerFCMDevice = () => {
-      retrieveFCMToken().then(data => {
+    const checkFCMDevice = data => {
+      return new Promise((resolve, reject) => {
+        const url = 'http://13.124.126.30:8000/authorization/fcm/check_device/';
+        axios
+          .post(url, data)
+          .then(check_device => {
+            console.log(check_device.status);
+            if (check_device.status === 200) {
+              resolve(false);
+            } else if (check_device.status === 204) {
+              resolve(true);
+            }
+          })
+          .catch(error => {
+            console.log(error);
+            resolve(true);
+          });
+      });
+    };
+    const registerFCMDevice = data => {
+      return new Promise((resolve, reject) => {
         axios
           .post(
-            'http://13.124.126.30:8000/authorization/fcm/check_device/',
+            'http://13.124.126.30:8000/authorization/fcm/register_device/',
             data,
           )
-          .then(result => {
-            if (result.status === 204) {
-              axios
-                .post(
-                  'http://13.124.126.30:8000/authorization/fcm/register_device/',
-                  data,
-                )
-                .then(result => {
-                  console.log(result.data);
-                });
-            } else if (result.status === 200) {
-              console.log('aleady registerd device');
-            }
+          .then(register => {
+            console.log(register.data);
+            resolve(true);
           });
       });
     };
     const retrieveFirebaseToken = () => {
-      axios
-        .get('http://13.124.126.30:8000/authorization/firebase/token/')
-        .then(result => {
-          return result.data;
-        })
-        .catch(error => console.log(error))
-        .then(token => {
-          firebase.auth().signInWithCustomToken(token);
-        });
+      return new Promise((resolve, reject) => {
+        axios
+          .get('http://13.124.126.30:8000/authorization/firebase/token/')
+          .then(result => {
+            return result.data;
+          })
+          .catch(error => console.log(error))
+          .then(token => {
+            firebase.auth().signInWithCustomToken(token);
+            resolve(true);
+          });
+      });
     };
     const retrieveMatchRequestStatus = () => {
-      axios
-        .get('http://13.124.126.30:8000/core/match_request/')
-        .then(result => {
-          // console.log('homepage useEffect match_request');
-          // console.log(result.data);
-          if (result.data === 'no match request') {
-            setMatchRequested(false);
-            // console.log('hehe');
-          } else {
-            setMatchRequested(true);
+      return new Promise((resolve, reject) => {
+        axios
+          .get('http://13.124.126.30:8000/core/match_request/')
+          .then(result => {
+            // console.log('homepage useEffect match_request');
             // console.log(result.data);
+            if (result.data === 'no match request') {
+              setMatchRequested(false);
+              // console.log('hehe');
+            } else {
+              setMatchRequested(true);
+              // console.log(result.data);
 
-            // result.data.personnel_select 처리 후 memberSelected에 넣기, memberText설정
-            let tmpMemInt = result.data.personnel_selected;
-            let tmpMemSelected = [false, false, false, false];
-            for (let i = 0; i < 4; i++) {
-              tmpMemSelected[i] = Math.floor(tmpMemInt % 2);
-              tmpMemInt /= 2;
-            }
-            setMemberMainSelected(tmpMemSelected[0]);
-            setMemberSelected(tmpMemSelected.slice(1, 3));
-            // console.log(tmpMemSelected);
-            // setText when ongoing
-            let tmpMemText = '';
-            if (tmpMemSelected[0] === 1 || result.data.personnel_selected === 0)
-              tmpMemText = '인원 상관 없음  ';
-            else {
-              tmpMemSelected.map((item, index) => {
-                if (tmpMemSelected[index] === 1) {
-                  tmpMemText = tmpMemText + memberList[index - 1] + ', ';
-                }
-                console.log(memberList);
-              });
-              tmpMemText = tmpMemText.substring(0, tmpMemText.length - 2);
-              if (tmpMemText.length > 20) {
-                tmpMemText = tmpMemText.substring(0, 20);
-                tmpMemText = tmpMemText + ' ...';
+              // result.data.personnel_select 처리 후 memberSelected에 넣기, memberText설정
+              let tmpMemInt = result.data.personnel_selected;
+              let tmpMemSelected = [false, false, false, false];
+              for (let i = 0; i < 4; i++) {
+                tmpMemSelected[i] = Math.floor(tmpMemInt % 2);
+                tmpMemInt /= 2;
               }
-            }
-            setOnMemText(tmpMemText);
-            // console.log(tmpMemText);
-
-            // result.data.date_select 처리 후 memberSelected에 넣기, dateText설정
-            let tmpDateInt = result.data.date_selected;
-            let tmpDateSelected = [
-              false,
-              false,
-              false,
-              false,
-              false,
-              false,
-              false,
-              false,
-              false,
-            ];
-            // console.log(tmpDateInt);
-            for (let i = 0; i < 9; i++) {
-              tmpDateSelected[i] = Math.floor(tmpDateInt % 2);
-              tmpDateInt /= 2;
-            }
-            setDateMainSelected(tmpDateSelected[0]);
-            setDateSelected(tmpDateSelected.slice(1, 8));
-            // console.log(tmpDateSelected);
-            //setText when ongoing
-            let tmpDateText = '';
-            if (tmpDateSelected[0] === 1 || result.data.date_selected === 0)
-              tmpDateText = '날짜 상관 없음  ';
-            else {
-              tmpDateSelected.map((item, index) => {
-                if (tmpDateSelected[index] === 1) {
-                  tmpDateText = tmpDateText + wow[index - 1] + ', ';
+              setMemberMainSelected(tmpMemSelected[0]);
+              setMemberSelected(tmpMemSelected.slice(1, 3));
+              // console.log(tmpMemSelected);
+              // setText when ongoing
+              let tmpMemText = '';
+              if (
+                tmpMemSelected[0] === 1 ||
+                result.data.personnel_selected === 0
+              )
+                tmpMemText = '인원 상관 없음  ';
+              else {
+                tmpMemSelected.map((item, index) => {
+                  if (tmpMemSelected[index] === 1) {
+                    tmpMemText = tmpMemText + memberList[index - 1] + ', ';
+                  }
+                  console.log(memberList);
+                });
+                tmpMemText = tmpMemText.substring(0, tmpMemText.length - 2);
+                if (tmpMemText.length > 20) {
+                  tmpMemText = tmpMemText.substring(0, 20);
+                  tmpMemText = tmpMemText + ' ...';
                 }
-                // console.log(dateList);
-              });
-              tmpDateText = tmpDateText.substring(0, tmpDateText.length - 2);
-              if (tmpDateText.length > 20) {
-                tmpDateText = tmpDateText.substring(0, 20);
-                tmpDateText = tmpDateText + ' ...';
               }
-            }
-            setOnDateText(tmpDateText);
-            // console.log(tmpDateText);
+              setOnMemText(tmpMemText);
+              // console.log(tmpMemText);
 
-            // result.date.max,min처리
-            let tmpAge = [result.data.min_age, result.data.max_age];
-            setMultiSliderValue(tmpAge);
-          }
-          return result.data;
-        });
+              // result.data.date_select 처리 후 memberSelected에 넣기, dateText설정
+              let tmpDateInt = result.data.date_selected;
+              let tmpDateSelected = [
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+              ];
+              // console.log(tmpDateInt);
+              for (let i = 0; i < 9; i++) {
+                tmpDateSelected[i] = Math.floor(tmpDateInt % 2);
+                tmpDateInt /= 2;
+              }
+              setDateMainSelected(tmpDateSelected[0]);
+              setDateSelected(tmpDateSelected.slice(1, 8));
+              // console.log(tmpDateSelected);
+              //setText when ongoing
+              let tmpDateText = '';
+              if (tmpDateSelected[0] === 1 || result.data.date_selected === 0)
+                tmpDateText = '날짜 상관 없음  ';
+              else {
+                tmpDateSelected.map((item, index) => {
+                  if (tmpDateSelected[index] === 1) {
+                    tmpDateText = tmpDateText + wow[index - 1] + ', ';
+                  }
+                  // console.log(dateList);
+                });
+                tmpDateText = tmpDateText.substring(0, tmpDateText.length - 2);
+                if (tmpDateText.length > 20) {
+                  tmpDateText = tmpDateText.substring(0, 20);
+                  tmpDateText = tmpDateText + ' ...';
+                }
+              }
+              setOnDateText(tmpDateText);
+              // console.log(tmpDateText);
+
+              // result.date.max,min처리
+              let tmpAge = [result.data.min_age, result.data.max_age];
+              setMultiSliderValue(tmpAge);
+            }
+            resolve(result.data);
+          });
+      });
     };
-    return () => listener();
+    return () => listener.remove();
   }, []);
   const requestMatching = async () => {
     console.log('***jsuer');

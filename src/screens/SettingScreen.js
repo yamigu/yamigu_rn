@@ -15,6 +15,7 @@ import appleAuth, {
 } from '@invertase/react-native-apple-authentication';
 import AsyncStorage from '@react-native-community/async-storage';
 import axios from 'axios';
+import KakaoLogins from '@react-native-seoul/kakao-login';
 
 const initUserValue = [
   'token',
@@ -46,9 +47,20 @@ const SettingScreen = ({navigation}) => {
     '채팅',
   ];
 
-  const logout = async () => {
-    axios.defaults.headers.common['Authorization'] = '';
-    AsyncStorage.setItem('userValue', JSON.stringify(initUserValue));
+  const logout = () => {
+    return new Promise((resolve, reject) => {
+      axios.defaults.headers.common['Authorization'] = '';
+      AsyncStorage.setItem('userValue', JSON.stringify(initUserValue));
+      resolve(true);
+      //   KakaoLogins.logout()
+      //     .then(result => {
+      //       console.log('logout successfully');
+      //       resolve(true);
+      //     })
+      //     .catch(error => {
+      //       resolve(false);
+      //     });
+    });
   };
 
   useEffect(() => {

@@ -34,7 +34,7 @@ import {HeaderBackButton} from 'react-navigation-stack';
 import utf8 from 'utf8';
 import {SampleConsumer} from '~/Context/Sample';
 import AsyncStorage from '@react-native-community/async-storage';
-
+import '~/config';
 const majorVersionIOS = parseInt(Platform.Version, 10);
 const dw = Dimensions.get('window').width;
 const dh = Dimensions.get('window').height;
@@ -159,16 +159,51 @@ const LoginScreen = ({navigation}) => {
             'Token ' + result.data.key;
           return result.data.key;
         })
-        .then(key => {
-          tmpValue[0] = key;
-          AsyncStorage.setItem('userValue', JSON.stringify(tmpValue));
+        .then(async key => {
+          tmpValue[global.config.user_info_const.TOKEN] = key;
+          return await axios.get(
+            'http://13.124.126.30:8000/authorization/user/info/',
+          );
         })
-        .then(async () => {
-          setLoginLoading(false);
-          let userVal = await AsyncStorage.getItem('userValue');
-          console.log(userVal);
-          if (userVal[2] === 'nickname') {
+
+        .then(async result => {
+          tmpValue[global.config.user_info_const.AVATA] =
+            result.data.avata !== null ? result.data.avata : 'avata';
+          tmpValue[global.config.user_info_const.BELONG] =
+            result.data.belong !== null ? result.data.belong : 'belong';
+          tmpValue[global.config.user_info_const.BIRTHDATE] =
+            result.data.birthdate !== null
+              ? result.data.birthdate
+              : 'birthdate';
+          tmpValue[global.config.user_info_const.DEPARTMENT] =
+            result.data.department !== null
+              ? result.data.department
+              : 'department';
+          tmpValue[global.config.user_info_const.GENDER] =
+            result.data.gender !== null ? result.data.gender : 'gender';
+          tmpValue[global.config.user_info_const.LOCATION] =
+            result.data.location !== null ? result.data.location : 'location';
+          tmpValue[global.config.user_info_const.NICKNAME] =
+            result.data.nickname !== null ? result.data.nickname : 'nickname';
+          tmpValue[global.config.user_info_const.UID] =
+            result.data.uid !== null ? result.data.uid : 'uid';
+          tmpValue[global.config.user_info_const.VERIFIED] =
+            result.data.verified !== null ? result.data.verified : 'verified';
+          AsyncStorage.setItem('userValue', JSON.stringify(tmpValue));
+          if (
+            tmpValue[global.config.user_info_const.NICKNAME] === 'nickname' ||
+            tmpValue[global.config.user_info_const.NICKNAME] === '' ||
+            tmpValue[global.config.user_info_const.NICKNAME] === null
+          ) {
             navigation.navigate('Signup');
+          } else if (
+            tmpValue[global.config.user_info_const.GENDER] === 'gender' ||
+            tmpValue[global.config.user_info_const.GENDER] === '' ||
+            tmpValue[global.config.user_info_const.GENDER] === null
+          ) {
+            navigation.navigate('IV', {
+              needBtn: true,
+            });
           } else {
             navigation.navigate('Main');
           }
@@ -208,15 +243,48 @@ const LoginScreen = ({navigation}) => {
         );
         return result.data.key;
       })
-      .then(key => {
-        tmpValue[0] = key;
-        AsyncStorage.setItem('userValue', JSON.stringify(tmpValue));
+      .then(async key => {
+        tmpValue[global.config.user_info_const.TOKEN] = key;
+        return await axios.get(
+          'http://13.124.126.30:8000/authorization/user/info/',
+        );
       })
-      .then(async () => {
-        let userVal = await AsyncStorage.getItem('userValue');
-        console.log(userVal);
-        if (userVal[2] === 'nickname') {
+      .then(async result => {
+        tmpValue[global.config.user_info_const.AVATA] =
+          result.data.avata !== null ? result.data.avata : 'avata';
+        tmpValue[global.config.user_info_const.BELONG] =
+          result.data.belong !== null ? result.data.belong : 'belong';
+        tmpValue[global.config.user_info_const.BIRTHDATE] =
+          result.data.birthdate !== null ? result.data.birthdate : 'birthdate';
+        tmpValue[global.config.user_info_const.DEPARTMENT] =
+          result.data.department !== null
+            ? result.data.department
+            : 'department';
+        tmpValue[global.config.user_info_const.GENDER] =
+          result.data.gender !== null ? result.data.gender : 'gender';
+        tmpValue[global.config.user_info_const.LOCATION] =
+          result.data.location !== null ? result.data.location : 'location';
+        tmpValue[global.config.user_info_const.NICKNAME] =
+          result.data.nickname !== null ? result.data.nickname : 'nickname';
+        tmpValue[global.config.user_info_const.UID] =
+          result.data.uid !== null ? result.data.uid : 'uid';
+        tmpValue[global.config.user_info_const.VERIFIED] =
+          result.data.verified !== null ? result.data.verified : 'verified';
+        AsyncStorage.setItem('userValue', JSON.stringify(tmpValue));
+        if (
+          tmpValue[global.config.user_info_const.NICKNAME] === 'nickname' ||
+          tmpValue[global.config.user_info_const.NICKNAME] === '' ||
+          tmpValue[global.config.user_info_const.NICKNAME] === null
+        ) {
           navigation.navigate('Signup');
+        } else if (
+          tmpValue[global.config.user_info_const.GENDER] === 'gender' ||
+          tmpValue[global.config.user_info_const.GENDER] === '' ||
+          tmpValue[global.config.user_info_const.GENDER] === null
+        ) {
+          navigation.navigate('IV', {
+            needBtn: true,
+          });
         } else {
           navigation.navigate('Main');
         }

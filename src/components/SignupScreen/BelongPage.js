@@ -84,7 +84,6 @@ const BelongPage = ({setBelong, setDepartment, setIs_student}) => {
               value={text1}
               selectionColor={palette.orange[0]}
               placeholderTextColor={palette.nonselect}
-              caretHidden={true}
               onFocus={event => {
                 setFocus1(true);
                 handleFormFocus(findNodeHandle(event.target));
@@ -112,7 +111,6 @@ const BelongPage = ({setBelong, setDepartment, setIs_student}) => {
               value={text2}
               selectionColor={palette.orange[0]}
               placeholderTextColor={palette.nonselect}
-              caretHidden={true}
               onFocus={event => {
                 setFocus2(true);
                 handleFormFocus(findNodeHandle(event.target));
@@ -127,7 +125,7 @@ const BelongPage = ({setBelong, setDepartment, setIs_student}) => {
 };
 const styles = StyleSheet.create({
   root: {
-    padding: 20,
+    paddingHorizontal: 20,
     flex: 1,
     backgroundColor: palette.default_bg,
     flexDirection: 'column',
@@ -186,7 +184,6 @@ const styles = StyleSheet.create({
     marginTop: 8,
     fontSize: 14,
     textAlignVertical: 'bottom',
-    lineHeight: 14,
     fontFamily: 'NotoSansCJKkr-Medium',
     paddingBottom: 0,
     color: palette.gray,
