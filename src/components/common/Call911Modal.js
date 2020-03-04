@@ -24,6 +24,7 @@ const Call911Modal = ({setCall911ModalVisible, uid}) => {
   const [listTrue, setListTrue] = useState(false);
   const reportRequest = () => {
     const index = listState.findIndex(value => value === 1);
+    console.log(index);
     if (index === -1) return;
 
     axios
@@ -111,8 +112,9 @@ const Call911Modal = ({setCall911ModalVisible, uid}) => {
                 justifyContent: 'center',
               }}
               onPress={() => {
-                if (listTrue === false) {
-                  onPress = {reportRequest};
+                if (listTrue === true) {
+                  reportRequest();
+                  setCall911ModalVisible(false);
                 } else setCall911ModalVisible(false);
               }}>
               <CustomTextRegular

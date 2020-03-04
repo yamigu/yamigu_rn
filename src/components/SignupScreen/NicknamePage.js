@@ -11,7 +11,16 @@ import palette from '~/lib/styles/palette';
 import {Item, Input} from 'native-base';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import axios from 'axios';
-
+var getTextLength = function(str) {
+  var len = 0;
+  for (var i = 0; i < str.length; i++) {
+    if (escape(str.charAt(i)).length == 6) {
+      len++;
+    }
+    len++;
+  }
+  return len;
+};
 const NicknamePage = ({
   setNickname,
   nicknameAvailable,
@@ -21,18 +30,30 @@ const NicknamePage = ({
   const [focus, setFocus] = useState(false);
   const check_validation = value => {
     return new Promise(async (resolve, reject) => {
-      const avail = await axios
-        .post('http://13.124.126.30:8000/authorization/validation/nickname/', {
-          nickname: value,
-        })
-        .then(() => true)
-        .catch(() => false);
+      let avail;
+      if (
+        value === '' ||
+        getTextLength(value) > 12 ||
+        getTextLength(value) < 2
+      ) {
+        avail = false;
+      } else {
+        avail = await axios
+          .post(
+            'http://13.124.126.30:8000/authorization/validation/nickname/',
+            {
+              nickname: value,
+            },
+          )
+          .then(() => true)
+          .catch(() => false);
+      }
       resolve(avail);
     });
   };
   return (
-    <KeyboardAwareScrollView style={styles.root}>
-      <CustomTextMedium size={20} color={palette.black}>
+    <KeyboardAwareScrollView bounces={false} style={styles.root}>
+      <CustomTextMedium size={24} color={palette.black}>
         닉네임을 작성해주세요
       </CustomTextMedium>
       <CustomTextRegular size={16} color={palette.gray}>
@@ -75,6 +96,7 @@ const NicknamePage = ({
 
 const styles = StyleSheet.create({
   root: {
+    height: '100%',
     paddingHorizontal: 20,
     backgroundColor: palette.default_bg,
     flexDirection: 'column',

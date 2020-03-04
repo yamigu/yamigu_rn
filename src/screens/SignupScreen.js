@@ -1,5 +1,12 @@
 import React, {useState, createRef, useEffect} from 'react';
-import {Text, View, StyleSheet, Keyboard} from 'react-native';
+import {
+  Text,
+  View,
+  StyleSheet,
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+} from 'react-native';
 import {HeaderBackButton} from 'react-navigation-stack';
 import {
   CustomTextMedium,
@@ -15,9 +22,14 @@ import {Button} from 'native-base';
 import {SafeAreaView} from 'react-navigation';
 import PersonalInfoPage from '~/components/SignupScreen/PersonalInfoPage';
 import IVScreen from './IVScreen';
-import Axios from 'axios';
+import axios from 'axios';
 import AsyncStorage from '@react-native-community/async-storage';
 let global_viewPager;
+let keyboardPadding = 0;
+const pf = Platform.OS;
+if (pf === 'ios') keyboardPadding = 100;
+else keyboardPadding = -400;
+
 const SignupScreen = ({navigation}) => {
   const [nickname, setNickname] = useState('');
   const [belong, setBelong] = useState('');
@@ -27,8 +39,16 @@ const SignupScreen = ({navigation}) => {
   const [nicknameAvailable, setNicknameAvailable] = useState(false);
   const [page, setPage] = useState(0);
   const viewPager = createRef();
+
+  const getUserInfo = async () => {
+    const userValue = await AsyncStorage.getItem('userValue');
+    const jUserValue = JSON.parse(userValue);
+    console.log(userValue);
+    axios.defaults.headers.common['Authorization'] = 'Token ' + jUserValue[0];
+  };
   useEffect(() => {
     global_viewPager = viewPager;
+    getUserInfo();
   }, []);
   global_viewPager = viewPager;
   const go = next_page => {
@@ -59,25 +79,33 @@ const SignupScreen = ({navigation}) => {
   };
   return (
     <SafeAreaView style={styles.root}>
-      <ViewPager ref={viewPager} style={styles.viewPager} scrollEnabled={false}>
-        <NicknamePage
-          setNickname={setNickname}
-          nicknameAvailable={nicknameAvailable}
-          setNicknameAvailable={setNicknameAvailable}
-        />
-        <LocationPage
-          setLocationText={setLocationText}
-          locationText={locationText}
-        />
-        <BelongPage
-          setBelong={setBelong}
-          setDepartment={setDepartment}
-          setIs_student={setIs_student}
-        />
-        <IVScreen />
-      </ViewPager>
+      <KeyboardAvoidingView style={styles.container}>
+        <ViewPager
+          ref={viewPager}
+          style={styles.viewPager}
+          scrollEnabled={false}>
+          <NicknamePage
+            setNickname={setNickname}
+            nicknameAvailable={nicknameAvailable}
+            setNicknameAvailable={setNicknameAvailable}
+          />
+          <LocationPage
+            setLocationText={setLocationText}
+            locationText={locationText}
+          />
+          <BelongPage
+            setBelong={setBelong}
+            setDepartment={setDepartment}
+            setIs_student={setIs_student}
+          />
+          <IVScreen />
+        </ViewPager>
+      </KeyboardAvoidingView>
 
-      <View style={styles.bottomView}>
+      <KeyboardAvoidingView
+        style={styles.bottomView}
+        behavior="position"
+        keyboardVerticalOffset={keyboardPadding}>
         <View style={styles.indicator}>
           <CustomTextRegular
             style={styles.indicatorText}
@@ -94,11 +122,7 @@ const SignupScreen = ({navigation}) => {
         <Button
           onPress={async () => {
             if (!checkActivation()) return;
-            const userValue = await AsyncStorage.getItem('userValue');
-            const jUserValue = JSON.parse(userValue);
-            console.log(userValue);
-            Axios.defaults.headers.common['Authorization'] =
-              'Token ' + jUserValue[0];
+
             if (page === 2) {
               //server로 nickname, belong, department, is_student 보내기
               // console.log(nickname);
@@ -109,23 +133,22 @@ const SignupScreen = ({navigation}) => {
               console.log(locationText);
               let isStudentString = is_student.toString();
 
-              Axios.post(
-                'http://13.124.126.30:8000/authorization/user/signup/',
-                {
+              axios
+                .post('http://13.124.126.30:8000/authorization/user/signup/', {
                   nickname: nickname,
                   is_student: isStudentString,
                   department: department,
                   belong: belong,
                   location: locationText,
-                },
-              ).then(() => console.log('done'));
+                })
+                .then(() => console.log('done'));
             } else if (page === 3) {
               gotoWebView();
               go(0);
               setPage(0);
             }
             move(1);
-            console.log(Axios.defaults.headers.common['Authorization']);
+            console.log(axios.defaults.headers.common['Authorization']);
           }}
           style={checkActivation() ? styles.buttonActive : styles.button}>
           {page !== 3 ? (
@@ -134,11 +157,11 @@ const SignupScreen = ({navigation}) => {
             </CustomTextRegular>
           ) : (
             <CustomTextMedium size={16} color="white">
-              본인인증 하고 야미구 시작하기!
+              본인인증하고 시작하기!
             </CustomTextMedium>
           )}
         </Button>
-      </View>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };
@@ -158,15 +181,7 @@ SignupScreen.navigationOptions = ({navigation}) => ({
           });
         }}
       />
-    ) : (
-      <HeaderBackButton
-        label=" "
-        tintColor={palette.black}
-        onPress={() => {
-          // navigation.goBack();
-        }}
-      />
-    ),
+    ) : null,
   headerTitle: () => (
     <CustomTextMedium size={16} color={palette.black}>
       회원가입
@@ -184,6 +199,9 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: palette.default_bg,
     justifyContent: 'space-between',
+  },
+  container: {
+    flex: 1,
   },
   viewPager: {
     flex: 1,

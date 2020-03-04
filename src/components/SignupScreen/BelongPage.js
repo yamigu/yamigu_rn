@@ -24,7 +24,7 @@ const BelongPage = ({setBelong, setDepartment, setIs_student}) => {
   };
   return (
     <KeyboardAwareScrollView ref={scrollView} style={styles.root}>
-      <CustomTextMedium size={20} color={palette.black}>
+      <CustomTextMedium size={24} color={palette.black}>
         소속을 입력해주세요
       </CustomTextMedium>
       <CustomTextRegular size={16} color={palette.gray}>

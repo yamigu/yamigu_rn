@@ -7,20 +7,20 @@ import {CustomTextRegular, CustomTextMedium} from '../common/CustomText';
 import palette from '~/lib/styles/palette';
 import TouchableByPlatform from '../common/TouchableByPlatform';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 
 const LocationPage = ({setLocationText, locationText}) => {
   const [locationModalVisible, setLocationModalVisible] = useState(false);
 
   return (
-    <View style={styles.root}>
+    <KeyboardAwareScrollView style={styles.root}>
       <Modal visible={locationModalVisible} transparent>
         <LocationModal
           setLocationText={setLocationText}
           setLocationModalVisible={setLocationModalVisible}
         />
       </Modal>
-
-      <CustomTextMedium size={20} color={palette.black}>
+      <CustomTextMedium size={24} color={palette.black}>
         지역을 선택해주세요
       </CustomTextMedium>
 
@@ -56,12 +56,13 @@ const LocationPage = ({setLocationText, locationText}) => {
         />
       </Button>
       <View style={{backgroundColor: palette.gray, height: 1}} />
-    </View>
+    </KeyboardAwareScrollView>
   );
 };
 const styles = StyleSheet.create({
   root: {
     paddingHorizontal: 20,
+    height: '100%',
     flex: 1,
     backgroundColor: palette.default_bg,
     flexDirection: 'column',
