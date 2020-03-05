@@ -1,5 +1,12 @@
 import React, {useState, useEffect} from 'react';
-import {StyleSheet, View, Image, Text, SafeAreaView} from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Image,
+  Text,
+  SafeAreaView,
+  Dimensions,
+} from 'react-native';
 import {Container, Content, Icon, Button} from 'native-base';
 import {
   CustomTextRegular,
@@ -14,6 +21,8 @@ import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 
 // import TouchableByPlatform from '~/components/common/TouchableByPlatform';
 
+const dh = Dimensions.get('window').height;
+
 const IVScreen = ({navigation}) => {
   const [btnNeeded, setBtnNeeded] = useState(false);
   useEffect(() => {
@@ -25,48 +34,41 @@ const IVScreen = ({navigation}) => {
     navigation.navigate('WebView');
   };
   return (
-    <KeyboardAwareScrollView
-      contentContainerStyle={
-        btnNeeded && {
-          flex: 1,
-          justifyContent: 'flex-end',
-        }
-      }>
+    <View
+      style={{
+        height: dh - 100,
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+      }}>
       <View
         style={{
+          padding: 20,
+          marginTop: 10,
           flex: 1,
-          paddingTop: btnNeeded ? 20 : 0,
           paddingHorizontal: 20,
           height: '100%',
           backgroundColor: palette.default_bg,
           flexDirection: 'column',
         }}>
         <CustomTextMedium size={24} color={palette.black}>
-          본인인증 부탁드려요..!
+          본인인증 부탁드려요!
         </CustomTextMedium>
         <CustomTextMedium size={16} color={palette.gray}>
           *번거롭더라도 안전한 미팅을 위해 꼭 필요해요
         </CustomTextMedium>
-        {/* <CustomTextLight size={12} color={palette.orange}>
-          실제 이름, 휴대폰 번호는 절대 다른 회원들에게 공개되지 않습니다.
-        </CustomTextLight> */}
       </View>
-      {btnNeeded === true ? (
-        <View style={{padding: 20}}>
-          <Button style={styles.button} onPress={gotoWebView}>
-            <CustomTextMedium size={16} color="white">
-              본인인증하고 시작하기!
-            </CustomTextMedium>
-          </Button>
-          <CustomTextMedium
-            size={12}
-            color={palette.gray}
-            style={styles.center}>
-            거짓된 정보 및 중복 가입을 방지 하기 위한 인증입니다.
+
+      <View style={{padding: 20}}>
+        <Button style={styles.button} onPress={gotoWebView}>
+          <CustomTextMedium size={16} color="white">
+            본인인증하고 시작하기!
           </CustomTextMedium>
-        </View>
-      ) : null}
-    </KeyboardAwareScrollView>
+        </Button>
+        <CustomTextMedium size={12} color={palette.gray} style={styles.center}>
+          거짓된 정보 및 중복 가입을 방지 하기 위한 인증입니다.
+        </CustomTextMedium>
+      </View>
+    </View>
   );
 };
 IVScreen.navigationOptions = ({navigation}) => ({

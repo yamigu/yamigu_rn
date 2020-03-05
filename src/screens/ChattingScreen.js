@@ -244,7 +244,6 @@ const ChattingScreen = ({navigation}) => {
           bounces="false"
           ref={_scrollToBottomY}
           onContentSizeChange={gotoBot}>
-
           {userInfo === null ? null : (
             <List style={{flex: 1}}>
               {messageList.map((item, index) => {
@@ -287,7 +286,7 @@ const ChattingScreen = ({navigation}) => {
               justifyContent: 'center',
               margin: 10,
               paddingTop: 0,
-              paddingBotto: 0,
+              paddingBottom: 0,
               height: 40,
               width: buttonWidth,
               backgroundColor: palette.orange[0],

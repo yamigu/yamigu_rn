@@ -14,6 +14,7 @@ import {CustomTextRegular, CustomTextBold} from '../common/CustomText';
 import palette from '~/lib/styles/palette';
 import Axios from 'axios';
 import AsyncStorage from '@react-native-community/async-storage';
+import {set} from 'react-native-reanimated';
 
 const dh = Dimensions.get('window').height;
 const dw = Dimensions.get('window').width;
@@ -90,6 +91,7 @@ const LocationModal = ({
                   onPress={() => {
                     if (fromProfile !== true) {
                       setLocationText(item);
+                      setLocationModalVisible(false);
                     } else {
                       Axios.post(
                         'http://13.124.126.30:8000/authorization/user/info/location/',

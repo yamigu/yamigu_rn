@@ -98,7 +98,7 @@ const SignupScreen = ({navigation}) => {
             setDepartment={setDepartment}
             setIs_student={setIs_student}
           />
-          <IVScreen />
+          {/* <IVScreen /> */}
         </ViewPager>
       </KeyboardAvoidingView>
 
@@ -122,6 +122,7 @@ const SignupScreen = ({navigation}) => {
         <Button
           onPress={async () => {
             if (!checkActivation()) return;
+            console.log(page);
 
             if (page === 2) {
               //server로 nickname, belong, department, is_student 보내기
@@ -141,13 +142,15 @@ const SignupScreen = ({navigation}) => {
                   belong: belong,
                   location: locationText,
                 })
-                .then(() => console.log('done'));
-            } else if (page === 3) {
-              gotoWebView();
-              go(0);
-              setPage(0);
+                .then(() => {
+                  console.log('done');
+                  // navigation.navigate('IV');
+                  move(1);
+                });
+            } else {
+              move(1);
             }
-            move(1);
+
             console.log(axios.defaults.headers.common['Authorization']);
           }}
           style={checkActivation() ? styles.buttonActive : styles.button}>

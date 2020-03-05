@@ -21,6 +21,8 @@ import Spinner from 'react-native-loading-spinner-overlay';
 
 import {CustomTextBold, CustomTextRegular} from './CustomText';
 import file_upload from '~/lib/utils/file_upload';
+import file_upload_for_pf from '~/lib/utils/file_upload_for_pf';
+
 import axios from 'axios';
 import AsyncStorage from '@react-native-community/async-storage';
 
@@ -252,7 +254,7 @@ const ProfileImageAddView = ({
                 console.log('formdata::::');
                 console.log(formData);
 
-                file_upload(
+                file_upload_for_pf(
                   formData,
                   'http://13.124.126.30:8000/authorization/user/profile_image/',
                 )

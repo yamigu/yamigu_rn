@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const file_upload = (formData, url) => {
+const file_upload_for_pf = (formData, url) => {
   return new Promise((resolve, reject) => {
     axios({
       url: url,
@@ -13,7 +13,7 @@ const file_upload = (formData, url) => {
       .then(res => {
         console.log('file uploaded');
         console.log(res.data);
-        resolve(res);
+        resolve(res.data);
       })
       .catch(err => {
         // console.log('file upload failed');
@@ -22,5 +22,4 @@ const file_upload = (formData, url) => {
       });
   });
 };
-
-export default file_upload;
+export default file_upload_for_pf;
