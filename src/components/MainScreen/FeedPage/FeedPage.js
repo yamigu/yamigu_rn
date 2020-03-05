@@ -36,29 +36,31 @@ const FeedPage = props => {
               setHasProfile(true);
               innerHasProfile = true;
               console.log('hasprofile::::');
-              console.log(hasProfile);
+              console.log(innerHasProfile);
             }
-          });
-        if (!innerHasProfile) return;
-        if (!hasProfile) return;
-        let tmp = [];
-        setProfileCardProp(tmp);
-        axios
-          .get('http://13.124.126.30:8000/core/feeds/')
-          .then(result => {
-            let count = 0;
-            result.data.map((item, index) => {
-              if (item.feed_list.length === 0) {
-              } else {
-                tmp[count] = item;
+            let tmpUrl =
+              'http://13.124.126.30:8000/core/feed/' + item.data.uid + '/';
+            return tmpUrl;
+          })
+          .then(url => {
+            console.log('new feed done');
+            axios.get(url).then(result => {
+              // console.log('myfeedmanage 1st axios done');
+              // console.log(result.data);
+              let tmpFeed = [];
+              let count = 0;
+              result.data.map(item => {
+                tmpFeed[count] = item;
                 count++;
-              }
+              });
+              tmpFeed.reverse();
+              setMyFeed(tmpFeed);
             });
-            setProfileCardProp(tmp);
           })
           .then(() => {
-            // console.log('axios done');
+            // console.log('myfeedmanage axios done');
           });
+        if (!innerHasProfile) return;
 
         //axios for likematchning
         axios.get('http://13.124.126.30:8000/core/both_like/').then(result => {
@@ -68,6 +70,34 @@ const FeedPage = props => {
           });
           setLikeMatchingProp(tmpBothLike);
         });
+        axios
+          .get('http://13.124.126.30:8000/core/feeds/')
+          .then(result => {
+            let tmp = [];
+            let count = 0;
+
+            result.data.map((item, index) => {
+              if (item.feed_list.length === 0) {
+              } else {
+                tmp[count] = item;
+                count++;
+              }
+            });
+            //있는애들은 2개만보여주기
+            // console.log('innerhas ::: ??? ' + innerHasProfile);
+            if (innerHasProfile === false) {
+              // console.log(tmp);
+              // console.log(innerHasProfile);
+              setProfileCardProp(tmp.slice(0, 2));
+            } else {
+              setProfileCardProp(tmp);
+            }
+          })
+          .then(() => {
+            setRefreshing(false);
+            console.log('effect done');
+          });
+        //axios for profilecard
       },
       // run function that updates the data on entering the screen
     );
@@ -82,7 +112,7 @@ const FeedPage = props => {
           setHasProfile(true);
           innerHasProfile = true;
           console.log('hasprofile::::');
-          console.log(hasProfile);
+          console.log(innerHasProfile);
         }
         let tmpUrl =
           'http://13.124.126.30:8000/core/feed/' + item.data.uid + '/';
@@ -144,6 +174,7 @@ const FeedPage = props => {
       });
     //axios for profilecard
   }, [props.navigation]);
+
   return (
     <View style={styles.root}>
       <Spinner visible={refreshing} textContent={'refreshing...'} />
@@ -158,15 +189,15 @@ const FeedPage = props => {
                   '무제한 피드 + 보너스 야미 본인이 나온 프로필 사진이 필요해요',
                   [
                     {
+                      text: '다음에',
+                      onPress: () => console.log('NOPE'),
+                    },
+                    {
                       text: '사진등록',
                       onPress: () => {
                         props.navigation.navigate('MyProfile');
                         console.log('profile~~');
                       },
-                    },
-                    {
-                      text: '다음에',
-                      onPress: () => console.log('NOPE'),
                     },
                   ],
                   {cancelable: false},

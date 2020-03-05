@@ -186,9 +186,24 @@ const ProfileCardFeed = ({
   }, []);
 
   const alertAddProfile = () => {
-    Alert.alert('프로필 등록하셈', '', [
-      {onPress: () => navigation.navigate('MyProfile')},
-    ]);
+    Alert.alert(
+      '사진 한장만 등록하세요!',
+      '무제한 피드 + 보너스 야미 본인이 나온 프로필 사진이 필요해요',
+      [
+        {
+          text: '다음에',
+          onPress: () => console.log('NOPE'),
+        },
+        {
+          text: '사진등록',
+          onPress: () => {
+            navigation.navigate('MyProfile');
+            console.log('profile~~');
+          },
+        },
+      ],
+      {cancelable: false},
+    );
   };
   const getStorage = () => {
     return new Promise(async (resolve, reject) => {

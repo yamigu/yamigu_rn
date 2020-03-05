@@ -37,7 +37,7 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import axios from 'axios';
 import AsyncStorage from '@react-native-community/async-storage';
 import firebase from 'react-native-firebase';
-import DeviceInfo from 'react-native-device-info';
+import DeviceInfo, {useFirstInstallTime} from 'react-native-device-info';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import Foundation from 'react-native-vector-icons/Foundation';

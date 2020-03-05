@@ -52,6 +52,8 @@ if (pf === 'ios') {
   keyboardPadding = 50;
   if (isIphoneX()) {
     keyboardPadding = 100;
+  } else {
+    keyboardPadding = 50;
   }
 } else keyboardPadding = -400;
 
@@ -159,6 +161,7 @@ const SignupScreen = ({navigation}) => {
         <Button
           onPress={() => {
             if (!checkActivation()) return;
+            console.log(page);
 
             if (page === 2) {
               let isStudentString = is_student.toString();
@@ -172,6 +175,7 @@ const SignupScreen = ({navigation}) => {
                 })
                 .then(() => {
                   console.log('done');
+
                   viewPager.current.setPage(3);
                   navigation.setParams({
                     page: 3,

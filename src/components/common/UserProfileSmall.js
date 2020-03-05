@@ -43,7 +43,7 @@ const UserProfileSmall = ({
           <Image
             source={
               imageSource === null
-                ? require('~/images/test-user-profile-girl.png')
+                ? require('~/images/profile-yamigu.png')
                 : imageSource
             }
             style={styles.image}
