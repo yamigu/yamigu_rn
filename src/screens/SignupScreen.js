@@ -145,7 +145,6 @@ const SignupScreen = ({navigation}) => {
                 .then(() => {
                   console.log('done');
                   // navigation.navigate('IV');
-                  move(1);
                 });
             } else {
               move(1);

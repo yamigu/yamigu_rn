@@ -36,7 +36,7 @@ const FeedPage = props => {
               setHasProfile(true);
               innerHasProfile = true;
               console.log('hasprofile::::');
-              console.log(hasProfile);
+              console.log(innerHasProfile);
             }
             let tmpUrl =
               'http://13.124.126.30:8000/core/feed/' + item.data.uid + '/';
@@ -112,7 +112,7 @@ const FeedPage = props => {
           setHasProfile(true);
           innerHasProfile = true;
           console.log('hasprofile::::');
-          console.log(hasProfile);
+          console.log(innerHasProfile);
         }
         let tmpUrl =
           'http://13.124.126.30:8000/core/feed/' + item.data.uid + '/';
