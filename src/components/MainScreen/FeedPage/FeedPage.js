@@ -26,6 +26,7 @@ const FeedPage = props => {
     props.navigation.addListener(
       'didFocus',
       () => {
+        navigation.setParams({});
         axios
           .get('http://13.124.126.30:8000/authorization/user/info/')
           .then(item => {
