@@ -332,7 +332,7 @@ const SideMenu = ({navigation}) => {
               )} */}
             </Body>
           </ListItem>
-          <TouchableByPlatform onPress={() => navigation.navigate('Signup')}>
+          {/* <TouchableByPlatform onPress={() => navigation.navigate('Signup')}>
             <ListItem icon noIndent style={styles.listItem}>
               <Body style={styles.listItemBody}>
                 <CustomTextRegular size={14} color={palette.black}>
@@ -340,7 +340,7 @@ const SideMenu = ({navigation}) => {
                 </CustomTextRegular>
               </Body>
             </ListItem>
-          </TouchableByPlatform>
+          </TouchableByPlatform> */}
           <TouchableByPlatform
             onPress={() =>
               sideInfo[global.config.user_info_const.NICKNAME] === 'nickname'
@@ -458,7 +458,7 @@ const SideMenu = ({navigation}) => {
               </Right>
             </ListItem>
           </TouchableByPlatform>
-          <TouchableByPlatform onPress={() => navigation.navigate('Login')}>
+          {/* <TouchableByPlatform onPress={() => navigation.navigate('Login')}>
             <ListItem noIndent style={styles.listItem}>
               <Body style={styles.listItemBody}>
                 <CustomTextRegular size={14} color={palette.black}>
@@ -466,7 +466,7 @@ const SideMenu = ({navigation}) => {
                 </CustomTextRegular>
               </Body>
             </ListItem>
-          </TouchableByPlatform>
+          </TouchableByPlatform> */}
           <TouchableByPlatform onPress={() => navigation.navigate('Notice')}>
             <ListItem noIndent style={styles.listItem}>
               <Body style={styles.listItemBody}>

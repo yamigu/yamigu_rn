@@ -12,5 +12,7 @@ module.exports = global.config = {
     VERIFIED: 8,
     YAMI: 9,
     LOCATION: 10,
+    HEIGHT: 11,
+    FREE: 15,
   },
 };

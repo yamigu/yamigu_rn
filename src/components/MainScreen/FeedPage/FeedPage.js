@@ -222,7 +222,7 @@ const FeedPage = props => {
             <RefreshControl
               refreshing={refreshing}
               onRefresh={refre}
-              title="Loading..."
+              // title="Loading..."
               tintColor={palette.gray}
             />
           }
