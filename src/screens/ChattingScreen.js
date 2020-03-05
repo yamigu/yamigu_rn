@@ -72,9 +72,9 @@ const ChattingScreen = ({navigation}) => {
   if (pf === 'ios') {
     keyboardPadding = 50;
     if (isIphoneX()) {
-      keyboardPadding = 100;
+      keyboardPadding = 90;
     } else {
-      keyboardPadding = 50;
+      keyboardPadding = 65;
     }
   } else keyboardPadding = -400;
 
