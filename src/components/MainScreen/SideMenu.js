@@ -76,11 +76,10 @@ const SideMenu = ({navigation}) => {
     } catch (error) {}
   };
   useEffect(() => {
-    console.log('sidemenu');
     if (navigation.state.isDrawerOpen) {
       _retrieveData();
     }
-  }, [navigation]);
+  }, []);
 
   return (
     <SafeAreaView style={styles.root}>

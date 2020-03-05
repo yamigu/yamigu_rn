@@ -90,6 +90,7 @@ const LocationModal = ({
                   onPress={() => {
                     if (fromProfile !== true) {
                       setLocationText(item);
+                      setLocationModalVisible(false);
                     } else {
                       Axios.post(
                         'http://13.124.126.30:8000/authorization/user/info/location/',
