@@ -101,6 +101,9 @@ const ChattingScreen = ({navigation}) => {
       })
       .then(() => {
         setApprovoed(true);
+        navigation.setParams({
+          approved: true,
+        });
       });
   };
   const requestDecline = room => {
