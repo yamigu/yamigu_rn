@@ -18,6 +18,41 @@ const FeedPage = props => {
   const [hasProfile, setHasProfile] = useState(false);
   const _scroll = useRef();
 
+  const refre = () => {
+    setRefreshing(true);
+    const emptyData = [];
+    setProfileCardProp(emptyData);
+    axios
+      .get('http://13.124.126.30:8000/core/feeds/')
+      .then(result => {
+        console.log(result.data);
+        let tmp = [];
+        let count = 0;
+
+        result.data.map((item, index) => {
+          if (item.feed_list.length === 0) {
+          } else {
+            tmp[count] = item;
+            count++;
+          }
+        });
+        //있는애들은 2개만보여주기
+        // console.log('innerhas ::: ??? ' + innerHasProfile);
+        if (hasProfile === false) {
+          // console.log(tmp);
+          // console.log(innerHasProfile);
+          setProfileCardProp(tmp.slice(0, 2));
+        } else {
+          setProfileCardProp(tmp);
+        }
+      })
+      .then(() => {
+        setRefreshing(false);
+        console.log('effect done');
+      });
+    setRefreshing(false);
+  };
+
   useEffect(() => {
     console.log('feedpage useeffect');
 
@@ -204,7 +239,7 @@ const FeedPage = props => {
           onScroll={event => {
             if (event.nativeEvent.contentOffset.y === 0) {
               console.log('now');
-              setTmpState(!tmpState);
+              refre();
               // setRefreshing(true);
             }
           }}
