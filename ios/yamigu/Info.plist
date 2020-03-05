@@ -70,11 +70,11 @@
 		</dict>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string></string>
+	<string>By sharing users&apos; daily photos, they can drive more reactions. </string>
 	<key>NSContactsUsageDescription</key>
-	<string>Reason for accessing contacts</string>
+	<string>In the app, users can be rewarded by registering friends, for which users register their friends as contacts</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Access Gallery to Pick images.</string>
+	<string>Since users are seeking meetings with people who have been certified, they will need a photo to verify their identity.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Fonts/Entypo.ttf</string>
@@ -135,14 +135,10 @@ Fontisto.ttf</string>
 		<string>UIInterfaceOrientationPortrait</string>
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
-	<array>
-		<string></string>
-	</array>
+	<true/>
 	<key>UIStatusBarStyle</key>
 	<string>UIStatusBarStyleDarkContent</string>
 	<key>UIUserInterfaceStyle</key>
 	<string>Light</string>
-	<key>UIViewControllerBasedStatusBarAppearance</key>
-	<true/>
 </dict>
 </plist>
