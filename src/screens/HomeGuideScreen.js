@@ -6,12 +6,12 @@ import palette from '~/lib/styles/palette';
 import {Content, Button} from 'native-base';
 import {CustomTextBold, CustomTextMedium} from '~/components/common/CustomText';
 import {HeaderBackButton} from 'react-navigation-stack';
-const dw = Dimensions.get('window').width;
+const deviceWidth = Dimensions.get('window').width;
 const HomeGuideScreen = ({navigation}) => (
   <ScrollView
     style={{
       backgroundColor: palette.default_bg,
-      paddingTop: 0,
+      paddingVertical: 20,
       // backgroundColor: palette.gold,
     }}
     contentContainerStyle={{
@@ -19,7 +19,7 @@ const HomeGuideScreen = ({navigation}) => (
       alignItems: 'center',
       justifyContent: 'flex-start',
     }}>
-    <Image
+    {/* <Image
       style={{
         paddingTop: 0,
         marginTop: 0,
@@ -29,11 +29,11 @@ const HomeGuideScreen = ({navigation}) => (
         resizeMode: 'contain',
       }}
       source={require('~/images/guide.png')}
-    />
-    {/* <Image
+    /> */}
+    <Image
       style={{
-        width: (deviceWidth * 317) / 375,
-        height: (deviceWidth * 317) / 375,
+        width: (deviceWidth * 777) / 2.4511 / 375,
+        height: (deviceWidth * 777) / 2.4511 / 375,
         resizeMode: 'cover',
       }}
       source={require('~/images/homeguidescreen-1.png')}
@@ -48,8 +48,8 @@ const HomeGuideScreen = ({navigation}) => (
     />
     <Image
       style={{
-        width: (deviceWidth * 317) / 375,
-        height: (deviceWidth * 225) / 375,
+        width: (deviceWidth * 777) / 2.4511 / 375,
+        height: (deviceWidth * 565) / 2.4511 / 375,
         resizeMode: 'cover',
       }}
       source={require('~/images/homeguidescreen-2.png')}
@@ -64,8 +64,8 @@ const HomeGuideScreen = ({navigation}) => (
     />
     <Image
       style={{
-        width: (deviceWidth * 317) / 375,
-        height: (deviceWidth * 130) / 375,
+        width: (deviceWidth * 777) / 2.4511 / 375,
+        height: (deviceWidth * 334) / 2.4511 / 375,
         resizeMode: 'cover',
       }}
       source={require('~/images/homeguidescreen-3.png')}
@@ -80,8 +80,8 @@ const HomeGuideScreen = ({navigation}) => (
     />
     <Image
       style={{
-        width: (deviceWidth * 317) / 375,
-        height: (deviceWidth * 180) / 375,
+        width: (deviceWidth * 777) / 2.4511 / 375,
+        height: (deviceWidth * 453) / 2.4511 / 375,
         resizeMode: 'cover',
       }}
       source={require('~/images/homeguidescreen-4.png')}
@@ -96,8 +96,8 @@ const HomeGuideScreen = ({navigation}) => (
     />
     <Image
       style={{
-        width: (deviceWidth * 317) / 375,
-        height: (deviceWidth * 172) / 375,
+        width: (deviceWidth * 777) / 2.4511 / 375,
+        height: (deviceWidth * 545) / 2.4511 / 375,
         resizeMode: 'cover',
       }}
       source={require('~/images/homeguidescreen-5.png')}
@@ -112,12 +112,12 @@ const HomeGuideScreen = ({navigation}) => (
     />
     <Image
       style={{
-        width: (deviceWidth * 317) / 375,
-        height: (deviceWidth * 317) / 375,
+        width: (deviceWidth * 777) / 2.4511 / 375,
+        height: (deviceWidth * 777) / 2.4511 / 375,
         resizeMode: 'cover',
       }}
       source={require('~/images/homeguidescreen-6.png')}
-    /> */}
+    />
     {/* <CustomTextBold size={100}>asd</CustomTextBold> */}
   </ScrollView>
 );

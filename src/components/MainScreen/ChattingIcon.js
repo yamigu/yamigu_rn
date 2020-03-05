@@ -70,10 +70,12 @@ const ChattingIcon = ({navigation}) => {
                   .on('child_added', result => {
                     try {
                       if (
+                        result.val().idSender !==
+                          userVal[global.config.user_info_const.UID] &&
                         result.val().time >
-                        storageData['room' + item.id][
-                          storageData['room' + item.id].length - 1
-                        ].time
+                          storageData['room' + item.id][
+                            storageData['room' + item.id].length - 1
+                          ].time
                       ) {
                         setHasNew(true);
                       }
