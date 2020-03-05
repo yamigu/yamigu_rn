@@ -26,6 +26,41 @@ const FeedPage = props => {
     props.navigation.addListener(
       'didFocus',
       () => {
+        axios
+          .get('http://13.124.126.30:8000/authorization/user/info/')
+          .then(item => {
+            setMyFeedManageProp(item.data);
+            if (item.data.avata !== null) {
+              // console.log('avata::::');
+              // console.log(item.data.avata);
+              setHasProfile(true);
+              innerHasProfile = true;
+              console.log('hasprofile::::');
+              console.log(hasProfile);
+            }
+            let tmpUrl =
+              'http://13.124.126.30:8000/core/feed/' + item.data.uid + '/';
+            return tmpUrl;
+          })
+          .then(url => {
+            console.log('new feed done');
+            axios.get(url).then(result => {
+              // console.log('myfeedmanage 1st axios done');
+              // console.log(result.data);
+              let tmpFeed = [];
+              let count = 0;
+              result.data.map(item => {
+                tmpFeed[count] = item;
+                count++;
+              });
+              tmpFeed.reverse();
+              setMyFeed(tmpFeed);
+            });
+          })
+          .then(() => {
+            // console.log('myfeedmanage axios done');
+          });
+
         if (!hasProfile) return;
 
         let tmp = [];
@@ -59,6 +94,8 @@ const FeedPage = props => {
           // console.log(item.data.avata);
           setHasProfile(true);
           innerHasProfile = true;
+          console.log('hasprofile::::');
+          console.log(hasProfile);
         }
         let tmpUrl =
           'http://13.124.126.30:8000/core/feed/' + item.data.uid + '/';
