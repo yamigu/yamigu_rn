@@ -65,7 +65,7 @@ const HomeGuideScreen = ({navigation}) => (
     <Image
       style={{
         width: (deviceWidth * 777) / 2.4511 / 375,
-        height: (deviceWidth * 334) / 2.4511 / 375,
+        height: (deviceWidth * 291) / 2.4511 / 375,
         resizeMode: 'cover',
       }}
       source={require('~/images/homeguidescreen-3.png')}
