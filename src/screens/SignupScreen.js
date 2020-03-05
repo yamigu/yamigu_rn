@@ -110,6 +110,12 @@ const SignupScreen = ({navigation}) => {
           initialPage={0}
           onPageSelected={e => {
             setPage(e.nativeEvent.position);
+            navigation.setParams({
+              page: e.nativeEvent.position,
+              move: page => {
+                go(page);
+              },
+            });
           }}>
           <NicknamePage
             key={1}
