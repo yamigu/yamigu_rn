@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {useState, useEffect} from 'react';
-import {Text, View, StyleSheet, Alert} from 'react-native';
+import {Text, View, StyleSheet, Alert, TextInput} from 'react-native';
 import {HeaderBackButton} from 'react-navigation-stack';
 import {
   CustomTextMedium,
@@ -77,6 +77,7 @@ const AddFriendsScreen = ({navigation}) => {
   const addFriend = phone => {
     console.log('inputValue');
     console.log(inputValue);
+    setInputValue('');
 
     axios
       .post('http://13.124.126.30:8000/core/friend/', {
@@ -122,9 +123,10 @@ const AddFriendsScreen = ({navigation}) => {
           실제 친구 추가를 위해 번호를 사용하고 있어요.
         </CustomTextRegular>
       </View>
-      <Input
+      <TextInput
+        keyboardType="numeric"
         placeholder=" 친구 번호를 추가해주세요"
-        color="#eeeeee"
+        color="black"
         style={styles.messageInput}
         value={inputValue}
         onChange={item => {
@@ -322,6 +324,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     padding: 0,
     margin: 0,
+    height: 50,
   },
   spinnerTextStyle: {
     color: '#FFF',

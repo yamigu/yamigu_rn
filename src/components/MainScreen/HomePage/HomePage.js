@@ -70,6 +70,7 @@ const HomePage = ({navigation}) => {
   const [asyncValue, setAsyncValue] = useState([]);
   const [matchRequested, setMatchRequested] = useState(false);
 
+  const [yamiNo, setYamiNo] = useState(0);
   const [freeTicket, setFreeTicket] = useState(0);
   const [notiState, setNotiState] = useState(0);
   //0 :소속인증 x, 1: 프로필 x, 2: 친구등록
@@ -142,10 +143,26 @@ const HomePage = ({navigation}) => {
                       'userValue',
                       JSON.stringify(jUserValue),
                     );
+                    setYamiNo(result.data);
                     setAsyncValue(jUserValue);
                     console.log('available yami: ' + result.data);
-                    resolve(true);
                   });
+              })
+              .then(() => {
+                axios
+                  .get('http://13.124.126.30:8000/authorization/user/free/')
+                  .then(result => {
+                    jUserValue[global.config.user_info_const.FREE] =
+                      result.data;
+                    AsyncStorage.setItem(
+                      'userValue',
+                      JSON.stringify(jUserValue),
+                    );
+                    setAsyncValue(jUserValue);
+                    setFreeTicket(result.data);
+                    console.log('available free: ' + result.data);
+                  });
+                resolve(true);
               })
               .catch(e => {
                 if (e.response.status === 401) {
@@ -411,7 +428,7 @@ const HomePage = ({navigation}) => {
       if (matchRequested === true) {
         Alert.alert(
           '미팅 주선을 취소하시겠어요?',
-          '무료 횟수가 차감됩니다.',
+          '',
           [
             {
               text: '네',
@@ -442,13 +459,17 @@ const HomePage = ({navigation}) => {
                 //이미 매칭중인데 누르면 취소니까
                 axios
                   .patch('http://13.124.126.30:8000/core/match_request/')
-                  .then(() => {
+                  .then(result => {
                     setLoginLoading(false);
+                    setFreeTicket(result.data.free);
+                    setYamiNo(result.data.yami);
+                    let tmp = asyncValue.slice();
+                    tmp[global.config.user_info_const.YAMI] = result.data.yami;
+                    tmp[global.config.user_info_const.FREE] = result.data.free;
+                    AsyncStorage.setItem('userValue', JSON.stringify(tmp));
+                    setAsyncValue(tmp);
                   })
                   .then(() => {
-                    let tmpTicket = freeTicket;
-                    tmpTicket = tmpTicket - 1;
-                    setFreeTicket(tmpTicket);
                     console.log('cancleed');
                   });
               },
@@ -463,15 +484,105 @@ const HomePage = ({navigation}) => {
         );
       } else {
         if (freeTicket < 1) {
-          Alert.alert(
-            '야미가 부족합니다!',
-            '스토어에서 야미를 구입하시겠어요?',
-            [
-              {text: '취소'},
-              {text: '스토어가기', onPress: () => navigation.navigate('Store')},
-            ],
-            '',
-          );
+          if (yamiNo < 2) {
+            Alert.alert(
+              '야미가 부족합니다!',
+              '스토어에서 야미를 구입하시겠어요?',
+              [
+                {text: '취소'},
+                {
+                  text: '스토어가기',
+                  onPress: () => navigation.navigate('Store'),
+                },
+              ],
+              '',
+            );
+          } else {
+            let count = yamiNo - 2;
+            setYamiNo(count);
+
+            console.log('야미 감소시키는 post');
+            let tmpMemText = '';
+            let memInt = 0;
+            if (memberMainSelected === true) {
+              tmpMemText = '인원 상관 없음  ';
+              memInt = 0;
+            } else {
+              memberSelected.map((item, index) => {
+                if (item === true) {
+                  memInt += Math.pow(2, index + 1);
+                  tmpMemText = tmpMemText + memberList[index] + ', ';
+                }
+              });
+            }
+            tmpMemText = tmpMemText.substring(0, tmpMemText.length - 2);
+            if (tmpMemText.length > 20) {
+              tmpMemText = tmpMemText.substring(0, 20);
+              tmpMemText = tmpMemText + ' ...';
+            }
+            setOnMemText(tmpMemText);
+
+            let dateInt = 0;
+            let tmpDateText = '';
+            if (dateMainSelected === true) {
+              tmpDateText = '날짜 상관 없음  ';
+              dateInt = 0;
+            } else {
+              dateSelected.map((item, index) => {
+                if (item === true) {
+                  dateInt += Math.pow(2, index + 1);
+                  tmpDateText = tmpDateText + dateList[index] + ', ';
+                }
+              });
+            }
+            tmpDateText = tmpDateText.substring(0, tmpDateText.length - 2);
+            if (tmpDateText.length > 20) {
+              tmpDateText = tmpDateText.substring(0, 20);
+              tmpDateText = tmpDateText + ' ...';
+            }
+            setOnDateText(tmpDateText);
+
+            let min_age = multiSliderValue[0];
+            let max_age = multiSliderValue[1];
+            // console.log(memInt);
+            axios
+              .post('http://13.124.126.30:8000/core/match_request/', {
+                personnel_selected: memInt,
+                date_selected: dateInt,
+                min_age: min_age,
+                max_age: max_age,
+              })
+              .then(result => {
+                setFreeTicket(result.data.free);
+                setYamiNo(result.data.yami);
+                let tmp = asyncValue.slice();
+                tmp[global.config.user_info_const.YAMI] = result.data.yami;
+                tmp[global.config.user_info_const.FREE] = result.data.free;
+                AsyncStorage.setItem('userValue', JSON.stringify(tmp));
+                setAsyncValue(tmp);
+
+                console.log(memInt + ' ' + dateInt);
+                console.log(result.data);
+              })
+              .catch(e => {
+                console.log(e);
+                if (e.response.status === 401) {
+                  AsyncStorage.setItem(
+                    'userValue',
+                    JSON.stringify(initUserValue),
+                  );
+                }
+              })
+              .then(() =>
+                setTimeout(() => {
+                  let count = freeTicket - 1;
+                  setFreeTicket(count);
+                  setLoginLoading(false);
+                  setMatchRequested(!matchRequested);
+                  console.log('here');
+                }, 500),
+              );
+          }
         } else {
           setLoginLoading(true);
 
@@ -530,6 +641,15 @@ const HomePage = ({navigation}) => {
               max_age: max_age,
             })
             .then(result => {
+              console.log(result.data);
+              setFreeTicket(result.data.free);
+              setYamiNo(result.data.yami);
+              console.log('befor');
+              let tmp = asyncValue.slice();
+              tmp[global.config.user_info_const.YAMI] = result.data.yami;
+              tmp[global.config.user_info_const.FREE] = result.data.free;
+              AsyncStorage.setItem('userValue', JSON.stringify(tmp));
+              setAsyncValue(tmp);
               console.log(memInt + ' ' + dateInt);
               console.log(result.data);
             })
@@ -543,6 +663,8 @@ const HomePage = ({navigation}) => {
             })
             .then(() =>
               setTimeout(() => {
+                let count = freeTicket - 1;
+                setFreeTicket(count);
                 setLoginLoading(false);
                 setMatchRequested(!matchRequested);
                 console.log('here');
