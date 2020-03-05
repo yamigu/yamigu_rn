@@ -35,29 +35,10 @@ const FeedPage = props => {
               // console.log(item.data.avata);
               setHasProfile(true);
               innerHasProfile = true;
-            }
-            let tmpUrl =
-              'http://13.124.126.30:8000/core/feed/' + item.data.uid + '/';
-            return tmpUrl;
-          })
-          .then(url => {
-            console.log('new feed done');
-            axios.get(url).then(result => {
-              // console.log('myfeedmanage 1st axios done');
-              // console.log(result.data);
-              let tmpFeed = [];
-              let count = 0;
-              result.data.map(item => {
-                tmpFeed[count] = item;
-                count++;
-              });
-              tmpFeed.reverse();
-              setMyFeed(tmpFeed);
-            });
-          })
-          .then(() => {
-            if (!innerHasProfile) return;
+              console.log('hasprofile::::');
+              console.log(hasProfile);
           });
+        if (!innerHasProfile) return;
         if (!hasProfile) return;
         let tmp = [];
         setProfileCardProp(tmp);
@@ -99,6 +80,8 @@ const FeedPage = props => {
           // console.log(item.data.avata);
           setHasProfile(true);
           innerHasProfile = true;
+          console.log('hasprofile::::');
+          console.log(hasProfile);
         }
         let tmpUrl =
           'http://13.124.126.30:8000/core/feed/' + item.data.uid + '/';

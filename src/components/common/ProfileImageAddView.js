@@ -49,7 +49,14 @@ const temp_init_data = [
     number: 5,
   },
 ];
-const ProfileImageAddView = ({scroll, offsetY, feed_list, setFeed_list}) => {
+const ProfileImageAddView = ({
+  scroll,
+  offsetY,
+  feed_list,
+  setFeed_list,
+  imageNo,
+  setImageNo,
+}) => {
   const [imageSource, setImageSource] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [pfImageList, setPfImageList] = useState(temp_init_data);
@@ -58,8 +65,6 @@ const ProfileImageAddView = ({scroll, offsetY, feed_list, setFeed_list}) => {
   const [userInfo, setUserInfo] = useState([]);
   const [btnMeasure, setBtnMeasure] = useState(null);
   const [btnMeasureRight, setBtnMeasureRight] = useState(null);
-
-  const [imageNo, setImageNo] = useState(0);
 
   const _imageLeft = createRef();
   const _imageRight = createRef();
