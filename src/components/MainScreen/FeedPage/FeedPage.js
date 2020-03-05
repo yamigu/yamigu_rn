@@ -130,18 +130,18 @@ const FeedPage = props => {
             // console.log(hasProfile);
             hasProfile === false
               ? Alert.alert(
-                  '프로필 등록하면 모든 유저 피드 다볼수있다?',
-                  '',
+                  '사진 한장만 등록하세요!',
+                  '무제한 피드 + 보너스 야미 본인이 나온 프로필 사진이 필요해요',
                   [
                     {
-                      text: '지금 할래요',
+                      text: '사진등록',
                       onPress: () => {
                         props.navigation.navigate('MyProfile');
                         console.log('profile~~');
                       },
                     },
                     {
-                      text: '안하고 안본다 더러워서 쳇',
+                      text: '다음에',
                       onPress: () => console.log('NOPE'),
                     },
                   ],

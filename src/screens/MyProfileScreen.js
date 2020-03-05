@@ -34,10 +34,7 @@ const MyProfileScreen = ({navigation}) => {
       const userValue = await AsyncStorage.getItem('userValue');
       const jUserValue = JSON.parse(userValue);
       if (userValue !== null) {
-        // console.log('qweqwe');
-        // console.log(jUserValue);
         setUserInfo(jUserValue);
-        // console.log(jUserValue[3]);
       } else {
         console.log('asdasd');
       }
@@ -45,7 +42,7 @@ const MyProfileScreen = ({navigation}) => {
   };
   useEffect(() => {
     _retrieveData();
-  }, []);
+  }, [userInfo]);
 
   return (
     <ScrollView

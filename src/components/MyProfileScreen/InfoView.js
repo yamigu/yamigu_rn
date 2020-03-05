@@ -145,7 +145,12 @@ const InfoView = ({navigation, userInfo}) => {
                 setHightModalVisible(true);
               }}>
               <CustomTextRegular size={16} color={palette.orange}>
-                미입력
+                {info[11] === null ||
+                info[11] === undefined ||
+                info[11] === '' ||
+                info[11] === 'height'
+                  ? '미입력'
+                  : info[11]}
               </CustomTextRegular>
             </TouchableOpacity>
           </Right>
@@ -165,9 +170,10 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0,
   },
   listItemRight: {
+    width: 100,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-end',
   },
   iconWarning: {
     alignSelf: 'center',

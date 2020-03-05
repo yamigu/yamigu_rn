@@ -37,6 +37,7 @@ let global_storage_data = [];
 
 let lock = false;
 const ChattingScreen = ({navigation}) => {
+  const [hasProfile, setHasProfile] = useState(false);
   const [messageList, setMessageList] = useState([]);
   const [myId, setMyId] = useState('');
   const [approved, setApprovoed] = useState(false);
@@ -55,6 +56,7 @@ const ChattingScreen = ({navigation}) => {
     return new Promise(async (resolve, reject) => {
       const userValue = await AsyncStorage.getItem('userValue');
       const jUserValue = JSON.parse(userValue);
+      // if (userValue[3]=== )
       setUserInfo(jUserValue);
       resolve(jUserValue);
     });
@@ -210,6 +212,7 @@ const ChattingScreen = ({navigation}) => {
               else
                 return (
                   <ReceivedItem
+                    navigation={navigation}
                     key={index}
                     nickname={partnerInfo.nickname}
                     text={item.message}

@@ -7,11 +7,14 @@ import {
   View,
   Modal,
   ScrollView,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import React, {useState} from 'react';
 import {Button} from 'native-base';
 import {CustomTextRegular, CustomTextBold} from '../common/CustomText';
 import palette from '~/lib/styles/palette';
+import Axios from 'axios';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const dh = Dimensions.get('window').height;
 const dw = Dimensions.get('window').width;
@@ -61,7 +64,7 @@ const HeightModal = ({setHightModalVisible}) => {
     '190cm 이상',
   ];
 
-  console.log(HeightList);
+  // console.log(HeightList);
   return (
     <SafeAreaView
       style={{
@@ -69,65 +72,83 @@ const HeightModal = ({setHightModalVisible}) => {
         //   alignItems: 'center',
         justifyContent: 'flex-end',
       }}>
-      <View
-        style={{
-          height: dh,
-          width: dw,
-          backgroundColor: 'rgba(0,0,0,0.7)',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}>
+      <TouchableWithoutFeedback onPress={() => setHightModalVisible(false)}>
         <View
           style={{
-            backgroundColor: 'white',
-            width: 270,
-            height: 300,
+            height: dh,
+            width: dw,
+            backgroundColor: 'rgba(0,0,0,0.7)',
             flexDirection: 'column',
             justifyContent: 'center',
             alignItems: 'center',
           }}>
-          <CustomTextBold size={16} style={{padding: 15}}>
-            키 선택
-          </CustomTextBold>
           <View
             style={{
-              backgroundColor: '#F0F1F1',
-              height: 0.5,
+              backgroundColor: 'white',
               width: 270,
-            }}
-          />
-          <ScrollView
-            contentContainerStyle={{
-              overflow: 'scroll',
-              width: 270,
-              //   backgroundColor: palette.gold,
+              height: 300,
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignItems: 'center',
             }}>
-            {HeightList.map((item, index) => {
-              return (
-                <Button
-                  key={index}
-                  transparent
-                  style={styles.btn}
-                  onPress={() => {
-                    //height patch
-                    setHightModalVisible(false);
-                  }}>
-                  <CustomTextRegular size={14}>{item}</CustomTextRegular>
-                </Button>
-              );
-            })}
-          </ScrollView>
+            <CustomTextBold size={16} style={{padding: 15}}>
+              키 선택
+            </CustomTextBold>
+            <View
+              style={{
+                backgroundColor: '#F0F1F1',
+                height: 0.5,
+                width: 270,
+              }}
+            />
+            <ScrollView
+              contentContainerStyle={{
+                overflow: 'scroll',
+                width: 270,
+                //   backgroundColor: palette.gold,
+              }}>
+              {HeightList.map((item, index) => {
+                return (
+                  <Button
+                    key={index}
+                    transparent
+                    style={styles.btn}
+                    onPress={() => {
+                      Axios.post(
+                        'http://13.124.126.30:8000/authorization/user/info/height/',
+                        {height: item},
+                      )
+                        .then(async result => {
+                          const userValue = await AsyncStorage.getItem(
+                            'userValue',
+                          );
+                          const jUserValue = JSON.parse(userValue);
+                          let newUserInfo = jUserValue.slice();
+                          newUserInfo[11] = item;
+                          console.log(result.data);
+                          AsyncStorage.setItem(
+                            'userValue',
+                            JSON.stringify(newUserInfo),
+                          );
+                          console.log(newUserInfo);
+                        })
+                        .then(() => setHightModalVisible(false));
+                    }}>
+                    <CustomTextRegular size={14}>{item}</CustomTextRegular>
+                  </Button>
+                );
+              })}
+            </ScrollView>
 
-          <View
-            style={{
-              backgroundColor: palette.gray,
-              height: 0.5,
-              width: 270,
-            }}
-          />
+            <View
+              style={{
+                backgroundColor: palette.gray,
+                height: 0.5,
+                width: 270,
+              }}
+            />
 
-          {/* <Button
+            {/* <Button
             style={{padding: 12, backgroundColor: 'white'}}
             onPress={() => setLocationModalVisible(false)}>
             <CustomTextRegular
@@ -136,8 +157,9 @@ const HeightModal = ({setHightModalVisible}) => {
               신고하기
             </CustomTextRegular>
           </Button> */}
+          </View>
         </View>
-      </View>
+      </TouchableWithoutFeedback>
     </SafeAreaView>
   );
 };

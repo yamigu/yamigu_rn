@@ -18,8 +18,10 @@
 
 @implementation AppDelegate
 
+
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url
                                                 options:(NSDictionary<NSString *,id> *)options {
+  
     if ([KOSession isKakaoAccountLoginCallback:url]) {
         return [KOSession handleOpenURL:url];
     }
@@ -41,15 +43,18 @@
                                                    moduleName:@"yamigu"
                                             initialProperties:nil];
 
-  
   rootView.backgroundColor = [[UIColor alloc] initWithRed:1.0f green:1.0f blue:1.0f alpha:1];
 
   self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
   UIViewController *rootViewController = [UIViewController new];
+  if (@available(iOS 13.0, *)) {
+    rootView.overrideUserInterfaceStyle = UIUserInterfaceStyleLight;
+  }
   rootViewController.view = rootView;
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
   [RNSplashScreen show];
+  
 
   return YES;
 }

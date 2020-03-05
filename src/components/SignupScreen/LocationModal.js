@@ -12,6 +12,8 @@ import React, {useState} from 'react';
 import {Button} from 'native-base';
 import {CustomTextRegular, CustomTextBold} from '../common/CustomText';
 import palette from '~/lib/styles/palette';
+import Axios from 'axios';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const dh = Dimensions.get('window').height;
 const dw = Dimensions.get('window').width;
@@ -85,11 +87,28 @@ const LocationModal = ({
                   transparent
                   style={styles.btn}
                   onPress={() => {
-                    setLocationModalVisible(false);
                     if (fromProfile !== true) {
                       setLocationText(item);
                     } else {
-                      //location patch
+                      Axios.post(
+                        'http://13.124.126.30:8000/authorization/user/info/location/',
+                        {location: item},
+                      )
+                        .then(async result => {
+                          const userValue = await AsyncStorage.getItem(
+                            'userValue',
+                          );
+                          const jUserValue = JSON.parse(userValue);
+                          let newUserInfo = jUserValue.slice();
+                          newUserInfo[10] = item;
+                          console.log(result.data);
+                          AsyncStorage.setItem(
+                            'userValue',
+                            JSON.stringify(newUserInfo),
+                          );
+                          console.log(newUserInfo);
+                        })
+                        .then(() => setLocationModalVisible(false));
                     }
                   }}>
                   <CustomTextRegular size={14}>{item}</CustomTextRegular>

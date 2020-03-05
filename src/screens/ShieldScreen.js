@@ -9,6 +9,7 @@ import {
   Dimensions,
   Alert,
   Platform,
+  TextInput,
 } from 'react-native';
 import {HeaderBackButton} from 'react-navigation-stack';
 import {
@@ -203,17 +204,23 @@ const ShieldScreen = ({params}) => {
         </Button>
         {enrolling !== 0 ? (
           <View>
-            <Input
+            <TextInput
               onChangeText={value => {
                 setInputText(value);
               }}
               value={inputText}
               focused={focused}
-              placeholderTextSize={10}
+              placeholderTextColor={palette.gray}
               placeholder={
-                enrolling === 1 ? '번호를 입력하세요' : '소속을 입력하세요'
+                enrolling === 1 ? ' 번호를 입력하세요' : ' 소속을 입력하세요'
               }
-              style={{backgroundColor: 'white', borderRadius: 10}}></Input>
+              style={{
+                height: 50,
+                backgroundColor: 'white',
+                borderRadius: 10,
+                marginBottom: 10,
+              }}
+            />
             <Button
               onPress={() => {
                 const data = new FormData();
@@ -237,6 +244,7 @@ const ShieldScreen = ({params}) => {
                 backgroundColor: palette.orange,
                 flexDirection: 'column',
                 justifyContent: 'center',
+                marginBottom: 20,
               }}>
               <CustomTextMedium size={15} color="white">
                 등록하기
