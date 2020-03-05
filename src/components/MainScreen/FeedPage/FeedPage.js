@@ -24,7 +24,7 @@ const FeedPage = props => {
     // console.log('useEffected');
     let innerHasProfile = false;
     const listener = props.navigation.addListener('didFocus', () => {
-      navigation.setParams({});
+      props.navigation.setParams({});
       axios
         .get('http://13.124.126.30:8000/authorization/user/info/')
         .then(item => {

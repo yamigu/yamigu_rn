@@ -23,9 +23,10 @@ const ChattingIcon = ({navigation}) => {
   };
 
   useEffect(() => {
+    console.log('useEffect of chattingICon');
+    let uid;
     getUserInfo().then(userVal => {
       console.log('ChattingIcon');
-      console.log(userVal);
       if (
         userVal === null ||
         userVal === undefined ||
@@ -47,15 +48,23 @@ const ChattingIcon = ({navigation}) => {
           firebase.auth().signInWithCustomToken(token);
         })
         .then(() => {
-          const uid = userVal[global.config.user_info_const.UID];
+          uid = userVal[global.config.user_info_const.UID];
           axios.get('http://13.124.126.30:8000/core/chat/').then(result => {
             result.data.chat_list.map(item => {
+              console.log('user/' + uid + '/chat/' + item.id);
               firebase
                 .database()
-                .ref('user/' + uid + '/chat/' + item.id)
+                .ref('message/' + item.id)
                 .limitToLast(1)
                 .on('child_added', result => {
-                  if (result.val() === true) setHasNew(true);
+                  firebase
+                    .database()
+                    .ref('user/' + uid + '/chat/' + item.id)
+                    .once('child_added', unread => {
+                      console.log('unread message');
+                      console.log(unread.val());
+                      if (unread.val() === true) setHasNew(true);
+                    });
                 });
               const temp = chatList.slice();
               temp.push(item);
@@ -64,18 +73,19 @@ const ChattingIcon = ({navigation}) => {
           });
         });
     });
-  }, [navigation]);
-  useEffect(() => {}, [hasNew]);
-  useEffect(() => {
     return () => {
+      console.log('chatting icon unmount');
       chatList.map(item => {
         firebase
           .database()
-          .ref('message/' + item)
-          .off('child_added');
+          .ref('message/' + item.id)
+          .off('child_added', () => {
+            'firebase off listener';
+          });
       });
     };
-  }, []);
+  }, [navigation]);
+  useEffect(() => {}, [hasNew]);
   return (
     <View
       style={{

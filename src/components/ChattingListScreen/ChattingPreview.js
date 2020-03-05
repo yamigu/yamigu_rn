@@ -45,7 +45,6 @@ const ChattingPreview = ({
     firebase
       .database()
       .ref('message/' + roomId)
-      .orderByKey()
       .limitToLast(1)
       .on('child_added', result => {
         setLastMessage(result.val());
