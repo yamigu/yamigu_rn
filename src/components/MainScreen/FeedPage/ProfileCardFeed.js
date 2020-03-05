@@ -285,6 +285,7 @@ const ProfileCardFeed = ({
           liked={likedByServer}
           rightComponent={
             <Button
+              transparent
               style={{
                 // backgroundColor: palette.gold,
                 backgroundColor: 'white',

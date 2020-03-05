@@ -21,6 +21,7 @@ const ChattingList = ({style, navigation, chatList, hasVerified, uid}) => (
           hasVerified={hasVerified}
           style={{marginVertical: 9}}
           navigation={navigation}
+          puid={item.uid}
           uid={uid}
           avata={item.avata}
           nickname={item.nickname}

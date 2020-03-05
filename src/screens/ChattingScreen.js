@@ -26,6 +26,8 @@ import AsyncStorage from '@react-native-community/async-storage';
 import ListItem from '~/components/common/ListItem';
 import Moment from 'moment';
 import axios from 'axios';
+import '~/config';
+
 const deviceWidth = Dimensions.get('window').width;
 const buttonWidth = deviceWidth * 0.9;
 const dw = Dimensions.get('window').width;
@@ -33,7 +35,6 @@ const dh = Dimensions.get('window').height;
 
 const pf = Platform.OS;
 let global_messageList = [];
-let global_storage_data = [];
 
 let lock = false;
 const ChattingScreen = ({navigation}) => {
@@ -78,10 +79,15 @@ const ChattingScreen = ({navigation}) => {
       .child(key)
       .update({
         key: key,
-        idSender: myId,
+        idSender: userInfo[global.config.user_info_const.UID],
         message: inputMessage,
         time: Moment.now(),
       });
+    firebase
+      .database()
+      .ref('user/' + partnerInfo.uid + '/chat/' + roomId)
+      .update({is_unread: true});
+
     setInputMessage('');
     gotoBot();
   };
@@ -107,11 +113,14 @@ const ChattingScreen = ({navigation}) => {
       });
   };
   const disconnectFirebase = () => {
-    firebase
-      .database()
-      .ref('message/' + roomId)
-      //.ref('message/474')
-      .off('child_added');
+    console.log(
+      firebase
+        .database()
+        .ref('message/' + roomId)
+        .off('child_added', () => {
+          console.log('what the fuck');
+        }),
+    );
   };
   const getStorage = async room => {
     let storage = await AsyncStorage.getItem('chatStorage');
@@ -139,6 +148,7 @@ const ChattingScreen = ({navigation}) => {
     });
   };
   useEffect(() => {
+    let focus = true;
     const room = navigation.getParam('roomId', -1);
     setRoomId(room);
     navigation.setParams({
@@ -150,43 +160,78 @@ const ChattingScreen = ({navigation}) => {
     setApprovoed(navigation.getParam('approved', false));
     setPartnerInfo(navigation.getParam('partner', ''));
     global_messageList.length = 0; // 배열 초기화
+    let listener;
+    let lastMessage;
+    firebase
+      .database()
+      .ref('message/' + room)
+      .limitToLast(1)
+      .once('child_added', result => {
+        lastMessage = result.val();
+      });
     getUid().then(async result => {
-      const room = navigation.getParam('roomId', -1);
-
-      const storage_result = await getStorage(room);
-      global_storage_data = storage_result;
-      setMyId(result[1]);
-      const listener = firebase
+      const userVal = result;
+      listener = firebase
         .database()
         .ref('message/' + room)
-        //.ref('message/474')
         .on('child_added', result => {
-          let check_new = false;
-          try {
-            check_new =
-              global_messageList.findIndex((item, index) => {
-                return item.key === result.val().key;
-              }) < 0 ||
-              global_messageList.length === 0 ||
-              result.val().time >
-                global_messageList[global_messageList.length - 1].time;
-          } catch {
-            check_new = true;
-          }
-          if (check_new) {
-            console.log('new chat');
-            global_messageList.push(result.val());
-            setMessageList(global_messageList.slice());
-            const temp = {...global_storage_data};
-            temp['room' + room] = global_messageList.slice();
-            global_storage_data = {...temp};
-          }
+          if (!focus) return;
+          global_messageList.push(result.val());
+          if (lastMessage.time > result.val().time) return;
+          const unique = global_messageList.filter((item, i) => {
+            return (
+              global_messageList.findIndex((item2, j) => {
+                return item.key === item2.key;
+              }) === i
+            );
+          });
+
+          setMessageList(unique);
+          firebase
+            .database()
+            .ref(
+              'user/' +
+                userVal[global.config.user_info_const.UID] +
+                '/chat/' +
+                room,
+            )
+            .update({is_unread: false});
         });
+      //   const storage_result = await getStorage(room);
+      //   global_storage_data = storage_result;
+      //   setMyId(result[1]);
+      //   listener = firebase
+      //     .database()
+      //     .ref('message/' + room)
+      //     //.ref('message/474')
+      //     .on('child_added', result => {
+      //       let check_new = false;
+      //       try {
+      //         check_new =
+      //           global_messageList.findIndex((item, index) => {
+      //             return item.key === result.val().key;
+      //           }) < 0 ||
+      //           global_messageList.length === 0 ||
+      //           result.val().time >
+      //             global_messageList[global_messageList.length - 1].time;
+      //       } catch {
+      //         check_new = true;
+      //       }
+      //       if (check_new) {
+      //         console.log('new chat');
+      //         global_messageList.push(result.val());
+      //         setMessageList(global_messageList.slice());
+      //         const temp = {...global_storage_data};
+      //         temp['room' + room] = global_messageList.slice();
+      //         global_storage_data = {...temp};
+      //       }
+      //     });
     });
 
     return () => {
+      focus = false;
+      console.log('disconnect');
       disconnectFirebase();
-      AsyncStorage.setItem('chatStorage', JSON.stringify(global_storage_data));
     };
   }, []);
   //behavior : position ###
@@ -197,28 +242,32 @@ const ChattingScreen = ({navigation}) => {
           bounces="false"
           ref={_scrollToBottomY}
           onContentSizeChange={gotoBot}>
-          <List style={{flex: 1}}>
-            {messageList.map((item, index) => {
-              let fortime =
-                Moment(parseInt(item.time)).diff(Moment.now(), 'day') > 0
-                  ? Moment(parseInt(item.time)).format('M월 DD일 a h:mm')
-                  : Moment(parseInt(item.time)).format('a h:mm');
-              if (item.idSender === myId)
-                return (
-                  <SentItem key={index} text={item.message} time={fortime} />
-                );
-              else
-                return (
-                  <ReceivedItem
-                    key={index}
-                    nickname={partnerInfo.nickname}
-                    text={item.message}
-                    time={fortime}
-                    avata={partnerInfo.avata}
-                  />
-                );
-            })}
-          </List>
+          {userInfo === null ? null : (
+            <List style={{flex: 1}}>
+              {messageList.map((item, index) => {
+                let fortime =
+                  Moment(parseInt(item.time)).diff(Moment.now(), 'day') > 0
+                    ? Moment(parseInt(item.time)).format('M월 DD일 a h:mm')
+                    : Moment(parseInt(item.time)).format('a h:mm');
+                if (
+                  item.idSender === userInfo[global.config.user_info_const.UID]
+                ) {
+                  return (
+                    <SentItem key={index} text={item.message} time={fortime} />
+                  );
+                } else
+                  return (
+                    <ReceivedItem
+                      key={index}
+                      nickname={partnerInfo.nickname}
+                      text={item.message}
+                      time={fortime}
+                      avata={partnerInfo.avata}
+                    />
+                  );
+              })}
+            </List>
+          )}
         </ScrollView>
       </KeyboardAvoidingView>
       <KeyboardAvoidingView
