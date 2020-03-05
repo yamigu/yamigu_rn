@@ -1,12 +1,19 @@
 import React, {useEffect, useState, useRef} from 'react';
-import {Text, View, StyleSheet, Alert, Modal} from 'react-native';
+import {
+  Text,
+  View,
+  StyleSheet,
+  Alert,
+  Modal,
+  RefreshControl,
+} from 'react-native';
+import {Spinner} from 'native-base';
 import palette from '~/lib/styles/palette';
 import ProfileCardList from './ProfileCardList';
 import LikeMatchingList from './LikeMatchingList';
 import MyFeedManage from './MyFeedManage';
 import {Content, Container} from 'native-base';
 import axios from 'axios';
-import Spinner from 'react-native-loading-spinner-overlay';
 
 const FeedPage = props => {
   const [myFeedManageProp, setMyFeedManageProp] = useState([]);
@@ -208,9 +215,17 @@ const FeedPage = props => {
 
   return (
     <View style={styles.root}>
-      <Spinner visible={refreshing} textContent={'refreshing...'} />
+      {/* <Spinner visible={refreshing} textContent={'refreshing...'} /> */}
       <Container style={styles.container}>
         <Content
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={refre}
+              title="Loading..."
+              tintColor={palette.gray}
+            />
+          }
           ref={_scroll}
           onMomentumScrollBegin={() => {
             // console.log(hasProfile);
@@ -239,7 +254,7 @@ const FeedPage = props => {
           onScroll={event => {
             if (event.nativeEvent.contentOffset.y === 0) {
               console.log('now');
-              refre();
+
               // setRefreshing(true);
             }
           }}
@@ -278,6 +293,8 @@ const styles = StyleSheet.create({
     backgroundColor: palette.default_bg,
   },
   innerView: {
+    position: 'absolute',
+    zIndex: 2,
     flexDirection: 'column',
   },
   dividerLine: {
