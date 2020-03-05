@@ -23,86 +23,80 @@ const FeedPage = props => {
 
     // console.log('useEffected');
     let innerHasProfile = false;
-    props.navigation.addListener(
-      'didFocus',
-      () => {
-        navigation.setParams({});
-        axios
-          .get('http://13.124.126.30:8000/authorization/user/info/')
-          .then(item => {
-            setMyFeedManageProp(item.data);
-            if (item.data.avata !== null) {
-              // console.log('avata::::');
-              // console.log(item.data.avata);
-              setHasProfile(true);
-              innerHasProfile = true;
-              console.log('hasprofile::::');
-              console.log(innerHasProfile);
-            }
-            let tmpUrl =
-              'http://13.124.126.30:8000/core/feed/' + item.data.uid + '/';
-            return tmpUrl;
-          })
-          .then(url => {
-            console.log('new feed done');
-            axios.get(url).then(result => {
-              // console.log('myfeedmanage 1st axios done');
-              // console.log(result.data);
-              let tmpFeed = [];
-              let count = 0;
-              result.data.map(item => {
-                tmpFeed[count] = item;
-                count++;
-              });
-              tmpFeed.reverse();
-              setMyFeed(tmpFeed);
-            });
-          })
-          .then(() => {
-            // console.log('myfeedmanage axios done');
-          });
-        if (!innerHasProfile) return;
-
-        //axios for likematchning
-        axios.get('http://13.124.126.30:8000/core/both_like/').then(result => {
-          let tmpBothLike = [];
-          result.data.map((item, index) => {
-            tmpBothLike[index] = item;
-          });
-          setLikeMatchingProp(tmpBothLike);
-        });
-        axios
-          .get('http://13.124.126.30:8000/core/feeds/')
-          .then(result => {
-            let tmp = [];
+    const listener = props.navigation.addListener('didFocus', () => {
+      navigation.setParams({});
+      axios
+        .get('http://13.124.126.30:8000/authorization/user/info/')
+        .then(item => {
+          setMyFeedManageProp(item.data);
+          if (item.data.avata !== null) {
+            // console.log('avata::::');
+            // console.log(item.data.avata);
+            setHasProfile(true);
+            innerHasProfile = true;
+            console.log('hasprofile::::');
+            console.log(innerHasProfile);
+          }
+          let tmpUrl =
+            'http://13.124.126.30:8000/core/feed/' + item.data.uid + '/';
+          return tmpUrl;
+        })
+        .then(url => {
+          console.log('new feed done');
+          axios.get(url).then(result => {
+            // console.log('myfeedmanage 1st axios done');
+            // console.log(result.data);
+            let tmpFeed = [];
             let count = 0;
-
-            result.data.map((item, index) => {
-              if (item.feed_list.length === 0) {
-              } else {
-                tmp[count] = item;
-                count++;
-              }
+            result.data.map(item => {
+              tmpFeed[count] = item;
+              count++;
             });
-            //있는애들은 2개만보여주기
-            // console.log('innerhas ::: ??? ' + innerHasProfile);
-            if (innerHasProfile === false) {
-              // console.log(tmp);
-              // console.log(innerHasProfile);
-              setProfileCardProp(tmp.slice(0, 2));
-            } else {
-              setProfileCardProp(tmp);
-            }
-          })
-          .then(() => {
-            setRefreshing(false);
-            console.log('effect done');
+            tmpFeed.reverse();
+            setMyFeed(tmpFeed);
           });
-        //axios for profilecard
-      },
-      // run function that updates the data on entering the screen
-    );
-    //axios for myfeedmanage
+        })
+        .then(() => {
+          // console.log('myfeedmanage axios done');
+        });
+      if (!innerHasProfile) return;
+
+      //axios for likematchning
+      axios.get('http://13.124.126.30:8000/core/both_like/').then(result => {
+        let tmpBothLike = [];
+        result.data.map((item, index) => {
+          tmpBothLike[index] = item;
+        });
+        setLikeMatchingProp(tmpBothLike);
+      });
+      axios
+        .get('http://13.124.126.30:8000/core/feeds/')
+        .then(result => {
+          let tmp = [];
+          let count = 0;
+
+          result.data.map((item, index) => {
+            if (item.feed_list.length === 0) {
+            } else {
+              tmp[count] = item;
+              count++;
+            }
+          });
+          //있는애들은 2개만보여주기
+          // console.log('innerhas ::: ??? ' + innerHasProfile);
+          if (innerHasProfile === false) {
+            // console.log(tmp);
+            // console.log(innerHasProfile);
+            setProfileCardProp(tmp.slice(0, 2));
+          } else {
+            setProfileCardProp(tmp);
+          }
+        })
+        .then(() => {
+          setRefreshing(false);
+          console.log('effect done');
+        });
+    });
     axios
       .get('http://13.124.126.30:8000/authorization/user/info/')
       .then(item => {
@@ -174,7 +168,8 @@ const FeedPage = props => {
         console.log('effect done');
       });
     //axios for profilecard
-  }, [props.navigation]);
+    return () => listener.remove();
+  }, []);
 
   return (
     <View style={styles.root}>
