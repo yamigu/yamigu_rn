@@ -50,8 +50,33 @@ const ChattingScreen = ({navigation}) => {
   const _scrollToBottomY = useRef();
 
   let keyboardPadding = 0;
-  if (pf === 'ios') keyboardPadding = 100;
-  else keyboardPadding = -400;
+  const isIphoneX = () => {
+    const dim = Dimensions.get('window');
+
+    return (
+      // This has to be iOS
+      Platform.OS === 'ios' &&
+      // Check either, iPhone X or XR
+      (isIPhoneXSize(dim) || isIPhoneXrSize(dim))
+    );
+  };
+
+  const isIPhoneXSize = dim => {
+    return dim.height == 812 || dim.width == 812;
+  };
+
+  const isIPhoneXrSize = dim => {
+    return dim.height == 896 || dim.width == 896;
+  };
+
+  if (pf === 'ios') {
+    keyboardPadding = 50;
+    if (isIphoneX()) {
+      keyboardPadding = 100;
+    } else {
+      keyboardPadding = 50;
+    }
+  } else keyboardPadding = -400;
 
   const getUid = () => {
     return new Promise(async (resolve, reject) => {

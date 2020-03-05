@@ -81,7 +81,14 @@ const SendChatting = ({avata, uid, setModalVisible, navigation}) => {
       .then(() => {
         userInfo[global.config.user_info_const.YAMI] -= 3;
         AsyncStorage.setItem('userValue', JSON.stringify(userInfo));
-        setModalVisible(false);
+      })
+      .then(() => {
+        Alert.alert(
+          '신청이 완료되었습니다!',
+          '',
+          [{text: '확인', onPress: () => setModalVisible(false)}],
+          '',
+        );
       })
       .catch(error => {
         Alert.alert('이미 대화중이에요', '', [
