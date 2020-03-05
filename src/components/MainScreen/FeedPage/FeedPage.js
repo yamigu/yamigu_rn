@@ -37,32 +37,9 @@ const FeedPage = props => {
               innerHasProfile = true;
               console.log('hasprofile::::');
               console.log(hasProfile);
-            }
-            let tmpUrl =
-              'http://13.124.126.30:8000/core/feed/' + item.data.uid + '/';
-            return tmpUrl;
-          })
-          .then(url => {
-            console.log('new feed done');
-            axios.get(url).then(result => {
-              // console.log('myfeedmanage 1st axios done');
-              // console.log(result.data);
-              let tmpFeed = [];
-              let count = 0;
-              result.data.map(item => {
-                tmpFeed[count] = item;
-                count++;
-              });
-              tmpFeed.reverse();
-              setMyFeed(tmpFeed);
-            });
-          })
-          .then(() => {
-            // console.log('myfeedmanage axios done');
           });
-
+        if (!innerHasProfile) return;
         if (!hasProfile) return;
-
         let tmp = [];
         setProfileCardProp(tmp);
         axios
@@ -81,6 +58,15 @@ const FeedPage = props => {
           .then(() => {
             // console.log('axios done');
           });
+
+        //axios for likematchning
+        axios.get('http://13.124.126.30:8000/core/both_like/').then(result => {
+          let tmpBothLike = [];
+          result.data.map((item, index) => {
+            tmpBothLike[index] = item;
+          });
+          setLikeMatchingProp(tmpBothLike);
+        });
       },
       // run function that updates the data on entering the screen
     );

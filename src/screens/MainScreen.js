@@ -112,18 +112,24 @@ MainScreen.navigationOptions = ({navigation}) => {
           width: 40,
           height: 40,
           // backgroundColor: palette.blue,
-          borderRadius: 100,
+          borderRadius: 20,
           overflow: 'hidden',
           justifyContent: 'center',
           alignItems: 'center',
           paddingBottom: 0,
         }}>
         <TouchableByPlatform
+          style={{
+            width: '100%',
+            height: '100%',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
           onPress={() => navigation.dispatch(DrawerActions.openDrawer())}>
           <Icon
             name="menu"
             style={{
-              size: 25,
+              size: 20,
               color: palette.black,
             }}
           />
