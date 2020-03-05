@@ -126,6 +126,9 @@ const ChattingScreen = ({navigation}) => {
       })
       .then(() => {
         setApprovoed(true);
+        navigation.setParams({
+          approved: true,
+        });
       });
   };
   const requestDecline = room => {
@@ -204,7 +207,8 @@ const ChattingScreen = ({navigation}) => {
         .on('child_added', result => {
           if (!focus) return;
           global_messageList.push(result.val());
-          if (lastMessage.time > result.val().time) return;
+          if (lastMessage !== undefined && lastMessage.time > result.val().time)
+            return;
           const unique = global_messageList.filter((item, i) => {
             return (
               global_messageList.findIndex((item2, j) => {
