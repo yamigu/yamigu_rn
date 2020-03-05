@@ -1,4 +1,4 @@
-import React, {useState, createRef, useEffect} from 'react';
+import React, {useState, createRef, useEffect, useRef} from 'react';
 import {
   Text,
   View,
@@ -6,6 +6,7 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   Platform,
+  Dimensions,
 } from 'react-native';
 import {HeaderBackButton} from 'react-navigation-stack';
 import {
@@ -27,8 +28,33 @@ import AsyncStorage from '@react-native-community/async-storage';
 let global_viewPager;
 let keyboardPadding = 0;
 const pf = Platform.OS;
-if (pf === 'ios') keyboardPadding = 100;
-else keyboardPadding = -400;
+
+const isIphoneX = () => {
+  const dim = Dimensions.get('window');
+
+  return (
+    // This has to be iOS
+    Platform.OS === 'ios' &&
+    // Check either, iPhone X or XR
+    (isIPhoneXSize(dim) || isIPhoneXrSize(dim))
+  );
+};
+
+const isIPhoneXSize = dim => {
+  return dim.height == 812 || dim.width == 812;
+};
+
+const isIPhoneXrSize = dim => {
+  return dim.height == 896 || dim.width == 896;
+};
+
+if (pf === 'ios') {
+  if (isIphoneX()) {
+    keyboardPadding = 100;
+  } else {
+    keyboardPadding = 50;
+  }
+} else keyboardPadding = -400;
 
 const SignupScreen = ({navigation}) => {
   const [nickname, setNickname] = useState('');
@@ -38,7 +64,8 @@ const SignupScreen = ({navigation}) => {
   const [locationText, setLocationText] = useState('');
   const [nicknameAvailable, setNicknameAvailable] = useState(false);
   const [page, setPage] = useState(0);
-  const viewPager = createRef();
+  const viewPager = useRef();
+  global_viewPager = viewPager;
 
   const getUserInfo = async () => {
     const userValue = await AsyncStorage.getItem('userValue');
@@ -47,17 +74,14 @@ const SignupScreen = ({navigation}) => {
     axios.defaults.headers.common['Authorization'] = 'Token ' + jUserValue[0];
   };
   useEffect(() => {
-    global_viewPager = viewPager;
     getUserInfo();
   }, []);
   global_viewPager = viewPager;
   const go = next_page => {
     viewPager.current.setPage(next_page);
-    setPage(next_page);
     global_viewPager = viewPager;
     navigation.setParams({
       page: next_page,
-      move: page => setPage(page),
     });
   };
   const move = delta => {
@@ -83,22 +107,30 @@ const SignupScreen = ({navigation}) => {
         <ViewPager
           ref={viewPager}
           style={styles.viewPager}
-          scrollEnabled={false}>
+          scrollEnabled={false}
+          orientation="horizontal"
+          initialPage={0}
+          onPageSelected={e => {
+            setPage(e.nativeEvent.position);
+          }}>
           <NicknamePage
+            key={1}
             setNickname={setNickname}
             nicknameAvailable={nicknameAvailable}
             setNicknameAvailable={setNicknameAvailable}
           />
           <LocationPage
+            key={2}
             setLocationText={setLocationText}
             locationText={locationText}
           />
           <BelongPage
+            key={3}
             setBelong={setBelong}
             setDepartment={setDepartment}
             setIs_student={setIs_student}
           />
-          {/* <IVScreen /> */}
+          <IVScreen key={4} />
         </ViewPager>
       </KeyboardAvoidingView>
 
@@ -120,20 +152,12 @@ const SignupScreen = ({navigation}) => {
           </View>
         </View>
         <Button
-          onPress={async () => {
+          onPress={() => {
             if (!checkActivation()) return;
             console.log(page);
 
             if (page === 2) {
-              //server로 nickname, belong, department, is_student 보내기
-              // console.log(nickname);
-              // console.log(department);
-              // console.log(belong);
-              // console.log(is_student);
-              // console.log(isStudentString);
-              console.log(locationText);
               let isStudentString = is_student.toString();
-
               axios
                 .post('http://13.124.126.30:8000/authorization/user/signup/', {
                   nickname: nickname,
@@ -144,13 +168,22 @@ const SignupScreen = ({navigation}) => {
                 })
                 .then(() => {
                   console.log('done');
-                  // navigation.navigate('IV');
-                });
-            } else {
-              move(1);
-            }
 
-            console.log(axios.defaults.headers.common['Authorization']);
+                  viewPager.current.setPage(3);
+                  navigation.setParams({
+                    page: 3,
+                    move: page => {
+                      go(page);
+                    },
+                  });
+                  return;
+                });
+            } else if (page === 3) {
+              gotoWebView();
+              go(0);
+              setPage(0);
+            }
+            move(1);
           }}
           style={checkActivation() ? styles.buttonActive : styles.button}>
           {page !== 3 ? (
@@ -163,14 +196,6 @@ const SignupScreen = ({navigation}) => {
             </CustomTextMedium>
           )}
         </Button>
-        {page === 3 ? (
-          <CustomTextRegular
-            size={10}
-            color={palette.black}
-            style={{alignSelf: 'center'}}>
-            본인임을 확인하고 정확한 나이와 성별을 알 수 있어요!
-          </CustomTextRegular>
-        ) : null}
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
@@ -184,6 +209,7 @@ SignupScreen.navigationOptions = ({navigation}) => ({
         tintColor={palette.black}
         onPress={() => {
           const page = navigation.getParam('page', 0);
+          console.log(page);
           global_viewPager.current.setPage(page - 1);
           navigation.getParam('move')(page - 1);
           navigation.setParams({
