@@ -30,10 +30,9 @@ import file_upload from '~/lib/utils/file_upload';
 const dw = Dimensions.get('window').width;
 const dh = Dimensions.get('window').height;
 
-const MyFeedView = ({userInfo, scroll, offsetY}) => {
+const MyFeedView = ({userInfo, scroll, offsetY, feed_list, setFeed_list}) => {
   const [imageSource, setImageSource] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
-  const [feed_list, setFeed_list] = useState([]);
   const [btnMeasure, setBtnMeasure] = useState(null);
 
   const _image = useRef();

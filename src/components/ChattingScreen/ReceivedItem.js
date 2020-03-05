@@ -4,22 +4,28 @@ import {Left, Right, Body, ListItem, Thumbnail, Row} from 'native-base';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import palette from '~/lib/styles/palette';
 import {CustomTextMedium, CustomTextRegular} from '../common/CustomText';
+import TouchableByPlatform from '../common/TouchableByPlatform';
 
 const deviceWidth = Dimensions.get('window').width;
-const ReceivedItem = ({manager, nickname, text, time, avata}) => {
+const ReceivedItem = ({navigation, manager, nickname, text, time, avata}) => {
   // uid 로 avata 가져와서 저장해놓기
 
   return (
     <ListItem avatar style={styles.listItem}>
       <Left style={styles.left}>
-        <Thumbnail
-          style={{
-            height: 50,
-            width: 50,
-            borderRadius: 25,
-          }}
-          source={{uri: avata}}
-        />
+        <TouchableByPlatform
+          onPress={() => {
+            // navigation.navigate('Profile', {});
+          }}>
+          <Thumbnail
+            style={{
+              height: 50,
+              width: 50,
+              borderRadius: 25,
+            }}
+            source={{uri: avata}}
+          />
+        </TouchableByPlatform>
       </Left>
       <Body style={styles.bodyReceived}>
         <View>

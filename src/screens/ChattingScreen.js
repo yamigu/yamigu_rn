@@ -38,6 +38,7 @@ let global_messageList = [];
 
 let lock = false;
 const ChattingScreen = ({navigation}) => {
+  const [hasProfile, setHasProfile] = useState(false);
   const [messageList, setMessageList] = useState([]);
   const [myId, setMyId] = useState('');
   const [approved, setApprovoed] = useState(false);
@@ -56,6 +57,7 @@ const ChattingScreen = ({navigation}) => {
     return new Promise(async (resolve, reject) => {
       const userValue = await AsyncStorage.getItem('userValue');
       const jUserValue = JSON.parse(userValue);
+      // if (userValue[3]=== )
       setUserInfo(jUserValue);
       resolve(jUserValue);
     });
@@ -242,6 +244,7 @@ const ChattingScreen = ({navigation}) => {
           bounces="false"
           ref={_scrollToBottomY}
           onContentSizeChange={gotoBot}>
+
           {userInfo === null ? null : (
             <List style={{flex: 1}}>
               {messageList.map((item, index) => {

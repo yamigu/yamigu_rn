@@ -78,8 +78,8 @@ const ChattingPreview = ({
         if (hasVerified === 0) {
           console.log('hasVerified :: ' + hasVerified);
           Alert.alert(
-            '대화를 위해 소속인증이 필요해요!',
-            '사진 한장으로 빠르게 인증하세요!',
+            '소속을 인증해보세요!',
+            '채팅가능 + 보너스 야미 소속이 인증된 친구들을 만나보세요',
             [
               {
                 text: '인증하기',

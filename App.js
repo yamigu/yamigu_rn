@@ -6,6 +6,7 @@ import SplashScreen from 'react-native-splash-screen';
 import {SampleProvider, SampleFunctionProvider} from '~/Context/Sample';
 import {UserContextProvider} from '~/Context/UserContext';
 import firebase from 'react-native-firebase';
+import {StatusBar} from 'react-native';
 
 const notification = new firebase.notifications.Notification()
   .setNotificationId('notificationId')
@@ -32,7 +33,6 @@ const App = () => {
     }
   };
   useEffect(() => {
-
     const removeNotificationDisplayedListener = firebase
       .notifications()
       .onNotificationDisplayed(notification => {

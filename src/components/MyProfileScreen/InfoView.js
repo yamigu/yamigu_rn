@@ -10,7 +10,7 @@ import '~/config';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import LocationModal from '../SignupScreen/LocationModal';
 import HeightModal from '~/components/MyProfileScreen/HeightModal';
-const InfoView = ({navigation, userInfo}) => {
+const InfoView = ({navigation, userInfo, setUserInfo}) => {
   const [info, setInfo] = useState([]);
   const nowYear = 20200000;
 
@@ -28,10 +28,14 @@ const InfoView = ({navigation, userInfo}) => {
         <LocationModal
           setLocationModalVisible={setLocationModalVisible}
           fromProfile={true}
+          setUserInfo={setUserInfo}
         />
       </Modal>
       <Modal visible={heightModalVisible} transparent>
-        <HeightModal setHightModalVisible={setHightModalVisible} />
+        <HeightModal
+          setHightModalVisible={setHightModalVisible}
+          setUserInfo={setUserInfo}
+        />
       </Modal>
       <CustomTextMedium
         size={18}
@@ -145,7 +149,12 @@ const InfoView = ({navigation, userInfo}) => {
                 setHightModalVisible(true);
               }}>
               <CustomTextRegular size={16} color={palette.orange}>
-                미입력
+                {info[11] === null ||
+                info[11] === undefined ||
+                info[11] === '' ||
+                info[11] === 'height'
+                  ? '미입력'
+                  : info[11]}
               </CustomTextRegular>
             </TouchableOpacity>
           </Right>
@@ -165,9 +174,10 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0,
   },
   listItemRight: {
+    width: 100,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-end',
   },
   iconWarning: {
     alignSelf: 'center',

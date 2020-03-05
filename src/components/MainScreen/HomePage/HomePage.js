@@ -15,6 +15,9 @@ import {
   Easing,
   Platform,
   SafeAreaView,
+  Image,
+  StatusBar,
+  ScrollView,
 } from 'react-native';
 import palette from '~/lib/styles/palette';
 import {
@@ -36,7 +39,8 @@ import AsyncStorage from '@react-native-community/async-storage';
 import firebase from 'react-native-firebase';
 import DeviceInfo from 'react-native-device-info';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
-
+import AntIcon from 'react-native-vector-icons/AntDesign';
+import Foundation from 'react-native-vector-icons/Foundation';
 // import CustomLabel from './CustomLabel';
 
 const dw = Dimensions.get('window').width;
@@ -59,14 +63,16 @@ let initUserValue = [
   'verified',
   'yami',
   'location',
+  'height',
 ];
 
 const HomePage = ({navigation}) => {
   const [asyncValue, setAsyncValue] = useState([]);
-  const [tmpSt, setTmpSt] = useState('');
   const [matchRequested, setMatchRequested] = useState(false);
 
   const [freeTicket, setFreeTicket] = useState(0);
+  const [notiState, setNotiState] = useState(0);
+  //0 :소속인증 x, 1: 프로필 x, 2: 친구등록
 
   const _retrieveData = () => {
     console.log('retrieve');
@@ -101,6 +107,7 @@ const HomePage = ({navigation}) => {
                   result.data.nickname;
                 jUserValue[global.config.user_info_const.AVATA] =
                   result.data.avata;
+
                 jUserValue[global.config.user_info_const.BIRTHDATE] =
                   result.data.birthdate;
                 jUserValue[global.config.user_info_const.BELONG] =
@@ -111,7 +118,15 @@ const HomePage = ({navigation}) => {
                   result.data.gender;
                 jUserValue[global.config.user_info_const.VERIFIED] =
                   result.data.verified;
+                if (result.data.verified === 0) {
+                  setNotiState(1);
+                } else {
+                  if (result.data.avata !== 'avata') {
+                    setNotiState(2);
+                  }
+                }
                 jUserValue[10] = result.data.location;
+                jUserValue[11] = result.data.height;
 
                 AsyncStorage.setItem('userValue', JSON.stringify(jUserValue));
                 setAsyncValue(jUserValue);
@@ -430,7 +445,12 @@ const HomePage = ({navigation}) => {
                   .then(() => {
                     setLoginLoading(false);
                   })
-                  .then(() => console.log('cancleed'));
+                  .then(() => {
+                    let tmpTicket = freeTicket;
+                    tmpTicket = tmpTicket - 1;
+                    setFreeTicket(tmpTicket);
+                    console.log('cancleed');
+                  });
               },
             },
             {
@@ -442,78 +462,93 @@ const HomePage = ({navigation}) => {
           {cancelable: false},
         );
       } else {
-        setLoginLoading(true);
-
-        console.log('sending?');
-        //아직 매칭 안한거고, 이제 보내야지
-        //날짜, 멤버, 나이 계산해서 아래 형식에 맞게 넣어주기
-
-        let tmpMemText = '';
-        let memInt = 0;
-        if (memberMainSelected === true) {
-          tmpMemText = '인원 상관 없음  ';
-          memInt = 0;
-        } else {
-          memberSelected.map((item, index) => {
-            if (item === true) {
-              memInt += Math.pow(2, index + 1);
-              tmpMemText = tmpMemText + memberList[index] + ', ';
-            }
-          });
-        }
-        tmpMemText = tmpMemText.substring(0, tmpMemText.length - 2);
-        if (tmpMemText.length > 20) {
-          tmpMemText = tmpMemText.substring(0, 20);
-          tmpMemText = tmpMemText + ' ...';
-        }
-        setOnMemText(tmpMemText);
-
-        let dateInt = 0;
-        let tmpDateText = '';
-        if (dateMainSelected === true) {
-          tmpDateText = '날짜 상관 없음  ';
-          dateInt = 0;
-        } else {
-          dateSelected.map((item, index) => {
-            if (item === true) {
-              dateInt += Math.pow(2, index + 1);
-              tmpDateText = tmpDateText + dateList[index] + ', ';
-            }
-          });
-        }
-        tmpDateText = tmpDateText.substring(0, tmpDateText.length - 2);
-        if (tmpDateText.length > 20) {
-          tmpDateText = tmpDateText.substring(0, 20);
-          tmpDateText = tmpDateText + ' ...';
-        }
-        setOnDateText(tmpDateText);
-
-        let min_age = multiSliderValue[0];
-        let max_age = multiSliderValue[1];
-        // console.log(memInt);
-        axios
-          .post('http://13.124.126.30:8000/core/match_request/', {
-            personnel_selected: memInt,
-            date_selected: dateInt,
-            min_age: min_age,
-            max_age: max_age,
-          })
-          .then(result => {
-            console.log(memInt + ' ' + dateInt);
-            console.log(result.data);
-          })
-          .catch(e => {
-            if (e.response.status === 401) {
-              AsyncStorage.setItem('userValue', JSON.stringify(initUserValue));
-            }
-          })
-          .then(() =>
-            setTimeout(() => {
-              setLoginLoading(false);
-              setMatchRequested(!matchRequested);
-              console.log('here');
-            }, 500),
+        if (freeTicket < 1) {
+          Alert.alert(
+            '야미가 부족합니다!',
+            '스토어에서 야미를 구입하시겠어요?',
+            [
+              {text: '취소'},
+              {text: '스토어가기', onPress: () => navigation.navigate('Store')},
+            ],
+            '',
           );
+        } else {
+          setLoginLoading(true);
+
+          console.log('sending?');
+          //아직 매칭 안한거고, 이제 보내야지
+          //날짜, 멤버, 나이 계산해서 아래 형식에 맞게 넣어주기
+
+          let tmpMemText = '';
+          let memInt = 0;
+          if (memberMainSelected === true) {
+            tmpMemText = '인원 상관 없음  ';
+            memInt = 0;
+          } else {
+            memberSelected.map((item, index) => {
+              if (item === true) {
+                memInt += Math.pow(2, index + 1);
+                tmpMemText = tmpMemText + memberList[index] + ', ';
+              }
+            });
+          }
+          tmpMemText = tmpMemText.substring(0, tmpMemText.length - 2);
+          if (tmpMemText.length > 20) {
+            tmpMemText = tmpMemText.substring(0, 20);
+            tmpMemText = tmpMemText + ' ...';
+          }
+          setOnMemText(tmpMemText);
+
+          let dateInt = 0;
+          let tmpDateText = '';
+          if (dateMainSelected === true) {
+            tmpDateText = '날짜 상관 없음  ';
+            dateInt = 0;
+          } else {
+            dateSelected.map((item, index) => {
+              if (item === true) {
+                dateInt += Math.pow(2, index + 1);
+                tmpDateText = tmpDateText + dateList[index] + ', ';
+              }
+            });
+          }
+          tmpDateText = tmpDateText.substring(0, tmpDateText.length - 2);
+          if (tmpDateText.length > 20) {
+            tmpDateText = tmpDateText.substring(0, 20);
+            tmpDateText = tmpDateText + ' ...';
+          }
+          setOnDateText(tmpDateText);
+
+          let min_age = multiSliderValue[0];
+          let max_age = multiSliderValue[1];
+          // console.log(memInt);
+          axios
+            .post('http://13.124.126.30:8000/core/match_request/', {
+              personnel_selected: memInt,
+              date_selected: dateInt,
+              min_age: min_age,
+              max_age: max_age,
+            })
+            .then(result => {
+              console.log(memInt + ' ' + dateInt);
+              console.log(result.data);
+            })
+            .catch(e => {
+              if (e.response.status === 401) {
+                AsyncStorage.setItem(
+                  'userValue',
+                  JSON.stringify(initUserValue),
+                );
+              }
+            })
+            .then(() =>
+              setTimeout(() => {
+                setLoginLoading(false);
+                setMatchRequested(!matchRequested);
+                console.log('here');
+              }, 500),
+            );
+        }
       }
     }
   };
@@ -598,261 +633,70 @@ const HomePage = ({navigation}) => {
   };
 
   return (
-    <View style={styles.root}>
-      <Spinner
-        visible={loginLoading}
-        textContent={'Loading...'}
-        textStyle={styles.spinnerTextStyle}
-      />
-      <Modal
-        animationType="none"
-        transparent={true}
-        visible={memberModalVisible}
-        onRequestClose={() => {
-          let tmpText = '';
-          memberSelected.map((item, index) => {
-            if (memberSelected[index] === true) {
-              tmpText = tmpText + memberList[index] + ', ';
-            }
-          });
-          tmpText = tmpText.substring(0, tmpText.length - 2);
-          if (tmpText.length > 20) {
-            tmpText = tmpText.substring(0, 20);
-            tmpText = tmpText + ' ...';
-          }
-          setMemberText(tmpText);
-          setMemberModalVisible(false);
-        }}>
-        <SafeAreaProvider>
-          <TouchableWithoutFeedback
-            onPress={() => {
-              setMemberModalVisible(false);
-              let tmpText = '';
-              memberSelected.map((item, index) => {
-                if (memberSelected[index] === true) {
-                  tmpText = tmpText + memberList[index] + ', ';
-                }
-              });
-              tmpText = tmpText.substring(0, tmpText.length - 2);
-              if (tmpText.length > 20) {
-                tmpText = tmpText.substring(0, 20);
-                tmpText = tmpText + ' ...';
+    <ScrollView>
+      <View style={styles.root}>
+        <Spinner
+          visible={loginLoading}
+          textContent={'Loading...'}
+          textStyle={styles.spinnerTextStyle}
+        />
+        <Modal
+          animationType="none"
+          transparent={true}
+          visible={memberModalVisible}
+          onRequestClose={() => {
+            let tmpText = '';
+            memberSelected.map((item, index) => {
+              if (memberSelected[index] === true) {
+                tmpText = tmpText + memberList[index] + ', ';
               }
-              setMemberText(tmpText);
-              console.log('aa');
-            }}>
-            <View
-              style={{
-                height: dh - 220,
-                backgroundColor: 'rgba(0,0,0,0.7)',
-                flexDirection: 'column',
-                justifyContent: 'flex-start',
-              }}
-            />
-          </TouchableWithoutFeedback>
+            });
+            tmpText = tmpText.substring(0, tmpText.length - 2);
+            if (tmpText.length > 20) {
+              tmpText = tmpText.substring(0, 20);
+              tmpText = tmpText + ' ...';
+            }
+            setMemberText(tmpText);
+            setMemberModalVisible(false);
+          }}>
+          <SafeAreaProvider>
+            <TouchableWithoutFeedback
+              onPress={() => {
+                setMemberModalVisible(false);
+                let tmpText = '';
+                memberSelected.map((item, index) => {
+                  if (memberSelected[index] === true) {
+                    tmpText = tmpText + memberList[index] + ', ';
+                  }
+                });
+                tmpText = tmpText.substring(0, tmpText.length - 2);
+                if (tmpText.length > 20) {
+                  tmpText = tmpText.substring(0, 20);
+                  tmpText = tmpText + ' ...';
+                }
+                setMemberText(tmpText);
+                console.log('aa');
+              }}>
+              <View
+                style={{
+                  height: dh - 220,
+                  backgroundColor: 'rgba(0,0,0,0.7)',
+                  flexDirection: 'column',
+                  justifyContent: 'flex-start',
+                }}
+              />
+            </TouchableWithoutFeedback>
 
-          {/* <View
+            {/* <View
           style={{
             height: 200,
             backgroundColor: 'rgba(0,0,0,0.7)',
             flexDirection: 'column',
             justifyContent: 'flex-start',
           }}> */}
-          <View
-            style={{
-              height: 220,
-              width: dw,
-              backgroundColor: 'white',
-              borderTopRightRadius: 10,
-              borderTopLeftRadius: 10,
-              paddingRight: 12,
-              paddingLeft: 12,
-            }}>
-            <View name="팀소개div" style={styles.grayBox}>
-              <View style={{flexDirection: 'row'}}>
-                <CustomTextRegular size={13} color="#505050">
-                  인원 선택
-                </CustomTextRegular>
-                <CustomTextRegular
-                  style={{paddingLeft: 12}}
-                  size={12}
-                  color="#B1B1B1">
-                  (복수 선택 가능)
-                </CustomTextRegular>
-              </View>
-              <Button
-                transparent={true}
-                style={styles.completeBtn}
-                onPress={() => {
-                  console.log('완료눌림');
-                  setMemberModalVisible(false);
-                  let tmpText = '';
-                  memberSelected.map((item, index) => {
-                    if (memberSelected[index] === true) {
-                      tmpText = tmpText + memberList[index] + ', ';
-                    }
-                  });
-                  tmpText = tmpText.substring(0, tmpText.length - 2);
-                  if (tmpText.length > 20) {
-                    tmpText = tmpText.substring(0, 20);
-                    tmpText = tmpText + ' ...';
-                  }
-                  setMemberText(tmpText);
-                }}>
-                <CustomTextMedium
-                  style={{paddingTop: 0, paddingBottom: 0}}
-                  color={palette.orange}
-                  size={13}>
-                  완료
-                </CustomTextMedium>
-              </Button>
-            </View>
-
-            <View name="택list" style={styles.itemList}>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                }}></View>
-              <Button
-                onPress={() => {
-                  {
-                    if (memberMainSelected === false) {
-                      setMemberMainSelected(!memberMainSelected);
-                      setMemberItemNo(0);
-                      setMemberSelected([false, false, false]);
-                    } else {
-                      console.log('인원상관없음 눌림');
-                    }
-                  }
-                }}
-                style={
-                  memberMainSelected === true
-                    ? styles.memberMainBtnSelected
-                    : styles.memberMainBtnUnselected
-                }>
-                <CustomTextRegular
-                  size={12}
-                  color={
-                    memberMainSelected === true ? palette.orange : palette.black
-                  }>
-                  인원 상관 없음
-                </CustomTextRegular>
-              </Button>
-
-              <View
-                style={{
-                  flexDirection: 'row',
-                  flexWrap: 'wrap',
-                }}>
-                {memberList.map((item, index) => {
-                  return (
-                    <Button
-                      onPress={() => {
-                        console.log('pressed');
-                        let tmpNo = memberItemNo;
-                        let tmp;
-                        if (memberSelected[index] === false) {
-                          setMemberItemNo(tmpNo + 1);
-                          if (tmpNo + 1 === 1) {
-                            setMemberMainSelected(false);
-                          }
-                        } else {
-                          setMemberItemNo(tmpNo - 1);
-                          if (tmpNo - 1 === 0) {
-                            setMemberMainSelected(true);
-                          }
-                        }
-                        tmp = memberSelected.slice();
-                        tmp[index] = !memberSelected[index];
-                        setMemberSelected(tmp);
-                      }}
-                      style={
-                        memberSelected[index] === true
-                          ? styles.memeberListBtnSelected
-                          : styles.memeberListBtnUnselected
-                      }>
-                      <CustomTextRegular
-                        size={12}
-                        color={
-                          memberSelected[index] === true
-                            ? palette.orange
-                            : palette.black
-                        }>
-                        {item}
-                      </CustomTextRegular>
-                    </Button>
-                  );
-                })}
-              </View>
-              <CustomTextRegular
-                color="#B9B9B9"
-                size={12}
-                style={{marginLeft: 6, marginTop: 10}}>
-                *함께 미팅할 친구들은 직접 구해야해요!
-              </CustomTextRegular>
-            </View>
-          </View>
-        </SafeAreaProvider>
-      </Modal>
-
-      <Modal
-        animationType="none"
-        transparent={true}
-        visible={dateModalVisible}
-        onRequestClose={() => {
-          let tmpText = '';
-          dateSelected.map((item, index) => {
-            if (memberSelected[index] === true) {
-              tmpText = tmpText + dateList[index] + ', ';
-            }
-          });
-          tmpText = tmpText.substring(0, tmpText.length - 2);
-          if (tmpText.length > 20) {
-            tmpText = tmpText.substring(0, 20);
-            tmpText = tmpText + ' ...';
-          }
-          setDateText(tmpText);
-          setDateModalVisible(false);
-        }}>
-        <SafeAreaProvider>
-          <TouchableWithoutFeedback
-            onPress={() => {
-              setDateModalVisible(false);
-              let tmpText = '';
-              dateSelected.map((item, index) => {
-                if (dateSelected[index] === true) {
-                  tmpText = tmpText + dateList[index] + ', ';
-                }
-              });
-              tmpText = tmpText.substring(0, tmpText.length - 2);
-              if (tmpText.length > 20) {
-                tmpText = tmpText.substring(0, 20);
-                tmpText = tmpText + ' ...';
-              }
-
-              setDateText(tmpText);
-              console.log('aa');
-            }}>
             <View
               style={{
-                height: dh - 330,
-                backgroundColor: 'rgba(0,0,0,0.7)',
-                flexDirection: 'column',
-                justifyContent: 'flex-start',
-              }}
-            />
-          </TouchableWithoutFeedback>
-          <View
-            style={{
-              height: 330,
-              backgroundColor: 'rgba(0,0,0,0.7)',
-              flexDirection: 'column',
-              justifyContent: 'flex-start',
-            }}>
-            <View
-              style={{
-                height: 330,
+                height: 220,
                 width: dw,
                 backgroundColor: 'white',
                 borderTopRightRadius: 10,
@@ -863,7 +707,7 @@ const HomePage = ({navigation}) => {
               <View name="팀소개div" style={styles.grayBox}>
                 <View style={{flexDirection: 'row'}}>
                   <CustomTextRegular size={13} color="#505050">
-                    날짜 선택
+                    인원 선택
                   </CustomTextRegular>
                   <CustomTextRegular
                     style={{paddingLeft: 12}}
@@ -873,13 +717,15 @@ const HomePage = ({navigation}) => {
                   </CustomTextRegular>
                 </View>
                 <Button
+                  transparent={true}
                   style={styles.completeBtn}
                   onPress={() => {
-                    setDateModalVisible(false);
+                    console.log('완료눌림');
+                    setMemberModalVisible(false);
                     let tmpText = '';
-                    dateSelected.map((item, index) => {
-                      if (dateSelected[index] === true) {
-                        tmpText = tmpText + dateList[index] + ', ';
+                    memberSelected.map((item, index) => {
+                      if (memberSelected[index] === true) {
+                        tmpText = tmpText + memberList[index] + ', ';
                       }
                     });
                     tmpText = tmpText.substring(0, tmpText.length - 2);
@@ -887,7 +733,7 @@ const HomePage = ({navigation}) => {
                       tmpText = tmpText.substring(0, 20);
                       tmpText = tmpText + ' ...';
                     }
-                    setDateText(tmpText);
+                    setMemberText(tmpText);
                   }}>
                   <CustomTextMedium
                     style={{paddingTop: 0, paddingBottom: 0}}
@@ -898,86 +744,78 @@ const HomePage = ({navigation}) => {
                 </Button>
               </View>
 
-              <View name="인원선택list" style={styles.itemList}>
+              <View name="택list" style={styles.itemList}>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                  }}></View>
                 <Button
                   onPress={() => {
                     {
-                      if (dateMainSelected === false) {
-                        setDateMainSelected(!dateMainSelected);
-                        setDateItemNo(0);
-                        setDateSelected([
-                          false,
-                          false,
-                          false,
-                          false,
-                          false,
-                          false,
-                          false,
-                          false,
-                        ]);
-                      } else null;
+                      if (memberMainSelected === false) {
+                        setMemberMainSelected(!memberMainSelected);
+                        setMemberItemNo(0);
+                        setMemberSelected([false, false, false]);
+                      } else {
+                        console.log('인원상관없음 눌림');
+                      }
                     }
                   }}
                   style={
-                    dateMainSelected === true
-                      ? styles.dateMainBtnSelected
-                      : styles.dateMainBtnUnselected
+                    memberMainSelected === true
+                      ? styles.memberMainBtnSelected
+                      : styles.memberMainBtnUnselected
                   }>
                   <CustomTextRegular
-                    style={{
-                      paddingTop: 0,
-                      paddingBottom: 0,
-                      backgroundColor: 'white',
-                    }}
                     size={12}
                     color={
-                      dateMainSelected === true ? palette.orange : palette.black
+                      memberMainSelected === true
+                        ? palette.orange
+                        : palette.nonselect
                     }>
-                    날짜 상관 없음
+                    인원 상관 없음
                   </CustomTextRegular>
                 </Button>
 
                 <View
                   style={{
-                    backgroundColor: 'white',
-                    // backgroundColor: palette.gold,
                     flexDirection: 'row',
                     flexWrap: 'wrap',
                   }}>
-                  {dateList.map((item, index) => {
+                  {memberList.map((item, index) => {
                     return (
                       <Button
                         onPress={() => {
-                          let tmpNo = dateItemNo;
+                          console.log('pressed');
+                          let tmpNo = memberItemNo;
                           let tmp;
-                          console.log(dateItemNo);
-                          console.log(tmpNo);
-                          if (dateSelected[index] === false) {
-                            setDateItemNo(tmpNo + 1);
+                          if (memberSelected[index] === false) {
+                            setMemberItemNo(tmpNo + 1);
                             if (tmpNo + 1 === 1) {
-                              setDateMainSelected(false);
+                              setMemberMainSelected(false);
                             }
                           } else {
-                            setDateItemNo(tmpNo - 1);
+                            setMemberItemNo(tmpNo - 1);
                             if (tmpNo - 1 === 0) {
-                              setDateMainSelected(true);
+                              setMemberMainSelected(true);
                             }
                           }
-                          tmp = dateSelected.slice();
-                          tmp[index] = !dateSelected[index];
-                          setDateSelected(tmp);
+                          tmp = memberSelected.slice();
+                          tmp[index] = !memberSelected[index];
+                          setMemberSelected(tmp);
                         }}
                         style={
-                          dateSelected[index] === true
-                            ? styles.dateListBtnSelected
-                            : styles.dateListBtnUnselected
+                          memberSelected[index] === true
+                            ? styles.memeberListBtnSelected
+                            : styles.memeberListBtnUnselected
                         }>
                         <CustomTextRegular
                           size={12}
                           color={
-                            dateSelected[index] === true
+                            memberSelected[index] === true
                               ? palette.orange
-                              : palette.black
+                              : palette.nonselect
                           }>
                           {item}
                         </CustomTextRegular>
@@ -989,318 +827,571 @@ const HomePage = ({navigation}) => {
                   color="#B9B9B9"
                   size={12}
                   style={{marginLeft: 6, marginTop: 10}}>
-                  *같은 날짜를 선택한 이성을 주선해주니 신중하게 선택하세요!
+                  *함께 미팅할 친구들은 직접 구해야해요!
                 </CustomTextRegular>
               </View>
             </View>
-          </View>
-        </SafeAreaProvider>
-      </Modal>
+          </SafeAreaProvider>
+        </Modal>
 
-      <Modal
-        animationType="none"
-        transparent={true}
-        visible={ageModalVisible}
-        onRequestClose={() => {
-          setAgeModalVisible(false);
-        }}>
-        <SafeAreaProvider>
-          <TouchableWithoutFeedback
-            onPress={() => {
-              setAgeModalVisible(false);
-              console.log('aa');
-            }}>
+        <Modal
+          animationType="none"
+          transparent={true}
+          visible={dateModalVisible}
+          onRequestClose={() => {
+            let tmpText = '';
+            dateSelected.map((item, index) => {
+              if (memberSelected[index] === true) {
+                tmpText = tmpText + dateList[index] + ', ';
+              }
+            });
+            tmpText = tmpText.substring(0, tmpText.length - 2);
+            if (tmpText.length > 20) {
+              tmpText = tmpText.substring(0, 20);
+              tmpText = tmpText + ' ...';
+            }
+            setDateText(tmpText);
+            setDateModalVisible(false);
+          }}>
+          <SafeAreaProvider>
+            <TouchableWithoutFeedback
+              onPress={() => {
+                setDateModalVisible(false);
+                let tmpText = '';
+                dateSelected.map((item, index) => {
+                  if (dateSelected[index] === true) {
+                    tmpText = tmpText + dateList[index] + ', ';
+                  }
+                });
+                tmpText = tmpText.substring(0, tmpText.length - 2);
+                if (tmpText.length > 20) {
+                  tmpText = tmpText.substring(0, 20);
+                  tmpText = tmpText + ' ...';
+                }
+
+                setDateText(tmpText);
+                console.log('aa');
+              }}>
+              <View
+                style={{
+                  height: dh - 330,
+                  backgroundColor: 'rgba(0,0,0,0.7)',
+                  flexDirection: 'column',
+                  justifyContent: 'flex-start',
+                }}
+              />
+            </TouchableWithoutFeedback>
             <View
               style={{
-                height: dh - 165,
+                height: 330,
                 backgroundColor: 'rgba(0,0,0,0.7)',
                 flexDirection: 'column',
                 justifyContent: 'flex-start',
-              }}
-            />
-          </TouchableWithoutFeedback>
-          <View
-            style={{
-              height: 165,
-              backgroundColor: 'rgba(0,0,0,0.7)',
-              flexDirection: 'column',
-              justifyContent: 'flex-start',
-            }}>
+              }}>
+              <View
+                style={{
+                  height: 330,
+                  width: dw,
+                  backgroundColor: 'white',
+                  borderTopRightRadius: 10,
+                  borderTopLeftRadius: 10,
+                  paddingRight: 12,
+                  paddingLeft: 12,
+                }}>
+                <View name="팀소개div" style={styles.grayBox}>
+                  <View style={{flexDirection: 'row'}}>
+                    <CustomTextRegular size={13} color="#505050">
+                      날짜 선택
+                    </CustomTextRegular>
+                    <CustomTextRegular
+                      style={{paddingLeft: 12}}
+                      size={12}
+                      color="#B1B1B1">
+                      (복수 선택 가능)
+                    </CustomTextRegular>
+                  </View>
+                  <Button
+                    style={styles.completeBtn}
+                    onPress={() => {
+                      setDateModalVisible(false);
+                      let tmpText = '';
+                      dateSelected.map((item, index) => {
+                        if (dateSelected[index] === true) {
+                          tmpText = tmpText + dateList[index] + ', ';
+                        }
+                      });
+                      tmpText = tmpText.substring(0, tmpText.length - 2);
+                      if (tmpText.length > 20) {
+                        tmpText = tmpText.substring(0, 20);
+                        tmpText = tmpText + ' ...';
+                      }
+                      setDateText(tmpText);
+                    }}>
+                    <CustomTextMedium
+                      style={{paddingTop: 0, paddingBottom: 0}}
+                      color={palette.orange}
+                      size={13}>
+                      완료
+                    </CustomTextMedium>
+                  </Button>
+                </View>
+
+                <View name="인원선택list" style={styles.itemList}>
+                  <Button
+                    onPress={() => {
+                      {
+                        if (dateMainSelected === false) {
+                          setDateMainSelected(!dateMainSelected);
+                          setDateItemNo(0);
+                          setDateSelected([
+                            false,
+                            false,
+                            false,
+                            false,
+                            false,
+                            false,
+                            false,
+                            false,
+                          ]);
+                        } else null;
+                      }
+                    }}
+                    style={
+                      dateMainSelected === true
+                        ? styles.dateMainBtnSelected
+                        : styles.dateMainBtnUnselected
+                    }>
+                    <CustomTextRegular
+                      style={{
+                        paddingTop: 0,
+                        paddingBottom: 0,
+                        backgroundColor: 'white',
+                      }}
+                      size={12}
+                      color={
+                        dateMainSelected === true
+                          ? palette.orange
+                          : palette.nonselect
+                      }>
+                      날짜 상관 없음
+                    </CustomTextRegular>
+                  </Button>
+
+                  <View
+                    style={{
+                      backgroundColor: 'white',
+                      // backgroundColor: palette.gold,
+                      flexDirection: 'row',
+                      flexWrap: 'wrap',
+                    }}>
+                    {dateList.map((item, index) => {
+                      return (
+                        <Button
+                          onPress={() => {
+                            let tmpNo = dateItemNo;
+                            let tmp;
+                            console.log(dateItemNo);
+                            console.log(tmpNo);
+                            if (dateSelected[index] === false) {
+                              setDateItemNo(tmpNo + 1);
+                              if (tmpNo + 1 === 1) {
+                                setDateMainSelected(false);
+                              }
+                            } else {
+                              setDateItemNo(tmpNo - 1);
+                              if (tmpNo - 1 === 0) {
+                                setDateMainSelected(true);
+                              }
+                            }
+                            tmp = dateSelected.slice();
+                            tmp[index] = !dateSelected[index];
+                            setDateSelected(tmp);
+                          }}
+                          style={
+                            dateSelected[index] === true
+                              ? styles.dateListBtnSelected
+                              : styles.dateListBtnUnselected
+                          }>
+                          <CustomTextRegular
+                            size={12}
+                            color={
+                              dateSelected[index] === true
+                                ? palette.orange
+                                : palette.nonselect
+                            }>
+                            {item}
+                          </CustomTextRegular>
+                        </Button>
+                      );
+                    })}
+                  </View>
+                  <CustomTextRegular
+                    color="#B9B9B9"
+                    size={12}
+                    style={{marginLeft: 6, marginTop: 10}}>
+                    *같은 날짜를 선택한 이성을 주선해주니 신중하게 선택하세요!
+                  </CustomTextRegular>
+                </View>
+              </View>
+            </View>
+          </SafeAreaProvider>
+        </Modal>
+
+        <Modal
+          animationType="none"
+          transparent={true}
+          visible={ageModalVisible}
+          onRequestClose={() => {
+            setAgeModalVisible(false);
+          }}>
+          <SafeAreaProvider>
+            <TouchableWithoutFeedback
+              onPress={() => {
+                setAgeModalVisible(false);
+                console.log('aa');
+              }}>
+              <View
+                style={{
+                  height: dh - 165,
+                  backgroundColor: 'rgba(0,0,0,0.7)',
+                  flexDirection: 'column',
+                  justifyContent: 'flex-start',
+                }}
+              />
+            </TouchableWithoutFeedback>
             <View
               style={{
                 height: 165,
-                width: dw,
-                backgroundColor: 'white',
-                borderTopRightRadius: 10,
-                borderTopLeftRadius: 10,
-                paddingRight: 12,
-                paddingLeft: 12,
+                backgroundColor: 'rgba(0,0,0,0.7)',
+                flexDirection: 'column',
+                justifyContent: 'flex-start',
               }}>
-              <View name="나이설정div" style={styles.grayBox}>
-                <View style={{flexDirection: 'row'}}>
-                  <CustomTextRegular size={13} color="#505050">
-                    선호 나이 선택
-                  </CustomTextRegular>
+              <View
+                style={{
+                  height: 165,
+                  width: dw,
+                  backgroundColor: 'white',
+                  borderTopRightRadius: 10,
+                  borderTopLeftRadius: 10,
+                  paddingRight: 12,
+                  paddingLeft: 12,
+                }}>
+                <View name="나이설정div" style={styles.grayBox}>
+                  <View style={{flexDirection: 'row'}}>
+                    <CustomTextRegular size={13} color="#505050">
+                      선호 나이 선택
+                    </CustomTextRegular>
+                  </View>
+                  <Button
+                    style={styles.completeBtn}
+                    onPress={() => {
+                      setAgeModalVisible(false);
+                    }}>
+                    <CustomTextMedium
+                      style={{paddingTop: 0, paddingBottom: 0}}
+                      color={palette.orange}
+                      size={13}>
+                      완료
+                    </CustomTextMedium>
+                  </Button>
                 </View>
-                <Button
-                  style={styles.completeBtn}
-                  onPress={() => {
-                    setAgeModalVisible(false);
-                  }}>
-                  <CustomTextMedium
-                    style={{paddingTop: 0, paddingBottom: 0}}
-                    color={palette.orange}
-                    size={13}>
-                    완료
-                  </CustomTextMedium>
-                </Button>
-              </View>
 
-              <View style={styles.container}>
-                <MultiSlider
-                  selectedStyle={{
-                    backgroundColor: palette.orange,
-                  }}
-                  unselectedStyle={{
-                    backgroundColor: 'silver',
-                  }}
-                  containerStyle={{
-                    height: 40,
-                  }}
-                  trackStyle={{
-                    height: 1,
-                  }}
-                  values={[multiSliderValue[0], multiSliderValue[1]]}
-                  sliderLength={dw * 0.8}
-                  onValuesChange={multiSliderValuesChange}
-                  min={20}
-                  max={30}
-                  step={1}
-                  // allowOverlap
-                  snapped
-                  // customLabel={CustomLabel}
-                  customMarker={CustomMarker}
-                  onValuesChangeStart={sliderOneValuesChangeStart}
-                  onValuesChangeFinish={sliderOneValuesChangeFinish}
-                />
-                <View style={styles.text}>
-                  <CustomTextMedium
-                    size={12}
-                    style={{marginTop: 0, paddingTop: 0}}>
-                    {' ' + multiSliderValue[0]}
-                  </CustomTextMedium>
-                  <CustomTextMedium size={12}>
-                    {multiSliderValue[1] === 30
-                      ? '30+'
-                      : multiSliderValue[1] + ' '}
-                  </CustomTextMedium>
+                <View style={styles.container}>
+                  <MultiSlider
+                    selectedStyle={{
+                      backgroundColor: palette.orange,
+                    }}
+                    unselectedStyle={{
+                      backgroundColor: 'silver',
+                    }}
+                    containerStyle={{
+                      height: 40,
+                    }}
+                    trackStyle={{
+                      height: 1,
+                    }}
+                    values={[multiSliderValue[0], multiSliderValue[1]]}
+                    sliderLength={dw * 0.8}
+                    onValuesChange={multiSliderValuesChange}
+                    min={20}
+                    max={30}
+                    step={1}
+                    // allowOverlap
+                    snapped
+                    // customLabel={CustomLabel}
+                    customMarker={CustomMarker}
+                    onValuesChangeStart={sliderOneValuesChangeStart}
+                    onValuesChangeFinish={sliderOneValuesChangeFinish}
+                  />
+                  <View style={styles.text}>
+                    <CustomTextMedium
+                      size={12}
+                      style={{marginTop: 0, paddingTop: 0}}>
+                      {' ' + multiSliderValue[0]}
+                    </CustomTextMedium>
+                    <CustomTextMedium size={12}>
+                      {multiSliderValue[1] === 30
+                        ? '30+'
+                        : multiSliderValue[1] + ' '}
+                    </CustomTextMedium>
+                  </View>
                 </View>
-              </View>
 
-              {/* end of age module  */}
+                {/* end of age module  */}
+              </View>
             </View>
-          </View>
-        </SafeAreaProvider>
-      </Modal>
-
-      <View style={styles.topLayout}>
-        {/* <CustomTextBold>{asyncValue[1]}</CustomTextBold> */}
-        <CustomTextBold size={24} color={palette.black}>
-          {matchRequested === true ? '미팅 주선 중' : '미팅 주선'}
-        </CustomTextBold>
-
-        {matchRequested === true ? (
-          <Animated.Image
-            style={{
-              transform: [{rotate: spin}],
-              marginTop: 20,
-              width: 24,
-              height: 30,
-            }}
-            source={require('~/images/rotation_icon.png')}
-          />
-        ) : (
-          <CustomTextRegular size={16} color="#646363">
-            미팅하고 싶은 날, 미팅 하면 돼
-          </CustomTextRegular>
-        )}
-      </View>
-
-      <View style={styles.bottomLayout}>
-        <View
-          style={{
-            width: dw * 0.9,
-            alignItems: 'center',
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-          }}>
-          <CustomTextRegular>미팅 설정</CustomTextRegular>
+          </SafeAreaProvider>
+        </Modal>
+        {notiState === 2 ? null : (
           <Button
             onPress={() => {
-              navigation.navigate('HomeGuideScreen');
-              console.log('home guide button pressed');
+              if (notiState === 0) {
+                navigation.navigate('BV');
+              } else {
+                if (notiState === 1) {
+                  navigation.navigate('MyProfile');
+                } else {
+                  navigation.navigate('AddFriends');
+                }
+              }
             }}
             style={{
-              borderRadius: 15,
-              backgroundColor: palette.default_bg,
-              width: 65,
-              elevation: 0,
-              height: 30,
+              backgroundColor: '#FFF6EF',
+              width: dw,
+              height: 50,
               flexDirection: 'row',
-              justifyContent: 'center',
-              alignItems: 'center',
-              borderColor: palette.orange,
-              borderWidth: 1,
-              paddingTop: 0,
-              paddingBottom: 0,
+              justifyContent: 'space-between',
             }}>
-            <CustomTextMedium color={palette.orange} size={12}>
-              이용 안내
-            </CustomTextMedium>
+            <View style={{flexDirection: 'row'}}>
+              <Foundation
+                name="flag"
+                size={20}
+                style={{marginLeft: 10, marginTop: 2}}></Foundation>
+              <CustomTextMedium
+                size={14}
+                color={palette.black}
+                style={{paddingLeft: 10}}>
+                {notiState === 0
+                  ? ' 채팅하려면 소속인증이 필요해요! '
+                  : notiState === 1
+                  ? '프로필 사진을 등록하고 친구를찾아보세요!'
+                  : null}
+              </CustomTextMedium>
+            </View>
+            <AntIcon name="right" style={{paddingRight: 15}} size={24} />
           </Button>
+        )}
+        <View style={styles.topLayout}>
+          {/* <CustomTextBold>{asyncValue[1]}</CustomTextBold> */}
+          <CustomTextBold size={24} color={palette.black}>
+            {matchRequested === true ? '미팅 주선 중' : '미팅 주선'}
+          </CustomTextBold>
+
+          {matchRequested === true ? (
+            <Animated.Image
+              style={{
+                transform: [{rotate: spin}],
+                marginTop: 20,
+                width: 24,
+                height: 30,
+              }}
+              source={require('~/images/rotation_icon.png')}
+            />
+          ) : (
+            <CustomTextRegular size={16} color="#646363">
+              미팅하고 싶은 날, 미팅 하면 돼
+            </CustomTextRegular>
+          )}
         </View>
 
-        <View style={styles.mainCondition}>
-          <CustomTextBold
-            size={14}
-            color={palette.gray}
+        <View style={styles.bottomLayout}>
+          <View
             style={{
-              paddingLeft: 6,
-              paddingTop: 0.5,
+              width: dw * 0.9,
+              alignItems: 'center',
+              flexDirection: 'row',
+              justifyContent: 'space-between',
             }}>
-            인원
-          </CustomTextBold>
-          <TouchableByPlatform
-            style={styles.touch}
-            onPress={() => {
-              {
-                if (matchRequested === true) {
-                  Alert.alert(
-                    '이미 주선이 진행중입니다! 변경을 원하시면 현재 조건의 주선을 취소해주세요!',
-                  );
-                } else {
-                  setMemberModalVisible(true);
-                  setMemberText('선택중 ...');
-                  console.log('onpress');
-                }
-              }
-            }}>
-            <CustomTextMedium
+            <CustomTextRegular>미팅 설정</CustomTextRegular>
+            <Button
+              onPress={() => {
+                navigation.navigate('HomeGuideScreen');
+                console.log('home guide button pressed');
+              }}
+              style={{
+                borderRadius: 15,
+                backgroundColor: palette.default_bg,
+                width: 65,
+                elevation: 0,
+                height: 30,
+                flexDirection: 'row',
+                justifyContent: 'center',
+                alignItems: 'center',
+                borderColor: palette.orange,
+                borderWidth: 1,
+                paddingTop: 0,
+                paddingBottom: 0,
+              }}>
+              <CustomTextMedium color={palette.orange} size={12}>
+                이용 안내
+              </CustomTextMedium>
+            </Button>
+          </View>
+
+          <View style={styles.mainCondition}>
+            <CustomTextBold
               size={14}
-              color={palette.black}
-              style={{paddingtop: 0}}>
-              {matchRequested === true
-                ? onMemText
-                : memberMainSelected === true
-                ? '인원 상관 없음'
-                : memberText}
-            </CustomTextMedium>
-
-            <AntDesignIcon name="caretdown" size={12} color={palette.black} />
-          </TouchableByPlatform>
-        </View>
-
-        <View style={styles.mainCondition}>
-          <CustomTextBold
-            size={14}
-            color={palette.gray}
-            style={{paddingLeft: 6, paddingTop: 0.5}}>
-            날짜
-          </CustomTextBold>
-          <TouchableByPlatform
-            style={styles.touch}
-            onPress={() => {
-              {
-                if (matchRequested === true) {
-                  Alert.alert(
-                    '이미 주선이 진행중입니다! 변경을 원하시면 현재 조건의 주선을 취소해주세요!',
-                  );
-                } else {
-                  setDateModalVisible(true);
-                  setDateText('선택중 ...');
-                  console.log('onpress');
+              color={palette.gray}
+              style={{
+                paddingLeft: 6,
+                paddingTop: 0.5,
+              }}>
+              인원
+            </CustomTextBold>
+            <TouchableByPlatform
+              style={styles.touch}
+              onPress={() => {
+                {
+                  if (matchRequested === true) {
+                    Alert.alert(
+                      '이미 주선이 진행중입니다! 변경을 원하시면 현재 조건의 주선을 취소해주세요!',
+                    );
+                  } else {
+                    setMemberModalVisible(true);
+                    setMemberText('선택중 ...');
+                    console.log('onpress');
+                  }
                 }
-              }
-            }}>
-            <CustomTextMedium size={14} color={palette.black}>
-              {matchRequested === true
-                ? onDateText
-                : dateMainSelected === true
-                ? '날짜 상관 없음'
-                : dateText}
-            </CustomTextMedium>
+              }}>
+              <CustomTextMedium
+                size={14}
+                color={palette.black}
+                style={{paddingtop: 0}}>
+                {matchRequested === true
+                  ? onMemText
+                  : memberMainSelected === true
+                  ? '인원 상관 없음'
+                  : memberText}
+              </CustomTextMedium>
 
-            <AntDesignIcon name="caretdown" size={12} color={palette.black} />
-          </TouchableByPlatform>
-        </View>
+              <AntDesignIcon name="caretdown" size={12} color={palette.black} />
+            </TouchableByPlatform>
+          </View>
 
-        <View style={styles.mainCondition}>
-          <CustomTextBold
-            size={14}
-            color={palette.gray}
-            style={{paddingLeft: 6, paddingTop: 0.5}}>
-            선호 나이
-          </CustomTextBold>
-          <TouchableByPlatform
-            style={styles.touch}
-            onPress={() => {
-              {
-                if (matchRequested === true) {
-                  Alert.alert(
-                    '이미 주선이 진행중입니다! 변경을 원하시면 현재 조건의 주선을 취소해주세요!',
-                  );
-                } else {
-                  setAgeModalVisible(true);
-                  console.log('onpress');
+          <View style={styles.mainCondition}>
+            <CustomTextBold
+              size={14}
+              color={palette.gray}
+              style={{paddingLeft: 6, paddingTop: 0.5}}>
+              날짜
+            </CustomTextBold>
+            <TouchableByPlatform
+              style={styles.touch}
+              onPress={() => {
+                {
+                  if (matchRequested === true) {
+                    Alert.alert(
+                      '이미 주선이 진행중입니다! 변경을 원하시면 현재 조건의 주선을 취소해주세요!',
+                    );
+                  } else {
+                    setDateModalVisible(true);
+                    setDateText('선택중 ...');
+                    console.log('onpress');
+                  }
                 }
-              }
-            }}>
-            <CustomTextMedium size={14} color={palette.black}>
-              {multiSliderValue[0] + ' ~ '}
-              {multiSliderValue[1] === 30 ? '30+' : multiSliderValue[1]}
-            </CustomTextMedium>
-            <AntDesignIcon name="caretdown" size={12} color={palette.black} />
-          </TouchableByPlatform>
+              }}>
+              <CustomTextMedium size={14} color={palette.black}>
+                {matchRequested === true
+                  ? onDateText
+                  : dateMainSelected === true
+                  ? '날짜 상관 없음'
+                  : dateText}
+              </CustomTextMedium>
+
+              <AntDesignIcon name="caretdown" size={12} color={palette.black} />
+            </TouchableByPlatform>
+          </View>
+
+          <View style={styles.mainCondition}>
+            <CustomTextBold
+              size={14}
+              color={palette.gray}
+              style={{paddingLeft: 6, paddingTop: 0.5}}>
+              선호 나이
+            </CustomTextBold>
+            <TouchableByPlatform
+              style={styles.touch}
+              onPress={() => {
+                {
+                  if (matchRequested === true) {
+                    Alert.alert(
+                      '이미 주선이 진행중입니다! 변경을 원하시면 현재 조건의 주선을 취소해주세요!',
+                    );
+                  } else {
+                    setAgeModalVisible(true);
+                    console.log('onpress');
+                  }
+                }
+              }}>
+              <CustomTextMedium size={14} color={palette.black}>
+                {multiSliderValue[0] + ' ~ '}
+                {multiSliderValue[1] === 30 ? '30+' : multiSliderValue[1]}
+              </CustomTextMedium>
+              <AntDesignIcon name="caretdown" size={12} color={palette.black} />
+            </TouchableByPlatform>
+          </View>
+          <View style={styles.gradientLayoutWrapper}>
+            <LinearGradient
+              colors={['#FFA022', '#FF6C2B']}
+              style={styles.gradientLayout}>
+              {matchRequested === false ? (
+                <TouchableByPlatform
+                  style={styles.mainBtn}
+                  onPress={() => requestMatching()}>
+                  <CustomTextMedium size={16} color="white">
+                    미팅 주선 신청하기
+                  </CustomTextMedium>
+
+                  {freeTicket > 0 ? (
+                    <CustomTextMedium size={16} color="white">
+                      무료
+                    </CustomTextMedium>
+                  ) : (
+                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                      <Image
+                        source={require('~/images/yami_icon_white.png')}
+                        style={{width: 20, height: 24}}
+                      />
+                      <CustomTextMedium color="white" size={16}>
+                        {'   '}2
+                      </CustomTextMedium>
+                    </View>
+                  )}
+                </TouchableByPlatform>
+              ) : (
+                <TouchableByPlatform
+                  style={styles.mainBtnCancel}
+                  onPress={() => requestMatching()}>
+                  <CustomTextMedium size={16} color="white">
+                    미팅 주선 취소 하기
+                  </CustomTextMedium>
+                </TouchableByPlatform>
+              )}
+            </LinearGradient>
+          </View>
+          <CustomTextRegular size={12} color="#646363" style={{marginTop: 5}}>
+            {freeTicket > 0
+              ? '무료 미팅 횟수: ' + freeTicket + '회'
+              : '무료 미팅 주선은 매주 월요일에 리셋됩니다.'}
+          </CustomTextRegular>
         </View>
-        <View style={styles.gradientLayoutWrapper}>
-          <LinearGradient
-            colors={['#FFA022', '#FF6C2B']}
-            style={styles.gradientLayout}>
-            {matchRequested === false ? (
-              <TouchableByPlatform
-                style={styles.mainBtn}
-                onPress={() => requestMatching()}>
-                {/* onPress={() => gotoChat()}> */}
-                <CustomTextMedium size={16} color="white">
-                  미팅 주선 신청하기
-                </CustomTextMedium>
-                <CustomTextMedium size={16} color="white">
-                  무료
-                </CustomTextMedium>
-              </TouchableByPlatform>
-            ) : (
-              <TouchableByPlatform
-                style={styles.mainBtnCancel}
-                onPress={() => requestMatching()}>
-                <CustomTextMedium size={16} color="white">
-                  미팅 주선 취소 하기
-                </CustomTextMedium>
-              </TouchableByPlatform>
-            )}
-          </LinearGradient>
-        </View>
-        <CustomTextRegular size={12} color="#646363" style={{marginTop: 5}}>
-          {freeTicket === 0
-            ? '무료 미팅 횟수: 3회'
-            : '무료 미팅 주선은 매주 월요일에 리셋됩니다.'}
-        </CustomTextRegular>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 const styles = StyleSheet.create({
   root: {
-    flex: 1,
+    // flex: 1,
     width: dw,
     // backgroundColor: palette.default_bg,
     // backgroundColor: palette.gold,
@@ -1408,7 +1499,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     height: 35,
     borderWidth: 1,
-    borderColor: palette.gray,
+    borderColor: palette.nonselect,
     borderRadius: 20,
     backgroundColor: 'white',
     flexDirection: 'column',
@@ -1440,7 +1531,7 @@ const styles = StyleSheet.create({
     paddingVertical: 0,
     borderWidth: 1,
     height: 35,
-    borderColor: palette.gray,
+    borderColor: palette.nonselect,
     borderRadius: 20,
     backgroundColor: 'white',
     flexDirection: 'column',
@@ -1466,7 +1557,7 @@ const styles = StyleSheet.create({
     marginRight: 12,
     marginTop: 12,
     borderWidth: 1,
-    borderColor: palette.gray,
+    borderColor: palette.nonselect,
     borderRadius: 20,
     backgroundColor: 'white',
     height: 35,
@@ -1493,7 +1584,7 @@ const styles = StyleSheet.create({
     marginTop: 12,
     borderWidth: 1,
     paddingHorizontal: 14,
-    borderColor: palette.gray,
+    borderColor: palette.nonselect,
     borderRadius: 20,
     backgroundColor: 'white',
     height: 35,

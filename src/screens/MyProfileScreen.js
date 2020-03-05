@@ -28,16 +28,16 @@ import {ScrollView} from 'react-native-gesture-handler';
 const MyProfileScreen = ({navigation}) => {
   const [userInfo, setUserInfo] = useState([]);
   const [offsetY, setOffsetY] = useState(0);
+
+  const [feed_list, setFeed_list] = useState([]);
+
   const _scroll = createRef();
   const _retrieveData = async () => {
     try {
       const userValue = await AsyncStorage.getItem('userValue');
       const jUserValue = JSON.parse(userValue);
       if (userValue !== null) {
-        // console.log('qweqwe');
-        // console.log(jUserValue);
         setUserInfo(jUserValue);
-        // console.log(jUserValue[3]);
       } else {
         console.log('asdasd');
       }
@@ -55,12 +55,27 @@ const MyProfileScreen = ({navigation}) => {
       onScroll={e => {
         setOffsetY(e.nativeEvent.contentOffset.y);
       }}>
-      <ImageView scroll={_scroll} offsetY={offsetY} />
+      <ImageView
+        scroll={_scroll}
+        offsetY={offsetY}
+        feed_list={feed_list}
+        setFeed_list={setFeed_list}
+      />
       <View style={styles.divider} />
-      <MyFeedView scroll={_scroll} offsetY={offsetY} userInfo={userInfo} />
+      <MyFeedView
+        scroll={_scroll}
+        offsetY={offsetY}
+        userInfo={userInfo}
+        feed_list={feed_list}
+        setFeed_list={setFeed_list}
+      />
       <FriendsView navigation={navigation} />
       <View style={styles.divider} />
-      <InfoView navigation={navigation} userInfo={userInfo} />
+      <InfoView
+        navigation={navigation}
+        userInfo={userInfo}
+        setUserInfo={setUserInfo}
+      />
       <View style={{width: 30, height: 30}} />
     </ScrollView>
   );
