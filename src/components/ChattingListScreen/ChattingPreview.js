@@ -23,6 +23,7 @@ const ChattingPreview = ({
   hasVerified,
   uid,
   avata,
+  puid,
   nickname,
   created_at,
   approved,
@@ -33,44 +34,43 @@ const ChattingPreview = ({
     time: 123123123123,
   });
   const [isNew, setIsNew] = useState(false);
-  const getStorage = () => {
-    return new Promise(async (resolve, reject) => {
-      let storage = await AsyncStorage.getItem('chatStorage');
-      storage = JSON.parse(storage);
-      resolve(storage);
-    });
-  };
   useEffect(() => {
-    getStorage().then(storage => {
-      firebase
-        .database()
-        .ref('message/' + roomId)
-        .orderByKey()
-        .limitToLast(1)
-        .on('child_added', result => {
-          console.log(result.val());
-          setLastMessage(result.val());
-          if (
-            storage === null ||
-            storage === undefined ||
-            storage['room' + roomId] === undefined ||
-            (result.val().idSender !== uid &&
-              result.val().time >
-                storage['room' + roomId][storage['room' + roomId].length - 1]
-                  .time)
-          ) {
-            setIsNew(true);
-          }
-        });
+    let focused = true;
+    const focusListener = navigation.addListener('didFocus', () => {
+      focused = true;
     });
+    const blurListener = navigation.addListener('willBlur', () => {
+      focused = false;
+    });
+    firebase
+      .database()
+      .ref('message/' + roomId)
+      .orderByKey()
+      .limitToLast(1)
+      .on('child_added', result => {
+        setLastMessage(result.val());
+        if (focused) {
+          console.log('newMessage!!');
+          firebase
+            .database()
+            .ref('user/' + uid + '/chat/' + roomId)
+            .once('child_added', unread => {
+              console.log('unread message?');
+              console.log(unread.val());
+              if (unread.val() === true) setIsNew(true);
+            });
+        }
+      });
     return () => {
+      focusListener.remove();
+      blurListener.remove();
       firebase
         .database()
         .ref('message/' + roomId)
         .off('child_added');
     };
   }, []);
-  return (
+  return roomId > 0 ? (
     <ListItem
       avatar
       style={[styles.chatPreview, style]}
@@ -94,6 +94,7 @@ const ChattingPreview = ({
           setIsNew(false);
           navigation.navigate('Chatting', {
             partner: {
+              uid: puid,
               nickname: nickname,
               avata: avata,
             },
@@ -133,14 +134,14 @@ const ChattingPreview = ({
               : iso_to_string(created_at)}
           </CustomTextRegular>
           {/* <Badge style={styles.badgeUnread}>
-          <CustomTextMedium size={10} color="white">
-            1
-          </CustomTextMedium>
-        </Badge> */}
+            <CustomTextMedium size={10} color="white">
+              1
+            </CustomTextMedium>
+          </Badge> */}
         </View>
       </Right>
     </ListItem>
-  );
+  ) : null;
 };
 
 const styles = StyleSheet.create({

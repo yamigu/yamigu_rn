@@ -21,13 +21,6 @@ const ChattingIcon = ({navigation}) => {
       resolve(info);
     });
   };
-  const getStorage = () => {
-    return new Promise(async (resolve, reject) => {
-      let storage = await AsyncStorage.getItem('chatStorage');
-      storage = JSON.parse(storage);
-      resolve(storage);
-    });
-  };
 
   useEffect(() => {
     getUserInfo().then(userVal => {
@@ -42,52 +35,34 @@ const ChattingIcon = ({navigation}) => {
         return;
       axios.defaults.headers.common['Authorization'] =
         'Token ' + userVal[global.config.user_info_const.TOKEN];
-      let storageData;
-      getStorage().then(storage => {
-        if (storage === null || storage === undefined) {
-          console.log(storage);
-          return;
-        }
-        storageData = storage;
 
-        axios
-          .get('http://13.124.126.30:8000/authorization/firebase/token/')
-          .then(result => {
-            return result.data;
-          })
-          .catch(error => console.log(error))
-          .then(token => {
-            console.log('signin');
-            firebase.auth().signInWithCustomToken(token);
-          })
-          .then(() => {
-            axios.get('http://13.124.126.30:8000/core/chat/').then(result => {
-              result.data.chat_list.map(item => {
-                firebase
-                  .database()
-                  .ref('message/' + item.id)
-                  .limitToLast(1)
-                  .on('child_added', result => {
-                    try {
-                      if (
-                        result.val().time >
-                        storageData['room' + item.id][
-                          storageData['room' + item.id].length - 1
-                        ].time
-                      ) {
-                        setHasNew(true);
-                      }
-                    } catch (error) {
-                      console.log(error);
-                    }
-                  });
-                const temp = chatList.slice();
-                temp.push(item);
-                setChatList(temp);
-              });
+      axios
+        .get('http://13.124.126.30:8000/authorization/firebase/token/')
+        .then(result => {
+          return result.data;
+        })
+        .catch(error => console.log(error))
+        .then(token => {
+          console.log('signin');
+          firebase.auth().signInWithCustomToken(token);
+        })
+        .then(() => {
+          const uid = userVal[global.config.user_info_const.UID];
+          axios.get('http://13.124.126.30:8000/core/chat/').then(result => {
+            result.data.chat_list.map(item => {
+              firebase
+                .database()
+                .ref('user/' + uid + '/chat/' + item.id)
+                .limitToLast(1)
+                .on('child_added', result => {
+                  if (result.val() === true) setHasNew(true);
+                });
+              const temp = chatList.slice();
+              temp.push(item);
+              setChatList(temp);
             });
           });
-      });
+        });
     });
   }, [navigation]);
   useEffect(() => {}, [hasNew]);

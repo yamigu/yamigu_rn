@@ -82,9 +82,9 @@ const ChattingListScreen = ({navigation}) => {
           } else {
             partner = item.sender;
           }
-          console.log(partner);
           item.nickname = partner.nickname;
           item.avata = partner.avata;
+          item.uid = partner.uid;
           item.chat_type === 0
             ? chatlist_data.push(item)
             : recvlist_data.push(item);

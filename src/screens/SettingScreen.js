@@ -30,47 +30,77 @@ const initUserValue = [
   'yami',
   'location',
 ];
-
+const notiListData = [
+  {
+    name: 'like',
+    display: '좋아요',
+    value: true,
+  },
+  {
+    name: 'like_match',
+    display: '좋아요 매칭',
+    value: true,
+  },
+  {
+    name: 'request',
+    display: '대화 신청',
+    value: true,
+  },
+  {
+    name: 'match',
+    display: '매칭 성공',
+    value: true,
+  },
+  {
+    name: 'chat',
+    display: '채팅',
+    value: true,
+  },
+];
 const SettingScreen = ({navigation}) => {
-  const [notiBoolList, setNotiBoolList] = useState([
-    true,
-    true,
-    true,
-    true,
-    true,
-  ]);
-  const notiTypeList = [
-    '좋아요',
-    '좋아요 매칭',
-    '대화 신청',
-    '매칭 성공',
-    '채팅',
-  ];
+  const [notiList, setNotiList] = useState(notiListData);
 
   const logout = () => {
     return new Promise((resolve, reject) => {
       axios.defaults.headers.common['Authorization'] = '';
       AsyncStorage.setItem('userValue', JSON.stringify(initUserValue));
       resolve(true);
-      //   KakaoLogins.logout()
-      //     .then(result => {
-      //       console.log('logout successfully');
-      //       resolve(true);
-      //     })
-      //     .catch(error => {
-      //       resolve(false);
-      //     });
+      KakaoLogins.logout()
+        .then(result => {
+          console.log('logout successfully');
+          resolve(true);
+        })
+        .catch(error => {
+          resolve(false);
+        });
     });
   };
 
   useEffect(() => {
-    //axios.get(auth/user/noti).then(()=>setNotiBoolList)
+    axios
+      .get('http://13.124.126.30:8000/core/toggle_notification/')
+      .then(result => {
+        const newData = [...notiListData];
+        newData.map(item => {
+          item.value = result.data[item.name];
+        });
+        setNotiList(newData);
+      });
   }, []);
 
   const notiStatusChanged = index => {
-    let tmpList = [...notiBoolList];
-    tmpList[index] = !tmpList[index];
-    setNotiBoolList(tmpList);
+    let tmpList = [...notiList];
+    axios
+      .post('http://13.124.126.30:8000/core/toggle_notification/', {
+        what: notiList[index].name,
+      })
+      .then(result => {
+        tmpList[index].value = result.data;
+        setNotiList(tmpList);
+      })
+      .catch(error => {
+        console.log(error);
+      });
     //axios.patch(auth/user/noti, {code===index})
   };
 
@@ -83,7 +113,7 @@ const SettingScreen = ({navigation}) => {
           </CustomTextMedium>
         </ListItem>
 
-        {notiTypeList.map((item, index) => {
+        {notiList.map((item, index) => {
           return (
             <ListItem
               noIndent
@@ -94,12 +124,12 @@ const SettingScreen = ({navigation}) => {
               }}>
               <Body style={styles.listItemBody}>
                 <CustomTextRegular size={14} color={palette.black}>
-                  {item}
+                  {item.display}
                 </CustomTextRegular>
               </Body>
               <Right style={styles.listItemRight}>
                 <Switch
-                  value={notiBoolList[index]}
+                  value={item.value}
                   onValueChange={() => {
                     notiStatusChanged(index);
                   }}
