@@ -9,6 +9,8 @@ const dw = Dimensions.get('window').width;
 
 const ImageView = ({scroll, offsetY, feed_list, setFeed_list}) => {
   const [hasProfile, setHasProfile] = useState(false);
+  const [imageNo, setImageNo] = useState(0);
+
   const getStorage = () => {
     return new Promise(async (resolve, reject) => {
       let storage = await AsyncStorage.getItem('userValue');
@@ -21,12 +23,14 @@ const ImageView = ({scroll, offsetY, feed_list, setFeed_list}) => {
     getStorage().then(result => {
       if (result[3] === 'avata' || result[3] === null) {
         setHasProfile(false);
+        console.log(hasProfile);
       } else {
         setHasProfile(true);
-        // console.log(hasProfile);
+        console.log(result[3]);
+        console.log(hasProfile);
       }
     });
-  }, []);
+  }, [imageNo]);
   return (
     <View style={styles.container}>
       <View style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -43,6 +47,8 @@ const ImageView = ({scroll, offsetY, feed_list, setFeed_list}) => {
         )}
       </View>
       <ProfileImageAddView
+        imageNo={imageNo}
+        setImageNo={setImageNo}
         scroll={scroll}
         offsetY={offsetY}
         feed_list={feed_list}
