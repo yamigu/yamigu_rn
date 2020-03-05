@@ -49,6 +49,7 @@ const isIPhoneXrSize = dim => {
 };
 
 if (pf === 'ios') {
+  keyboardPadding = 50;
   if (isIphoneX()) {
     keyboardPadding = 100;
   }
