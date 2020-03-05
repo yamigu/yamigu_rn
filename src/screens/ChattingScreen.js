@@ -184,9 +184,12 @@ const ChattingScreen = ({navigation}) => {
         });
     });
 
-    return () => {
+    return async () => {
+      await AsyncStorage.setItem(
+        'chatStorage',
+        JSON.stringify(global_storage_data),
+      );
       disconnectFirebase();
-      AsyncStorage.setItem('chatStorage', JSON.stringify(global_storage_data));
     };
   }, []);
   //behavior : position ###
@@ -289,7 +292,11 @@ ChattingScreen.navigationOptions = ({navigation}) => {
       <HeaderBackButton
         label=" "
         tintColor={palette.black}
-        onPress={() => {
+        onPress={async () => {
+          await AsyncStorage.setItem(
+            'chatStorage',
+            JSON.stringify(global_storage_data),
+          );
           if (approved) navigation.goBack();
           else {
             Alert.alert(

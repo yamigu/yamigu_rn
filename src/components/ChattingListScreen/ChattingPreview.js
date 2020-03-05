@@ -47,7 +47,7 @@ const ChattingPreview = ({
         .ref('message/' + roomId)
         .orderByKey()
         .limitToLast(1)
-        .on('child_added', result => {
+        .once('child_added', result => {
           console.log(result.val());
           setLastMessage(result.val());
           if (
@@ -63,11 +63,42 @@ const ChattingPreview = ({
           }
         });
     });
-    return () => {
+
+    const focusListener = navigation.addListener('didFocus', () => {
+      getStorage().then(storage => {
+        firebase
+          .database()
+          .ref('message/' + roomId)
+          .orderByKey()
+          .limitToLast(1)
+          .on('child_added', result => {
+            console.log(result.val());
+            setLastMessage(result.val());
+            if (
+              storage === null ||
+              storage === undefined ||
+              storage['room' + roomId] === undefined ||
+              (result.val().idSender !== uid &&
+                result.val().time >
+                  storage['room' + roomId][storage['room' + roomId].length - 1]
+                    .time)
+            ) {
+              setIsNew(true);
+            }
+          });
+      });
+    });
+
+    const blurListener = navigation.addListener('willBlur', () => {
+      console.log('firebase offlistener');
       firebase
         .database()
         .ref('message/' + roomId)
         .off('child_added');
+    });
+    return () => {
+      focusListener.remove();
+      blurListener.remove();
     };
   }, []);
   return (
