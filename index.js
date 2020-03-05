@@ -13,3 +13,4 @@ AppRegistry.registerHeadlessTask(
   'RNFirebaseBackgroundMessage',
   () => bgMessaging,
 );
+// StatusBar.setBarStyle('dark-content');
