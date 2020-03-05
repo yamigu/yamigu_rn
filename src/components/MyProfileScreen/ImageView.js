@@ -7,7 +7,7 @@ import Anticon from 'react-native-vector-icons/AntDesign';
 import AsyncStorage from '@react-native-community/async-storage';
 const dw = Dimensions.get('window').width;
 
-const ImageView = ({scroll, offsetY}) => {
+const ImageView = ({scroll, offsetY, feed_list, setFeed_list}) => {
   const [hasProfile, setHasProfile] = useState(false);
   const getStorage = () => {
     return new Promise(async (resolve, reject) => {
@@ -42,7 +42,12 @@ const ImageView = ({scroll, offsetY}) => {
           />
         )}
       </View>
-      <ProfileImageAddView scroll={scroll} offsetY={offsetY} />
+      <ProfileImageAddView
+        scroll={scroll}
+        offsetY={offsetY}
+        feed_list={feed_list}
+        setFeed_list={setFeed_list}
+      />
       <View style={styles.descView}>
         <CustomTextRegular size={12} color={palette.gray}>
           메인 사진은 반드시 본인 사진이어야 합니다

@@ -10,7 +10,7 @@ import '~/config';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import LocationModal from '../SignupScreen/LocationModal';
 import HeightModal from '~/components/MyProfileScreen/HeightModal';
-const InfoView = ({navigation, userInfo}) => {
+const InfoView = ({navigation, userInfo, setUserInfo}) => {
   const [info, setInfo] = useState([]);
   const nowYear = 20200000;
 
@@ -28,10 +28,14 @@ const InfoView = ({navigation, userInfo}) => {
         <LocationModal
           setLocationModalVisible={setLocationModalVisible}
           fromProfile={true}
+          setUserInfo={setUserInfo}
         />
       </Modal>
       <Modal visible={heightModalVisible} transparent>
-        <HeightModal setHightModalVisible={setHightModalVisible} />
+        <HeightModal
+          setHightModalVisible={setHightModalVisible}
+          setUserInfo={setUserInfo}
+        />
       </Modal>
       <CustomTextMedium
         size={18}

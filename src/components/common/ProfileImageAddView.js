@@ -49,7 +49,7 @@ const temp_init_data = [
     number: 5,
   },
 ];
-const ProfileImageAddView = ({scroll, offsetY}) => {
+const ProfileImageAddView = ({scroll, offsetY, feed_list, setFeed_list}) => {
   const [imageSource, setImageSource] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [pfImageList, setPfImageList] = useState(temp_init_data);
@@ -58,6 +58,9 @@ const ProfileImageAddView = ({scroll, offsetY}) => {
   const [userInfo, setUserInfo] = useState([]);
   const [btnMeasure, setBtnMeasure] = useState(null);
   const [btnMeasureRight, setBtnMeasureRight] = useState(null);
+
+  const [imageNo, setImageNo] = useState(0);
+
   const _imageLeft = createRef();
   const _imageRight = createRef();
   const _measure = (obj, number) => {
@@ -115,10 +118,13 @@ const ProfileImageAddView = ({scroll, offsetY}) => {
       },
     }).then(result => {
       const tmp = temp_init_data.slice();
+      let count = 0;
       result.data.map((item, index) => {
-        tmp[index] = item;
+        tmp[item.number - 1] = item;
+        if (item.src !== null) count++;
       });
-      console.log(result.data);
+      console.log(count);
+      setImageNo(count);
       setPfImageList(tmp);
     });
   }, []);
@@ -160,6 +166,7 @@ const ProfileImageAddView = ({scroll, offsetY}) => {
 
   return (
     <View>
+      {console.log(imageNo)}
       <Spinner
         visible={uploading}
         textContent={'Uploading...'}
@@ -172,7 +179,9 @@ const ProfileImageAddView = ({scroll, offsetY}) => {
         onRequestClose={() => {
           Alert.alert('Modal has been closed.');
         }}>
-        {btnMeasure !== null && btnMeasure !== undefined ? (
+        {btnMeasure !== null &&
+        btnMeasure !== undefined &&
+        pfImageTempList[0].src !== null ? (
           <View
             style={{
               position: 'absolute',
@@ -191,7 +200,9 @@ const ProfileImageAddView = ({scroll, offsetY}) => {
             />
           </View>
         ) : null}
-        {btnMeasureRight !== null && btnMeasureRight !== undefined ? (
+        {btnMeasureRight !== null &&
+        btnMeasureRight !== undefined &&
+        pfImageTempList[btnMeasureRight.number - 1].src !== null ? (
           <View
             style={{
               position: 'absolute',
@@ -224,7 +235,7 @@ const ProfileImageAddView = ({scroll, offsetY}) => {
             <Button
               style={styles.modalButtonMultiple}
               onPress={() => {
-                setUploading(true);
+                // setUploading(true);
                 const formData = new FormData();
                 formData.append('image', {
                   uri: imageSource.uri,
@@ -232,34 +243,49 @@ const ProfileImageAddView = ({scroll, offsetY}) => {
                   name: imageSource.uri,
                 });
                 formData.append('number', imageSource.number);
+
+                console.log('formdata::::');
+                console.log(formData);
+
                 file_upload(
                   formData,
                   'http://13.124.126.30:8000/authorization/user/profile_image/',
-                ).then(result => {
-                  setUploading(false);
-                  let temp = pfImageList.slice();
-                  temp[result.data.number - 1] = result.data;
-                  setPfImageList(temp);
-                  setPfImageTempList(temp_init_data);
-                  setModalVisible(false);
-                  if (imageSource.number === 1) {
-                    let newUserInfo = userInfo.slice();
-                    newUserInfo[global.config.user_info_const.AVATA] =
-                      result.data.src;
-                    console.log('new profile image: ');
-                    console.log(result.data);
-                    AsyncStorage.setItem(
-                      'userValue',
-                      JSON.stringify(newUserInfo),
-                    );
-                  }
-                  // Alert.alert(
-                  //   'Alert Title',
-                  //   'My Alert Msg',
-                  //   [{text: 'OK', onPress: () => setModalVisible(false)}],
-                  //   {cancelable: false},
-                  // );
-                });
+                )
+                  .then(result => {
+                    console.log('data::::');
+                    // console.log(result);
+                    let temp = pfImageList.slice();
+                    temp[result.number - 1] = result;
+                    // console.log(imageSource.number);
+                    if (imageSource.number === 1) {
+                      let newUserInfo = userInfo.slice();
+                      newUserInfo[global.config.user_info_const.AVATA] =
+                        result.src;
+                      console.log('new profile image: ');
+                      // console.log(result);
+                      AsyncStorage.setItem(
+                        'userValue',
+                        JSON.stringify(newUserInfo),
+                      );
+                    }
+                    // console.log(temp);
+                    setPfImageList(temp);
+                    // console.log(temp_init_data);
+                    setPfImageTempList(temp_init_data);
+                    setModalVisible(false);
+                    return result;
+                  })
+                  .then(newPf => {
+                    // console.log('hihi');
+                    // console.log(newPf.feed);
+                    let tmp = feed_list.slice();
+                    tmp.unshift(newPf.feed);
+                    // console.log(tmp);
+                    let tmpCount = imageNo + 1;
+                    setImageNo(tmpCount);
+                    setFeed_list(tmp);
+                    setUploading(false);
+                  });
               }}>
               <CustomTextRegular size={17} color={palette.red}>
                 완료
@@ -284,6 +310,7 @@ const ProfileImageAddView = ({scroll, offsetY}) => {
         </SafeAreaView>
       </Modal>
       {/* modal end */}
+
       <View
         style={styles.buttonView}
         ref={_imageLeft}
@@ -314,6 +341,7 @@ const ProfileImageAddView = ({scroll, offsetY}) => {
             source={require('~/images/profile_camera.png')}
           />
         </Button>
+
         <View
           onLayout={event => {
             measureView(event);
@@ -321,7 +349,15 @@ const ProfileImageAddView = ({scroll, offsetY}) => {
           ref={_imageRight}
           style={styles.rightButtonView}>
           <View style={styles.rightButtonViewFirst}>
-            <Button style={styles.button} onPress={() => selectPhotoTapped(2)}>
+            <Button
+              style={imageNo > 0 ? styles.button : styles.nonactive_button}
+              onPress={() => {
+                if (imageNo > 0) {
+                  selectPhotoTapped(2);
+                } else {
+                  null;
+                }
+              }}>
               {modalVisible && pfImageTempList[1].src !== null ? (
                 <Image
                   style={styles.fill}
@@ -333,11 +369,19 @@ const ProfileImageAddView = ({scroll, offsetY}) => {
                 <AntDesignIcon
                   name="plus"
                   size={((deviceWidth - 76) / 2) * 0.468 * 0.332}
-                  color={palette.orange[0]}
+                  color={imageNo > 0 ? palette.orange[0] : palette.gray}
                 />
               )}
             </Button>
-            <Button style={styles.button} onPress={() => selectPhotoTapped(3)}>
+            <Button
+              style={imageNo > 1 ? styles.button : styles.nonactive_button}
+              onPress={() => {
+                if (imageNo > 1) {
+                  selectPhotoTapped(3);
+                } else {
+                  null;
+                }
+              }}>
               {modalVisible && pfImageTempList[2].src !== null ? (
                 <Image
                   style={styles.fill}
@@ -349,13 +393,22 @@ const ProfileImageAddView = ({scroll, offsetY}) => {
                 <AntDesignIcon
                   name="plus"
                   size={((deviceWidth - 76) / 2) * 0.468 * 0.332}
-                  color={palette.orange[0]}
+                  color={imageNo > 1 ? palette.orange[0] : palette.gray}
                 />
               )}
             </Button>
           </View>
+
           <View style={styles.rightButtonViewSecond}>
-            <Button style={styles.button} onPress={() => selectPhotoTapped(4)}>
+            <Button
+              style={imageNo > 2 ? styles.button : styles.nonactive_button}
+              onPress={() => {
+                if (imageNo > 2) {
+                  selectPhotoTapped(4);
+                } else {
+                  null;
+                }
+              }}>
               {modalVisible && pfImageTempList[3].src !== null ? (
                 <Image
                   style={styles.fill}
@@ -367,11 +420,19 @@ const ProfileImageAddView = ({scroll, offsetY}) => {
                 <AntDesignIcon
                   name="plus"
                   size={((deviceWidth - 76) / 2) * 0.468 * 0.332}
-                  color={palette.orange[0]}
+                  color={imageNo > 2 ? palette.orange[0] : palette.gray}
                 />
               )}
             </Button>
-            <Button style={styles.button} onPress={() => selectPhotoTapped(5)}>
+            <Button
+              style={imageNo > 3 ? styles.button : styles.nonactive_button}
+              onPress={() => {
+                if (imageNo > 3) {
+                  selectPhotoTapped(5);
+                } else {
+                  null;
+                }
+              }}>
               {modalVisible && pfImageTempList[4].src !== null ? (
                 <Image
                   style={styles.fill}
@@ -383,7 +444,7 @@ const ProfileImageAddView = ({scroll, offsetY}) => {
                 <AntDesignIcon
                   name="plus"
                   size={((deviceWidth - 76) / 2) * 0.468 * 0.332}
-                  color={palette.orange[0]}
+                  color={imageNo > 3 ? palette.orange[0] : palette.gray}
                 />
               )}
             </Button>
@@ -466,6 +527,19 @@ const styles = StyleSheet.create({
     paddingBottom: 0,
     backgroundColor: '#ffffff00',
     borderColor: palette.orange[0],
+    borderWidth: 0.5,
+    borderRadius: 5,
+    elevation: 0,
+  },
+  nonactive_button: {
+    width: ((deviceWidth - 76) / 2) * 0.468,
+    height: ((deviceWidth - 76) / 2) * 0.468,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingTop: 0,
+    paddingBottom: 0,
+    backgroundColor: palette.default_bg,
+    borderColor: '#AEAEAE',
     borderWidth: 0.5,
     borderRadius: 5,
     elevation: 0,

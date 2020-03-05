@@ -126,6 +126,7 @@ const HomePage = ({navigation}) => {
                   }
                 }
                 jUserValue[10] = result.data.location;
+                jUserValue[11] = result.data.height;
 
                 AsyncStorage.setItem('userValue', JSON.stringify(jUserValue));
                 setAsyncValue(jUserValue);

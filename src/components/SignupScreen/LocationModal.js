@@ -22,6 +22,7 @@ const LocationModal = ({
   setLocationModalVisible,
   setLocationText,
   fromProfile,
+  setUserInfo,
 }) => {
   const locationList = [
     '서울',
@@ -100,7 +101,9 @@ const LocationModal = ({
                           );
                           const jUserValue = JSON.parse(userValue);
                           let newUserInfo = jUserValue.slice();
+
                           newUserInfo[10] = item;
+                          setUserInfo(newUserInfo);
                           console.log(result.data);
                           AsyncStorage.setItem(
                             'userValue',
@@ -108,7 +111,10 @@ const LocationModal = ({
                           );
                           console.log(newUserInfo);
                         })
-                        .then(() => setLocationModalVisible(false));
+                        .then(() => {
+                          console.log('??');
+                          setLocationModalVisible(false);
+                        });
                     }
                   }}>
                   <CustomTextRegular size={14}>{item}</CustomTextRegular>

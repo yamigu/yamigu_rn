@@ -19,7 +19,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 const dh = Dimensions.get('window').height;
 const dw = Dimensions.get('window').width;
 
-const HeightModal = ({setHightModalVisible}) => {
+const HeightModal = ({setHightModalVisible, setUserInfo}) => {
   const HeightList = [
     '150cm 이하',
     '151cm',
@@ -126,6 +126,7 @@ const HeightModal = ({setHightModalVisible}) => {
                           let newUserInfo = jUserValue.slice();
                           newUserInfo[11] = item;
                           console.log(result.data);
+                          setUserInfo(newUserInfo);
                           AsyncStorage.setItem(
                             'userValue',
                             JSON.stringify(newUserInfo),

@@ -12,8 +12,8 @@ const file_upload = (formData, url) => {
     })
       .then(res => {
         console.log('file uploaded');
-        // console.log(res);
-        resolve(true);
+        console.log(res.data);
+        resolve(res.data);
       })
       .catch(err => {
         // console.log('file upload failed');
