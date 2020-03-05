@@ -37,6 +37,7 @@ const FeedPage = props => {
               innerHasProfile = true;
               console.log('hasprofile::::');
               console.log(hasProfile);
+            }
           });
         if (!innerHasProfile) return;
         if (!hasProfile) return;
