@@ -49,6 +49,7 @@ const isIPhoneXrSize = dim => {
 };
 
 if (pf === 'ios') {
+  keyboardPadding = 50;
   if (isIphoneX()) {
     keyboardPadding = 100;
   } else {
@@ -112,6 +113,12 @@ const SignupScreen = ({navigation}) => {
           initialPage={0}
           onPageSelected={e => {
             setPage(e.nativeEvent.position);
+            navigation.setParams({
+              page: e.nativeEvent.position,
+              move: page => {
+                go(page);
+              },
+            });
           }}>
           <NicknamePage
             key={1}

@@ -79,7 +79,7 @@ const SideMenu = ({navigation}) => {
     if (navigation.state.isDrawerOpen) {
       _retrieveData();
     }
-  }, []);
+  }, [navigation]);
 
   return (
     <SafeAreaView style={styles.root}>
