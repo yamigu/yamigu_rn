@@ -23,40 +23,87 @@ const FeedPage = props => {
   const [refreshing, setRefreshing] = useState(false);
   const [tmpState, setTmpState] = useState(false);
   const [hasProfile, setHasProfile] = useState(false);
+  const [likeNum, setLikeNum] = useState(0);
   const _scroll = useRef();
 
-  const refre = () => {
+  const retrieveFeeds = () => {
+    return new Promise((resolve, reject) => {
+      //setProfileCardProp(feeds);
+      axios
+        .get('http://13.124.126.30:8000/core/feeds/')
+        .then(result => {
+          //   console.log(result.data);
+          let data = [];
+          let count = 0;
+          result.data.map((item, index) => {
+            if (item.feed_list.length === 0) {
+            } else {
+              if (hasProfile === false && count > 1) return;
+              data[count] = item;
+              count++;
+              setProfileCardProp(data);
+            }
+          });
+
+          resolve(true);
+        })
+        .catch(error => {
+          console.log(error);
+          resolve(null);
+        });
+    });
+  };
+  const retrieveBothLikes = () => {
+    return new Promise((resolve, reject) => {
+      axios
+        .get('http://13.124.126.30:8000/core/both_like/')
+        .then(result => {
+          let bothLike = [];
+          result.data.map((item, index) => {
+            bothLike[index] = item;
+          });
+          resolve(bothLike);
+        })
+        .catch(error => {
+          resolve(null);
+        });
+    });
+  };
+
+  const retrieveLikeNum = () => {
+    return new Promise((resolve, reject) => {
+      axios
+        .get('http://13.124.126.30:8000/core/like_count/')
+        .then(result => {
+          resolve(result.data);
+        })
+        .catch(error => {
+          resolve(null);
+        });
+    });
+  };
+  const refre = async () => {
     setRefreshing(true);
     const emptyData = [];
     setProfileCardProp(emptyData);
-    axios
-      .get('http://13.124.126.30:8000/core/feeds/')
-      .then(result => {
-        console.log(result.data);
-        let tmp = [];
-        let count = 0;
+    await retrieveFeeds();
+    // if (feeds !== null) {
+    //   if (hasProfile === false) {
+    //     setProfileCardProp(feeds.slice(0, 2));
+    //   } else {
+    //     setProfileCardProp(feeds);
+    //   }
+    // }
+    const bothLikes = await retrieveBothLikes();
 
-        result.data.map((item, index) => {
-          if (item.feed_list.length === 0) {
-          } else {
-            tmp[count] = item;
-            count++;
-          }
-        });
-        //있는애들은 2개만보여주기
-        // console.log('innerhas ::: ??? ' + innerHasProfile);
-        if (hasProfile === false) {
-          // console.log(tmp);
-          // console.log(innerHasProfile);
-          setProfileCardProp(tmp.slice(0, 2));
-        } else {
-          setProfileCardProp(tmp);
-        }
-      })
-      .then(() => {
-        setRefreshing(false);
-        console.log('effect done');
-      });
+    if (bothLikes !== null) {
+      setLikeMatchingProp(bothLikes);
+    }
+
+    const likeNum = await retrieveLikeNum();
+    if (likeNum !== null) {
+      setLikeNum(likeNum);
+    }
     setRefreshing(false);
   };
 
@@ -103,41 +150,7 @@ const FeedPage = props => {
         });
       if (!innerHasProfile) return;
 
-      //axios for likematchning
-      axios.get('http://13.124.126.30:8000/core/both_like/').then(result => {
-        let tmpBothLike = [];
-        result.data.map((item, index) => {
-          tmpBothLike[index] = item;
-        });
-        setLikeMatchingProp(tmpBothLike);
-      });
-      axios
-        .get('http://13.124.126.30:8000/core/feeds/')
-        .then(result => {
-          let tmp = [];
-          let count = 0;
-
-          result.data.map((item, index) => {
-            if (item.feed_list.length === 0) {
-            } else {
-              tmp[count] = item;
-              count++;
-            }
-          });
-          //있는애들은 2개만보여주기
-          // console.log('innerhas ::: ??? ' + innerHasProfile);
-          if (innerHasProfile === false) {
-            // console.log(tmp);
-            // console.log(innerHasProfile);
-            setProfileCardProp(tmp.slice(0, 2));
-          } else {
-            setProfileCardProp(tmp);
-          }
-        })
-        .then(() => {
-          setRefreshing(false);
-          console.log('effect done');
-        });
+      refre();
     });
     axios
       .get('http://13.124.126.30:8000/authorization/user/info/')
@@ -272,6 +285,7 @@ const FeedPage = props => {
           <LikeMatchingList
             navigation={props.navigation}
             likeMatchingProp={likeMatchingProp}
+            likeNum={likeNum}
           />
           <ProfileCardList
             navigation={props.navigation}

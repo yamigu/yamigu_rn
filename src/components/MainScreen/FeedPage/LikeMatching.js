@@ -20,7 +20,7 @@ import palette from '~/lib/styles/palette';
 import TouchableByPlatform from '~/components/common/TouchableByPlatform';
 import {Button, Row} from 'native-base';
 import LikeNumModal from './LikeNumModal';
-
+import axios from 'axios';
 const dh = Dimensions.get('window').height;
 
 const styles = StyleSheet.create({
@@ -72,7 +72,9 @@ const LikeMatching = () => {
   const [likeNum, setLikeNum] = useState(0);
 
   useEffect(() => {
-    //axios.get(likeNum개수 받아오기, set해주기)
+    axios.get('http://13.124.126.30:8000/core/like_count/').then(result => {
+      setLikeNum(result.data);
+    });
   }, []);
   return (
     <View style={styles.container}>

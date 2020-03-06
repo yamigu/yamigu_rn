@@ -166,7 +166,7 @@ const ProfileCardFeed = ({
   const [moreModalVisible, setMoreModalVisible] = useState(false);
   const [call911ModalVisible, setCall911ModalVisible] = useState(false);
   const [chattingModalVisible, setChattingModalVisible] = useState(false);
-
+  const [loading, setLoading] = useState(true);
   // const [hasChatting, setHasChatting] = useState(false);
 
   useEffect(() => {
@@ -182,6 +182,7 @@ const ProfileCardFeed = ({
         });
         // console.log(tmpFeedListNo);
         setFeedList(tmpFeedList.reverse());
+        setLoading(false);
       });
   }, []);
 
@@ -251,7 +252,35 @@ const ProfileCardFeed = ({
       />
     );
   };
-  return (
+  return loading ? (
+    <View style={styles.container}>
+      <View style={styles.cardView}>
+        <View style={{flexDirection: 'row'}}>
+          <View
+            style={{
+              width: 50,
+              height: 50,
+              borderRadius: 25,
+              backgroundColor: palette.divider,
+              marginRight: 10,
+            }}
+          />
+          <View style={{marginVertical: 6, justifyContent: 'space-between'}}>
+            <View
+              style={{width: 57, height: 17, backgroundColor: palette.divider}}
+            />
+            <View
+              style={{width: 130, height: 17, backgroundColor: palette.divider}}
+            />
+          </View>
+        </View>
+      </View>
+      <View style={styles.viewPager}>
+        <View style={{flex: 1, backgroundColor: palette.divider}} />
+      </View>
+      <View style={styles.actionDiv}></View>
+    </View>
+  ) : (
     <View style={styles.container}>
       <Modal visible={chattingModalVisible} transparent={true}>
         <SendChatting
@@ -317,10 +346,10 @@ const ProfileCardFeed = ({
         />
       </View>
       {/* <TouchableByPlatform
-        onPress={() => {
-          // navigation.setParams('3'); signup screen.js 참고해서 page수 넘겨주기
-          navigation.navigate('Profile');
-        }}> */}
+      onPress={() => {
+        // navigation.setParams('3'); signup screen.js 참고해서 page수 넘겨주기
+        navigation.navigate('Profile');
+      }}> */}
 
       <IndicatorViewPager
         style={styles.viewPager}

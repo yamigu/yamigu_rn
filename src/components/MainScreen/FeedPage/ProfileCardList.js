@@ -14,6 +14,7 @@ const ProfileCardList = ({navigation, profileCardProp, hasProfile}) => {
         console.log(item.feed_list.length);
         return (
           <ProfileCardFeed
+            loading={item.loading}
             style={{marginTop: 0}}
             key={index}
             location={item.profile.location}
