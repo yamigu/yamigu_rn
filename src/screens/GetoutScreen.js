@@ -7,9 +7,63 @@ import {
   CustomTextRegular,
 } from '~/components/common/CustomText';
 import {HeaderBackButton} from 'react-navigation-stack';
+import axios from 'axios';
+import {NavigationActions, StackActions} from 'react-navigation';
+import AsyncStorage from '@react-native-community/async-storage';
+import appleAuth, {
+  AppleAuthRequestOperation,
+  AppleAuthCredentialState,
+} from '@invertase/react-native-apple-authentication';
+import KakaoLogins from '@react-native-seoul/kakao-login';
+
 const dw = Dimensions.get('window').width;
 
+const initUserValue = [
+  'token',
+  'uid',
+  'nickname',
+  'avata',
+  'birthdate',
+  'belong',
+  'department',
+  'gender',
+  'verified',
+  'yami',
+  'location',
+  'height',
+];
 const GetoutScreen = ({navigation}) => {
+  const logout = () => {
+    return new Promise(async (resolve, reject) => {
+      axios.defaults.headers.common['Authorization'] = '';
+      AsyncStorage.setItem('userValue', JSON.stringify(initUserValue));
+      try {
+        await KakaoLogins.logout();
+      } catch {
+        await appleAuth.performRequest({
+          requestedOperation: AppleAuthRequestOperation.LOGOUT,
+        });
+      }
+      resolve(true);
+    });
+  };
+  const requestWithdraw = () => {
+    axios
+      .post('http://13.124.126.30:8000/authorization/withdraw/')
+      .then(async result => {
+        await logout();
+        navigation.dispatch(
+          StackActions.reset({
+            key: null,
+            index: 0,
+            actions: [NavigationActions.navigate({routeName: 'Main'})],
+          }),
+        );
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
   return (
     <View style={{padding: 18, marginTop: 10}}>
       <CustomTextMedium size={18} color="black">
@@ -34,7 +88,7 @@ const GetoutScreen = ({navigation}) => {
                 },
                 {
                   text: '탈퇴하기',
-                  onPress: () => Alert.alert('ㅜㅜㅜ'),
+                  onPress: () => requestWithdraw(),
                   style: 'destructive',
                 },
               ],

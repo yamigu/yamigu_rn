@@ -1,7 +1,7 @@
 apply plugin: "com.android.application"
 
-import com.android.build.OutputFile
 
+import com.android.build.OutputFile
 /**
  * The react.gradle file registers a task for each build variant (e.g. bundleDebugJsAndAssets
  * and bundleReleaseJsAndAssets).
@@ -76,8 +76,8 @@ import com.android.build.OutputFile
  */
 
 project.ext.react = [
-    entryFile: "index.js",
-    enableHermes: false,  // clean and rebuild if changing
+        entryFile   : "index.js",
+        enableHermes: false,  // clean and rebuild if changing
 ]
 
 apply from: "../../node_modules/react-native/react.gradle"
@@ -120,7 +120,7 @@ def jscFlavor = 'org.webkit:android-jsc:+'
 def enableHermes = project.ext.react.get("enableHermes", false);
 
 android {
-    compileSdkVersion rootProject.ext.compileSdkVersion
+    compileSdkVersion 29
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -158,6 +158,7 @@ android {
             keyPassword 'android'
         }
     }
+    buildToolsVersion = '29.0.3'
     buildTypes {
 
         debug {
@@ -191,10 +192,12 @@ android {
 
         }
     }
+
+
+
 }
 
 dependencies {
-    implementation project(':react-native-firebase')
 
     // Firebase dependencies
     implementation "com.google.android.gms:play-services-base:16.1.0"
@@ -214,8 +217,6 @@ dependencies {
     }
     implementation project(':react-native-fs')
     //contacts
-    implementation project(':react-native-contacts')
-
 
 
 }

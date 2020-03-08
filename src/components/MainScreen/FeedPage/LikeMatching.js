@@ -12,7 +12,6 @@ import {
 } from 'react-native';
 import {
   CustomTextMedium,
-  CustomTextLight,
   CustomTextBold,
   CustomTextRegular,
 } from '~/components/common/CustomText';
@@ -66,16 +65,11 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
 });
-const LikeMatching = () => {
+const LikeMatching = ({likeNum}) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [likeNumModalVisible, setLikeNumModalVisible] = useState(false);
-  const [likeNum, setLikeNum] = useState(0);
 
-  useEffect(() => {
-    axios.get('http://13.124.126.30:8000/core/like_count/').then(result => {
-      setLikeNum(result.data);
-    });
-  }, []);
+  useEffect(() => {}, []);
   return (
     <View style={styles.container}>
       <Modal
@@ -119,7 +113,7 @@ const LikeMatching = () => {
         </TouchableWithoutFeedback>
       </Modal>
 
-      <Modal visible={likeNumModalVisible} transparent="true">
+      <Modal visible={likeNumModalVisible} transparent>
         <LikeNumModal
           setLikeNumModalVisible={setLikeNumModalVisible}
           likeNum={likeNum}
@@ -139,9 +133,9 @@ const LikeMatching = () => {
             <ImageBackground
               source={require('~/images/gold-like.png')}
               style={styles.goldLike}>
-              <CustomTextLight size={16} color="white">
+              <CustomTextRegular size={16} color="white">
                 {likeNum}
-              </CustomTextLight>
+              </CustomTextRegular>
             </ImageBackground>
           </ImageBackground>
         </TouchableByPlatform>

@@ -150,6 +150,7 @@ const styles = StyleSheet.create({
 const ProfileCardFeed = ({
   location,
   verified,
+  height,
   navigation,
   uid,
   nickname,
@@ -315,6 +316,7 @@ const ProfileCardFeed = ({
         <ProfileCard
           uid={uid}
           verified={verified}
+          height={height}
           location={location}
           size={50}
           fontSizes={[14, 12, 12]}
@@ -365,6 +367,7 @@ const ProfileCardFeed = ({
                     navigation.navigate('Profile', {
                       viewpagerIndex: index,
                       location,
+                      height,
                       verified,
                       uid,
                       nickname,

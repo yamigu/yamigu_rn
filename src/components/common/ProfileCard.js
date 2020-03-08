@@ -33,6 +33,7 @@ const dh = Dimensions.get('window').height;
 const ProfileCard = ({
   noTouch,
   verified,
+  height,
   uid,
   setLiked,
   liked,
@@ -70,6 +71,7 @@ const ProfileCard = ({
                 navigation.navigate('Profile', {
                   viewpagerIndex: 0,
                   location,
+                  height,
                   verified,
                   uid,
                   nickname,

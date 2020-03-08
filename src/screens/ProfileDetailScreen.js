@@ -55,6 +55,7 @@ const ProfileDetailScreen = ({navigation}) => {
   const liked = navigation.getParam('liked');
   const verified = navigation.getParam('verified');
   const location = navigation.getParam('location');
+  const height = navigation.getParam('height');
   const viewpagerIndex = navigation.getParam('viewpagerIndex');
 
   const [likedState, setLikedState] = useState(false);
@@ -64,7 +65,6 @@ const ProfileDetailScreen = ({navigation}) => {
 
   const [moreModalVisible, setMoreModalVisible] = useState(false);
   const [call911ModalVisible, setCall911ModalVisible] = useState(false);
-
   const postLike = () => {
     console.log('like pressed');
     if (likedState === true) {
@@ -376,7 +376,7 @@ const ProfileDetailScreen = ({navigation}) => {
               </Left>
               <Right>
                 <CustomTextRegular size={14} color={palette.sub}>
-                  182cm
+                  {height}
                 </CustomTextRegular>
               </Right>
             </ListItem>

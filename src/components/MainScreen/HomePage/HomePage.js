@@ -119,10 +119,12 @@ const HomePage = ({navigation}) => {
                   result.data.gender;
                 jUserValue[global.config.user_info_const.VERIFIED] =
                   result.data.verified;
+                console.log(result.data);
+                setNotiState(0);
                 if (result.data.verified === 0) {
                   setNotiState(1);
                 } else {
-                  if (result.data.avata !== 'avata') {
+                  if (result.data.avata === null) {
                     setNotiState(2);
                   }
                 }
@@ -165,6 +167,7 @@ const HomePage = ({navigation}) => {
                 resolve(true);
               })
               .catch(e => {
+                console.log(e);
                 if (e.response.status === 401) {
                   AsyncStorage.setItem(
                     'userValue',
@@ -1264,13 +1267,13 @@ const HomePage = ({navigation}) => {
             </View>
           </SafeAreaProvider>
         </Modal>
-        {notiState === 2 ? null : (
+        {notiState === 0 ? null : (
           <Button
             onPress={() => {
-              if (notiState === 0) {
+              if (notiState === 1) {
                 navigation.navigate('BV');
               } else {
-                if (notiState === 1) {
+                if (notiState === 2) {
                   navigation.navigate('MyProfile');
                 } else {
                   navigation.navigate('AddFriends');
@@ -1293,10 +1296,10 @@ const HomePage = ({navigation}) => {
                 size={14}
                 color={palette.black}
                 style={{paddingLeft: 10}}>
-                {notiState === 0
+                {notiState === 1
                   ? ' 채팅하려면 소속인증이 필요해요! '
-                  : notiState === 1
-                  ? '프로필 사진을 등록하고 친구를찾아보세요!'
+                  : notiState === 2
+                  ? '프로필 사진을 등록하고 친구를 찾아보세요!'
                   : null}
               </CustomTextMedium>
             </View>

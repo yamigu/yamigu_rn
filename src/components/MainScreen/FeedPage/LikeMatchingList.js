@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
 });
-const LikeMatchingList = ({navigation, likeMatchingProp}) => {
+const LikeMatchingList = ({navigation, likeMatchingProp, likeNum}) => {
   const [bothLikeUser, setBothLikeUser] = useState([]);
 
   useEffect(() => {
@@ -42,7 +42,7 @@ const LikeMatchingList = ({navigation, likeMatchingProp}) => {
         horizontal={true}
         showsHorizontalScrollIndicator={false}
         style={styles.scrollView}>
-        <LikeMatching />
+        <LikeMatching likeNum={likeNum} />
 
         {likeMatchingProp.map((user, index) => {
           let intAge =
@@ -69,6 +69,7 @@ const LikeMatchingList = ({navigation, likeMatchingProp}) => {
                   belong: user.belong,
                   department: user.department,
                   bothLike: true,
+                  height: user.height,
                 })
               }
               // badgeComponent={

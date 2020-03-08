@@ -27,9 +27,15 @@ const FriendsView = ({navigation}) => {
     });
   }, []);
 
-  const patchFriendStatus = (id, action) => {
+  const patchFriendStatus = (id, action, approved) => {
+    let text = '';
+    if (action === 'APPROVE') text = '친구 요청을 수락하시겠어요?';
+    else if (action === 'DELETE') {
+      if (!approved) text = '친구 요청을 거절하시겠어요?';
+      else text = '정말 친구를 삭제하시겠습니까?';
+    } else if (action === 'CANCEL') text = '친구 요청을 취소하시겠어요?';
     Alert.alert(
-      '정말 친구를 삭제하시겠습니까?',
+      text,
       '',
       [
         {
@@ -114,21 +120,27 @@ const FriendsView = ({navigation}) => {
                 style={!friend.you_sent && !friend.approved ? {} : {flex: 0}}>
                 {friend.approved === true ? (
                   <TouchableByPlatform
-                    onPress={() => patchFriendStatus(friend.id, 'DELETE')}>
+                    onPress={() =>
+                      patchFriendStatus(friend.id, 'DELETE', friend.approved)
+                    }>
                     <Octionicon name="x" style={styles.iconX} />
                   </TouchableByPlatform>
                 ) : friend.you_sent !== true ? (
                   <View style={styles.notAccetedView}>
                     <Button
                       style={styles.declineButton}
-                      onPress={() => patchFriendStatus(friend.id, 'DELETE')}>
+                      onPress={() =>
+                        patchFriendStatus(friend.id, 'DELETE', friend.approved)
+                      }>
                       <CustomTextRegular size={18} color={palette.gray}>
                         X
                       </CustomTextRegular>
                     </Button>
                     <Button
                       style={styles.acceptButton}
-                      onPress={() => patchFriendStatus(friend.id, 'APPROVE')}>
+                      onPress={() =>
+                        patchFriendStatus(friend.id, 'APPROVE', friend.approved)
+                      }>
                       <CustomTextRegular size={18} color={palette.orange}>
                         O
                       </CustomTextRegular>
@@ -136,7 +148,9 @@ const FriendsView = ({navigation}) => {
                   </View>
                 ) : (
                   <TouchableByPlatform
-                    onPress={() => patchFriendStatus(friend.id, 'CANCEL')}>
+                    onPress={() =>
+                      patchFriendStatus(friend.id, 'CANCEL', friend.approved)
+                    }>
                     <Octionicon name="x" style={styles.iconX} />
                   </TouchableByPlatform>
                 )}

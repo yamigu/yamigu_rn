@@ -223,14 +223,21 @@ const LoginScreen = ({navigation}) => {
   const kakaoLogin = () => {
     // logCallback('Login Start', setLoginLoading(true));
     KakaoLogins.login()
-      .then(result => {
+      .then(async result => {
         logCallback(`Access Token is ${result.accessToken}`, null);
-        return axios.post(
-          'http://13.124.126.30:8000/authorization/oauth/kakao/',
-          {
+        // return await axios.post(
+        //   'http://13.124.126.30:8000/authorization/oauth/kakao/',
+        //   {
+        //     access_token: result.accessToken,
+        //   },
+        // );
+        return await axios({
+          url: 'http://13.124.126.30:8000/authorization/oauth/kakao/',
+          method: 'POST',
+          data: {
             access_token: result.accessToken,
           },
-        );
+        });
       })
       .then(result => {
         setLoginToken(result.data.key);

@@ -16,6 +16,7 @@ import appleAuth, {
 import AsyncStorage from '@react-native-community/async-storage';
 import axios from 'axios';
 import KakaoLogins from '@react-native-seoul/kakao-login';
+import {NavigationActions, StackActions} from 'react-navigation';
 
 const initUserValue = [
   'token',
@@ -29,6 +30,7 @@ const initUserValue = [
   'verified',
   'yami',
   'location',
+  'height',
 ];
 const notiListData = [
   {
@@ -62,16 +64,19 @@ const SettingScreen = ({navigation}) => {
 
   const logout = () => {
     return new Promise((resolve, reject) => {
-      axios.defaults.headers.common['Authorization'] = '';
-      AsyncStorage.setItem('userValue', JSON.stringify(initUserValue));
-      resolve(true);
-      KakaoLogins.logout()
-        .then(result => {
-          console.log('logout successfully');
+      axios
+        .post('http://13.124.126.30:8000/authorization/logout/')
+        .then(async result => {
+          axios.defaults.headers.common['Authorization'] = '';
+          AsyncStorage.setItem('userValue', JSON.stringify(initUserValue));
+          try {
+            await KakaoLogins.logout();
+          } catch {
+            await appleAuth.performRequest({
+              requestedOperation: AppleAuthRequestOperation.LOGOUT,
+            });
+          }
           resolve(true);
-        })
-        .catch(error => {
-          resolve(false);
         });
     });
   };
@@ -162,7 +167,15 @@ const SettingScreen = ({navigation}) => {
                   text: '네',
                   onPress: () => {
                     logout().then(() => {
-                      navigation.navigate('Login');
+                      navigation.dispatch(
+                        StackActions.reset({
+                          key: null,
+                          index: 0,
+                          actions: [
+                            NavigationActions.navigate({routeName: 'Main'}),
+                          ],
+                        }),
+                      );
                       Alert.alert('로그아웃 되었습니다.');
                       console.log('YES LOGOUT');
                     });

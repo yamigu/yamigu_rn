@@ -67,6 +67,7 @@ const SideMenu = ({navigation}) => {
     try {
       const userValue = await AsyncStorage.getItem('userValue');
       const jUserValue = JSON.parse(userValue);
+      console.log(jUserValue);
       if (userValue !== null) {
         //console.log('qweqwe');
         setSideInfo(jUserValue);
@@ -137,7 +138,9 @@ const SideMenu = ({navigation}) => {
           <View style={styles.nameAndAgeView}>
             <CustomTextBold size={18} color={palette.black}>
               {sideInfo[global.config.user_info_const.NICKNAME] ===
-              'nickname' ? (
+                'nickname' ||
+              sideInfo[global.config.user_info_const.NICKNAME] === '' ||
+              sideInfo[global.config.user_info_const.NICKNAME] === null ? (
                 <CustomTextBold size={18} color={palette.black}>
                   로그인이 필요합니다!
                 </CustomTextBold>
@@ -151,7 +154,8 @@ const SideMenu = ({navigation}) => {
               style={{marginLeft: 6}}>
               {sideInfo[global.config.user_info_const.BIRTHDATE] ===
                 'birthdate' ||
-              sideInfo[global.config.user_info_const.BIRTHDATE] === ''
+              sideInfo[global.config.user_info_const.BIRTHDATE] === '' ||
+              sideInfo[global.config.user_info_const.BIRTHDATE] === null
                 ? null
                 : Math.floor(
                     (20200000 -
@@ -170,7 +174,9 @@ const SideMenu = ({navigation}) => {
             </CustomTextMedium> */}
           </View>
           <View style={styles.belongView}>
-            {sideInfo[global.config.user_info_const.NICKNAME] === 'nickname' ? (
+            {sideInfo[global.config.user_info_const.NICKNAME] === 'nickname' ||
+            sideInfo[global.config.user_info_const.NICKNAME] === '' ||
+            sideInfo[global.config.user_info_const.NICKNAME] === null ? (
               <Button
                 style={{backgroundColor: palette.default_bg, elevation: 0}}
                 onPress={() => navigation.navigate('Login')}>

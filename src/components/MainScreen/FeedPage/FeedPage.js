@@ -106,7 +106,26 @@ const FeedPage = props => {
     }
     setRefreshing(false);
   };
-
+  const addProfileAlert = () => {
+    Alert.alert(
+      '사진 한장만 등록하세요!',
+      '무제한 피드 + 보너스 야미 본인이 나온 프로필 사진이 필요해요',
+      [
+        {
+          text: '다음에',
+          onPress: () => console.log('NOPE'),
+        },
+        {
+          text: '사진등록',
+          onPress: () => {
+            props.navigation.navigate('MyProfile');
+            console.log('profile~~');
+          },
+        },
+      ],
+      {cancelable: false},
+    );
+  };
   useEffect(() => {
     console.log('feedpage useeffect');
 
@@ -234,36 +253,20 @@ const FeedPage = props => {
           refreshControl={
             <RefreshControl
               refreshing={refreshing}
-              onRefresh={refre}
+              onRefresh={() => {
+                hasProfile === true ? refre() : addProfileAlert();
+              }}
               // title="Loading..."
               tintColor={palette.gray}
             />
           }
           ref={_scroll}
-          onMomentumScrollBegin={() => {
+          onMomentumScrollEnd={e => {
+            if (e.nativeEvent.contentOffset.y < 100) return;
             // console.log(hasProfile);
-            hasProfile === false
-              ? Alert.alert(
-                  '사진 한장만 등록하세요!',
-                  '무제한 피드 + 보너스 야미 본인이 나온 프로필 사진이 필요해요',
-                  [
-                    {
-                      text: '다음에',
-                      onPress: () => console.log('NOPE'),
-                    },
-                    {
-                      text: '사진등록',
-                      onPress: () => {
-                        props.navigation.navigate('MyProfile');
-                        console.log('profile~~');
-                      },
-                    },
-                  ],
-                  {cancelable: false},
-                )
-              : null;
+            hasProfile === false ? addProfileAlert() : null;
           }}
-          onMomentumScrollEnd={() => {}}
+          onMomentumScrollBegin={() => {}}
           onScroll={event => {
             if (event.nativeEvent.contentOffset.y === 0) {
               console.log('now');

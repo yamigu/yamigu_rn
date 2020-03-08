@@ -288,6 +288,7 @@ const MyFeedManage = ({
                             navigation.navigate('Profile', {
                               viewpagerIndex: 0,
                               location: myFeedManageProp.location,
+                              height: myFeedManageProp.height,
                               verified: myFeedManageProp.verified,
                               uid: myFeedManageProp.uid,
                               nickname: myFeedManageProp.nickname,
