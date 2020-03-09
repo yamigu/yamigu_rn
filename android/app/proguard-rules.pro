@@ -12,3 +12,13 @@
 -dontwarn io.invertase.firebase.**
 -keep class com.facebook.react.devsupport.** { *; }
 -dontwarn com.facebook.react.devsupport.**
+
+-keep public class com.google.firebase.* { public *; }
+-dontwarn com.google.firebase.**
+
+-keep public class com.google.android.gms.* { public *; }
+-dontwarn com.google.android.gms.**
+
+# if using notifications from RNFirebase
+-keep public class me.leolin.shortcutbadger.* { public *; }
+-dontwarn me.leolin.shortcutbadger.**

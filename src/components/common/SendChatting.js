@@ -15,6 +15,8 @@ import {CustomTextMedium} from './CustomText';
 import palette from '~/lib/styles/palette';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 import {KeyboardAvoidingView} from 'react-native';
+import firebase from 'react-native-firebase';
+import Moment from 'moment';
 
 import axios from 'axios';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -29,6 +31,7 @@ const SendChatting = ({avata, uid, setModalVisible, navigation}) => {
 
   const [inputText, setInputText] = useState('');
   const [userInfo, setUserInfo] = useState(null);
+
   const gotoBot = () => {};
 
   const getStorage = () => {
@@ -72,34 +75,81 @@ const SendChatting = ({avata, uid, setModalVisible, navigation}) => {
     const jUserValue = JSON.parse(userValue);
     setUserInfo(jUserValue);
   };
+  const requestChatCreate = () => {
+    return new Promise(resolve => {
+      axios
+        .post('http://13.124.126.30:8000/core/chat/', {
+          target_uid: uid,
+          greet: inputText === '' ? '안녕하세요' : inputText,
+        })
+        .then(result => {
+          userInfo[global.config.user_info_const.YAMI] -= 3;
+          AsyncStorage.setItem('userValue', JSON.stringify(userInfo));
 
-  const requestChat = () => {
-    axios
-      .post('http://13.124.126.30:8000/core/chat/', {
-        target_uid: uid,
-      })
-      .then(() => {
-        userInfo[global.config.user_info_const.YAMI] -= 3;
-        AsyncStorage.setItem('userValue', JSON.stringify(userInfo));
-      })
-      .then(() => {
-        Alert.alert(
-          '신청이 완료되었습니다!',
-          '',
-          [{text: '확인', onPress: () => setModalVisible(false)}],
-          '',
-        );
-      })
-      .catch(error => {
-        Alert.alert('이미 대화중이에요', '', [
-          {
-            text: '확인',
-            onPress: () => {
-              setModalVisible(false);
-            },
-          },
-        ]);
-      });
+          Alert.alert(
+            '신청이 완료되었습니다!',
+            '',
+            [{text: '확인', onPress: () => setModalVisible(false)}],
+            '',
+          );
+          resolve(result);
+        })
+        .catch(error => {
+          if (error.response.data == 'No yami') {
+            Alert.alert('야미가 부족해요!', '', [
+              {
+                text: '확인',
+                onPress: () => {
+                  setModalVisible(false);
+                },
+              },
+            ]);
+          } else {
+            Alert.alert('이미 대화중인 상대에요', '', [
+              {
+                text: '확인',
+                onPress: () => {
+                  setModalVisible(false);
+                },
+              },
+            ]);
+          }
+          resolve(null);
+        });
+    });
+  };
+  const sendFCM = roomId => {
+    return new Promise(resolve => {
+      try {
+        const key = firebase
+          .database()
+          .ref('message/' + roomId)
+          .push().key;
+        firebase
+          .database()
+          .ref('message/' + roomId)
+          .child(key)
+          .update({
+            key: key,
+            idSender: userInfo[global.config.user_info_const.UID],
+            message: inputText === '' ? '안녕하세요' : inputText,
+            time: Moment.now(),
+          });
+        firebase
+          .database()
+          .ref('user/' + uid + '/chat/' + roomId)
+          .update({is_unread: true});
+        resolve(key);
+      } catch (e) {
+        console.log(e);
+        resolve(e);
+      }
+    });
+  };
+  const requestChat = async () => {
+    const result = await requestChatCreate();
+    if (result === null) return;
+    const result2 = sendFCM(result.data.id);
   };
   return (
     <SafeAreaView

@@ -29,6 +29,7 @@ const AddFriendsScreen = ({navigation}) => {
     callback;
   };
   useEffect(() => {
+    console.log('useEffect');
     axios.get('http://13.124.126.30:8000/core/friends/').then(result => {
       let tmpNo = 0;
       console.log(result.data);
@@ -106,6 +107,7 @@ const AddFriendsScreen = ({navigation}) => {
         textContent={'Loading...'}
         textStyle={styles.spinnerTextStyle}
       />
+
       <CustomTextMedium size={18} color={palette.black}>
         친구를 추가해서
       </CustomTextMedium>
@@ -126,7 +128,6 @@ const AddFriendsScreen = ({navigation}) => {
       <TextInput
         keyboardType="numeric"
         placeholder=" 친구 번호를 추가해주세요"
-        color="black"
         style={styles.messageInput}
         value={inputValue}
         onChange={item => {

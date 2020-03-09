@@ -119,20 +119,24 @@ const ChattingPreview = ({
             {nickname}
           </CustomTextMedium>
           <CustomTextRegular size={12} color={palette.gray}>
-            {approved && lastMessage !== undefined
+            {/* {approved && lastMessage !== undefined
               ? lastMessage.message
-              : '미팅 신청이 들어왔어요!'}
+              : '미팅 신청이 들어왔어요!'} */}
+            {lastMessage.message}
           </CustomTextRegular>
         </View>
       </Body>
       <Right style={styles.chatPreviewRight}>
         <View style={styles.chatPreviewRightTextView}>
           <CustomTextRegular size={10} color={palette.gray}>
-            {approved && lastMessage !== undefined
+            {/* {approved && lastMessage !== undefined
               ? Moment(parseInt(lastMessage.time)).diff(Moment.now(), 'day') > 0
                 ? Moment(parseInt(lastMessage.time)).format('M월 DD일')
                 : Moment(parseInt(lastMessage.time)).format('a h:mm')
-              : iso_to_string(created_at)}
+              : iso_to_string(created_at)} */}
+            {Moment(parseInt(lastMessage.time)).diff(Moment.now(), 'day') > 0
+              ? Moment(parseInt(lastMessage.time)).format('M월 DD일')
+              : Moment(parseInt(lastMessage.time)).format('a h:mm')}
           </CustomTextRegular>
           {/* <Badge style={styles.badgeUnread}>
             <CustomTextMedium size={10} color="white">

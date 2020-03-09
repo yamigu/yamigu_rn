@@ -10,11 +10,13 @@ import {HeaderBackButton} from 'react-navigation-stack';
 import axios from 'axios';
 import AsyncStorage from '@react-native-community/async-storage';
 import '~/config';
+import Spinner from 'react-native-loading-spinner-overlay';
 const ChattingListScreen = ({navigation}) => {
   const [chatList, setChatList] = useState([]);
   const [userInfo, setUserInfo] = useState([]);
   const [receivedList, setReceivedList] = useState([]);
   const [hasVerified, setHasVeirifed] = useState(0);
+  const [loading, setLoading] = useState(true);
   const getUserVal = () => {
     return new Promise(async (resolve, reject) => {
       const userValue = await AsyncStorage.getItem('userValue');
@@ -59,43 +61,61 @@ const ChattingListScreen = ({navigation}) => {
   };
 
   useEffect(() => {
-    const listener = navigation.addListener('didFocus', () => {
-      getUserVal().then(result => {
-        if (!result) return;
-      });
+    const listener = navigation.addListener('didFocus', async () => {
+      setLoading(true);
+      const result = await getUserVal();
+      setLoading(false);
+      if (!result) return;
     });
     return () => listener.remove();
   }, []);
-  useEffect(() => {
-    if (userInfo.length === 0) return;
-    axios.get('http://13.124.126.30:8000/core/chat/').then(result => {
-      const chatlist_data = [];
-      const recvlist_data = [];
-      result.data.chat_list.map(item => {
-        if (
-          item.sender.uid !== userInfo[global.config.user_info_const.UID] ||
-          item.approved_on !== null
-        ) {
-          let partner;
-          if (item.sender.uid === userInfo[global.config.user_info_const.UID]) {
-            partner = item.receiver;
-          } else {
-            partner = item.sender;
+  const getChatList = () => {
+    return new Promise(resolve => {
+      axios.get('http://13.124.126.30:8000/core/chat/').then(result => {
+        const chatlist_data = [];
+        const recvlist_data = [];
+        result.data.chat_list.map(item => {
+          if (
+            item.sender.uid !== userInfo[global.config.user_info_const.UID] ||
+            item.approved_on !== null
+          ) {
+            let partner;
+            if (
+              item.sender.uid === userInfo[global.config.user_info_const.UID]
+            ) {
+              partner = item.receiver;
+            } else {
+              partner = item.sender;
+            }
+            item.nickname = partner.nickname;
+            item.avata = partner.avata;
+            item.uid = partner.uid;
+            item.chat_type === 0
+              ? chatlist_data.push(item)
+              : recvlist_data.push(item);
           }
-          item.nickname = partner.nickname;
-          item.avata = partner.avata;
-          item.uid = partner.uid;
-          item.chat_type === 0
-            ? chatlist_data.push(item)
-            : recvlist_data.push(item);
-        }
+        });
+        setChatList(chatlist_data);
+        setReceivedList(recvlist_data);
+        resolve(true);
       });
-      setChatList(chatlist_data);
-      setReceivedList(recvlist_data);
+    }).catch(error => {
+      resolve(false);
     });
+  };
+  const retrieveChatList = async () => {
+    const result = await getChatList();
+    return result;
+  };
+  useEffect(() => {
+    setLoading(true);
+    if (userInfo.length === 0) return;
+    retrieveChatList();
+    setLoading(false);
   }, [userInfo]);
   return (
     <Content showsVerticalScrollIndicator={false} style={styles.root}>
+      <Spinner visible={loading} textContent={'채팅 목록 불러오는중...'} />
       <ReceivedList
         hasVerified={hasVerified}
         navigation={navigation}
