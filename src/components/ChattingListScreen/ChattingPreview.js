@@ -22,11 +22,9 @@ const ChattingPreview = ({
   navigation,
   hasVerified,
   uid,
-  avata,
-  puid,
-  nickname,
-  created_at,
+  partner,
   approved,
+  cancelled,
   roomId,
 }) => {
   const [lastMessage, setLastMessage] = useState({
@@ -92,13 +90,10 @@ const ChattingPreview = ({
         } else {
           setIsNew(false);
           navigation.navigate('Chatting', {
-            partner: {
-              uid: puid,
-              nickname: nickname,
-              avata: avata,
-            },
-            approved: approved,
-            roomId: roomId,
+            partner,
+            approved,
+            cancelled,
+            roomId,
           });
           console.log('hasVerified :: ' + hasVerified);
         }
@@ -106,9 +101,9 @@ const ChattingPreview = ({
       <Left style={styles.chatPreviewLeft}>
         <UserProfileSmall
           imageSource={
-            avata === null
+            partner.avata === null
               ? require('~/images/user-default-profile.png')
-              : {uri: avata}
+              : {uri: partner.avata}
           }
           badgeComponent={isNew ? <Badge style={styles.label} /> : null}
         />
@@ -116,7 +111,7 @@ const ChattingPreview = ({
       <Body style={styles.chatPreviewBody}>
         <View style={styles.chatPreviewBodyTextView}>
           <CustomTextMedium size={16} color={palette.black}>
-            {nickname}
+            {partner.nickname}
           </CustomTextMedium>
           <CustomTextRegular size={12} color={palette.gray}>
             {/* {approved && lastMessage !== undefined

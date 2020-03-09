@@ -15,12 +15,16 @@ import Anticon from 'react-native-vector-icons/AntDesign';
 import palette from '~/lib/styles/palette';
 import TouchableByPlatform from '~/components/common/TouchableByPlatform';
 import ReceivedItem from '~/components/ChattingScreen/ReceivedItem';
+import MoreModal from '~/components/ChattingScreen/MoreModal';
 import SentItem from '~/components/ChattingScreen/SentItem';
 import {HeaderBackButton} from 'react-navigation-stack';
 import {SafeAreaView} from 'react-navigation';
 import {createRef} from 'react';
 import 'react-native-gesture-handler';
-import {CustomTextMedium} from '~/components/common/CustomText';
+import {
+  CustomTextMedium,
+  CustomTextRegular,
+} from '~/components/common/CustomText';
 import firebase from 'react-native-firebase';
 import AsyncStorage from '@react-native-community/async-storage';
 import ListItem from '~/components/common/ListItem';
@@ -38,18 +42,21 @@ let global_messageList = [];
 
 let lock = false;
 const ChattingScreen = ({navigation}) => {
-  const [hasProfile, setHasProfile] = useState(false);
   const [messageList, setMessageList] = useState([]);
   const [myId, setMyId] = useState('');
   const [approved, setApprovoed] = useState(false);
+  const [cancelled, setCancelled] = useState(false);
+  const [hasProfile, setHasProfile] = useState(false);
   const [userInfo, setUserInfo] = useState(null);
   const [partnerInfo, setPartnerInfo] = useState(null);
   const [roomId, setRoomId] = useState(-1);
   const [asyncData, setAsyncData] = useState([]);
   const [inputMessage, setInputMessage] = useState('');
+  const [modalVisible, setModalVisible] = useState(false);
   const _scrollToBottomY = useRef();
 
   let keyboardPadding = 0;
+
   const isIphoneX = () => {
     const dim = Dimensions.get('window');
 
@@ -78,6 +85,9 @@ const ChattingScreen = ({navigation}) => {
     }
   } else keyboardPadding = -400;
 
+  const turnOnModal = () => {
+    setModalVisible(true);
+  };
   const getUid = () => {
     return new Promise(async (resolve, reject) => {
       const userValue = await AsyncStorage.getItem('userValue');
@@ -142,6 +152,26 @@ const ChattingScreen = ({navigation}) => {
         navigation.goBack();
       });
   };
+  const requestCancel = () => {
+    axios
+      .patch('http://13.124.126.30:8000/core/chat/', {
+        room_id: roomId,
+        action: 'CANCEL',
+      })
+      .then(() => {
+        navigation.goBack();
+      });
+  };
+  const requestCancelCheck = () => {
+    axios
+      .patch('http://13.124.126.30:8000/core/chat/', {
+        room_id: roomId,
+        action: 'CANCEL_CHECK',
+      })
+      .then(() => {
+        navigation.goBack();
+      });
+  };
   const disconnectFirebase = () => {
     console.log(
       firebase
@@ -179,6 +209,7 @@ const ChattingScreen = ({navigation}) => {
   };
   useEffect(() => {
     let focus = true;
+    navigation.setParams({turnOnModal: turnOnModal});
     const room = navigation.getParam('roomId', -1);
     setRoomId(room);
     navigation.setParams({
@@ -186,8 +217,8 @@ const ChattingScreen = ({navigation}) => {
       approved: navigation.getParam('approved', false),
       requestDecline: () => requestDecline(room),
     });
-
     setApprovoed(navigation.getParam('approved', false));
+    setCancelled(navigation.getParam('cancelled', false));
     setPartnerInfo(navigation.getParam('partner', ''));
     global_messageList.length = 0; // 배열 초기화
     let listener;
@@ -199,35 +230,42 @@ const ChattingScreen = ({navigation}) => {
       .once('child_added', result => {
         lastMessage = result.val();
       });
-    getUid().then(async result => {
-      const userVal = result;
-      listener = firebase
-        .database()
-        .ref('message/' + room)
-        .on('child_added', result => {
-          if (!focus) return;
-          global_messageList.push(result.val());
-          if (lastMessage !== undefined && lastMessage.time > result.val().time)
-            return;
-          const unique = global_messageList.filter((item, i) => {
-            return (
-              global_messageList.findIndex((item2, j) => {
-                return item.key === item2.key;
-              }) === i
-            );
-          });
-
-          setMessageList(unique);
-          firebase
-            .database()
-            .ref(
-              'user/' +
-                userVal[global.config.user_info_const.UID] +
-                '/chat/' +
-                room,
+    navigation.addListener('didFocus', () => {
+      getUid().then(async result => {
+        const userVal = result;
+        console.log(userVal[global.config.user_info_const.AVATA]);
+        listener = firebase
+          .database()
+          .ref('message/' + room)
+          .on('child_added', result => {
+            if (!focus) return;
+            global_messageList.push(result.val());
+            if (
+              lastMessage !== undefined &&
+              lastMessage.time > result.val().time
             )
-            .update({is_unread: false});
-        });
+              return;
+            const unique = global_messageList.filter((item, i) => {
+              return (
+                global_messageList.findIndex((item2, j) => {
+                  return item.key === item2.key;
+                }) === i
+              );
+            });
+
+            setMessageList(unique);
+            firebase
+              .database()
+              .ref(
+                'user/' +
+                  userVal[global.config.user_info_const.UID] +
+                  '/chat/' +
+                  room,
+              )
+              .update({is_unread: false});
+          });
+      });
+
       //   const storage_result = await getStorage(room);
       //   global_storage_data = storage_result;
       //   setMyId(result[1]);
@@ -268,6 +306,17 @@ const ChattingScreen = ({navigation}) => {
   //behavior : position ###
   return (
     <SafeAreaView style={styles.root}>
+      <Modal
+        style={{backgroundColor: palette.gold}}
+        visible={modalVisible}
+        transparent={true}>
+        <MoreModal
+          setVisible={setModalVisible}
+          requestCancel={cancelled ? requestCancelCheck : requestCancel}
+          cancelled={cancelled}
+        />
+      </Modal>
+
       <KeyboardAvoidingView style={styles.container}>
         <ScrollView
           bounces="false"
@@ -290,15 +339,29 @@ const ChattingScreen = ({navigation}) => {
                   return (
                     <ReceivedItem
                       key={index}
-                      nickname={partnerInfo.nickname}
                       text={item.message}
                       time={fortime}
-                      avata={partnerInfo.avata}
+                      navigation={navigation}
+                      partnerInfo={partnerInfo}
+                      hasProfile={
+                        userInfo[global.config.user_info_const.AVATA] === null
+                          ? false
+                          : true
+                      }
                     />
                   );
               })}
             </List>
           )}
+          {cancelled ? (
+            <View style={styles.cancelledBoxWrapper}>
+              <View style={styles.cancelledBox}>
+                <CustomTextRegular size={12} color={palette.black}>
+                  상대방이 채팅방을 나갔습니다.
+                </CustomTextRegular>
+              </View>
+            </View>
+          ) : null}
         </ScrollView>
       </KeyboardAvoidingView>
       <KeyboardAvoidingView
@@ -325,6 +388,29 @@ const ChattingScreen = ({navigation}) => {
                 alignSelf: 'center',
               }}>
               대화 시작하기
+            </Text>
+          </Button>
+        ) : cancelled ? (
+          <Button
+            onPress={() => {
+              requestCancelCheck();
+            }}
+            style={{
+              flexDirection: 'column',
+              alignSelf: 'center',
+              justifyContent: 'center',
+              margin: 10,
+              paddingTop: 0,
+              paddingBottom: 0,
+              height: 40,
+              width: buttonWidth,
+              backgroundColor: palette.orange[0],
+            }}>
+            <Text
+              style={{
+                alignSelf: 'center',
+              }}>
+              대화방 나가기
             </Text>
           </Button>
         ) : (
@@ -395,16 +481,20 @@ ChattingScreen.navigationOptions = ({navigation}) => {
         </CustomTextMedium>
       );
     },
-    headerRight: () => null,
-    // <TouchableByPlatform>
-    //   <Icon
-    //     name="more"
-    //     color={palette.black}
-    //     style={{
-    //       margin: 10,
-    //     }}
-    //   />
-    // </TouchableByPlatform>
+    headerRight: () => (
+      <TouchableByPlatform
+        onPress={() => {
+          navigation.getParam('turnOnModal')();
+        }}>
+        <Icon
+          name="more"
+          color={palette.black}
+          style={{
+            margin: 10,
+          }}
+        />
+      </TouchableByPlatform>
+    ),
     headerMode: 'screen',
     headerStyle: {
       backgroundColor: 'white',
@@ -457,6 +547,17 @@ const styles = StyleSheet.create({
     fontSize: 14,
     padding: 0,
     margin: 0,
+  },
+  cancelledBoxWrapper: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  cancelledBox: {
+    backgroundColor: '#FFFBF8',
+    borderRadius: 5,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
   },
 });
 export default ChattingScreen;

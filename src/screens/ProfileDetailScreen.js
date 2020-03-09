@@ -57,7 +57,8 @@ const ProfileDetailScreen = ({navigation}) => {
   const location = navigation.getParam('location');
   const height = navigation.getParam('height');
   const viewpagerIndex = navigation.getParam('viewpagerIndex');
-
+  const isChatting = navigation.getParam('is_chatting', false);
+  const friend = navigation.getParam('friend', false);
   const [likedState, setLikedState] = useState(false);
   const [friendList, setFriendList] = useState([]);
   const [feedList, setFeedList] = useState([]);
@@ -206,7 +207,7 @@ const ProfileDetailScreen = ({navigation}) => {
               size={66}
               fontSizes={[16, 14, 14]}
               nickname={nickname}
-              avata={{uri: avata}}
+              avata={avata === null ? null : {uri: avata}}
               age={age}
               belong={belong}
               department={department}
@@ -218,7 +219,16 @@ const ProfileDetailScreen = ({navigation}) => {
             <View style={styles.horizontalDivider} />
           </View>
 
-          {bothLike === true ? (
+          {isChatting || friend ? (
+            <View style={styles.soleAction}>
+              <CustomTextRegular
+                style={{alignSelf: 'center'}}
+                color={palette.nonselect}
+                size={14}>
+                {isChatting ? '대화 중' : '친구'}
+              </CustomTextRegular>
+            </View>
+          ) : bothLike === true ? (
             <TouchableByPlatform
               style={styles.soleAction}
               onPress={() => {
@@ -376,7 +386,7 @@ const ProfileDetailScreen = ({navigation}) => {
               </Left>
               <Right>
                 <CustomTextRegular size={14} color={palette.sub}>
-                  {height}
+                  {height === null ? '미입력' : height}
                 </CustomTextRegular>
               </Right>
             </ListItem>

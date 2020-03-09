@@ -21,13 +21,12 @@ const ChattingList = ({style, navigation, chatList, hasVerified, uid}) => (
           hasVerified={hasVerified}
           style={{marginVertical: 9}}
           navigation={navigation}
-          puid={item.uid}
           uid={uid}
-          avata={item.avata}
-          nickname={item.nickname}
           created_at={item.created_at}
           approved={item.approved_on !== null ? true : false}
+          cancelled={item.canceled_on !== null ? true : false}
           roomId={item.id}
+          partner={item.partner}
         />
       );
     })}

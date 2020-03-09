@@ -48,7 +48,7 @@ const ProfileCard = ({
   department,
   bothLike,
   rightComponent,
-  addF,
+  friend,
 }) => {
   useEffect(() => {
     console.log(avata);
@@ -80,6 +80,7 @@ const ProfileCard = ({
                   belong,
                   department,
                   liked,
+                  friend,
                   setLiked: value => setLiked(value),
                 });
               }
@@ -125,15 +126,9 @@ const ProfileCard = ({
               </CustomTextMedium>
             </View>
             <View style={styles.secondLine}>
-              {addF === true ? (
-                <CustomTextRegular size={fontSizes[2]} color={palette.sub}>
-                  {belong} {department}
-                </CustomTextRegular>
-              ) : (
-                <CustomTextRegular size={fontSizes[2]} color={palette.sub}>
-                  {belong} {department}, {location}
-                </CustomTextRegular>
-              )}
+              <CustomTextRegular size={fontSizes[2]} color={palette.sub}>
+                {belong} {department}, {location}
+              </CustomTextRegular>
             </View>
           </View>
         </Body>

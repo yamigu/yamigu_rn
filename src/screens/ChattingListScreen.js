@@ -62,9 +62,8 @@ const ChattingListScreen = ({navigation}) => {
 
   useEffect(() => {
     const listener = navigation.addListener('didFocus', async () => {
-      setLoading(true);
+      console.log('getUserval');
       const result = await getUserVal();
-      setLoading(false);
       if (!result) return;
     });
     return () => listener.remove();
@@ -87,8 +86,7 @@ const ChattingListScreen = ({navigation}) => {
             } else {
               partner = item.sender;
             }
-            item.nickname = partner.nickname;
-            item.avata = partner.avata;
+            item.partner = partner;
             item.uid = partner.uid;
             item.chat_type === 0
               ? chatlist_data.push(item)

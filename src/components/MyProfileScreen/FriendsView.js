@@ -75,14 +75,18 @@ const FriendsView = ({navigation}) => {
               <Body>
                 {friend.approved === true ? (
                   <ProfileCard
-                    addF={true}
+                    verified={friend.user_info.verified}
+                    height={friend.user_info.height}
+                    uid={friend.user_info.uid}
+                    navigation={navigation}
+                    location={friend.user_info.location}
                     size={66}
                     fontSizes={[16, 14, 14]}
                     nickname={friend.user_info.nickname}
-                    image={
-                      Object.keys(friend.user_info).length === 5
+                    avata={
+                      friend.user_info.avata === null
                         ? null
-                        : friend.user_info.avata
+                        : {uri: friend.user_info.avata}
                     }
                     age={Math.floor(
                       (nowYear - parseInt(friend.user_info.birthdate) + 20000) /
@@ -90,6 +94,7 @@ const FriendsView = ({navigation}) => {
                     )}
                     belong={friend.user_info.belong}
                     department={friend.user_info.department}
+                    friend={true}
                   />
                 ) : friend.you_sent === true ? (
                   <ProfileCard
@@ -104,7 +109,7 @@ const FriendsView = ({navigation}) => {
                   />
                 ) : (
                   <ProfileCard
-                    addF={true}
+                    noTouch={true}
                     size={66}
                     fontSizes={[16, 14, 14]}
                     nickname="친구가 맞나요??"
