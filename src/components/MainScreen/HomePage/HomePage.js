@@ -73,7 +73,6 @@ const HomePage = ({navigation}) => {
   const [yamiNo, setYamiNo] = useState(0);
   const [freeTicket, setFreeTicket] = useState(0);
   const [notiState, setNotiState] = useState(0);
-  //0 :소속인증 x, 1: 프로필 x, 2: 친구등록
 
   const _retrieveData = () => {
     console.log('retrieve');
@@ -123,10 +122,10 @@ const HomePage = ({navigation}) => {
                 setNotiState(0);
                 if (result.data.verified === 0) {
                   setNotiState(1);
-                } else {
-                  if (result.data.avata === null) {
-                    setNotiState(2);
-                  }
+                } else if (result.data.avata === null) {
+                  setNotiState(2);
+                } else if (result.data.friends.length === 0) {
+                  setNotiState(3);
                 }
                 jUserValue[10] = result.data.location;
                 jUserValue[11] = result.data.height;
@@ -1272,12 +1271,10 @@ const HomePage = ({navigation}) => {
             onPress={() => {
               if (notiState === 1) {
                 navigation.navigate('BV');
-              } else {
-                if (notiState === 2) {
-                  navigation.navigate('MyProfile');
-                } else {
-                  navigation.navigate('AddFriends');
-                }
+              } else if (notiState === 2) {
+                navigation.navigate('MyProfile');
+              } else if (notiState === 3) {
+                navigation.navigate('AddFriends');
               }
             }}
             style={{
@@ -1300,6 +1297,8 @@ const HomePage = ({navigation}) => {
                   ? ' 채팅하려면 소속인증이 필요해요! '
                   : notiState === 2
                   ? '프로필 사진을 등록하고 친구를 찾아보세요!'
+                  : notiState === 3
+                  ? '친구를 추가하고 보너스 야미 받아가세요!'
                   : null}
               </CustomTextMedium>
             </View>
