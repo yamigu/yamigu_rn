@@ -444,7 +444,7 @@ const ProfileDetailScreen = ({navigation}) => {
                     size={50}
                     fontSizes={[14, 12, 12]}
                     nickname={friend.nickname}
-                    avata={friend.avata}
+                    avata={friend.avata === null ? null : {uri: friend.avata}}
                     age={Math.floor(
                       (nowYear - parseInt(friend.birthdate) + 20000) / 10000,
                     )}
