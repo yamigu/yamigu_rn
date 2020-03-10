@@ -14,6 +14,8 @@ import LikeMatchingList from './LikeMatchingList';
 import MyFeedManage from './MyFeedManage';
 import {Content, Container} from 'native-base';
 import axios from 'axios';
+import AsyncStorage from '@react-native-community/async-storage';
+
 import '~/config';
 
 const FeedPage = props => {

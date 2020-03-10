@@ -27,7 +27,7 @@ export const CustomTextMedium = props => {
     <Text
       style={[
         {
-          fontFamily: os === 'android' ? 'serif' : 'Apple SD Gothic Neo',
+          fontFamily: os === 'android' ? 'Roboto' : 'Apple SD Gothic Neo',
           fontWeight: os === 'android' ? 'normal' : '500',
           color: props.color ? props.color : 'black',
           fontSize: props.size ? props.size : 16,
@@ -46,7 +46,7 @@ export const CustomTextBold = props => {
     <Text
       style={[
         {
-          fontFamily: os === 'android' ? 'serif' : 'Apple SD Gothic Neo',
+          fontFamily: os === 'android' ? 'Roboto' : 'Apple SD Gothic Neo',
           fontWeight: 'bold',
           color: props.color ? props.color : 'black',
           fontSize: props.size ? props.size : 16,

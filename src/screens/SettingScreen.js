@@ -51,7 +51,7 @@ const notiListData = [
   },
   {
     name: 'match',
-    display: '매칭 성공',
+    display: '주선 완료',
     value: true,
   },
   {
@@ -96,6 +96,8 @@ const SettingScreen = ({navigation}) => {
 
   const notiStatusChanged = index => {
     let tmpList = [...notiList];
+    tmpList[index].value = !tmpList[index].value;
+    setNotiList(tmpList);
     axios
       .post(global.config.api_host + 'core/toggle_notification/', {
         what: notiList[index].name,

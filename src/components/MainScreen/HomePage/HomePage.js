@@ -68,7 +68,7 @@ let initUserValue = [
 const HomePage = ({navigation}) => {
   const [asyncValue, setAsyncValue] = useState([]);
   const [matchRequested, setMatchRequested] = useState(false);
-
+  const [userInfo, setUserInfo] = useState(null);
   const [yamiNo, setYamiNo] = useState(0);
   const [freeTicket, setFreeTicket] = useState(0);
   const [notiState, setNotiState] = useState(0);
@@ -80,6 +80,7 @@ const HomePage = ({navigation}) => {
       try {
         const userValue = await AsyncStorage.getItem('userValue');
         const jUserValue = JSON.parse(userValue);
+        setUserInfo(null);
         // console.log('juse::');
         // console.log(jUserValue);
         if (
@@ -227,10 +228,11 @@ const HomePage = ({navigation}) => {
         const result = await _retrieveData();
         console.log('done');
 
+        if (!result) return;
+
         console.log('get match request status');
         const result6 = await retrieveMatchRequestStatus();
 
-        if (!result) return;
         console.log('get fcm token');
         const result2 = await retrieveFCMToken();
         console.log('done');
@@ -1474,8 +1476,12 @@ const HomePage = ({navigation}) => {
                   <CustomTextMedium size={16} color="white">
                     미팅 주선 신청하기
                   </CustomTextMedium>
-
-                  {freeTicket > 0 ? (
+                  {freeTicket > 0 ||
+                  userInfo === null ||
+                  userInfo[global.config.user_info_const.NICKNAME] ===
+                    'nickname' ||
+                  userInfo[global.config.user_info_const.NICKNAME] === '' ||
+                  userInfo[global.config.user_info_const.NICKNAME] === null ? (
                     <CustomTextMedium size={16} color="white">
                       무료
                     </CustomTextMedium>

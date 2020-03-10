@@ -82,6 +82,20 @@ const MainScreenNavigator = createBottomTabNavigator(
           // 'birhdate',  'belong',     'department', 'profile_list',
           // 'feed_list', 'friend_list','yami_number',
         },
+        tabBarOnLongPress: async ({navigation, defaultHandler}) => {
+          const userValue = await AsyncStorage.getItem('userValue');
+          const jUserValue = JSON.parse(userValue);
+          if (jUserValue[0] === 'token') {
+            navigation.navigate('Login');
+          } else if (jUserValue[2] === 'nickname') {
+            navigation.navigate('Signup');
+            //navigate to loginscreen
+          } else if (jUserValue[4] === 'birthdate') {
+            navigation.navigate('IV', {needBtn: true});
+          } else {
+            defaultHandler();
+          }
+        },
       }),
     },
   },

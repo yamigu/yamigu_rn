@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import {Dimensions, Image} from 'react-native';
+import {Dimensions, Platform} from 'react-native';
 import {createAppContainer, createSwitchNavigator} from 'react-navigation';
 import {createDrawerNavigator, DrawerActions} from 'react-navigation-drawer';
 import {createStackNavigator} from 'react-navigation-stack';
@@ -129,7 +129,7 @@ const DrawerStack = createDrawerNavigator(
   },
   {
     contentComponent: SideMenu,
-    edgeWidth: -100, // this is where the magic happens :))
+    edgeWidth: Platform.OS === 'ios' ? 50 : -100,
     drawerWidth: deviceWidth * 0.813,
   },
 );
