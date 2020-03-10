@@ -17,6 +17,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import axios from 'axios';
 import KakaoLogins from '@react-native-seoul/kakao-login';
 import {NavigationActions, StackActions} from 'react-navigation';
+import '~/config';
 
 const initUserValue = [
   'token',
@@ -65,7 +66,7 @@ const SettingScreen = ({navigation}) => {
   const logout = () => {
     return new Promise((resolve, reject) => {
       axios
-        .post('http://13.124.126.30:8000/authorization/logout/')
+        .post(global.config.api_host + 'authorization/logout/')
         .then(async result => {
           axios.defaults.headers.common['Authorization'] = '';
           AsyncStorage.setItem('userValue', JSON.stringify(initUserValue));
@@ -83,7 +84,7 @@ const SettingScreen = ({navigation}) => {
 
   useEffect(() => {
     axios
-      .get('http://13.124.126.30:8000/core/toggle_notification/')
+      .get(global.config.api_host + 'core/toggle_notification/')
       .then(result => {
         const newData = [...notiListData];
         newData.map(item => {
@@ -96,7 +97,7 @@ const SettingScreen = ({navigation}) => {
   const notiStatusChanged = index => {
     let tmpList = [...notiList];
     axios
-      .post('http://13.124.126.30:8000/core/toggle_notification/', {
+      .post(global.config.api_host + 'core/toggle_notification/', {
         what: notiList[index].name,
       })
       .then(result => {

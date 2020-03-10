@@ -147,7 +147,7 @@ const LoginScreen = ({navigation}) => {
       // user is authenticated
 
       axios
-        .post('http://13.124.126.30:8000/authorization/oauth/apple/', {
+        .post(global.config.api_host + 'authorization/oauth/apple/', {
           access_token: appleAuthRequestResponse.authorizationCode,
           id_token: appleAuthRequestResponse.identityToken,
         })
@@ -162,7 +162,7 @@ const LoginScreen = ({navigation}) => {
         .then(async key => {
           tmpValue[global.config.user_info_const.TOKEN] = key;
           return await axios.get(
-            'http://13.124.126.30:8000/authorization/user/info/',
+            global.config.api_host + 'authorization/user/info/',
           );
         })
 
@@ -226,13 +226,13 @@ const LoginScreen = ({navigation}) => {
       .then(async result => {
         logCallback(`Access Token is ${result.accessToken}`, null);
         // return await axios.post(
-        //   'http://13.124.126.30:8000/authorization/oauth/kakao/',
+        //   global.config.api_host + 'authorization/oauth/kakao/',
         //   {
         //     access_token: result.accessToken,
         //   },
         // );
         return await axios({
-          url: 'http://13.124.126.30:8000/authorization/oauth/kakao/',
+          url: global.config.api_host + 'authorization/oauth/kakao/',
           method: 'POST',
           data: {
             access_token: result.accessToken,
@@ -253,7 +253,7 @@ const LoginScreen = ({navigation}) => {
       .then(async key => {
         tmpValue[global.config.user_info_const.TOKEN] = key;
         return await axios.get(
-          'http://13.124.126.30:8000/authorization/user/info/',
+          global.config.api_host + 'authorization/user/info/',
         );
       })
       .then(async result => {

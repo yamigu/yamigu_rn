@@ -256,7 +256,8 @@ const SideMenu = ({navigation}) => {
             </TouchableByPlatform>
           ) : null}
 
-          {sideInfo[global.config.user_info_const.AVATA] === 'avata' ? (
+          {sideInfo[global.config.user_info_const.AVATA] === 'avata' ||
+          sideInfo[global.config.user_info_const.AVATA] === null ? (
             <TouchableByPlatform
               navigation={navigation}
               onPress={() =>

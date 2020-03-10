@@ -29,6 +29,7 @@ import Call911Modal from '~/components/common/Call911Modal';
 import SendChatting from '~/components/common/SendChatting';
 import MaterialCommunityicon from 'react-native-vector-icons/MaterialCommunityIcons';
 import AsyncStorage from '@react-native-community/async-storage';
+import '~/config';
 
 // const data = ['2:2 미팅', '3:3 미팅', '4:4 미팅', '날짜는 조율 가능해요'];
 
@@ -174,7 +175,7 @@ const ProfileCardFeed = ({
     setLiked(likedByServer);
 
     axios
-      .get('http://13.124.126.30:8000/core/feed/' + uid + '/')
+      .get(global.config.api_host + 'core/feed/' + uid + '/')
       .then(result => {
         // console.log(result.data);
         let tmpFeedList = [];
@@ -223,7 +224,7 @@ const ProfileCardFeed = ({
       // console.log(feedList[0].id);
       axios
         .post(
-          'http://13.124.126.30:8000/core/like/' + feedList[0].id + '/cancel/',
+          global.config.api_host + 'core/like/' + feedList[0].id + '/cancel/',
         )
         .then(result => {
           // console.log(result.data);
@@ -235,7 +236,7 @@ const ProfileCardFeed = ({
       // console.log(feedList);
       // console.log(feedList[0].id);
       axios
-        .post('http://13.124.126.30:8000/core/like/' + feedList[0].id + '/')
+        .post(global.config.api_host + 'core/like/' + feedList[0].id + '/')
         .then(result => {
           // console.log(result.data);
           setLiked(!liked);

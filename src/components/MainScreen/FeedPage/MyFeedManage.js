@@ -28,6 +28,8 @@ import {
 } from '~/components/common/CustomText';
 import file_upload from '~/lib/utils/file_upload';
 import axios from 'axios';
+import '~/config';
+
 const dw = Dimensions.get('window').width;
 const dh = Dimensions.get('window').height;
 const nowYear = 20200000;
@@ -56,7 +58,7 @@ const MyFeedManage = ({
         onPress: () => {
           const fid = myFeed[_viewPager.current._currentIndex].id;
           axios
-            .patch('http://13.124.126.30:8000/core/feed/' + fid + '/delete/')
+            .patch(global.config.api_host + 'core/feed/' + fid + '/delete/')
             .then(result => {
               let temp = myFeed.slice();
               temp.splice(_viewPager.current._currentIndex, 1);
@@ -138,7 +140,7 @@ const MyFeedManage = ({
       type: imageSource.type,
       name: imageSource.uri,
     });
-    file_upload(formData, 'http://13.124.126.30:8000/core/feed/').then(
+    file_upload(formData, global.config.api_host + 'core/feed/').then(
       result => {
         setImageSource(null);
         setModalVisible(false);

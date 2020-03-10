@@ -4,8 +4,7 @@ import {ScrollView, StyleSheet, View} from 'react-native';
 import {List, ListItem} from 'native-base';
 import LikeMatching from './LikeMatching';
 import UserProfileSmall from '~/components/common/UserProfileSmall';
-import GoldBadge from '~/components/common/GoldBadge';
-import TouchableByPlatform from '~/components/common/TouchableByPlatform';
+import '~/config';
 
 const nowYear = 20200000;
 
@@ -23,7 +22,7 @@ const LikeMatchingList = ({navigation, likeMatchingProp, likeNum}) => {
 
   useEffect(() => {
     // let tmpBothLike = [];
-    // axios.get('http://13.124.126.30:8000/core/both_like/').then(result => {
+    // axios.get(global.config.api_host + 'core/both_like/').then(result => {
     //   result.data.map((item, index) => {
     //     tmpBothLike[index] = item;
     //   });

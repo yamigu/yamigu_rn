@@ -197,7 +197,7 @@ const StoreScreen = ({navigation}) => {
       await RNIap.requestPurchase(sku, false).then(result => {
         axios
           .post(
-            'http://13.124.126.30:8000/purchase/validate/' + Platform.OS + '/',
+            global.config.api_host + 'purchase/validate/' + Platform.OS + '/',
             {
               payload: JSON.stringify(result),
             },

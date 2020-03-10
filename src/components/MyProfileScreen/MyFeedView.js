@@ -46,7 +46,7 @@ const MyFeedView = ({userInfo, scroll, offsetY, feed_list, setFeed_list}) => {
         onPress: () => {
           const fid = feed_list[_viewPager.current._currentIndex - 1].id;
           axios
-            .patch('http://13.124.126.30:8000/core/feed/' + fid + '/delete/')
+            .patch(global.config.api_host + 'core/feed/' + fid + '/delete/')
             .then(result => {
               let temp = feed_list.slice();
               temp.splice(_viewPager.current._currentIndex - 1, 1);
@@ -79,7 +79,8 @@ const MyFeedView = ({userInfo, scroll, offsetY, feed_list, setFeed_list}) => {
     if (userInfo[global.config.user_info_const.UID] !== undefined) {
       axios
         .get(
-          'http://13.124.126.30:8000/core/feed/' +
+          global.config.api_host +
+            'core/feed/' +
             userInfo[global.config.user_info_const.UID] +
             '/',
         )
@@ -181,17 +182,16 @@ const MyFeedView = ({userInfo, scroll, offsetY, feed_list, setFeed_list}) => {
                 type: imageSource.type,
                 name: imageSource.name,
               });
-              file_upload(
-                formData,
-                'http://13.124.126.30:8000/core/feed/',
-              ).then(result => {
-                setImageSource(null);
-                setModalVisible(false);
-                let tmpFeed = feed_list.slice();
-                tmpFeed.unshift(result.data);
-                // console.log(result.data);
-                setFeed_list(tmpFeed);
-              });
+              file_upload(formData, global.config.api_host + 'core/feed/').then(
+                result => {
+                  setImageSource(null);
+                  setModalVisible(false);
+                  let tmpFeed = feed_list.slice();
+                  tmpFeed.unshift(result.data);
+                  // console.log(result.data);
+                  setFeed_list(tmpFeed);
+                },
+              );
             }}>
             <CustomTextRegular size={17} color={palette.red}>
               완료

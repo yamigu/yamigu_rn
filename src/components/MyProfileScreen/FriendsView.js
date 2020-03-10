@@ -7,6 +7,7 @@ import ProfileCard from '../common/ProfileCard';
 import Octionicon from 'react-native-vector-icons/Octicons';
 import axios from 'axios';
 import TouchableByPlatform from '../common/TouchableByPlatform';
+import '~/config';
 
 const FriendsView = ({navigation}) => {
   const [numOfFriends, setNumOfFriends] = useState(0);
@@ -14,7 +15,7 @@ const FriendsView = ({navigation}) => {
   const nowYear = 20200000;
 
   useEffect(() => {
-    axios.get('http://13.124.126.30:8000/core/friends/').then(result => {
+    axios.get(global.config.api_host + 'core/friends/').then(result => {
       let tmpNo = 0;
       console.log(result.data);
       result.data.map(item => {
@@ -43,11 +44,11 @@ const FriendsView = ({navigation}) => {
           onPress: () => {
             console.log('OK Pressed');
             axios
-              .patch('http://13.124.126.30:8000/core/friend/', {
+              .patch(global.config.api_host + 'core/friend/', {
                 id: id,
                 action: action,
               })
-              .then(() => axios.get('http://13.124.126.30:8000/core/friends/'))
+              .then(() => axios.get(global.config.api_host + 'core/friends/'))
               .then(result => {
                 console.log(result.data);
                 setFriendList(result.data);

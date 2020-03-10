@@ -14,9 +14,7 @@ import {
   Animated,
   Easing,
   Platform,
-  SafeAreaView,
   Image,
-  StatusBar,
   ScrollView,
 } from 'react-native';
 import palette from '~/lib/styles/palette';
@@ -41,6 +39,7 @@ import DeviceInfo, {useFirstInstallTime} from 'react-native-device-info';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import Foundation from 'react-native-vector-icons/Foundation';
+import '~/config';
 // import CustomLabel from './CustomLabel';
 
 const dw = Dimensions.get('window').width;
@@ -98,7 +97,7 @@ const HomePage = ({navigation}) => {
             axios.defaults.headers.common['Authorization'] =
               'Token ' + jUserValue[0];
             axios
-              .get('http://13.124.126.30:8000/authorization/user/info/')
+              .get(global.config.api_host + 'authorization/user/info/')
               .then(result => {
                 // console.log(result.status);
                 console.log('Successfully get user info, set UserInfo');
@@ -136,7 +135,7 @@ const HomePage = ({navigation}) => {
               .then(() => {
                 console.log('Get num of available yami');
                 axios
-                  .get('http://13.124.126.30:8000/authorization/user/yami/')
+                  .get(global.config.api_host + 'authorization/user/yami/')
                   .then(result => {
                     jUserValue[global.config.user_info_const.YAMI] =
                       result.data;
@@ -151,7 +150,7 @@ const HomePage = ({navigation}) => {
               })
               .then(() => {
                 axios
-                  .get('http://13.124.126.30:8000/authorization/user/free/')
+                  .get(global.config.api_host + 'authorization/user/free/')
                   .then(result => {
                     jUserValue[global.config.user_info_const.FREE] =
                       result.data;
@@ -268,7 +267,7 @@ const HomePage = ({navigation}) => {
     };
     const checkFCMDevice = data => {
       return new Promise((resolve, reject) => {
-        const url = 'http://13.124.126.30:8000/authorization/fcm/check_device/';
+        const url = global.config.api_host + 'authorization/fcm/check_device/';
         axios
           .post(url, data)
           .then(check_device => {
@@ -289,7 +288,7 @@ const HomePage = ({navigation}) => {
       return new Promise((resolve, reject) => {
         axios
           .post(
-            'http://13.124.126.30:8000/authorization/fcm/register_device/',
+            global.config.api_host + 'authorization/fcm/register_device/',
             data,
           )
           .then(register => {
@@ -301,7 +300,7 @@ const HomePage = ({navigation}) => {
     const retrieveFirebaseToken = () => {
       return new Promise((resolve, reject) => {
         axios
-          .get('http://13.124.126.30:8000/authorization/firebase/token/')
+          .get(global.config.api_host + 'authorization/firebase/token/')
           .then(result => {
             return result.data;
           })
@@ -315,7 +314,7 @@ const HomePage = ({navigation}) => {
     const retrieveMatchRequestStatus = () => {
       return new Promise((resolve, reject) => {
         axios
-          .get('http://13.124.126.30:8000/core/match_request/')
+          .get(global.config.api_host + 'core/match_request/')
           .then(result => {
             // console.log('homepage useEffect match_request');
             // console.log(result.data);
@@ -460,7 +459,7 @@ const HomePage = ({navigation}) => {
 
                 //이미 매칭중인데 누르면 취소니까
                 axios
-                  .patch('http://13.124.126.30:8000/core/match_request/')
+                  .patch(global.config.api_host + 'core/match_request/')
                   .then(result => {
                     setLoginLoading(false);
                     setFreeTicket(result.data.free);
@@ -548,7 +547,7 @@ const HomePage = ({navigation}) => {
             let max_age = multiSliderValue[1];
             // console.log(memInt);
             axios
-              .post('http://13.124.126.30:8000/core/match_request/', {
+              .post(global.config.api_host + 'core/match_request/', {
                 personnel_selected: memInt,
                 date_selected: dateInt,
                 min_age: min_age,
@@ -636,7 +635,7 @@ const HomePage = ({navigation}) => {
           let max_age = multiSliderValue[1];
           // console.log(memInt);
           axios
-            .post('http://13.124.126.30:8000/core/match_request/', {
+            .post(global.config.api_host + 'core/match_request/', {
               personnel_selected: memInt,
               date_selected: dateInt,
               min_age: min_age,

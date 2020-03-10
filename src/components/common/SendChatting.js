@@ -78,7 +78,7 @@ const SendChatting = ({avata, uid, setModalVisible, navigation}) => {
   const requestChatCreate = () => {
     return new Promise(resolve => {
       axios
-        .post('http://13.124.126.30:8000/core/chat/', {
+        .post(global.config.api_host + 'core/chat/', {
           target_uid: uid,
           greet: inputText === '' ? '안녕하세요' : inputText,
         })

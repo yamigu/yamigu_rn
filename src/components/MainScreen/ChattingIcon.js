@@ -39,7 +39,7 @@ const ChattingIcon = ({navigation}) => {
         'Token ' + userVal[global.config.user_info_const.TOKEN];
 
       axios
-        .get('http://13.124.126.30:8000/authorization/firebase/token/')
+        .get(global.config.api_host + 'authorization/firebase/token/')
         .then(result => {
           return result.data;
         })
@@ -51,7 +51,7 @@ const ChattingIcon = ({navigation}) => {
           console.log('signin');
           firebase.auth().signInWithCustomToken(token);
           uid = userVal[global.config.user_info_const.UID];
-          axios.get('http://13.124.126.30:8000/core/chat/').then(result => {
+          axios.get(global.config.api_host + 'core/chat/').then(result => {
             result.data.chat_list.map(item => {
               console.log('user/' + uid + '/chat/' + item.id);
               firebase

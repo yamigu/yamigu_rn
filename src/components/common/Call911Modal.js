@@ -14,6 +14,7 @@ import {CustomTextMedium, CustomTextRegular} from './CustomText';
 import palette from '~/lib/styles/palette';
 import {StyleSheet} from 'react-native';
 import axios from 'axios';
+import '~/config';
 
 const dh = Dimensions.get('window').height;
 const dw = Dimensions.get('window').width;
@@ -29,7 +30,7 @@ const Call911Modal = ({setCall911ModalVisible, uid}) => {
     if (index === -1) return;
 
     axios
-      .post('http://13.124.126.30:8000/core/report/', {
+      .post(global.config.api_host + 'core/report/', {
         who: uid,
         why: list911[index],
       })

@@ -11,6 +11,8 @@ import palette from '~/lib/styles/palette';
 import {Item, Input} from 'native-base';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import axios from 'axios';
+import '~/config';
+
 var getTextLength = function(str) {
   var len = 0;
   for (var i = 0; i < str.length; i++) {
@@ -39,12 +41,9 @@ const NicknamePage = ({
         avail = false;
       } else {
         avail = await axios
-          .post(
-            'http://13.124.126.30:8000/authorization/validation/nickname/',
-            {
-              nickname: value,
-            },
-          )
+          .post(global.config.api_host + 'authorization/validation/nickname/', {
+            nickname: value,
+          })
           .then(() => true)
           .catch(() => false);
       }

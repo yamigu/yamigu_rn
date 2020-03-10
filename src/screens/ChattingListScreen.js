@@ -70,7 +70,7 @@ const ChattingListScreen = ({navigation}) => {
   }, []);
   const getChatList = () => {
     return new Promise(resolve => {
-      axios.get('http://13.124.126.30:8000/core/chat/').then(result => {
+      axios.get(global.config.api_host + 'core/chat/').then(result => {
         const chatlist_data = [];
         const recvlist_data = [];
         result.data.chat_list.map(item => {

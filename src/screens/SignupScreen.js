@@ -25,6 +25,8 @@ import PersonalInfoPage from '~/components/SignupScreen/PersonalInfoPage';
 import IVScreen from './IVScreen';
 import axios from 'axios';
 import AsyncStorage from '@react-native-community/async-storage';
+import '~/config';
+
 let global_viewPager;
 let keyboardPadding = 0;
 const pf = Platform.OS;
@@ -166,7 +168,7 @@ const SignupScreen = ({navigation}) => {
             if (page === 2) {
               let isStudentString = is_student.toString();
               axios
-                .post('http://13.124.126.30:8000/authorization/user/signup/', {
+                .post(global.config.api_host + 'authorization/user/signup/', {
                   nickname: nickname,
                   is_student: isStudentString,
                   department: department,

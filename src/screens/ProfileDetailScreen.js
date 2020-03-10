@@ -39,6 +39,7 @@ import SendChatting from '~/components/common/SendChatting';
 import Call911Modal from '~/components/common/Call911Modal';
 import MoreModal from '~/components/common/MoreModal';
 import AsyncStorage from '@react-native-community/async-storage';
+import '~/config';
 
 const deviceWidth = Dimensions.get('window').width;
 const nowYear = 20200000;
@@ -59,6 +60,7 @@ const ProfileDetailScreen = ({navigation}) => {
   const viewpagerIndex = navigation.getParam('viewpagerIndex');
   const isChatting = navigation.getParam('is_chatting', false);
   const friend = navigation.getParam('friend', false);
+  const [myUid, setMyUid] = useState(null);
   const [likedState, setLikedState] = useState(false);
   const [friendList, setFriendList] = useState([]);
   const [feedList, setFeedList] = useState([]);
@@ -72,7 +74,7 @@ const ProfileDetailScreen = ({navigation}) => {
       // console.log('좋아요 취소');
       axios
         .post(
-          'http://13.124.126.30:8000/core/like/' + feedList[0].id + '/cancel/',
+          global.config.api_host + 'core/like/' + feedList[0].id + '/cancel/',
         )
         .then(result => {
           console.log(result.data);
@@ -82,7 +84,7 @@ const ProfileDetailScreen = ({navigation}) => {
     } else {
       // console.log('좋아요 보내기');
       axios
-        .post('http://13.124.126.30:8000/core/like/' + feedList[0].id + '/')
+        .post(global.config.api_host + 'core/like/' + feedList[0].id + '/')
         .then(result => {
           console.log(result.data);
           setLikedState(!likedState);
@@ -103,13 +105,16 @@ const ProfileDetailScreen = ({navigation}) => {
   };
 
   useEffect(() => {
+    getStorage().then(result => {
+      setMyUid(result[global.config.user_info_const.UID]);
+    });
     navigation.setParams({
       setModal: tmp,
     });
     console.log(liked);
     setLikedState(liked);
     axios
-      .get('http://13.124.126.30:8000/core/feed/' + uid + '/')
+      .get(global.config.api_host + 'core/feed/' + uid + '/')
       .then(result => {
         // console.log(result.data);
         let tmpFeedList = [];
@@ -120,7 +125,7 @@ const ProfileDetailScreen = ({navigation}) => {
         setFeedList(tmpFeedList.reverse());
       });
     axios
-      .get('http://13.124.126.30:8000/core/friends/' + uid + '/')
+      .get(global.config.api_host + 'core/friends/' + uid + '/')
       .then(result => {
         // console.log(result.data);
         let tmpFriendList = [];
@@ -282,7 +287,7 @@ const ProfileDetailScreen = ({navigation}) => {
                 </CustomTextMedium>
               </View>
             </TouchableByPlatform>
-          ) : myFeed !== true ? (
+          ) : myFeed !== true && myUid !== uid ? (
             <View style={styles.actionView}>
               <TouchableByPlatform
                 style={styles.touchable}
@@ -443,6 +448,10 @@ const ProfileDetailScreen = ({navigation}) => {
                   <ProfileCard
                     size={50}
                     fontSizes={[14, 12, 12]}
+                    location={friend.location}
+                    height={friend.height}
+                    verified={friend.verified}
+                    uid={friend.uid}
                     nickname={friend.nickname}
                     avata={friend.avata === null ? null : {uri: friend.avata}}
                     age={Math.floor(
@@ -450,6 +459,7 @@ const ProfileDetailScreen = ({navigation}) => {
                     )}
                     belong={friend.belong}
                     department={friend.department}
+                    navigation={navigation}
                     // location={friend.location}
                   />
                 </Body>

@@ -15,7 +15,7 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import axios from 'axios';
 import TouchableByPlatform from '~/components/common/TouchableByPlatform';
 import CustomMarker from '~/components/MainScreen/HomePage/CustomMarker';
-
+import '~/config';
 const AddFriendsScreen = ({navigation}) => {
   const [inputValue, setInputValue] = useState('');
   const [loginLoading, setLoginLoading] = useState(false);
@@ -30,7 +30,7 @@ const AddFriendsScreen = ({navigation}) => {
   };
   useEffect(() => {
     console.log('useEffect');
-    axios.get('http://13.124.126.30:8000/core/friends/').then(result => {
+    axios.get(global.config.api_host + 'core/friends/').then(result => {
       let tmpNo = 0;
       console.log(result.data);
       result.data.map(item => {
@@ -59,11 +59,11 @@ const AddFriendsScreen = ({navigation}) => {
           onPress: () => {
             console.log('OK Pressed');
             axios
-              .patch('http://13.124.126.30:8000/core/friend/', {
+              .patch(global.config.api_host + 'core/friend/', {
                 id: id,
                 action: action,
               })
-              .then(() => axios.get('http://13.124.126.30:8000/core/friends/'))
+              .then(() => axios.get(global.config.api_host + 'core/friends/'))
               .then(result => {
                 console.log(result.data);
                 setFriendList(result.data);
@@ -81,7 +81,7 @@ const AddFriendsScreen = ({navigation}) => {
     setInputValue('');
 
     axios
-      .post('http://13.124.126.30:8000/core/friend/', {
+      .post(global.config.api_host + 'core/friend/', {
         phoneno: inputValue,
       })
       .then(result => {
@@ -93,7 +93,7 @@ const AddFriendsScreen = ({navigation}) => {
           setLoginLoading(false);
         }
       })
-      .then(() => axios.get('http://13.124.126.30:8000/core/friends/'))
+      .then(() => axios.get(global.config.api_host + 'core/friends/'))
       .then(result => {
         console.log(result.data);
         setFriendList(result.data);

@@ -15,7 +15,7 @@ import appleAuth, {
   AppleAuthCredentialState,
 } from '@invertase/react-native-apple-authentication';
 import KakaoLogins from '@react-native-seoul/kakao-login';
-
+import '~/config';
 const dw = Dimensions.get('window').width;
 
 const initUserValue = [
@@ -49,7 +49,7 @@ const GetoutScreen = ({navigation}) => {
   };
   const requestWithdraw = () => {
     axios
-      .post('http://13.124.126.30:8000/authorization/withdraw/')
+      .post(global.config.api_host + 'authorization/withdraw/')
       .then(async result => {
         await logout();
         navigation.dispatch(

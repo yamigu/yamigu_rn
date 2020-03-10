@@ -25,6 +25,7 @@ import file_upload_for_pf from '~/lib/utils/file_upload_for_pf';
 
 import axios from 'axios';
 import AsyncStorage from '@react-native-community/async-storage';
+import '~/config';
 
 const deviceWidth = Dimensions.get('window').width;
 const dw = Dimensions.get('window').width;
@@ -118,7 +119,7 @@ const ProfileImageAddView = ({
   useEffect(() => {
     _retrieveData();
     axios({
-      url: 'http://13.124.126.30:8000/authorization/user/profile_image/',
+      url: global.config.api_host + 'authorization/user/profile_image/',
       method: 'GET',
       headers: {
         'Content-Type': 'multipart/form-data',
@@ -256,7 +257,7 @@ const ProfileImageAddView = ({
 
                 file_upload_for_pf(
                   formData,
-                  'http://13.124.126.30:8000/authorization/user/profile_image/',
+                  global.config.api_host + 'authorization/user/profile_image/',
                 )
                   .then(result => {
                     console.log('data::::');

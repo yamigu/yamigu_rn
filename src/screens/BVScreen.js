@@ -25,6 +25,7 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import file_upload from '~/lib/utils/file_upload';
 import AsyncStorage from '@react-native-community/async-storage';
 import axios from 'axios';
+import '~/config';
 
 const dw = Dimensions.get('window').width;
 const BVScreen = ({navigation}) => {
@@ -45,7 +46,7 @@ const BVScreen = ({navigation}) => {
       imageSource: imageSource,
     });
     axios
-      .get('http://13.124.126.30:8000/authorization/user/belong_verification/')
+      .get(global.config.api_host + 'authorization/user/belong_verification/')
       .then(result => {
         // console.log(result.data);
         return result.data;
@@ -108,7 +109,7 @@ const BVScreen = ({navigation}) => {
       resolve(
         file_upload(
           formData,
-          'http://13.124.126.30:8000/authorization/user/belong_verification/',
+          global.config.api_host + 'authorization/user/belong_verification/',
         )
           .then(result => {
             console.log('here result aa');

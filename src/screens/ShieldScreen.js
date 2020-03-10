@@ -23,6 +23,8 @@ import axios from 'axios';
 import Spinner from 'react-native-loading-spinner-overlay';
 import Contacts from 'react-native-contacts';
 import {PermissionsAndroid} from 'react-native';
+import '~/config';
+
 const pf = Platform.OS;
 
 const deviceWidth = Dimensions.get('window').width;
@@ -43,7 +45,7 @@ const ShieldScreen = ({params}) => {
   useEffect(() => {
     //axios.get(아는 사람 피하기 목록 가져오기)
     //setSheilding(result.data);
-    axios.get('http://13.124.126.30:8000/core/shield/').then(result => {
+    axios.get(global.config.api_host + 'core/shield/').then(result => {
       setSheilding(result.data.reverse());
     });
   }, []);
@@ -52,23 +54,21 @@ const ShieldScreen = ({params}) => {
     //server로 보내기
     if (data === '' || data === null || data === undefined) return;
     else {
-      axios
-        .post('http://13.124.126.30:8000/core/shield/', data)
-        .then(result => {
-          const newData = sheilding.slice();
-          result.data.map(item => {
-            newData.unshift(item);
-          });
-          setSheilding(newData);
-          setEnrolling(0);
-          setFocused(false);
-          setInputText('');
+      axios.post(global.config.api_host + 'core/shield/', data).then(result => {
+        const newData = sheilding.slice();
+        result.data.map(item => {
+          newData.unshift(item);
         });
+        setSheilding(newData);
+        setEnrolling(0);
+        setFocused(false);
+        setInputText('');
+      });
     }
   };
   const deleteShield = (data, index) => {
     axios
-      .patch('http://13.124.126.30:8000/core/shield/', data)
+      .patch(global.config.api_host + 'core/shield/', data)
       .then(result => {
         console.log(result.data);
         const newData = sheilding.slice();

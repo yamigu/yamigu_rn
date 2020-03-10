@@ -27,6 +27,8 @@ import {
 } from './CustomText';
 import palette from '~/lib/styles/palette';
 import TouchableByPlatform from './TouchableByPlatform';
+import '~/config';
+
 const dw = Dimensions.get('window').width;
 const dh = Dimensions.get('window').height;
 
@@ -68,20 +70,24 @@ const ProfileCard = ({
           <TouchableByPlatform
             onPress={() => {
               if (noTouch !== true) {
-                navigation.navigate('Profile', {
-                  viewpagerIndex: 0,
-                  location,
-                  height,
-                  verified,
-                  uid,
-                  nickname,
-                  avata: avata.uri,
-                  age,
-                  belong,
-                  department,
-                  liked,
-                  friend,
-                  setLiked: value => setLiked(value),
+                navigation.navigate({
+                  routeName: 'Profile',
+                  params: {
+                    viewpagerIndex: 0,
+                    location,
+                    height,
+                    verified,
+                    uid,
+                    nickname,
+                    avata: avata.uri,
+                    age,
+                    belong,
+                    department,
+                    liked,
+                    friend,
+                    setLiked: value => setLiked(value),
+                  },
+                  key: uid,
                 });
               }
             }}>

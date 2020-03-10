@@ -12,6 +12,7 @@ import {Button, Toast} from 'native-base';
 import {CustomTextMedium, CustomTextRegular} from './CustomText';
 import palette from '~/lib/styles/palette';
 import axios from 'axios';
+import '~/config';
 
 const dh = Dimensions.get('window').height;
 const dw = Dimensions.get('window').width;
@@ -19,7 +20,7 @@ const dw = Dimensions.get('window').width;
 const MoreModal = ({setMoreModalVisible, setCall911ModalVisible, uid}) => {
   const requestBlock = () => {
     axios
-      .post('http://13.124.126.30:8000/core/block/', {
+      .post(global.config.api_host + 'core/block/', {
         who: uid,
       })
       .then(() => {

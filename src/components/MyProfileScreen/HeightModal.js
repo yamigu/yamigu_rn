@@ -15,6 +15,7 @@ import {CustomTextRegular, CustomTextBold} from '../common/CustomText';
 import palette from '~/lib/styles/palette';
 import Axios from 'axios';
 import AsyncStorage from '@react-native-community/async-storage';
+import '~/config';
 
 const dh = Dimensions.get('window').height;
 const dw = Dimensions.get('window').width;
@@ -115,7 +116,8 @@ const HeightModal = ({setHightModalVisible, setUserInfo}) => {
                     style={styles.btn}
                     onPress={() => {
                       Axios.post(
-                        'http://13.124.126.30:8000/authorization/user/info/height/',
+                        global.config.api_host +
+                          'authorization/user/info/height/',
                         {height: item},
                       )
                         .then(async result => {

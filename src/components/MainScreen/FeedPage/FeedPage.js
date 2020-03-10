@@ -14,6 +14,7 @@ import LikeMatchingList from './LikeMatchingList';
 import MyFeedManage from './MyFeedManage';
 import {Content, Container} from 'native-base';
 import axios from 'axios';
+import '~/config';
 
 const FeedPage = props => {
   const [myFeedManageProp, setMyFeedManageProp] = useState([]);
@@ -30,7 +31,7 @@ const FeedPage = props => {
     return new Promise((resolve, reject) => {
       //setProfileCardProp(feeds);
       axios
-        .get('http://13.124.126.30:8000/core/feeds/')
+        .get(global.config.api_host + 'core/feeds/')
         .then(result => {
           //   console.log(result.data);
           let data = [];
@@ -56,7 +57,7 @@ const FeedPage = props => {
   const retrieveBothLikes = () => {
     return new Promise((resolve, reject) => {
       axios
-        .get('http://13.124.126.30:8000/core/both_like/')
+        .get(global.config.api_host + 'core/both_like/')
         .then(result => {
           let bothLike = [];
           result.data.map((item, index) => {
@@ -73,7 +74,7 @@ const FeedPage = props => {
   const retrieveLikeNum = () => {
     return new Promise((resolve, reject) => {
       axios
-        .get('http://13.124.126.30:8000/core/like_count/')
+        .get(global.config.api_host + 'core/like_count/')
         .then(result => {
           resolve(result.data);
         })
@@ -134,7 +135,7 @@ const FeedPage = props => {
     const listener = props.navigation.addListener('didFocus', () => {
       props.navigation.setParams({});
       axios
-        .get('http://13.124.126.30:8000/authorization/user/info/')
+        .get(global.config.api_host + 'authorization/user/info/')
         .then(item => {
           setMyFeedManageProp(item.data);
           if (item.data.avata !== null) {
@@ -146,7 +147,7 @@ const FeedPage = props => {
             console.log(innerHasProfile);
           }
           let tmpUrl =
-            'http://13.124.126.30:8000/core/feed/' + item.data.uid + '/';
+            global.config.api_host + 'core/feed/' + item.data.uid + '/';
           return tmpUrl;
         })
         .then(url => {
@@ -172,7 +173,7 @@ const FeedPage = props => {
       refre();
     });
     axios
-      .get('http://13.124.126.30:8000/authorization/user/info/')
+      .get(global.config.api_host + 'authorization/user/info/')
       .then(item => {
         setMyFeedManageProp(item.data);
         if (item.data.avata !== null) {
@@ -184,7 +185,7 @@ const FeedPage = props => {
           console.log(innerHasProfile);
         }
         let tmpUrl =
-          'http://13.124.126.30:8000/core/feed/' + item.data.uid + '/';
+          global.config.api_host + 'core/feed/' + item.data.uid + '/';
         return tmpUrl;
       })
       .then(url => {
@@ -207,7 +208,7 @@ const FeedPage = props => {
       });
 
     //axios for likematchning
-    axios.get('http://13.124.126.30:8000/core/both_like/').then(result => {
+    axios.get(global.config.api_host + 'core/both_like/').then(result => {
       let tmpBothLike = [];
       result.data.map((item, index) => {
         tmpBothLike[index] = item;
@@ -215,7 +216,7 @@ const FeedPage = props => {
       setLikeMatchingProp(tmpBothLike);
     });
     axios
-      .get('http://13.124.126.30:8000/core/feeds/')
+      .get(global.config.api_host + 'core/feeds/')
       .then(result => {
         let tmp = [];
         let count = 0;

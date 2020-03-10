@@ -130,7 +130,7 @@ const ChattingScreen = ({navigation}) => {
   };
   const requestApprove = () => {
     axios
-      .patch('http://13.124.126.30:8000/core/chat/', {
+      .patch(global.config.api_host + 'core/chat/', {
         room_id: roomId,
         action: 'APPROVE',
       })
@@ -144,7 +144,7 @@ const ChattingScreen = ({navigation}) => {
   const requestDecline = room => {
     console.log(room);
     axios
-      .patch('http://13.124.126.30:8000/core/chat/', {
+      .patch(global.config.api_host + 'core/chat/', {
         room_id: room,
         action: 'DECLINE',
       })
@@ -154,7 +154,7 @@ const ChattingScreen = ({navigation}) => {
   };
   const requestCancel = () => {
     axios
-      .patch('http://13.124.126.30:8000/core/chat/', {
+      .patch(global.config.api_host + 'core/chat/', {
         room_id: roomId,
         action: 'CANCEL',
       })
@@ -164,7 +164,7 @@ const ChattingScreen = ({navigation}) => {
   };
   const requestCancelCheck = () => {
     axios
-      .patch('http://13.124.126.30:8000/core/chat/', {
+      .patch(global.config.api_host + 'core/chat/', {
         room_id: roomId,
         action: 'CANCEL_CHECK',
       })
