@@ -62,11 +62,11 @@
 		<true/>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string>By sharing users' daily photos, they can drive more reactions. </string>
+	<string>"야미구"가 프로필 사진 또는 피드 사진 업로드를 위해 카메라에 접근하도록 허용합니다. </string>
 	<key>NSContactsUsageDescription</key>
-	<string>In the app, users can be rewarded by registering friends, for which users register their friends as contacts</string>
+	<string>지인들을 등록하거나 차단하기 위해 연락처 접근이 필요합니다.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Since users are seeking meetings with people who have been certified, they will need a photo to verify their identity.</string>
+	<string>"야미구"가 프로필 사진 또는 피드 사진 업로드를 위해 사진 라이브러리에 접근하도록 허용합니다.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Fonts/Entypo.ttf</string>
