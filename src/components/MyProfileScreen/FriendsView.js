@@ -99,7 +99,6 @@ const FriendsView = ({navigation}) => {
                   />
                 ) : friend.you_sent === true ? (
                   <ProfileCard
-                    addF={true}
                     size={66}
                     fontSizes={[16, 14, 14]}
                     nickname="친구 수락중"
@@ -107,6 +106,7 @@ const FriendsView = ({navigation}) => {
                     age=""
                     belong=""
                     department={friend.phoneno}
+                    noTouch={true}
                   />
                 ) : (
                   <ProfileCard
@@ -118,6 +118,7 @@ const FriendsView = ({navigation}) => {
                     age=""
                     belong=""
                     department={friend.phoneno}
+                    noTouch={true}
                   />
                 )}
               </Body>

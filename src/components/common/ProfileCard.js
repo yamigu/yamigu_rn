@@ -133,7 +133,15 @@ const ProfileCard = ({
             </View>
             <View style={styles.secondLine}>
               <CustomTextRegular size={fontSizes[2]} color={palette.sub}>
-                {belong} {department}, {location}
+                {belong}
+                {department !== '' &&
+                department !== undefined &&
+                department !== null
+                  ? ' ' + department
+                  : ''}
+                {location !== '' && location !== undefined && location !== null
+                  ? ', ' + location
+                  : ''}
               </CustomTextRegular>
             </View>
           </View>
