@@ -155,13 +155,18 @@ const AddFriendsScreen = ({navigation}) => {
               <Body>
                 {friend.approved === true ? (
                   <ProfileCard
+                    verified={friend.user_info.verified}
+                    height={friend.user_info.height}
+                    uid={friend.user_info.uid}
+                    navigation={navigation}
+                    location={friend.user_info.location}
                     size={66}
                     fontSizes={[16, 14, 14]}
                     nickname={friend.user_info.nickname}
-                    image={
-                      Object.keys(friend.user_info).length === 5
+                    avata={
+                      friend.user_info.avata === null
                         ? null
-                        : friend.user_info.avata
+                        : {uri: friend.user_info.avata}
                     }
                     age={Math.floor(
                       (nowYear - parseInt(friend.user_info.birthdate) + 20000) /
@@ -169,7 +174,7 @@ const AddFriendsScreen = ({navigation}) => {
                     )}
                     belong={friend.user_info.belong}
                     department={friend.user_info.department}
-                    addF={true}
+                    friend={true}
                   />
                 ) : friend.you_sent === true ? (
                   <ProfileCard
