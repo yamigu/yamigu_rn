@@ -31,7 +31,7 @@ const ChattingListScreen = ({navigation}) => {
             },
           },
         ]);
-        return false;
+        resolve(false);
       } else if (
         jUserValue[global.config.user_info_const.NICKNAME] === 'nickname'
       ) {
@@ -43,10 +43,11 @@ const ChattingListScreen = ({navigation}) => {
             },
           },
         ]);
+        resolve(false);
       } else if (
         jUserValue[global.config.user_info_const.BIRTHDATE] === 'birthdate'
       ) {
-        Alert.alert('로그인 및 회원가입이 필요한 서비스입니다.', '', [
+        Alert.alert('소속인증이 필요한 서비스입니다.', '', [
           {
             onPress: () => {
               navigation.pop();
@@ -56,7 +57,7 @@ const ChattingListScreen = ({navigation}) => {
         ]);
       }
       setHasVeirifed(jUserValue[global.config.user_info_const.VERIFIED]);
-      resolve(true);
+      resolve(false);
     });
   };
 
@@ -103,13 +104,24 @@ const ChattingListScreen = ({navigation}) => {
   };
   const retrieveChatList = async () => {
     const result = await getChatList();
+
+    setLoading(false);
+
     return result;
   };
   useEffect(() => {
     setLoading(true);
-    if (userInfo.length === 0) return;
+    if (
+      userInfo === null ||
+      userInfo[global.config.user_info_const.NICKNAME] === null ||
+      userInfo[global.config.user_info_const.NICKNAME] === '' ||
+      userInfo[global.config.user_info_const.NICKNAME] === undefined ||
+      userInfo[global.config.user_info_const.NICKNAME] === 'nickname'
+    ) {
+      setLoading(false);
+      return;
+    }
     retrieveChatList();
-    setLoading(false);
   }, [userInfo]);
   return (
     <Content showsVerticalScrollIndicator={false} style={styles.root}>

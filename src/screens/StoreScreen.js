@@ -293,7 +293,8 @@ const StoreScreen = ({navigation}) => {
           toGoDisplay="친구 추가"
           toGo={() => navigation.navigate('AddFriends')}
         />
-        {userInfo.verified === 0 ? (
+        {userInfo !== null &&
+        userInfo[global.config.user_info_const.VERIFIED] === 0 ? (
           <ListItemWithNavigation
             title="야미 5개 무료"
             toGoDisplay="소속 인증하기"
@@ -301,7 +302,8 @@ const StoreScreen = ({navigation}) => {
           />
         ) : null}
 
-        {userInfo.avata === null ? (
+        {userInfo !== null &&
+        userInfo[global.config.user_info_const.AVATA] === null ? (
           <ListItemWithNavigation
             title="야미 5개 무료"
             toGoDisplay="프로필 사진 등록하기"

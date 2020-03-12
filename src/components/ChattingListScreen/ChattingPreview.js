@@ -67,6 +67,19 @@ const ChattingPreview = ({
         .off('child_added');
     };
   }, []);
+  useEffect(() => {
+    const notiData = navigation.getParam('notiData', null);
+    if (notiData !== null) {
+      if (roomId === JSON.parse(notiData.clickAction).roomId) {
+        navigation.navigate('Chatting', {
+          partner,
+          approved,
+          cancelled,
+          roomId,
+        });
+      }
+    }
+  }, [roomId]);
   return roomId > 0 ? (
     <ListItem
       avatar

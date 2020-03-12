@@ -73,6 +73,21 @@ const HomePage = ({navigation}) => {
   const [freeTicket, setFreeTicket] = useState(0);
   const [notiState, setNotiState] = useState(0);
 
+  const listenForOpen = async () => {
+    const notificationOpen = await firebase
+      .notifications()
+      .getInitialNotification();
+    let data = null;
+    if (notificationOpen) {
+      console.log('initialize by click noti!');
+      if (Platform.OS === 'android') {
+        console.log(notificationOpen.notification._android._notification._data);
+        navigation.navigate('ChattingList', {
+          notiData: notificationOpen.notification._android._notification._data,
+        });
+      }
+    }
+  };
   const _retrieveData = () => {
     console.log('retrieve');
     // axios.defaults.headers.common['Authorization'] = '';
@@ -80,7 +95,7 @@ const HomePage = ({navigation}) => {
       try {
         const userValue = await AsyncStorage.getItem('userValue');
         const jUserValue = JSON.parse(userValue);
-        setUserInfo(null);
+        setUserInfo(jUserValue);
         // console.log('juse::');
         // console.log(jUserValue);
         if (
@@ -190,6 +205,7 @@ const HomePage = ({navigation}) => {
   };
 
   useEffect(() => {
+    listenForOpen();
     const today = new Date();
     setNowTime(today);
 

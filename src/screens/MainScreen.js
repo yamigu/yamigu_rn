@@ -18,9 +18,7 @@ import {DrawerActions} from 'react-navigation-drawer';
 const MainScreenNavigator = createBottomTabNavigator(
   {
     Home: {
-      onPress: () => {
-        console.log('zzzzz');
-      },
+      onPress: () => {},
       screen: HomePage,
       navigationOptions: {
         tabBarIcon: ({focused}) => {

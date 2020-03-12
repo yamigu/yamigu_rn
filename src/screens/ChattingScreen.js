@@ -124,7 +124,16 @@ const ChattingScreen = ({navigation}) => {
       .database()
       .ref('user/' + partnerInfo.uid + '/chat/' + roomId)
       .update({is_unread: true});
-
+    axios.post(global.config.api_host + 'core/send_push/', {
+      data: {
+        title: userInfo[global.config.user_info_const.NICKNAME],
+        content: inputMessage,
+        clickAction: {
+          roomId: roomId,
+        },
+      },
+      uid: partnerInfo.uid,
+    });
     setInputMessage('');
     gotoBot();
   };
