@@ -66,6 +66,7 @@ const ChattingIcon = ({navigation}) => {
                       console.log('unread message');
                       console.log(unread.val());
                       if (unread.val() === true) setHasNew(true);
+                      else setHasNew(false);
                     });
                 });
               const temp = chatList.slice();

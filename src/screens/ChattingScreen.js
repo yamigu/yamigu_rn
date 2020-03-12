@@ -31,6 +31,7 @@ import ListItem from '~/components/common/ListItem';
 import Moment from 'moment';
 import axios from 'axios';
 import '~/config';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 const deviceWidth = Dimensions.get('window').width;
 const buttonWidth = deviceWidth * 0.9;
@@ -53,6 +54,7 @@ const ChattingScreen = ({navigation}) => {
   const [asyncData, setAsyncData] = useState([]);
   const [inputMessage, setInputMessage] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
+  const [loading, setLoading] = useState(true);
   const _scrollToBottomY = useRef();
 
   let keyboardPadding = 0;
@@ -162,6 +164,7 @@ const ChattingScreen = ({navigation}) => {
       });
   };
   const requestCancel = () => {
+    setModalVisible(false);
     axios
       .patch(global.config.api_host + 'core/chat/', {
         room_id: roomId,
@@ -272,6 +275,7 @@ const ChattingScreen = ({navigation}) => {
                   room,
               )
               .update({is_unread: false});
+            setLoading(false);
           });
       });
 
@@ -325,6 +329,7 @@ const ChattingScreen = ({navigation}) => {
           cancelled={cancelled}
         />
       </Modal>
+      <Spinner visible={loading} textContent={'대화 내역 불러오는중...'} />
 
       <KeyboardAvoidingView style={styles.container}>
         <ScrollView

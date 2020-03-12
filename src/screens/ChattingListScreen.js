@@ -65,7 +65,10 @@ const ChattingListScreen = ({navigation}) => {
     const listener = navigation.addListener('didFocus', async () => {
       console.log('getUserval');
       const result = await getUserVal();
-      if (!result) return;
+      if (!result) {
+        setLoading(false);
+        return;
+      }
     });
     return () => listener.remove();
   }, []);

@@ -118,9 +118,10 @@ const SendChatting = ({avata, uid, setModalVisible, navigation}) => {
         });
     });
   };
-  const sendFCM = roomId => {
+  const sendFDB = roomId => {
     return new Promise(resolve => {
       try {
+        const greet = inputText === '' ? '안녕하세요' : inputText;
         const key = firebase
           .database()
           .ref('message/' + roomId)
@@ -132,24 +133,37 @@ const SendChatting = ({avata, uid, setModalVisible, navigation}) => {
           .update({
             key: key,
             idSender: userInfo[global.config.user_info_const.UID],
-            message: inputText === '' ? '안녕하세요' : inputText,
+            message: greet,
             time: Moment.now(),
           });
         firebase
           .database()
           .ref('user/' + uid + '/chat/' + roomId)
           .update({is_unread: true});
+        sendFCM(roomId, greet);
         resolve(key);
       } catch (e) {
         console.log(e);
-        resolve(e);
+        resolve(null);
       }
+    });
+  };
+  const sendFCM = (room, greet) => {
+    axios.post(global.config.api_host + 'core/send_push/', {
+      data: {
+        title: userInfo[global.config.user_info_const.NICKNAME],
+        content: greet,
+        clickAction: {
+          roomId: room,
+        },
+      },
+      uid: uid,
     });
   };
   const requestChat = async () => {
     const result = await requestChatCreate();
     if (result === null) return;
-    const result2 = sendFCM(result.data.id);
+    const result2 = sendFDB(result.data.id);
   };
   return (
     <SafeAreaView

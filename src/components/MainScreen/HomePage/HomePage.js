@@ -39,6 +39,7 @@ import DeviceInfo, {useFirstInstallTime} from 'react-native-device-info';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import Foundation from 'react-native-vector-icons/Foundation';
+import {NavigationActions, StackActions} from 'react-navigation';
 import '~/config';
 // import CustomLabel from './CustomLabel';
 
@@ -65,14 +66,32 @@ let initUserValue = [
   'height',
 ];
 
-const HomePage = ({navigation}) => {
+const HomePage = ({navigation, screenProps}) => {
   const [asyncValue, setAsyncValue] = useState([]);
   const [matchRequested, setMatchRequested] = useState(false);
   const [userInfo, setUserInfo] = useState(null);
   const [yamiNo, setYamiNo] = useState(0);
   const [freeTicket, setFreeTicket] = useState(0);
   const [notiState, setNotiState] = useState(0);
-
+  const navigateByNoti = screenProps => {
+    if (
+      JSON.parse(
+        screenProps.notification._android._notification._data.clickAction,
+      ).roomId
+    ) {
+      navigation.navigate('ChattingList', {
+        notiData: screenProps.notification._android._notification._data,
+      });
+    } else if (
+      JSON.parse(
+        screenProps.notification._android._notification._data.clickAction,
+      ).feed
+    ) {
+      navigation.navigate('Feed');
+    } else {
+      navigation.navigate('Home');
+    }
+  };
   const listenForOpen = async () => {
     const notificationOpen = await firebase
       .notifications()
@@ -80,12 +99,9 @@ const HomePage = ({navigation}) => {
     let data = null;
     if (notificationOpen) {
       console.log('initialize by click noti!');
-      if (Platform.OS === 'android') {
-        console.log(notificationOpen.notification._android._notification._data);
-        navigation.navigate('ChattingList', {
-          notiData: notificationOpen.notification._android._notification._data,
-        });
-      }
+      console.log(notificationOpen.notification._android._notification._data);
+
+      navigateByNoti(screenProps);
     }
   };
   const _retrieveData = () => {
@@ -203,9 +219,21 @@ const HomePage = ({navigation}) => {
       }
     });
   };
-
   useEffect(() => {
-    listenForOpen();
+    console.log('HomePage useEffect');
+
+    if (Platform.OS === 'ios') {
+      console.log(screenProps);
+      if (screenProps !== null) {
+        // console.log(screenProps);
+        navigateByNoti(screenProps);
+      }
+    }
+  }, [screenProps]);
+  useEffect(() => {
+    if (Platform.OS === 'android') {
+      listenForOpen();
+    }
     const today = new Date();
     setNowTime(today);
 

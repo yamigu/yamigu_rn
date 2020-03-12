@@ -32,6 +32,7 @@ const notification = new firebase.notifications.Notification()
 //   }
 // };
 const App = () => {
+  const [screenPropData, setScreenPropData] = useState(null);
   const check_fcm_permission = async () => {
     const enabled = await firebase.messaging().hasPermission();
     console.log('check fcm permission');
@@ -63,7 +64,8 @@ const App = () => {
     const removeNotificationOpenedListener = firebase
       .notifications()
       .onNotificationOpened(notificationOpen => {
-        console.log('onNotificationOpened', notificationOpen);
+        // console.log('onNotificationOpened', notificationOpen);
+        setScreenPropData(notificationOpen);
       });
     const removeNotificationDisplayedListener = firebase
       .notifications()
@@ -87,7 +89,7 @@ const App = () => {
     <UserContextProvider>
       <SafeAreaProvider>
         <View style={{flex: 1}}>
-          <Navigation />
+          <Navigation screenProps={screenPropData} />
         </View>
       </SafeAreaProvider>
     </UserContextProvider>

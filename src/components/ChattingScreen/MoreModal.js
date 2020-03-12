@@ -21,8 +21,8 @@ const dw = Dimensions.get('window').width;
 const MoreModal = ({setVisible, requestCancel, cancelled}) => {
   const pressBlock = () => {
     if (cancelled) {
-      requestCancel();
       setVisible(false);
+      requestCancel();
       return;
     }
     Alert.alert(

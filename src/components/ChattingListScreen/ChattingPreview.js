@@ -79,7 +79,7 @@ const ChattingPreview = ({
         });
       }
     }
-  }, [roomId]);
+  }, [roomId, navigation]);
   return roomId > 0 ? (
     <ListItem
       avatar
