@@ -185,7 +185,7 @@ const AddFriendsScreen = ({navigation}) => {
                     age=""
                     belong=""
                     department={friend.phoneno}
-                    addF={true}
+                    noTouch={true}
                   />
                 ) : (
                   <ProfileCard
@@ -196,7 +196,7 @@ const AddFriendsScreen = ({navigation}) => {
                     age=""
                     belong=""
                     department={friend.phoneno}
-                    addF={true}
+                    noTouch={true}
                   />
                 )}
               </Body>
