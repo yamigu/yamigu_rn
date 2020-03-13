@@ -46,7 +46,7 @@
 		00E356EE1AD99517003FC87E /* yamiguTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = yamiguTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* yamiguTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = yamiguTests.m; sourceTree = "<group>"; };
-		13B07F961A680F5B00A75B9A /* yamigu.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = yamigu.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		13B07F961A680F5B00A75B9A /* 야미구.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "야미구.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = yamigu/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = yamigu/AppDelegate.m; sourceTree = "<group>"; };
 		13B07FB21A68108700A75B9A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
@@ -201,7 +201,7 @@
 		83CBBA001A601CBA00E9B192 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				13B07F961A680F5B00A75B9A /* yamigu.app */,
+				13B07F961A680F5B00A75B9A /* 야미구.app */,
 				00E356EE1AD99517003FC87E /* yamiguTests.xctest */,
 				2D02E47B1E0B4A5D006451C7 /* yamigu-tvOS.app */,
 				2D02E4901E0B4A5D006451C7 /* yamigu-tvOSTests.xctest */,
@@ -249,7 +249,7 @@
 			);
 			name = yamigu;
 			productName = yamigu;
-			productReference = 13B07F961A680F5B00A75B9A /* yamigu.app */;
+			productReference = 13B07F961A680F5B00A75B9A /* 야미구.app */;
 			productType = "com.apple.product-type.application";
 		};
 		2D02E47A1E0B4A5D006451C7 /* yamigu-tvOS */ = {
@@ -699,7 +699,7 @@
 				CODE_SIGN_ENTITLEMENTS = yamigu/yamigu.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 11;
+				CURRENT_PROJECT_VERSION = 14;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = 6Q5H8262SG;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -708,7 +708,7 @@
 				);
 				INFOPLIST_FILE = yamigu/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 2.0.9;
+				MARKETING_VERSION = 2.0.12;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -716,7 +716,7 @@
 					"-all_load",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = party.yamigu.www.com;
-				PRODUCT_NAME = yamigu;
+				PRODUCT_NAME = "야미구";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -730,7 +730,7 @@
 				CODE_SIGN_ENTITLEMENTS = yamigu/yamigu.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 11;
+				CURRENT_PROJECT_VERSION = 14;
 				DEVELOPMENT_TEAM = 6Q5H8262SG;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -738,7 +738,7 @@
 				);
 				INFOPLIST_FILE = yamigu/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 2.0.9;
+				MARKETING_VERSION = 2.0.12;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -746,7 +746,7 @@
 					"-all_load",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = party.yamigu.www.com;
-				PRODUCT_NAME = yamigu;
+				PRODUCT_NAME = "야미구";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				VERSIONING_SYSTEM = "apple-generic";
 			};

@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import {Text, View, Button} from 'react-native';
+import {Text, View, Button, Platform} from 'react-native';
 import {HeaderBackButton} from 'react-navigation-stack';
 import {
   CustomTextRegular,
@@ -8,7 +8,7 @@ import {
 } from '~/components/common/CustomText';
 import {Container, Header, Content, Accordion} from 'native-base';
 import palette from '~/lib/styles/palette';
-
+const os = Platform.OS;
 const dataArray = [
   {
     title: '친구 등록 안내',
@@ -39,7 +39,8 @@ const NoticeScreen = () => {
           marginTop: 10,
           paddingLeft: 20,
           height: 60,
-          fontFamily: 'NotoSansCJKkr-Regular',
+          fontFamily: os === 'android' ? 'Roboto' : 'Apple SD Gothic Neo',
+
           fontSize: 16,
           color: '#343434',
         }}
@@ -47,7 +48,8 @@ const NoticeScreen = () => {
           backgroundColor: 'white',
           paddingLeft: 20,
           marginTop: 3,
-          fontFamily: 'NotoSansCJKkr-Regular',
+          fontFamily: os === 'android' ? 'Roboto' : 'Apple SD Gothic Neo',
+
           fontSize: 12,
           color: palette.black,
         }}
@@ -76,6 +78,7 @@ NoticeScreen.navigationOptions = ({navigation}) => ({
     backgroundColor: 'white',
   },
   headerTitleAlign: 'center',
+  drawerLockMode: 'locked-closed',
 });
 
 export default NoticeScreen;

@@ -51,7 +51,7 @@ const ChattingListScreen = ({navigation}) => {
           {
             onPress: () => {
               navigation.pop();
-              navigation.navigate('IV');
+              navigation.navigate('IV', {needBtn: true});
             },
           },
         ]);
@@ -165,6 +165,7 @@ ChattingListScreen.navigationOptions = ({navigation}) => ({
     backgroundColor: 'white',
   },
   headerTitleAlign: 'center',
+  drawerLockMode: 'locked-closed',
 });
 
 const styles = StyleSheet.create({

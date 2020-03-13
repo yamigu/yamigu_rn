@@ -236,6 +236,7 @@ SignupScreen.navigationOptions = ({navigation}) => ({
     backgroundColor: 'white',
   },
   headerTitleAlign: 'center',
+  drawerLockMode: 'locked-closed',
 });
 
 const styles = StyleSheet.create({

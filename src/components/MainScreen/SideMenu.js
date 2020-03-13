@@ -43,7 +43,7 @@ import Navigation from '~/../Navigation';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import KakaoSDK from '@actbase/react-native-kakaosdk';
 import AsyncStorage from '@react-native-community/async-storage';
-import {getProfile} from '@react-native-seoul/kakao-login';
+import {getProfile, login} from '@react-native-seoul/kakao-login';
 import '~/config';
 import {useCallback} from 'react';
 const deviceWidth = Dimensions.get('window').width;
@@ -54,7 +54,20 @@ const SideMenu = ({navigation}) => {
       .then(res => console.log(res))
       .catch(e => console.log(e));
   };
-
+  const nicknameCheck = () => {
+    return (
+      sideInfo[global.config.user_info_const.NICKNAME] === 'nickname' ||
+      sideInfo[global.config.user_info_const.NICKNAME] === '' ||
+      sideInfo[global.config.user_info_const.NICKNAME] === null
+    );
+  };
+  const birthdateCheck = () => {
+    return (
+      sideInfo[global.config.user_info_const.BIRTHDATE] === 'birthdate' ||
+      sideInfo[global.config.user_info_const.BIRTHDATE] === '' ||
+      sideInfo[global.config.user_info_const.BIRTHDATE] === null
+    );
+  };
   const [toggle, setToggle] = useState(false);
   const [numOfFreinds, setNumOfFriends] = useState(0);
 
@@ -78,35 +91,42 @@ const SideMenu = ({navigation}) => {
   };
   useEffect(() => {
     if (navigation.state.isDrawerOpen) {
-      _retrieveData();
+      if (navigation.state.routes[navigation.state.index].index !== 0) {
+        navigation.closeDrawer();
+      } else {
+        _retrieveData();
+      }
     }
   }, [navigation]);
 
-  return (
+  return navigation.state.routes[navigation.state.index].index !== 0 ? null : (
     <SafeAreaView style={styles.root}>
       <Content showsVerticalScrollIndicator={false}>
         <View style={styles.profileView}>
           {/* <TouchableByPlatform onPress={() => navigation.navigate('Signup')}>
-            <ImageBackground
-              style={styles.profileBackground}
-              source={require('~/images/profile-default-background.png')}>
-              <CustomTextRegular size={16} color="white">
-                친구들과 찍은 사진을 올려보세요!
-              </CustomTextRegular>
-              <Image
-                source={require('~/images/icon-picture.png')}
-                style={styles.icon}
-              />
-            </ImageBackground>
-          </TouchableByPlatform> */}
+        <ImageBackground
+          style={styles.profileBackground}
+          source={require('~/images/profile-default-background.png')}>
+          <CustomTextRegular size={16} color="white">
+            친구들과 찍은 사진을 올려보세요!
+          </CustomTextRegular>
+          <Image
+            source={require('~/images/icon-picture.png')}
+            style={styles.icon}
+          />
+        </ImageBackground>
+      </TouchableByPlatform> */}
           <View style={styles.profilePane}>
             <View style={styles.profileWrapper}>
               <View style={styles.thumbnailWrapper}>
                 <TouchableByPlatform
                   onPress={() =>
-                    sideInfo[global.config.user_info_const.NICKNAME] ===
-                    'nickname'
+                    nicknameCheck()
                       ? navigation.navigate('Login')
+                      : birthdateCheck()
+                      ? navigation.navigate('IV', {
+                          needBtn: true,
+                        })
                       : navigation.navigate('MyProfile')
                   }>
                   <Thumbnail
@@ -114,6 +134,7 @@ const SideMenu = ({navigation}) => {
                     source={
                       sideInfo[global.config.user_info_const.AVATA] ===
                         'avata' ||
+                      sideInfo[global.config.user_info_const.AVATA] === '' ||
                       sideInfo[global.config.user_info_const.AVATA] === null
                         ? require('~/images/user-default-profile.png')
                         : {uri: sideInfo[global.config.user_info_const.AVATA]}
@@ -137,10 +158,7 @@ const SideMenu = ({navigation}) => {
 
           <View style={styles.nameAndAgeView}>
             <CustomTextBold size={18} color={palette.black}>
-              {sideInfo[global.config.user_info_const.NICKNAME] ===
-                'nickname' ||
-              sideInfo[global.config.user_info_const.NICKNAME] === '' ||
-              sideInfo[global.config.user_info_const.NICKNAME] === null ? (
+              {nicknameCheck() ? (
                 <CustomTextBold size={18} color={palette.black}>
                   로그인이 필요합니다!
                 </CustomTextBold>
@@ -152,10 +170,7 @@ const SideMenu = ({navigation}) => {
               size={14}
               color={palette.black}
               style={{marginLeft: 6}}>
-              {sideInfo[global.config.user_info_const.BIRTHDATE] ===
-                'birthdate' ||
-              sideInfo[global.config.user_info_const.BIRTHDATE] === '' ||
-              sideInfo[global.config.user_info_const.BIRTHDATE] === null
+              {birthdateCheck()
                 ? null
                 : Math.floor(
                     (20200000 -
@@ -167,16 +182,14 @@ const SideMenu = ({navigation}) => {
                   ) + '살'}
             </CustomTextMedium>
             {/* <CustomTextMedium
-              size={14}
-              color={palette.black}
-              style={{marginLeft: 0}}>
-              살
-            </CustomTextMedium> */}
+          size={14}
+          color={palette.black}
+          style={{marginLeft: 0}}>
+          살
+        </CustomTextMedium> */}
           </View>
           <View style={styles.belongView}>
-            {sideInfo[global.config.user_info_const.NICKNAME] === 'nickname' ||
-            sideInfo[global.config.user_info_const.NICKNAME] === '' ||
-            sideInfo[global.config.user_info_const.NICKNAME] === null ? (
+            {nicknameCheck() ? (
               <Button
                 style={{backgroundColor: palette.default_bg, elevation: 0}}
                 onPress={() => navigation.navigate('Login')}>
@@ -211,8 +224,12 @@ const SideMenu = ({navigation}) => {
           {sideInfo[global.config.user_info_const.VERIFIED] === 0 ? (
             <TouchableByPlatform
               onPress={() => {
-                sideInfo[global.config.user_info_const.NICKNAME] === 'nickname'
+                nicknameCheck()
                   ? navigation.navigate('Login')
+                  : birthdateCheck()
+                  ? navigation.navigate('IV', {
+                      needBtn: true,
+                    })
                   : navigation.navigate('BV');
               }}>
               <ListItem icon noIndent style={styles.listItem}>
@@ -232,8 +249,7 @@ const SideMenu = ({navigation}) => {
             </TouchableByPlatform>
           ) : null}
 
-          {sideInfo[global.config.user_info_const.NICKNAME] !== 'nickname' &&
-          sideInfo[global.config.user_info_const.BIRTHDATE] === 'birthdate' ? (
+          {!nicknameCheck() && birthdateCheck() ? (
             <TouchableByPlatform
               onPress={() => {
                 navigation.navigate('IV', {needBtn: true});
@@ -261,8 +277,15 @@ const SideMenu = ({navigation}) => {
             <TouchableByPlatform
               navigation={navigation}
               onPress={() =>
-                sideInfo[global.config.user_info_const.NICKNAME] === 'nickname'
+                sideInfo[global.config.user_info_const.NICKNAME] ===
+                  'nickname' ||
+                sideInfo[global.config.user_info_const.NICKNAME] === '' ||
+                sideInfo[global.config.user_info_const.NICKNAME] === null
                   ? navigation.navigate('Login')
+                  : birthdateCheck()
+                  ? navigation.navigate('IV', {
+                      needBtn: true,
+                    })
                   : navigation.navigate('MyProfile')
               }>
               <ListItem icon noIndent style={styles.listItem}>
@@ -283,8 +306,12 @@ const SideMenu = ({navigation}) => {
           ) : null}
           <TouchableByPlatform
             onPress={() =>
-              sideInfo[global.config.user_info_const.NICKNAME] === 'nickname'
+              nicknameCheck()
                 ? navigation.navigate('Login')
+                : birthdateCheck()
+                ? navigation.navigate('IV', {
+                    needBtn: true,
+                  })
                 : navigation.navigate('AddFriends')
             }>
             <ListItem icon noIndent style={styles.listItem}>
@@ -314,44 +341,48 @@ const SideMenu = ({navigation}) => {
                 </CustomTextRegular>
               </View>
               {/* ) : (
-                <Content contentContainerStyle={styles.friendList}>
-                  <Thumbnail
-                    source={require('~/images/test-user-profile-2.png')}
-                    style={styles.friend}
-                    size={deviceWidth * 0.81 * 0.163}
-                  />
-                  <Thumbnail
-                    source={require('~/images/test-user-profile-3.png')}
-                    style={styles.friend}
-                    size={deviceWidth * 0.81 * 0.163}
-                  />
-                  <Thumbnail
-                    source={require('~/images/test-user-profile-4.png')}
-                    style={styles.friend}
-                    size={deviceWidth * 0.81 * 0.163}
-                  />
-                  <Thumbnail
-                    source={require('~/images/test-user-profile-5.png')}
-                    style={styles.friend}
-                    size={deviceWidth * 0.81 * 0.163}
-                  />
-                </Content>
-              )} */}
+            <Content contentContainerStyle={styles.friendList}>
+              <Thumbnail
+                source={require('~/images/test-user-profile-2.png')}
+                style={styles.friend}
+                size={deviceWidth * 0.81 * 0.163}
+              />
+              <Thumbnail
+                source={require('~/images/test-user-profile-3.png')}
+                style={styles.friend}
+                size={deviceWidth * 0.81 * 0.163}
+              />
+              <Thumbnail
+                source={require('~/images/test-user-profile-4.png')}
+                style={styles.friend}
+                size={deviceWidth * 0.81 * 0.163}
+              />
+              <Thumbnail
+                source={require('~/images/test-user-profile-5.png')}
+                style={styles.friend}
+                size={deviceWidth * 0.81 * 0.163}
+              />
+            </Content>
+          )} */}
             </Body>
           </ListItem>
           {/* <TouchableByPlatform onPress={() => navigation.navigate('Signup')}>
-            <ListItem icon noIndent style={styles.listItem}>
-              <Body style={styles.listItemBody}>
-                <CustomTextRegular size={14} color={palette.black}>
-                  (임시) 회원가입
-                </CustomTextRegular>
-              </Body>
-            </ListItem>
-          </TouchableByPlatform> */}
+        <ListItem icon noIndent style={styles.listItem}>
+          <Body style={styles.listItemBody}>
+            <CustomTextRegular size={14} color={palette.black}>
+              (임시) 회원가입
+            </CustomTextRegular>
+          </Body>
+        </ListItem>
+      </TouchableByPlatform> */}
           <TouchableByPlatform
             onPress={() =>
-              sideInfo[global.config.user_info_const.NICKNAME] === 'nickname'
+              nicknameCheck()
                 ? navigation.navigate('Login')
+                : birthdateCheck()
+                ? navigation.navigate('IV', {
+                    needBtn: true,
+                  })
                 : navigation.navigate('Store')
             }>
             <ListItem icon noIndent style={styles.listItem}>
@@ -382,8 +413,12 @@ const SideMenu = ({navigation}) => {
           </TouchableByPlatform>
           <TouchableByPlatform
             onPress={() =>
-              sideInfo[global.config.user_info_const.NICKNAME] === 'nickname'
+              nicknameCheck()
                 ? navigation.navigate('Login')
+                : birthdateCheck()
+                ? navigation.navigate('IV', {
+                    needBtn: true,
+                  })
                 : navigation.navigate('Shield')
             }>
             <ListItem icon noIndent style={styles.listItem}>
@@ -402,36 +437,36 @@ const SideMenu = ({navigation}) => {
             </ListItem>
           </TouchableByPlatform>
           {/* <ListItem
-            button
-            icon
-            noIndent
-            style={styles.listItem}
-            onPress={() => {
+        button
+        icon
+        noIndent
+        style={styles.listItem}
+        onPress={() => {
+          setToggle(!toggle);
+        }}>
+        <Left style={styles.listItemLeft}>
+          <MaterialCommunityicon
+            name="shield-check"
+            size={deviceWidth * 0.813 * 0.06}
+            style={styles.iconStore}
+          />
+        </Left>
+        <Body style={styles.listItemBody}>
+          <CustomTextRegular size={14} color={palette.black}>
+            전공 또는 직업 가리기
+          </CustomTextRegular>
+        </Body>
+        <Right style={styles.listItemRight}>
+          <Switch
+            value={toggle}
+            onValueChange={() => {
               setToggle(!toggle);
-            }}>
-            <Left style={styles.listItemLeft}>
-              <MaterialCommunityicon
-                name="shield-check"
-                size={deviceWidth * 0.813 * 0.06}
-                style={styles.iconStore}
-              />
-            </Left>
-            <Body style={styles.listItemBody}>
-              <CustomTextRegular size={14} color={palette.black}>
-                전공 또는 직업 가리기
-              </CustomTextRegular>
-            </Body>
-            <Right style={styles.listItemRight}>
-              <Switch
-                value={toggle}
-                onValueChange={() => {
-                  setToggle(!toggle);
-                }}
-                thumbColor="white"
-                trackColor={{false: palette.nonselect, true: palette.orange}}
-              />
-            </Right>
-          </ListItem> */}
+            }}
+            thumbColor="white"
+            trackColor={{false: palette.nonselect, true: palette.orange}}
+          />
+        </Right>
+      </ListItem> */}
 
           <ListItem itemDivider style={styles.itemDivider}>
             <CustomTextMedium
@@ -466,14 +501,14 @@ const SideMenu = ({navigation}) => {
             </ListItem>
           </TouchableByPlatform>
           {/* <TouchableByPlatform onPress={() => navigation.navigate('Login')}>
-            <ListItem noIndent style={styles.listItem}>
-              <Body style={styles.listItemBody}>
-                <CustomTextRegular size={14} color={palette.black}>
-                  (임시) 로그인 화면
-                </CustomTextRegular>
-              </Body>
-            </ListItem>
-          </TouchableByPlatform> */}
+        <ListItem noIndent style={styles.listItem}>
+          <Body style={styles.listItemBody}>
+            <CustomTextRegular size={14} color={palette.black}>
+              (임시) 로그인 화면
+            </CustomTextRegular>
+          </Body>
+        </ListItem>
+      </TouchableByPlatform> */}
           <TouchableByPlatform onPress={() => navigation.navigate('Notice')}>
             <ListItem noIndent style={styles.listItem}>
               <Body style={styles.listItemBody}>
@@ -485,8 +520,12 @@ const SideMenu = ({navigation}) => {
           </TouchableByPlatform>
           <TouchableByPlatform
             onPress={() =>
-              sideInfo[global.config.user_info_const.NICKNAME] === 'nickname'
+              nicknameCheck()
                 ? navigation.navigate('Login')
+                : birthdateCheck()
+                ? navigation.navigate('IV', {
+                    needBtn: true,
+                  })
                 : navigation.navigate('Setting')
             }>
             <ListItem noIndent style={styles.listItem}>

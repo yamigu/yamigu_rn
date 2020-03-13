@@ -502,6 +502,7 @@ ProfileDetailScreen.navigationOptions = ({navigation}) => ({
       <Ionicon name="ios-more" size={26} color="white" />
     </Button>
   ),
+  drawerLockMode: 'locked-closed',
 });
 
 const styles = StyleSheet.create({

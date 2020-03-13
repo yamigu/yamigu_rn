@@ -67,10 +67,18 @@ const MainScreenNavigator = createBottomTabNavigator(
           const jUserValue = JSON.parse(userValue);
           if (jUserValue[0] === 'token') {
             navigation.navigate('Login');
-          } else if (jUserValue[2] === 'nickname') {
+          } else if (
+            jUserValue[2] === 'nickname' ||
+            jUserValue[2] === null ||
+            jUserValue[2] === ''
+          ) {
             navigation.navigate('Signup');
             //navigate to loginscreen
-          } else if (jUserValue[4] === 'birthdate') {
+          } else if (
+            jUserValue[4] === 'birthdate' ||
+            jUserValue[4] === '' ||
+            jUserValue[4] === null
+          ) {
             navigation.navigate('IV', {needBtn: true});
           } else {
             defaultHandler();
@@ -85,10 +93,18 @@ const MainScreenNavigator = createBottomTabNavigator(
           const jUserValue = JSON.parse(userValue);
           if (jUserValue[0] === 'token') {
             navigation.navigate('Login');
-          } else if (jUserValue[2] === 'nickname') {
+          } else if (
+            jUserValue[2] === 'nickname' ||
+            jUserValue[2] === null ||
+            jUserValue[2] === ''
+          ) {
             navigation.navigate('Signup');
             //navigate to loginscreen
-          } else if (jUserValue[4] === 'birthdate') {
+          } else if (
+            jUserValue[4] === 'birthdate' ||
+            jUserValue[4] === '' ||
+            jUserValue[4] === null
+          ) {
             navigation.navigate('IV', {needBtn: true});
           } else {
             defaultHandler();

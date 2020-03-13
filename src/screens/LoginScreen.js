@@ -52,19 +52,7 @@ let tmpValue = [
   'location',
 ];
 let originValue = [];
-const _retrieveData = async () => {
-  try {
-    const value = await AsyncStorage.getItem('userValue');
-    if (value !== null) {
-      for (let i = 0; i < 9; i++) {
-        originValue[i] = value[i];
-      }
-      console.log(value);
-    }
-  } catch (error) {
-    // Error retrieving data
-  }
-};
+
 const ButtonContainerAndroid = ({kakaoLogin}) => {
   return (
     <View style={styles.buttonContainer}>
@@ -112,15 +100,50 @@ const logCallback = (log, callback) => {
 const deviceWidth = Dimensions.get('window').width;
 
 const LoginScreen = ({navigation}) => {
-  useEffect(() => {
-    console.log('hererere');
-    _retrieveData();
-    axios.defaults.headers.common['Authorization'] = '';
-    console.log(originValue);
-  }, []);
   const [loginLoading, setLoginLoading] = useState(false);
   const [loginToken, setLoginToken] = useState(TOKEN_EMPTY);
+  useEffect(() => {
+    console.log('hererere');
+    const userVal = _retrieveData();
 
+    //axios.defaults.headers.common['Authorization'] = '';
+    console.log(originValue);
+  }, []);
+
+  const _retrieveData = async () => {
+    try {
+      const value = await AsyncStorage.getItem('userValue');
+      if (value !== null) {
+        for (let i = 0; i < 9; i++) {
+          originValue[i] = value[i];
+        }
+        const userVal = JSON.parse(value);
+        if (
+          userVal[global.config.user_info_const.TOKEN] !== 'token' &&
+          userVal[global.config.user_info_const.TOKEN] !== '' &&
+          userVal[global.config.user_info_const.TOKEN] !== null
+        ) {
+          if (
+            userVal[global.config.user_info_const.NICKNAME] === 'nickname' ||
+            userVal[global.config.user_info_const.NICKNAME] === '' ||
+            userVal[global.config.user_info_const.NICKNAME] === null
+          ) {
+            navigation.navigate('Signup');
+          } else if (
+            userVal[global.config.user_info_const.BIRTHDATE] === 'birthdate' ||
+            userVal[global.config.user_info_const.BIRTHDATE] === '' ||
+            userVal[global.config.user_info_const.BIRTHDATE] === null
+          ) {
+            navigation.navigate('IV', {needBtn: true});
+          }
+        }
+        return userVal;
+      }
+    } catch (error) {
+      // Error retrieving data
+      return null;
+    }
+  };
   const onAppleButtonPress = async () => {
     console.log('onAppleButtonPress pressed');
     // performs login request
@@ -159,13 +182,17 @@ const LoginScreen = ({navigation}) => {
             'Token ' + result.data.key;
           return result.data.key;
         })
+        .catch(error => {
+          setLoginLoading(false);
+        })
         .then(async key => {
           tmpValue[global.config.user_info_const.TOKEN] = key;
-          return await axios.get(
+          const userInfo = await axios.get(
             global.config.api_host + 'authorization/user/info/',
           );
+          setLoginLoading(false);
+          return userInfo;
         })
-
         .then(async result => {
           tmpValue[global.config.user_info_const.AVATA] =
             result.data.avata !== null ? result.data.avata : 'avata';
@@ -208,8 +235,6 @@ const LoginScreen = ({navigation}) => {
             navigation.navigate('Main');
           }
         });
-
-      console.log(appleAuthRequestResponse);
       // navigation.navigate('Main');
       // Alert.alert('authed!');
     } else {
@@ -380,6 +405,7 @@ LoginScreen.navigationOptions = ({navigation}) => ({
     backgroundColor: 'white',
   },
   headerTitleAlign: 'center',
+  drawerLockMode: 'locked-closed',
 });
 
 const styles = StyleSheet.create({

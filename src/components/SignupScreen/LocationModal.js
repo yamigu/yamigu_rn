@@ -5,7 +5,7 @@ import {
   StyleSheet,
   SafeAreaView,
   View,
-  Modal,
+  Platform,
   ScrollView,
 } from 'react-native';
 import React, {useState} from 'react';
@@ -17,7 +17,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import '~/config';
 const dh = Dimensions.get('window').height;
 const dw = Dimensions.get('window').width;
-
+const os = Platform.OS;
 const LocationModal = ({
   setLocationModalVisible,
   setLocationText,

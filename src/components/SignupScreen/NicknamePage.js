@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {
   View,
   StyleSheet,
-  Dimensions,
+  Platform,
   KeyboardAvoidingView,
   TouchableWithoutFeedbackBase,
 } from 'react-native';
@@ -12,7 +12,7 @@ import {Item, Input} from 'native-base';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import axios from 'axios';
 import '~/config';
-
+const os = Platform.OS;
 var getTextLength = function(str) {
   var len = 0;
   for (var i = 0; i < str.length; i++) {
@@ -108,7 +108,8 @@ const styles = StyleSheet.create({
   input: {
     fontSize: 14,
     textAlignVertical: 'bottom',
-    fontFamily: 'NotoSansCJKkr-Regular',
+    fontFamily: os === 'android' ? 'Roboto' : 'Apple SD Gothic Neo',
+
     paddingTop: 0,
     paddingBottom: 0,
     color: palette.black,

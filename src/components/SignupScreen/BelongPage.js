@@ -1,10 +1,10 @@
 import React, {useState, createRef} from 'react';
-import {Text, View, StyleSheet, findNodeHandle} from 'react-native';
+import {Text, View, StyleSheet, findNodeHandle, Platform} from 'react-native';
 import {CustomTextRegular, CustomTextMedium} from '../common/CustomText';
 import palette from '~/lib/styles/palette';
 import {Button, Form, Item, Label, Input, Content} from 'native-base';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-
+const os = Platform.OS;
 const BelongPage = ({setBelong, setDepartment, setIs_student}) => {
   const [toggle, setToggle] = useState(0);
   const [text1, setText1] = useState('');
@@ -184,14 +184,15 @@ const styles = StyleSheet.create({
     marginTop: 8,
     fontSize: 14,
     textAlignVertical: 'bottom',
-    fontFamily: 'NotoSansCJKkr-Medium',
+    fontFamily: os === 'android' ? 'Roboto' : 'Apple SD Gothic Neo',
     paddingBottom: 0,
     color: palette.gray,
   },
   input: {
     fontSize: 14,
     textAlignVertical: 'bottom',
-    fontFamily: 'NotoSansCJKkr-Regular',
+    fontFamily: os === 'android' ? 'Roboto' : 'Apple SD Gothic Neo',
+
     paddingBottom: 0,
     color: palette.black,
   },

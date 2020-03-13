@@ -141,6 +141,7 @@ HomeGuideScreen.navigationOptions = ({navigation}) => ({
     backgroundColor: 'white',
   },
   headerTitleAlign: 'center',
+  drawerLockMode: 'locked-closed',
 });
 
 export default HomeGuideScreen;

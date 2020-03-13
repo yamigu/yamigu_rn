@@ -85,6 +85,7 @@ IVScreen.navigationOptions = ({navigation}) => ({
     </>
   ),
   headerTitleAlign: 'center',
+  drawerLockMode: 'locked-closed',
 });
 
 const styles = StyleSheet.create({

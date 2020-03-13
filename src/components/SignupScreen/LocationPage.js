@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {useState} from 'react';
-import {Text, View, Modal, StyleSheet, Alert} from 'react-native';
+import {Text, View, Modal, StyleSheet, Platform} from 'react-native';
 import LocationModal from './LocationModal';
 import {Item, Button, Input} from 'native-base';
 import {CustomTextRegular, CustomTextMedium} from '../common/CustomText';
@@ -8,7 +8,7 @@ import palette from '~/lib/styles/palette';
 import TouchableByPlatform from '../common/TouchableByPlatform';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-
+const os = Platform.OS;
 const LocationPage = ({setLocationText, locationText}) => {
   const [locationModalVisible, setLocationModalVisible] = useState(false);
 
@@ -122,14 +122,16 @@ const styles = StyleSheet.create({
     fontSize: 14,
     textAlignVertical: 'bottom',
     lineHeight: 14,
-    fontFamily: 'NotoSansCJKkr-Medium',
+    fontFamily: os === 'android' ? 'Roboto' : 'Apple SD Gothic Neo',
+
     paddingBottom: 0,
     color: palette.gray,
   },
   input: {
     fontSize: 14,
     textAlignVertical: 'bottom',
-    fontFamily: 'NotoSansCJKkr-Regular',
+    fontFamily: os === 'android' ? 'Roboto' : 'Apple SD Gothic Neo',
+
     paddingBottom: 0,
     color: palette.black,
   },

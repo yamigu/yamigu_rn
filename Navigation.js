@@ -33,7 +33,6 @@ const AppStack = createStackNavigator({
   Main: {
     screen: MainScreen, // MainScreen 컴포넌트를 네비게이터에 등록
   },
-
   Profile: {
     screen: ProfileDetailScreen,
   },
@@ -82,12 +81,11 @@ const AppStack = createStackNavigator({
   Getout: {
     screen: GetoutScreen,
   },
-});
-const AuthStack = createStackNavigator({
   Login: {
     screen: LoginScreen,
     navigationOptions: {
       headerShown: true,
+      drawerLockMode: 'locked-closed',
     },
   },
   IV: {
@@ -122,10 +120,6 @@ const DrawerStack = createDrawerNavigator(
       name: 'MainStack',
       screen: AppStack,
     },
-    Auth: {
-      name: 'AuthStack',
-      screen: AuthStack,
-    },
   },
   {
     contentComponent: SideMenu,
@@ -139,7 +133,6 @@ const Navigation = createAppContainer(
     {
       Chat: ChattingScreen,
       App: DrawerStack,
-      Auth: AuthStack,
     },
     {
       initialRouteName: 'App',

@@ -63,7 +63,7 @@ const StoreScreen = ({navigation}) => {
   const [spinnerLoading, setSpinnerLoading] = useState(false);
 
   useEffect(() => {
-    //initIap();
+    initIap();
     // getAvailablePurchases();
     getItems();
     _retrieveData();
@@ -191,48 +191,57 @@ const StoreScreen = ({navigation}) => {
 
   // Version 3 apis
   const requestPurchase = async sku => {
-    if (loading) return;
-    setLoading(true);
+    if (spinnerLoading) return;
+    setSpinnerLoading(true);
     try {
-      await RNIap.requestPurchase(sku, false).then(result => {
-        axios
-          .post(
-            global.config.api_host + 'purchase/validate/' + Platform.OS + '/',
-            {
-              payload: JSON.stringify(result),
-            },
-          )
-          .then(async result => {
-            setYami(result.data);
-            const newInfo = userInfo.slice();
-            newInfo[global.config.user_info_const.YAMI] = result.data;
-            setUserInfo(newInfo);
-            AsyncStorage.setItem('userValue', JSON.stringify(newInfo));
+      const result = await RNIap.requestPurchase(sku, false);
+      const result2 = await axios.post(
+        global.config.api_host + 'purchase/validate/' + Platform.OS + '/',
+        {
+          payload: JSON.stringify(result),
+          env: __DEV__ ? 'sandbox' : 'release',
+        },
+      );
+      setYami(result2.data);
+      const newInfo = userInfo.slice();
+      newInfo[global.config.user_info_const.YAMI] = result2.data;
+      setUserInfo(newInfo);
+      AsyncStorage.setItem('userValue', JSON.stringify(newInfo));
 
-            return Platform.OS === 'android'
-              ? await RNIap.consumeAllItemsAndroid().then(result => {
-                  console.log(result);
-                })
-              : await RNIap.finishTransactionIOS().then(result => {
-                  console.log(result);
-                });
-          })
-          .catch(err => {
-            console.log(err);
-            return false;
-          });
-      });
+      const result3 =
+        Platform.OS === 'android'
+          ? await RNIap.consumeAllItemsAndroid().then(result => {
+              console.log(result);
+            })
+          : await RNIap.finishTransactionIOS().then(result => {
+              console.log(result);
+            });
+      setSpinnerLoading(false);
     } catch (err) {
+      setSpinnerLoading(false);
+
+      Alert.alert('오류가 발생했습니다', err.message);
       console.log(err);
       if (err.code === 'E_USER_CANCELLED') {
         console.log(err.message);
       } else if (err.code === 'E_ALREADY_OWNED') {
-        await RNIap.consumeAllItemsAndroid().then(result => {
-          console.log(result);
-        });
+        return Platform.OS === 'android'
+          ? await RNIap.consumeAllItemsAndroid().then(result => {
+              console.log(result);
+            })
+          : await RNIap.finishTransactionIOS().then(result => {
+              console.log(result);
+            });
+      } else {
+        return Platform.OS === 'android'
+          ? await RNIap.consumeAllItemsAndroid().then(result => {
+              console.log(result);
+            })
+          : await RNIap.finishTransactionIOS().then(result => {
+              console.log(result);
+            });
       }
     }
-    setLoading(false);
   };
 
   return (
@@ -336,6 +345,7 @@ StoreScreen.navigationOptions = ({navigation}) => ({
     backgroundColor: 'white',
   },
   headerTitleAlign: 'center',
+  drawerLockMode: 'locked-closed',
 });
 
 const styles = StyleSheet.create({

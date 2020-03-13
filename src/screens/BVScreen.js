@@ -6,7 +6,7 @@ import {
   View,
   StyleSheet,
   Dimensions,
-  PixelRatio,
+  Platform,
   Image,
   Alert,
 } from 'react-native';
@@ -26,7 +26,7 @@ import file_upload from '~/lib/utils/file_upload';
 import AsyncStorage from '@react-native-community/async-storage';
 import axios from 'axios';
 import '~/config';
-
+const os = Platform.OS;
 const dw = Dimensions.get('window').width;
 const BVScreen = ({navigation}) => {
   const [imageSource, setImageSource] = useState(null);
@@ -466,6 +466,7 @@ BVScreen.navigationOptions = ({navigation}) => ({
     backgroundColor: 'white',
   },
   headerTitleAlign: 'center',
+  drawerLockMode: 'locked-closed',
 });
 
 const styles = StyleSheet.create({
@@ -550,14 +551,16 @@ const styles = StyleSheet.create({
     marginTop: 8,
     fontSize: 14,
     textAlignVertical: 'bottom',
-    fontFamily: 'NotoSansCJKkr-Medium',
+    fontFamily: os === 'android' ? 'Roboto' : 'Apple SD Gothic Neo',
+
     paddingBottom: 0,
     color: palette.gray,
   },
   input: {
     fontSize: 14,
     textAlignVertical: 'bottom',
-    fontFamily: 'NotoSansCJKkr-Regular',
+    fontFamily: os === 'android' ? 'Roboto' : 'Apple SD Gothic Neo',
+
     paddingBottom: 0,
     color: palette.black,
   },
