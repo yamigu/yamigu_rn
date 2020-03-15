@@ -117,7 +117,7 @@ const AddFriendsScreen = ({navigation}) => {
       </CustomTextMedium>
       <View style={styles.descTextView}>
         <CustomTextRegular size={12} color={palette.sub}>
-          친구가 수락하면{' '}
+          해당 번호로 가입한 친구가 수락하면{' '}
         </CustomTextRegular>
         <CustomTextRegular size={12} color={palette.orange}>
           1명당 야미 10개를 드려요.
