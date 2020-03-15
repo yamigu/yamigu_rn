@@ -70,7 +70,7 @@ const ChattingListScreen = ({navigation}) => {
         ]);
       }
       setHasVeirifed(jUserValue[global.config.user_info_const.VERIFIED]);
-      resolve(true);
+      resolve(jUserValue);
     });
   };
 
@@ -82,23 +82,26 @@ const ChattingListScreen = ({navigation}) => {
         setLoading(false);
         return;
       }
-      const result2 = await retrieveChatList();
+      const result2 = await retrieveChatList(result);
     });
     return () => listener.remove();
   }, []);
-  const getChatList = () => {
+  const getChatList = userValue => {
     return new Promise(resolve => {
       axios.get(global.config.api_host + 'core/chat/').then(result => {
         const chatlist_data = [];
         const recvlist_data = [];
+        setChatList([]);
+        setReceivedList([]);
+
         result.data.chat_list.map(item => {
           if (
-            item.sender.uid !== userInfo[global.config.user_info_const.UID] ||
+            item.sender.uid !== userValue[global.config.user_info_const.UID] ||
             item.approved_on !== null
           ) {
             let partner;
             if (
-              item.sender.uid === userInfo[global.config.user_info_const.UID]
+              item.sender.uid === userValue[global.config.user_info_const.UID]
             ) {
               partner = item.receiver;
             } else {
@@ -119,8 +122,8 @@ const ChattingListScreen = ({navigation}) => {
       resolve(false);
     });
   };
-  const retrieveChatList = async () => {
-    const result = await getChatList();
+  const retrieveChatList = async userValue => {
+    const result = await getChatList(userValue);
     setLoading(false);
 
     return result;

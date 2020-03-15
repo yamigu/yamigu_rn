@@ -54,6 +54,7 @@ const AddFriendsScreen = ({navigation}) => {
       text,
       '',
       [
+        {text: '아니오', onPress: () => console.log('Cancel Pressed')},
         {
           text: '네',
           onPress: () => {
@@ -70,7 +71,6 @@ const AddFriendsScreen = ({navigation}) => {
               });
           },
         },
-        {text: '아니오', onPress: () => console.log('Cancel Pressed')},
       ],
       {cancelable: false},
     );
