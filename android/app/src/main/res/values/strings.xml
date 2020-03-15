@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">yamigu</string>
+    <string name="app_name">야미구</string>
     <string name="kakao_app_key">8f227ce17d6a3f4f4cee01b62114ac95</string>
     <string name="title_dynamicfeature">yamigu_dynamicfeature_module</string>
 </resources>
