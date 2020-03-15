@@ -93,9 +93,6 @@ const MyFeedManage = ({
     // {"target":1105,"layout":{"y":0,"width":256,"x":32,"height":54.5}}
   };
   const _scrollTop = () => {
-    Object.keys(scroll.current._root).map(item => {
-      console.log(item);
-    });
     // console.log(scroll);
     setTimeout(() => {
       scroll.current._root.scrollToPosition(0, 0);
@@ -279,7 +276,7 @@ const MyFeedManage = ({
             ref={_viewPager}
             style={styles.viewPager}
             indicator={_renderDotIndicator()}>
-            {myFeed.map(item => {
+            {myFeed.map((item, index) => {
               return (
                 <View>
                   <TouchableOpacity
@@ -307,24 +304,26 @@ const MyFeedManage = ({
                     }>
                     <Image
                       style={styles.viewPage}
-                      key="1"
+                      key={index}
                       source={
                         item.img_src === null ? null : {uri: item.img_src}
                       }
                     />
-                    <View style={styles.roundWrapper}>
-                      <Button
-                        transparent
-                        style={styles.deleteBtn}
-                        onPress={deleteFeed}>
-                        <Octionicon
-                          name="x"
-                          size={20}
-                          style={styles.iconX}
-                          color="white"
-                        />
-                      </Button>
-                    </View>
+                    {myFeed.length === 1 ? null : (
+                      <View style={styles.roundWrapper}>
+                        <Button
+                          transparent
+                          style={styles.deleteBtn}
+                          onPress={deleteFeed}>
+                          <Octionicon
+                            name="x"
+                            size={20}
+                            style={styles.iconX}
+                            color="white"
+                          />
+                        </Button>
+                      </View>
+                    )}
                   </TouchableOpacity>
                 </View>
               );

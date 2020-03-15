@@ -257,14 +257,16 @@ const MyFeedView = ({userInfo, scroll, offsetY, feed_list, setFeed_list}) => {
                   key={index + 2}
                   source={item.img_src === null ? null : {uri: item.img_src}}
                 />
-                <View style={styles.roundWrapper}>
-                  <Button
-                    transparent
-                    style={styles.deleteBtn}
-                    onPress={deleteFeed}>
-                    <Octionicon name="x" size={20} style={styles.iconX} />
-                  </Button>
-                </View>
+                {feed_list.length === 1 ? null : (
+                  <View style={styles.roundWrapper}>
+                    <Button
+                      transparent
+                      style={styles.deleteBtn}
+                      onPress={deleteFeed}>
+                      <Octionicon name="x" size={20} style={styles.iconX} />
+                    </Button>
+                  </View>
+                )}
               </View>
             );
           })}
