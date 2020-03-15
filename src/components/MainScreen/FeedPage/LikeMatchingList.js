@@ -1,10 +1,12 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {useEffect, useState} from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
-import {List, ListItem} from 'native-base';
+import {List, ListItem, Badge} from 'native-base';
 import LikeMatching from './LikeMatching';
 import UserProfileSmall from '~/components/common/UserProfileSmall';
 import '~/config';
+import palette from '~/lib/styles/palette';
+import GoldBadge from '~/components/common/GoldBadge';
 
 const nowYear = 20200000;
 
@@ -44,6 +46,7 @@ const LikeMatchingList = ({navigation, likeMatchingProp, likeNum}) => {
         <LikeMatching likeNum={likeNum} />
 
         {likeMatchingProp.map((user, index) => {
+          console.log(user);
           let intAge =
             Math.floor((nowYear - parseInt(user.birthdate)) / 10000) + 2;
           // console.log('usersrrrrr');
@@ -56,6 +59,7 @@ const LikeMatchingList = ({navigation, likeMatchingProp, likeNum}) => {
               }}
               userName={user.nickname}
               imageSource={user.avata === null ? null : {uri: user.avata}}
+              badgeComponent={user.has_new ? <GoldBadge /> : null}
               onPress={() =>
                 navigation.navigate('Profile', {
                   viewpagerIndex: index,

@@ -5,10 +5,14 @@ import palette from '~/lib/styles/palette';
 
 const styles = StyleSheet.create({
   goldBadge: {
+    position: 'absolute',
+    top: 12,
     width: 16,
     height: 16,
     borderRadius: 8,
     transform: [{rotate: '-45deg'}],
+    borderWidth: 1,
+    borderColor: 'white',
   },
 });
 const GoldBadge = () => {
