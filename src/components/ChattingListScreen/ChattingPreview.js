@@ -97,7 +97,6 @@ const ChattingPreview = ({
               },
             ],
           );
-          navigation.navigate('BV');
         } else if (hasVerified === 1) {
           Alert.alert('소속인증이 진행중입니다!', '잠시만 기다려주세요');
         } else {

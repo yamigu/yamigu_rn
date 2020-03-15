@@ -21,8 +21,15 @@ const ChattingListScreen = ({navigation}) => {
     return new Promise(async (resolve, reject) => {
       const userValue = await AsyncStorage.getItem('userValue');
       const jUserValue = JSON.parse(userValue);
+
       setUserInfo(jUserValue);
-      if (jUserValue[global.config.user_info_const.TOKEN] === 'token') {
+
+      if (
+        jUserValue[global.config.user_info_const.TOKEN] === null ||
+        jUserValue[global.config.user_info_const.TOKEN] === '' ||
+        jUserValue[global.config.user_info_const.TOKEN] === undefined ||
+        jUserValue[global.config.user_info_const.TOKEN] === 'token'
+      ) {
         Alert.alert('로그인 및 회원가입이 필요한 서비스입니다.', '', [
           {
             onPress: () => {
@@ -33,6 +40,9 @@ const ChattingListScreen = ({navigation}) => {
         ]);
         resolve(false);
       } else if (
+        jUserValue[global.config.user_info_const.NICKNAME] === null ||
+        jUserValue[global.config.user_info_const.NICKNAME] === '' ||
+        jUserValue[global.config.user_info_const.NICKNAME] === undefined ||
         jUserValue[global.config.user_info_const.NICKNAME] === 'nickname'
       ) {
         Alert.alert('로그인 및 회원가입이 필요한 서비스입니다.', '', [
@@ -45,6 +55,9 @@ const ChattingListScreen = ({navigation}) => {
         ]);
         resolve(false);
       } else if (
+        jUserValue[global.config.user_info_const.BIRTHDATE] === null ||
+        jUserValue[global.config.user_info_const.BIRTHDATE] === '' ||
+        jUserValue[global.config.user_info_const.BIRTHDATE] === undefined ||
         jUserValue[global.config.user_info_const.BIRTHDATE] === 'birthdate'
       ) {
         Alert.alert('소속인증이 필요한 서비스입니다.', '', [
@@ -57,7 +70,7 @@ const ChattingListScreen = ({navigation}) => {
         ]);
       }
       setHasVeirifed(jUserValue[global.config.user_info_const.VERIFIED]);
-      resolve(false);
+      resolve(true);
     });
   };
 
@@ -69,6 +82,7 @@ const ChattingListScreen = ({navigation}) => {
         setLoading(false);
         return;
       }
+      const result2 = await retrieveChatList();
     });
     return () => listener.remove();
   }, []);
@@ -107,28 +121,32 @@ const ChattingListScreen = ({navigation}) => {
   };
   const retrieveChatList = async () => {
     const result = await getChatList();
-
     setLoading(false);
 
     return result;
   };
-  useEffect(() => {
-    setLoading(true);
-    if (
-      userInfo === null ||
-      userInfo[global.config.user_info_const.NICKNAME] === null ||
-      userInfo[global.config.user_info_const.NICKNAME] === '' ||
-      userInfo[global.config.user_info_const.NICKNAME] === undefined ||
-      userInfo[global.config.user_info_const.NICKNAME] === 'nickname'
-    ) {
-      setLoading(false);
-      return;
-    }
-    retrieveChatList();
-  }, [userInfo]);
+  //   useEffect(() => {
+  //     console.log('useeffect by userInfo');
+  //     setLoading(true);
+  //     if (
+  //       userInfo === null ||
+  //       userInfo[global.config.user_info_const.NICKNAME] === null ||
+  //       userInfo[global.config.user_info_const.NICKNAME] === '' ||
+  //       userInfo[global.config.user_info_const.NICKNAME] === undefined ||
+  //       userInfo[global.config.user_info_const.NICKNAME] === 'nickname'
+  //     ) {
+  //       setLoading(false);
+  //       return;
+  //     }
+  //     retrieveChatList();
+  //   }, [userInfo]);
   return (
     <Content showsVerticalScrollIndicator={false} style={styles.root}>
-      <Spinner visible={loading} textContent={'채팅 목록 불러오는중...'} />
+      <Spinner
+        visible={loading}
+        textStyle={{color: 'white'}}
+        textContent={'채팅 목록 불러오는중...'}
+      />
       <ReceivedList
         hasVerified={hasVerified}
         navigation={navigation}

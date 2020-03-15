@@ -329,13 +329,14 @@ const ChattingScreen = ({navigation}) => {
           cancelled={cancelled}
         />
       </Modal>
-      <Spinner visible={loading} textContent={'대화 내역 불러오는중...'} />
+      <Spinner
+        visible={loading}
+        textStyle={{color: 'white'}}
+        textContent={'대화 내역 불러오는중...'}
+      />
 
       <KeyboardAvoidingView style={styles.container}>
-        <ScrollView
-          bounces="false"
-          ref={_scrollToBottomY}
-          onContentSizeChange={gotoBot}>
+        <ScrollView ref={_scrollToBottomY} onContentSizeChange={gotoBot}>
           {userInfo === null ? null : (
             <List style={{flex: 1}}>
               {messageList.map((item, index) => {
