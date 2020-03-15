@@ -385,6 +385,7 @@ const BVScreen = ({navigation}) => {
           * 사원증 위조는 사문서부정행사죄가 성립됩니다.
         </CustomTextRegular>
       </View>
+      <View style={{height: 40, flex: 1}} />
     </Content>
   );
 };

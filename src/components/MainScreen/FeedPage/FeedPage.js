@@ -29,7 +29,7 @@ const FeedPage = props => {
   const [likeNum, setLikeNum] = useState(0);
   const _scroll = useRef();
 
-  const retrieveFeeds = () => {
+  const retrieveFeeds = hasProfile => {
     return new Promise((resolve, reject) => {
       //setProfileCardProp(feeds);
       axios
@@ -85,11 +85,11 @@ const FeedPage = props => {
         });
     });
   };
-  const refre = async () => {
+  const refre = async hasProfile => {
     setRefreshing(true);
     const emptyData = [];
     setProfileCardProp(emptyData);
-    await retrieveFeeds();
+    await retrieveFeeds(hasProfile);
     // if (feeds !== null) {
     //   if (hasProfile === false) {
     //     setProfileCardProp(feeds.slice(0, 2));
@@ -136,43 +136,43 @@ const FeedPage = props => {
     let innerHasProfile = false;
     const listener = props.navigation.addListener('didFocus', () => {
       props.navigation.setParams({});
-      axios
-        .get(global.config.api_host + 'authorization/user/info/')
-        .then(item => {
-          setMyFeedManageProp(item.data);
-          if (item.data.avata !== null) {
-            // console.log('avata::::');
-            // console.log(item.data.avata);
-            setHasProfile(true);
-            innerHasProfile = true;
-            console.log('hasprofile::::');
-            console.log(innerHasProfile);
-          }
-          let tmpUrl =
-            global.config.api_host + 'core/feed/' + item.data.uid + '/';
-          return tmpUrl;
-        })
-        .then(url => {
-          console.log('new feed done');
-          axios.get(url).then(result => {
-            // console.log('myfeedmanage 1st axios done');
-            // console.log(result.data);
-            let tmpFeed = [];
-            let count = 0;
-            result.data.map(item => {
-              tmpFeed[count] = item;
-              count++;
-            });
-            tmpFeed.reverse();
-            setMyFeed(tmpFeed);
-          });
-        })
-        .then(() => {
-          // console.log('myfeedmanage axios done');
-        });
-      if (!innerHasProfile) return;
+      //   axios
+      //     .get(global.config.api_host + 'authorization/user/info/')
+      //     .then(item => {
+      //       setMyFeedManageProp(item.data);
+      //       if (item.data.avata !== null) {
+      //         // console.log('avata::::');
+      //         // console.log(item.data.avata);
+      //         setHasProfile(true);
+      //         innerHasProfile = true;
+      //         console.log('hasprofile::::');
+      //         console.log(innerHasProfile);
+      //       }
+      //       let tmpUrl =
+      //         global.config.api_host + 'core/feed/' + item.data.uid + '/';
+      //       return tmpUrl;
+      //     })
+      //     .then(url => {
+      //       console.log('new feed done');
+      //       axios.get(url).then(result => {
+      //         // console.log('myfeedmanage 1st axios done');
+      //         // console.log(result.data);
+      //         let tmpFeed = [];
+      //         let count = 0;
+      //         result.data.map(item => {
+      //           tmpFeed[count] = item;
+      //           count++;
+      //         });
+      //         tmpFeed.reverse();
+      //         setMyFeed(tmpFeed);
+      //       });
+      //     })
+      //     .then(() => {
+      //       // console.log('myfeedmanage axios done');
+      //     });
+      //   if (!innerHasProfile) return;
 
-      refre();
+      //   refre();
     });
     axios
       .get(global.config.api_host + 'authorization/user/info/')
@@ -188,10 +188,11 @@ const FeedPage = props => {
         }
         let tmpUrl =
           global.config.api_host + 'core/feed/' + item.data.uid + '/';
+        refre(innerHasProfile);
+
         return tmpUrl;
       })
       .then(url => {
-        console.log('new feed done');
         axios.get(url).then(result => {
           // console.log('myfeedmanage 1st axios done');
           // console.log(result.data);
@@ -210,40 +211,40 @@ const FeedPage = props => {
       });
 
     //axios for likematchning
-    axios.get(global.config.api_host + 'core/both_like/').then(result => {
-      let tmpBothLike = [];
-      result.data.map((item, index) => {
-        tmpBothLike[index] = item;
-      });
-      setLikeMatchingProp(tmpBothLike);
-    });
-    axios
-      .get(global.config.api_host + 'core/feeds/')
-      .then(result => {
-        let tmp = [];
-        let count = 0;
+    // axios.get(global.config.api_host + 'core/both_like/').then(result => {
+    //   let tmpBothLike = [];
+    //   result.data.map((item, index) => {
+    //     tmpBothLike[index] = item;
+    //   });
+    //   setLikeMatchingProp(tmpBothLike);
+    // });
+    // axios
+    //   .get(global.config.api_host + 'core/feeds/')
+    //   .then(result => {
+    //     let tmp = [];
+    //     let count = 0;
 
-        result.data.map((item, index) => {
-          if (item.feed_list.length === 0) {
-          } else {
-            tmp[count] = item;
-            count++;
-          }
-        });
-        //있는애들은 2개만보여주기
-        // console.log('innerhas ::: ??? ' + innerHasProfile);
-        if (innerHasProfile === false) {
-          // console.log(tmp);
-          // console.log(innerHasProfile);
-          setProfileCardProp(tmp.slice(0, 2));
-        } else {
-          setProfileCardProp(tmp);
-        }
-      })
-      .then(() => {
-        setRefreshing(false);
-        console.log('effect done');
-      });
+    //     result.data.map((item, index) => {
+    //       if (item.feed_list.length === 0) {
+    //       } else {
+    //         tmp[count] = item;
+    //         count++;
+    //       }
+    //     });
+    //     //있는애들은 2개만보여주기
+    //     // console.log('innerhas ::: ??? ' + innerHasProfile);
+    //     if (innerHasProfile === false) {
+    //       // console.log(tmp);
+    //       // console.log(innerHasProfile);
+    //       setProfileCardProp(tmp.slice(0, 2));
+    //     } else {
+    //       setProfileCardProp(tmp);
+    //     }
+    //   })
+    //   .then(() => {
+    //     setRefreshing(false);
+    //     console.log('effect done');
+    //   });
     //axios for profilecard
     return () => listener.remove();
   }, []);
@@ -257,7 +258,7 @@ const FeedPage = props => {
             <RefreshControl
               refreshing={refreshing}
               onRefresh={() => {
-                hasProfile === true ? refre() : addProfileAlert();
+                hasProfile === true ? refre(true) : addProfileAlert();
               }}
               // title="Loading..."
               tintColor={palette.gray}

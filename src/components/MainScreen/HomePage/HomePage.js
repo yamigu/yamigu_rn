@@ -100,8 +100,7 @@ const HomePage = ({navigation, screenProps}) => {
     if (notificationOpen) {
       console.log('initialize by click noti!');
       console.log(notificationOpen.notification._android._notification._data);
-
-      navigateByNoti(screenProps);
+      navigateByNoti(notificationOpen);
     }
   };
   const _retrieveData = () => {
@@ -1320,43 +1319,45 @@ const HomePage = ({navigation, screenProps}) => {
           </SafeAreaProvider>
         </Modal>
         {notiState === 0 ? null : (
-          <Button
-            onPress={() => {
-              if (notiState === 1) {
-                navigation.navigate('BV');
-              } else if (notiState === 2) {
-                navigation.navigate('MyProfile');
-              } else if (notiState === 3) {
-                navigation.navigate('AddFriends');
-              }
-            }}
-            style={{
-              backgroundColor: '#FFF6EF',
-              width: dw,
-              height: 50,
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-            }}>
-            <View style={{flexDirection: 'row'}}>
-              <Foundation
-                name="flag"
-                size={20}
-                style={{marginLeft: 10, marginTop: 2}}></Foundation>
-              <CustomTextMedium
-                size={14}
-                color={palette.black}
-                style={{paddingLeft: 10}}>
-                {notiState === 1
-                  ? ' 채팅하려면 소속인증이 필요해요! '
-                  : notiState === 2
-                  ? '프로필 사진을 등록하고 친구를 찾아보세요!'
-                  : notiState === 3
-                  ? '친구를 추가하고 보너스 야미 받아가세요!'
-                  : null}
-              </CustomTextMedium>
-            </View>
-            <AntIcon name="right" style={{paddingRight: 15}} size={24} />
-          </Button>
+          <View style={{position: 'absolute', zIndex: 2}}>
+            <Button
+              onPress={() => {
+                if (notiState === 1) {
+                  navigation.navigate('BV');
+                } else if (notiState === 2) {
+                  navigation.navigate('MyProfile');
+                } else if (notiState === 3) {
+                  navigation.navigate('AddFriends');
+                }
+              }}
+              style={{
+                backgroundColor: '#FFF6EF',
+                width: dw,
+                height: 50,
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+              }}>
+              <View style={{flexDirection: 'row'}}>
+                <Foundation
+                  name="flag"
+                  size={20}
+                  style={{marginLeft: 10, marginTop: 2}}></Foundation>
+                <CustomTextMedium
+                  size={14}
+                  color={palette.black}
+                  style={{paddingLeft: 10}}>
+                  {notiState === 1
+                    ? '채팅하려면 소속인증이 필요해요! '
+                    : notiState === 2
+                    ? '프로필 사진을 등록하고 친구를 찾아보세요!'
+                    : notiState === 3
+                    ? '친구를 추가하고 보너스 야미 받아가세요!'
+                    : null}
+                </CustomTextMedium>
+              </View>
+              <AntIcon name="right" style={{paddingRight: 15}} size={24} />
+            </Button>
+          </View>
         )}
         <View style={styles.topLayout}>
           {/* <CustomTextBold>{asyncValue[1]}</CustomTextBold> */}
