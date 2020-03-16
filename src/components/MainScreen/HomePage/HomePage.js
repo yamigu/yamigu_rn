@@ -96,11 +96,16 @@ const HomePage = ({navigation, screenProps}) => {
     const notificationOpen = await firebase
       .notifications()
       .getInitialNotification();
-    let data = null;
+
     if (notificationOpen) {
-      console.log('initialize by click noti!');
-      console.log(notificationOpen.notification._android._notification._data);
-      navigateByNoti(notificationOpen);
+      const lastNotification = await AsyncStorage.getItem('lastNotification');
+      if (lastNotification !== notificationOpen.notification.notificationId) {
+        await AsyncStorage.setItem(
+          'lastNotification',
+          notificationOpen.notification.notificationId,
+        );
+        navigateByNoti(notificationOpen);
+      }
     }
   };
   const _retrieveData = () => {
