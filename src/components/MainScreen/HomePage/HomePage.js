@@ -230,9 +230,6 @@ const HomePage = ({navigation, screenProps}) => {
     }
   }, [screenProps]);
   useEffect(() => {
-    if (Platform.OS === 'android') {
-      listenForOpen();
-    }
     const today = new Date();
     setNowTime(today);
 
@@ -295,6 +292,9 @@ const HomePage = ({navigation, screenProps}) => {
 
         console.log('done');
         navigation.setParams({});
+        if (Platform.OS === 'android') {
+          listenForOpen();
+        }
       },
       // run function that updates the data on entering the screen
     );

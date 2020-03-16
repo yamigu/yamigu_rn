@@ -112,8 +112,13 @@ const InfoView = ({navigation, userInfo, setUserInfo}) => {
               </CustomTextRegular>
             ) : info[global.config.user_info_const.VERIFIED] === 2 ? (
               <CustomTextRegular size={16} color={palette.gray}>
-                {info[global.config.user_info_const.BELONG]}{' '}
-                {info[global.config.user_info_const.DEPARTMENT]}
+                {info[global.config.user_info_const.BELONG]}
+                {info[global.config.user_info_const.DEPARTMENT] !== '' &&
+                info[global.config.user_info_const.DEPARTMENT] !== null &&
+                info[global.config.user_info_const.DEPARTMENT] !== undefined &&
+                info[global.config.user_info_const.DEPARTMENT] !== 'department'
+                  ? ' ' + info[global.config.user_info_const.DEPARTMENT]
+                  : ''}
               </CustomTextRegular>
             ) : null}
           </Body>
