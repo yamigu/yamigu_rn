@@ -43,7 +43,7 @@ const UserProfileSmall = ({
           <Image
             source={
               imageSource === null
-                ? require('~/images/profile-yamigu.png')
+                ? require('~/images/user-default-profile.png')
                 : imageSource
             }
             style={styles.image}

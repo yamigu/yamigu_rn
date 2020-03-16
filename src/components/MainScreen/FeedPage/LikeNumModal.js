@@ -83,6 +83,7 @@ const LikeNumModal = ({setLikeNumModalVisible, likeNum}) => {
           />
 
           <Button
+            transparent
             style={{
               width: 200,
               padding: 12,

@@ -112,7 +112,7 @@ const FeedPage = props => {
   const addProfileAlert = () => {
     Alert.alert(
       '사진 한장만 등록하세요!',
-      '무제한 피드 + 보너스 야미 본인이 나온 프로필 사진이 필요해요',
+      '무제한 피드 + 보너스 야미\n본인이 나온 프로필 사진이 필요해요',
       [
         {
           text: '다음에',

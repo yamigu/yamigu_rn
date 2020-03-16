@@ -92,7 +92,7 @@ const ChattingPreview = ({
           console.log('hasVerified :: ' + hasVerified);
           Alert.alert(
             '소속을 인증해보세요!',
-            '채팅가능 + 보너스 야미 소속이 인증된 친구들을 만나보세요',
+            '채팅가능 + 보너스 야미\n소속이 인증된 친구들을 만나보세요',
             [
               {
                 text: '인증하기',
