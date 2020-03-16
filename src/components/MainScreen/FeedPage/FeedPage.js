@@ -136,43 +136,16 @@ const FeedPage = props => {
     let innerHasProfile = false;
     const listener = props.navigation.addListener('didFocus', () => {
       props.navigation.setParams({});
-      //   axios
-      //     .get(global.config.api_host + 'authorization/user/info/')
-      //     .then(item => {
-      //       setMyFeedManageProp(item.data);
-      //       if (item.data.avata !== null) {
-      //         // console.log('avata::::');
-      //         // console.log(item.data.avata);
-      //         setHasProfile(true);
-      //         innerHasProfile = true;
-      //         console.log('hasprofile::::');
-      //         console.log(innerHasProfile);
-      //       }
-      //       let tmpUrl =
-      //         global.config.api_host + 'core/feed/' + item.data.uid + '/';
-      //       return tmpUrl;
-      //     })
-      //     .then(url => {
-      //       console.log('new feed done');
-      //       axios.get(url).then(result => {
-      //         // console.log('myfeedmanage 1st axios done');
-      //         // console.log(result.data);
-      //         let tmpFeed = [];
-      //         let count = 0;
-      //         result.data.map(item => {
-      //           tmpFeed[count] = item;
-      //           count++;
-      //         });
-      //         tmpFeed.reverse();
-      //         setMyFeed(tmpFeed);
-      //       });
-      //     })
-      //     .then(() => {
-      //       // console.log('myfeedmanage axios done');
-      //     });
-      //   if (!innerHasProfile) return;
-
-      //   refre();
+      axios
+        .get(global.config.api_host + 'authorization/user/info/')
+        .then(item => {
+          setMyFeedManageProp(item.data);
+          if (item.data.avata !== null) {
+            // console.log('avata::::');
+            // console.log(item.data.avata);
+            setHasProfile(true);
+          }
+        });
     });
     axios
       .get(global.config.api_host + 'authorization/user/info/')
