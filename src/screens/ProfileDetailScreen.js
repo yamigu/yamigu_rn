@@ -123,6 +123,16 @@ const ProfileDetailScreen = ({navigation}) => {
           tmpFeedList[index] = item;
         });
         setFeedList(tmpFeedList.reverse());
+        axios
+          .post(
+            global.config.api_host +
+              'core/feed/' +
+              tmpFeedList[tmpFeedList.length - 1].id +
+              '/read/',
+          )
+          .then(result => {
+            console.log(result.data);
+          });
       });
     axios
       .get(global.config.api_host + 'core/friends/' + uid + '/')

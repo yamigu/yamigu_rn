@@ -19,9 +19,13 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
 });
-const LikeMatchingList = ({navigation, likeMatchingProp, likeNum}) => {
+const LikeMatchingList = ({
+  navigation,
+  likeMatchingProp,
+  likeNum,
+  setLikeMatchingProp,
+}) => {
   const [bothLikeUser, setBothLikeUser] = useState([]);
-
   useEffect(() => {
     // let tmpBothLike = [];
     // axios.get(global.config.api_host + 'core/both_like/').then(result => {
@@ -60,7 +64,11 @@ const LikeMatchingList = ({navigation, likeMatchingProp, likeNum}) => {
               userName={user.nickname}
               imageSource={user.avata === null ? null : {uri: user.avata}}
               badgeComponent={user.has_new ? <GoldBadge /> : null}
-              onPress={() =>
+              onPress={() => {
+                const newData = likeMatchingProp.slice();
+                newData[index].has_new = false;
+                setLikeMatchingProp(newData);
+
                 navigation.navigate('Profile', {
                   viewpagerIndex: index,
                   location: user.location,
@@ -73,8 +81,8 @@ const LikeMatchingList = ({navigation, likeMatchingProp, likeNum}) => {
                   department: user.department,
                   bothLike: true,
                   height: user.height,
-                })
-              }
+                });
+              }}
               // badgeComponent={
               //   user.isUnread === true ? <GoldBadge /> : null
               // }

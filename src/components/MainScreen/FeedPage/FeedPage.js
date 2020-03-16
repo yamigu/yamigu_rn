@@ -293,11 +293,14 @@ const FeedPage = props => {
             navigation={props.navigation}
             likeMatchingProp={likeMatchingProp}
             likeNum={likeNum}
+            setLikeMatchingProp={setLikeMatchingProp}
           />
           <ProfileCardList
             navigation={props.navigation}
             profileCardProp={profileCardProp}
             hasProfile={hasProfile}
+            likeMatchingProp={likeMatchingProp}
+            setLikeMatchingProp={setLikeMatchingProp}
           />
         </Content>
       </Container>

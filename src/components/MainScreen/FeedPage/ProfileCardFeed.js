@@ -162,6 +162,8 @@ const ProfileCardFeed = ({
   bothLike,
   likedByServer,
   hasProfile,
+  likeMatchingProp,
+  setLikeMatchingProp,
 }) => {
   const [liked, setLiked] = useState(false);
   const [feedList, setFeedList] = useState([]);
@@ -239,6 +241,17 @@ const ProfileCardFeed = ({
         .post(global.config.api_host + 'core/like/' + feedList[0].id + '/')
         .then(result => {
           // console.log(result.data);
+          if (result.status === 208) {
+            const old = likeMatchingProp.findIndex(
+              item => item.uid === result.data.uid,
+            );
+            if (old < 0) {
+              const newData = likeMatchingProp.slice();
+              result.data.has_new = true;
+              newData.unshift(result.data);
+              setLikeMatchingProp(newData);
+            }
+          }
           setLiked(!liked);
         });
     }

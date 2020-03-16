@@ -220,8 +220,9 @@ const ChattingScreen = ({navigation}) => {
     });
   };
   useEffect(() => {
+    console.log('useEffect of ChattingScreen');
     let focus = true;
-    navigation.setParams({turnOnModal: turnOnModal});
+    navigation.setParams({notiData: null, turnOnModal: turnOnModal});
     const room = navigation.getParam('roomId', -1);
     setRoomId(room);
     navigation.setParams({

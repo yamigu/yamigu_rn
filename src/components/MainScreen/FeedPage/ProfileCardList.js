@@ -4,7 +4,13 @@ import ProfileCardFeed from './ProfileCardFeed';
 import axios from 'axios';
 import palette from '~/lib/styles/palette';
 
-const ProfileCardList = ({navigation, profileCardProp, hasProfile}) => {
+const ProfileCardList = ({
+  navigation,
+  profileCardProp,
+  hasProfile,
+  likeMatchingProp,
+  setLikeMatchingProp,
+}) => {
   let nowYear = 20200000;
   useEffect(() => {}, [profileCardProp]);
 
@@ -32,6 +38,8 @@ const ProfileCardList = ({navigation, profileCardProp, hasProfile}) => {
             bothLike={false}
             my_feed={false}
             hasProfile={hasProfile}
+            likeMatchingProp={likeMatchingProp}
+            setLikeMatchingProp={setLikeMatchingProp}
           />
         );
       })}
