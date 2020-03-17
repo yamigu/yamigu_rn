@@ -27,6 +27,7 @@ const FeedPage = props => {
   const [tmpState, setTmpState] = useState(false);
   const [hasProfile, setHasProfile] = useState(false);
   const [likeNum, setLikeNum] = useState(0);
+  const [page, setPage] = useState(null);
   const _scroll = useRef();
 
   const retrieveFeeds = hasProfile => {
@@ -35,10 +36,12 @@ const FeedPage = props => {
       axios
         .get(global.config.api_host + 'core/feeds/')
         .then(result => {
-          //   console.log(result.data);
+          console.log('retrieveFeeds');
+          console.log(result.data.results);
           let data = [];
           let count = 0;
-          result.data.map((item, index) => {
+          setPage(result.data.next);
+          result.data.results.map((item, index) => {
             if (item.feed_list.length === 0) {
             } else {
               if (hasProfile === false && count > 1) return;
@@ -46,6 +49,30 @@ const FeedPage = props => {
               count++;
               setProfileCardProp(data);
             }
+          });
+
+          resolve(true);
+        })
+        .catch(error => {
+          console.log(error);
+          resolve(null);
+        });
+    });
+  };
+  const retrieveNextPage = () => {
+    return new Promise((resolve, reject) => {
+      console.log(page);
+      axios
+        .get(page)
+        .then(result => {
+          setPage(result.data.next);
+          let data = profileCardProp.slice();
+          let count = data.length;
+          console.log(result.data.results);
+          result.data.results.map((item, index) => {
+            data[count] = item;
+            count++;
+            setProfileCardProp(data);
           });
 
           resolve(true);
@@ -241,7 +268,11 @@ const FeedPage = props => {
           onMomentumScrollEnd={e => {
             if (e.nativeEvent.contentOffset.y < 100) return;
             // console.log(hasProfile);
-            hasProfile === false ? addProfileAlert() : null;
+            hasProfile === false
+              ? addProfileAlert()
+              : page !== null
+              ? retrieveNextPage()
+              : null;
           }}
           onMomentumScrollBegin={() => {}}
           onScroll={event => {
