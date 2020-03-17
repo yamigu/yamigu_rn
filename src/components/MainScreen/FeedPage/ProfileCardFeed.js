@@ -30,6 +30,7 @@ import SendChatting from '~/components/common/SendChatting';
 import MaterialCommunityicon from 'react-native-vector-icons/MaterialCommunityIcons';
 import AsyncStorage from '@react-native-community/async-storage';
 import '~/config';
+import BothLikeModal from '~/components/MainScreen/FeedPage/BothLikeModal';
 
 // const data = ['2:2 미팅', '3:3 미팅', '4:4 미팅', '날짜는 조율 가능해요'];
 
@@ -170,6 +171,7 @@ const ProfileCardFeed = ({
   const [moreModalVisible, setMoreModalVisible] = useState(false);
   const [call911ModalVisible, setCall911ModalVisible] = useState(false);
   const [chattingModalVisible, setChattingModalVisible] = useState(false);
+  const [bothlikeModalVisible, setBothlikeModalVisible] = useState(false);
   const [loading, setLoading] = useState(true);
   // const [hasChatting, setHasChatting] = useState(false);
 
@@ -250,6 +252,7 @@ const ProfileCardFeed = ({
               result.data.has_new = true;
               newData.unshift(result.data);
               setLikeMatchingProp(newData);
+              setBothlikeModalVisible(true);
             }
           }
           setLiked(!liked);
@@ -325,7 +328,12 @@ const ProfileCardFeed = ({
           uid={uid}
         />
       </Modal>
-
+      <Modal visible={bothlikeModalVisible} transparent>
+        <BothLikeModal
+          setModalVisible={setBothlikeModalVisible}
+          partner={nickname}
+        />
+      </Modal>
       <View style={styles.cardView}>
         <ProfileCard
           uid={uid}
