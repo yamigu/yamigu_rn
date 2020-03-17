@@ -93,7 +93,7 @@ const ProfileDetailScreen = ({navigation}) => {
     }
   };
 
-  const tmp = () => {
+  const setMoreModalNavi = () => {
     setMoreModalVisible(true);
   };
   const getStorage = () => {
@@ -109,7 +109,7 @@ const ProfileDetailScreen = ({navigation}) => {
       setMyUid(result[global.config.user_info_const.UID]);
     });
     navigation.setParams({
-      setModal: tmp,
+      setModal: setMoreModalNavi,
     });
     console.log(liked);
     setLikedState(liked);
@@ -275,7 +275,7 @@ const ProfileDetailScreen = ({navigation}) => {
                               '',
                             );
                           } else {
-                            //대화방 만들기~~
+                            setModalVisible(true);
                           }
                         },
                       },
