@@ -326,6 +326,14 @@ const SideMenu = ({navigation}) => {
                   내 친구 추가하기
                 </CustomTextRegular>
               </Body>
+              <Right style={styles.listItemRight}>
+                <CustomTextRegular size={14} color={palette.orange[0]}>
+                  {sideInfo[global.config.user_info_const.NEW_FRIEND_REQUESTS] >
+                  0
+                    ? 'new'
+                    : null}
+                </CustomTextRegular>
+              </Right>
             </ListItem>
           </TouchableByPlatform>
 

@@ -170,6 +170,8 @@ const HomePage = ({navigation, screenProps}) => {
                   result.data.gender;
                 jUserValue[global.config.user_info_const.VERIFIED] =
                   result.data.verified;
+                jUserValue[global.config.user_info_const.NEW_FRIEND_REQUESTS] =
+                  result.data.new_friend_requests;
                 console.log(result.data);
                 setNotiState(0);
                 if (result.data.verified === 0) {

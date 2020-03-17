@@ -14,6 +14,7 @@ module.exports = global.config = {
     YAMI: 9,
     LOCATION: 10,
     HEIGHT: 11,
+    NEW_FRIEND_REQUESTS: 12,
     FREE: 15,
   },
 };
