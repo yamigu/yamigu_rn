@@ -73,6 +73,8 @@ const HomePage = ({navigation, screenProps}) => {
   const [yamiNo, setYamiNo] = useState(0);
   const [freeTicket, setFreeTicket] = useState(0);
   const [notiState, setNotiState] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [lastTime, setLastTime] = useState(0);
   const navigateByNoti = screenProps => {
     if (
       JSON.parse(
@@ -92,6 +94,21 @@ const HomePage = ({navigation, screenProps}) => {
       navigation.navigate('Home');
     }
   };
+  const nicknameCheck = () => {
+    return (
+      userInfo[global.config.user_info_const.NICKNAME] === 'nickname' ||
+      userInfo[global.config.user_info_const.NICKNAME] === '' ||
+      userInfo[global.config.user_info_const.NICKNAME] === null
+    );
+  };
+  const birthdateCheck = () => {
+    return (
+      userInfo[global.config.user_info_const.BIRTHDATE] === 'birthdate' ||
+      userInfo[global.config.user_info_const.BIRTHDATE] === '' ||
+      userInfo[global.config.user_info_const.BIRTHDATE] === null
+    );
+  };
+
   const listenForOpen = async () => {
     const notificationOpen = await firebase
       .notifications()
@@ -460,6 +477,8 @@ const HomePage = ({navigation, screenProps}) => {
     return () => listener.remove();
   }, []);
   const requestMatching = async () => {
+    if (loading || Moment.now() - lastTime < 1000) return;
+    setLastTime(Moment.now());
     console.log('***jsuer');
     const userValue = await AsyncStorage.getItem('userValue');
     const jUserValue = JSON.parse(userValue);
@@ -493,7 +512,7 @@ const HomePage = ({navigation, screenProps}) => {
               text: '네',
               onPress: () => {
                 // console.log('came true');
-                logCallback('match request', setLoginLoading(false));
+                logCallback('match request', setLoading(false));
                 setMatchRequested(false);
 
                 setMemberItemNo(0);
@@ -516,10 +535,11 @@ const HomePage = ({navigation, screenProps}) => {
                 setDateSelected(tdselected);
 
                 //이미 매칭중인데 누르면 취소니까
+                setLoading(true);
                 axios
                   .patch(global.config.api_host + 'core/match_request/')
                   .then(result => {
-                    setLoginLoading(false);
+                    setLoading(false);
                     setFreeTicket(result.data.free);
                     setYamiNo(result.data.yami);
                     let tmp = asyncValue.slice();
@@ -527,9 +547,14 @@ const HomePage = ({navigation, screenProps}) => {
                     tmp[global.config.user_info_const.FREE] = result.data.free;
                     AsyncStorage.setItem('userValue', JSON.stringify(tmp));
                     setAsyncValue(tmp);
+                    setLoading(false);
                   })
                   .then(() => {
                     console.log('cancleed');
+                    setLoading(false);
+                  })
+                  .catch(() => {
+                    setLoading(false);
                   });
               },
             },
@@ -560,7 +585,6 @@ const HomePage = ({navigation, screenProps}) => {
             let count = yamiNo - 2;
             setYamiNo(count);
 
-            console.log('야미 감소시키는 post');
             let tmpMemText = '';
             let memInt = 0;
             if (memberMainSelected === true) {
@@ -604,6 +628,7 @@ const HomePage = ({navigation, screenProps}) => {
             let min_age = multiSliderValue[0];
             let max_age = multiSliderValue[1];
             // console.log(memInt);
+            setLoading(true);
             axios
               .post(global.config.api_host + 'core/match_request/', {
                 personnel_selected: memInt,
@@ -619,12 +644,14 @@ const HomePage = ({navigation, screenProps}) => {
                 tmp[global.config.user_info_const.FREE] = result.data.free;
                 AsyncStorage.setItem('userValue', JSON.stringify(tmp));
                 setAsyncValue(tmp);
+                setLoading(false);
 
                 console.log(memInt + ' ' + dateInt);
                 console.log(result.data);
               })
               .catch(e => {
                 console.log(e);
+                setLoading(false);
                 if (e.response.status === 401) {
                   AsyncStorage.setItem(
                     'userValue',
@@ -636,14 +663,14 @@ const HomePage = ({navigation, screenProps}) => {
                 setTimeout(() => {
                   let count = freeTicket - 1;
                   setFreeTicket(count);
-                  setLoginLoading(false);
                   setMatchRequested(!matchRequested);
+                  setLoading(false);
                   console.log('here');
                 }, 500),
               );
           }
         } else {
-          setLoginLoading(true);
+          setLoading(true);
 
           console.log('sending?');
           //아직 매칭 안한거고, 이제 보내야지
@@ -724,7 +751,7 @@ const HomePage = ({navigation, screenProps}) => {
               setTimeout(() => {
                 let count = freeTicket - 1;
                 setFreeTicket(count);
-                setLoginLoading(false);
+                setLoading(false);
                 setMatchRequested(!matchRequested);
                 console.log('here');
               }, 500),
@@ -749,8 +776,6 @@ const HomePage = ({navigation, screenProps}) => {
     inputRange: [0, 1],
     outputRange: ['0deg', '360deg'],
   });
-
-  const [loginLoading, setLoginLoading] = useState(false);
 
   const [memberModalVisible, setMemberModalVisible] = useState(false);
   const [dateModalVisible, setDateModalVisible] = useState(false);
@@ -817,7 +842,7 @@ const HomePage = ({navigation, screenProps}) => {
     <ScrollView>
       <View style={styles.root}>
         <Spinner
-          visible={loginLoading}
+          visible={loading}
           textContent={'Loading...'}
           textStyle={styles.spinnerTextStyle}
         />
@@ -1534,12 +1559,7 @@ const HomePage = ({navigation, screenProps}) => {
                   <CustomTextMedium size={16} color="white">
                     미팅 주선 신청하기
                   </CustomTextMedium>
-                  {freeTicket > 0 ||
-                  userInfo === null ||
-                  userInfo[global.config.user_info_const.NICKNAME] ===
-                    'nickname' ||
-                  userInfo[global.config.user_info_const.NICKNAME] === '' ||
-                  userInfo[global.config.user_info_const.NICKNAME] === null ? (
+                  {freeTicket > 0 || userInfo === null || nicknameCheck() ? (
                     <CustomTextMedium size={16} color="white">
                       무료
                     </CustomTextMedium>

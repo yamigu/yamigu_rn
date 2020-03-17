@@ -123,7 +123,7 @@ const DrawerStack = createDrawerNavigator(
   },
   {
     contentComponent: SideMenu,
-    edgeWidth: Platform.OS === 'ios' ? 50 : -100,
+    edgeWidth: Platform.OS === 'ios' ? 100 : -100,
     drawerWidth: deviceWidth * 0.813,
   },
 );

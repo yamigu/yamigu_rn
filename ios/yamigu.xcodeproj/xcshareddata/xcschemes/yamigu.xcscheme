@@ -29,7 +29,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-               BuildableName = "yamigu.app"
+               BuildableName = "&#x110b;&#x1163;&#x1106;&#x1175;&#x1100;&#x116e;.app"
                BlueprintName = "yamigu"
                ReferencedContainer = "container:yamigu.xcodeproj">
             </BuildableReference>
@@ -59,7 +59,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "yamigu.app"
+            BuildableName = "&#x110b;&#x1163;&#x1106;&#x1175;&#x1100;&#x116e;.app"
             BlueprintName = "yamigu"
             ReferencedContainer = "container:yamigu.xcodeproj">
          </BuildableReference>
@@ -82,7 +82,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "yamigu.app"
+            BuildableName = "&#x110b;&#x1163;&#x1106;&#x1175;&#x1100;&#x116e;.app"
             BlueprintName = "yamigu"
             ReferencedContainer = "container:yamigu.xcodeproj">
          </BuildableReference>
@@ -99,7 +99,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "yamigu.app"
+            BuildableName = "&#x110b;&#x1163;&#x1106;&#x1175;&#x1100;&#x116e;.app"
             BlueprintName = "yamigu"
             ReferencedContainer = "container:yamigu.xcodeproj">
          </BuildableReference>
