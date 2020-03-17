@@ -46,9 +46,10 @@ const AddFriendsScreen = ({navigation}) => {
   const patchFriendStatus = (id, action, approved) => {
     let text = '';
     if (action === 'APPROVE') text = '친구 요청을 수락하시겠어요?';
-    else if (action === 'DELETE') {
-      if (!approved) text = '친구 요청을 거절하시겠어요?';
-      else text = '정말 친구를 삭제하시겠습니까?';
+    else if (action === 'DECLINE') {
+      text = '친구 요청을 거절하시겠어요?';
+    } else if (action === 'DELETE') {
+      text = '정말 친구를 삭제하시겠습니까?';
     } else if (action === 'CANCEL') text = '친구 요청을 취소하시겠어요?';
     Alert.alert(
       text,
@@ -68,6 +69,11 @@ const AddFriendsScreen = ({navigation}) => {
               .then(result => {
                 console.log(result.data);
                 setFriendList(result.data);
+                if (action === 'DELETE') {
+                  setNumOfFriends(numOfFriends - 1);
+                } else if (action === 'APPROVE') {
+                  setNumOfFriends(numOfFriends + 1);
+                }
               });
           },
         },
@@ -215,7 +221,7 @@ const AddFriendsScreen = ({navigation}) => {
                     <Button
                       style={styles.declineButton}
                       onPress={() =>
-                        patchFriendStatus(friend.id, 'DELETE', friend.approved)
+                        patchFriendStatus(friend.id, 'DECLINE', friend.approved)
                       }>
                       <CustomTextRegular size={18} color={palette.gray}>
                         X
