@@ -219,20 +219,34 @@ const ChattingScreen = ({navigation}) => {
       }
     });
   };
+
+  const retrieveInfo = async room => {
+    const result = await axios.get(
+      global.config.api_host + 'core/chat/detail/' + room + '/',
+    );
+    const approved_data = result.data.approved_on;
+    if (approved_data !== null) {
+      setApprovoed(true);
+      navigation.setParams({
+        approved: true,
+      });
+    }
+  };
   useEffect(() => {
     console.log('useEffect of ChattingScreen');
     let focus = true;
     navigation.setParams({notiData: null, turnOnModal: turnOnModal});
     const room = navigation.getParam('roomId', -1);
-    setRoomId(room);
-    navigation.setParams({
-      partner: navigation.getParam('partner', ''),
-      approved: navigation.getParam('approved', false),
-      requestDecline: () => requestDecline(room),
-    });
-    setApprovoed(navigation.getParam('approved', false));
-    setCancelled(navigation.getParam('cancelled', false));
     setPartnerInfo(navigation.getParam('partner', ''));
+    setRoomId(room);
+    retrieveInfo(room);
+    // navigation.setParams({
+    //   partner: navigation.getParam('partner', ''),
+    //   approved: navigation.getParam('approved', false),
+    //   requestDecline: () => requestDecline(room),
+    // });
+    // setApprovoed(navigation.getParam('approved', false));
+    // setCancelled(navigation.getParam('cancelled', false));
     global_messageList.length = 0; // 배열 초기화
     let listener;
     let lastMessage;

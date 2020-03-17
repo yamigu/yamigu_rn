@@ -15,6 +15,7 @@ const ChattingList = ({style, navigation, chatList, hasVerified, uid}) => (
       </View>
     </ListItem>
     {chatList.map((item, index) => {
+      console.log(item);
       return (
         <ChattingPreview
           key={index}

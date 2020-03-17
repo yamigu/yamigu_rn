@@ -21,9 +21,7 @@ const ChattingListScreen = ({navigation}) => {
     return new Promise(async (resolve, reject) => {
       const userValue = await AsyncStorage.getItem('userValue');
       const jUserValue = JSON.parse(userValue);
-
       setUserInfo(jUserValue);
-
       if (
         jUserValue[global.config.user_info_const.TOKEN] === null ||
         jUserValue[global.config.user_info_const.TOKEN] === '' ||
@@ -93,7 +91,7 @@ const ChattingListScreen = ({navigation}) => {
         const recvlist_data = [];
         setChatList([]);
         setReceivedList([]);
-
+        console.log(result.data);
         result.data.chat_list.map(item => {
           if (
             item.sender.uid !== userValue[global.config.user_info_const.UID] ||
