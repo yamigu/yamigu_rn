@@ -75,6 +75,7 @@ const HomePage = ({navigation, screenProps}) => {
   const [notiState, setNotiState] = useState(0);
   const [loading, setLoading] = useState(false);
   const [lastTime, setLastTime] = useState(0);
+  const [screenPropsData, setScreenPropsData] = useState(null);
   const navigateByNoti = screenProps => {
     if (
       JSON.parse(
@@ -242,16 +243,21 @@ const HomePage = ({navigation, screenProps}) => {
       }
     });
   };
-  useEffect(() => {
-    console.log('HomePage useEffect');
-
+  const listenForOpenIOS = async () => {
     if (Platform.OS === 'ios') {
-      console.log(screenProps);
+      console.log(screenPropsData);
       if (screenProps !== null) {
         // console.log(screenProps);
+        if (userInfo === null) {
+          const result = await _retrieveData();
+        }
         navigateByNoti(screenProps);
       }
     }
+  };
+  useEffect(() => {
+    setScreenPropsData(screenProps);
+    listenForOpenIOS();
   }, [screenProps]);
   useEffect(() => {
     const today = new Date();
