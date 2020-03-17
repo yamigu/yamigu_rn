@@ -67,13 +67,11 @@ const FeedPage = props => {
         .then(result => {
           setPage(result.data.next);
           let data = profileCardProp.slice();
-          let count = data.length;
-          console.log(result.data.results);
           result.data.results.map((item, index) => {
-            data[count] = item;
-            count++;
-            setProfileCardProp(data);
+            console.log(item);
+            data.push(item);
           });
+          setProfileCardProp(data);
 
           resolve(true);
         })
