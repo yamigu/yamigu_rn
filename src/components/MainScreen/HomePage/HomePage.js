@@ -529,6 +529,7 @@ const HomePage = ({navigation, screenProps}) => {
     if (loading || Moment.now() - lastTime < 1000) return;
     setLastTime(Moment.now());
     console.log('***jsuer');
+
     const userValue = await AsyncStorage.getItem('userValue');
     const jUserValue = JSON.parse(userValue);
     // console.log(jUserValue);
@@ -563,26 +564,26 @@ const HomePage = ({navigation, screenProps}) => {
                 // console.log('came true');
                 logCallback('match request', setLoading(false));
                 setMatchRequested(false);
+                // setMemberItemNo(0);
+                // setMemberMainSelected(true);
+                // let tmselected = [false, false, false];
+                // setMemberSelected(tmselected);
 
-                setMemberItemNo(0);
-                setMemberMainSelected(true);
-                let tmselected = [false, false, false];
-                setMemberSelected(tmselected);
-
-                setDateItemNo(0);
-                setDateMainSelected(true);
-                let tdselected = [
-                  false,
-                  false,
-                  false,
-                  false,
-                  false,
-                  false,
-                  false,
-                  false,
-                ];
-                setDateSelected(tdselected);
-
+                // setDateItemNo(0);
+                // setDateMainSelected(true);
+                // let tdselected = [
+                //   false,
+                //   false,
+                //   false,
+                //   false,
+                //   false,
+                //   false,
+                //   false,
+                //   false,
+                // ];
+                // setDateSelected(tdselected);
+                setMemberText(onMemText);
+                setDateText(onDateText);
                 //이미 매칭중인데 누르면 취소니까
                 setLoading(true);
                 axios
