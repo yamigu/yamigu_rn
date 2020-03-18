@@ -131,8 +131,8 @@ android {
         applicationId "com.yamigu.yamigu_app"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 44
-        versionName "2.0.15"
+        versionCode 45
+        versionName "2.0.16"
     }
     splits {
         abi {

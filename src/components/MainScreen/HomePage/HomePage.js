@@ -29,7 +29,7 @@ import TouchableByPlatform from '~/components/common/TouchableByPlatform';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 import MultiSlider from './MultiSlider';
 import CustomMarker from './CustomMarker';
-import Moment from 'moment';
+import Moment from 'moment-timezone';
 import 'moment/locale/ko';
 import Spinner from 'react-native-loading-spinner-overlay';
 import axios from 'axios';
@@ -42,7 +42,8 @@ import Foundation from 'react-native-vector-icons/Foundation';
 import {NavigationActions, StackActions} from 'react-navigation';
 import '~/config';
 // import CustomLabel from './CustomLabel';
-
+Moment.locale('ko');
+Moment.tz.setDefault('Asia/Seoul');
 const dw = Dimensions.get('window').width;
 const dh = Dimensions.get('window').height;
 
@@ -260,29 +261,29 @@ const HomePage = ({navigation, screenProps}) => {
     listenForOpenIOS();
   }, [screenProps]);
   useEffect(() => {
-    const today = new Date();
+    const today = Moment();
     setNowTime(today);
 
     const wow = [
-      Moment(today)
+      Moment()
         .add(1, 'days')
         .format('MM/DD (ddd)'),
-      Moment(today)
+      Moment()
         .add(2, 'days')
         .format('MM/DD (ddd)'),
-      Moment(today)
+      Moment()
         .add(3, 'days')
         .format('MM/DD (ddd)'),
-      Moment(today)
+      Moment()
         .add(4, 'days')
         .format('MM/DD (ddd)'),
-      Moment(today)
+      Moment()
         .add(5, 'days')
         .format('MM/DD (ddd)'),
-      Moment(today)
+      Moment()
         .add(6, 'days')
         .format('MM/DD (ddd)'),
-      Moment(today)
+      Moment()
         .add(7, 'days')
         .format('MM/DD (ddd)'),
       '금요일',
@@ -392,44 +393,47 @@ const HomePage = ({navigation, screenProps}) => {
           .get(global.config.api_host + 'core/match_request/')
           .then(result => {
             // console.log('homepage useEffect match_request');
-            // console.log(result.data);
+            console.log(result.data);
             if (result.data === 'no match request') {
               setMatchRequested(false);
               // console.log('hehe');
             } else {
               setMatchRequested(true);
               // console.log(result.data);
-
               // result.data.personnel_select 처리 후 memberSelected에 넣기, memberText설정
               let tmpMemInt = result.data.personnel_selected;
-              let tmpMemSelected = [false, false, false, false];
-              for (let i = 0; i < 4; i++) {
-                tmpMemSelected[i] = Math.floor(tmpMemInt % 2);
-                tmpMemInt /= 2;
-              }
-              setMemberMainSelected(tmpMemSelected[0]);
-              setMemberSelected(tmpMemSelected.slice(1, 3));
-              // console.log(tmpMemSelected);
-              // setText when ongoing
+              let tmpMemSelected = [false, false, false];
               let tmpMemText = '';
-              if (
-                tmpMemSelected[0] === 1 ||
-                result.data.personnel_selected === 0
-              )
-                tmpMemText = '인원 상관 없음  ';
-              else {
+              if (tmpMemInt === 0) {
+                setMemberMainSelected(true);
+                tmpMemText = '인원 상관 없음';
+              } else {
+                console.log(tmpMemInt);
+                for (let i = 0; i < 3; i++) {
+                  tmpMemSelected[i] = ((tmpMemInt >> i) & 1) === 1;
+                }
+                setMemberMainSelected(false);
+                let count = 0;
                 tmpMemSelected.map((item, index) => {
-                  if (tmpMemSelected[index] === 1) {
-                    tmpMemText = tmpMemText + memberList[index - 1] + ', ';
+                  if (item) {
+                    if (count > 0) {
+                      tmpMemText = tmpMemText + ', ';
+                    }
+                    tmpMemText = tmpMemText + memberList[index];
+                    count++;
                   }
-                  console.log(memberList);
+                  // console.log(dateList);
                 });
-                tmpMemText = tmpMemText.substring(0, tmpMemText.length - 2);
+                tmpMemText = tmpMemText.substring(0, tmpMemText.length);
                 if (tmpMemText.length > 20) {
                   tmpMemText = tmpMemText.substring(0, 20);
                   tmpMemText = tmpMemText + ' ...';
                 }
               }
+              setMemberSelected(tmpMemSelected);
+              console.log(tmpMemSelected);
+              // setText when ongoing
+              console.log(tmpMemText);
               setOnMemText(tmpMemText);
               // console.log(tmpMemText);
 
@@ -447,30 +451,67 @@ const HomePage = ({navigation, screenProps}) => {
                 false,
               ];
               // console.log(tmpDateInt);
-              for (let i = 0; i < 9; i++) {
-                tmpDateSelected[i] = Math.floor(tmpDateInt % 2);
-                tmpDateInt /= 2;
-              }
-              setDateMainSelected(tmpDateSelected[0]);
-              setDateSelected(tmpDateSelected.slice(1, 8));
-              // console.log(tmpDateSelected);
-              //setText when ongoing
+              //   for (let i = 0; i < 9; i++) {
+              //     tmpDateSelected[i] = Math.floor(tmpDateInt % 2);
+              //     tmpDateInt /= 2;
+              //   }
+              const selected_friday = (tmpDateInt & 128) >> 7 === 1;
+              const selected_saturday = (tmpDateInt & 256) >> 8 === 1;
+              const no_matter = tmpDateInt === 0;
               let tmpDateText = '';
-              if (tmpDateSelected[0] === 1 || result.data.date_selected === 0)
-                tmpDateText = '날짜 상관 없음  ';
-              else {
+              if (no_matter) {
+                setDateMainSelected(true);
+                tmpDateText = '날짜 상관 없음';
+              } else {
+                if (selected_friday) {
+                  tmpDateSelected[7] = true;
+                  tmpDateInt -= 128;
+                }
+                if (selected_saturday) {
+                  tmpDateSelected[8] = true;
+                  tmpDateInt -= 256;
+                }
+
+                const requested_on = Moment(result.data.requested_on);
+                const days_diff = -requested_on.diff(Moment(), 'days');
+                console.log(days_diff);
+                tmpDateInt = tmpDateInt >> days_diff;
+                for (let i = 0; i < 7; i++) {
+                  tmpDateSelected[i] = ((tmpDateInt >> i) & 1) === 1;
+                }
+                console.log(tmpDateSelected);
+                setDateSelected(tmpDateSelected);
+                let count = 0;
                 tmpDateSelected.map((item, index) => {
-                  if (tmpDateSelected[index] === 1) {
-                    tmpDateText = tmpDateText + wow[index - 1] + ', ';
+                  if (item) {
+                    if (count > 0) {
+                      tmpDateText = tmpDateText + ', ';
+                    }
+                    tmpDateText = tmpDateText + wow[index];
+                    count++;
                   }
                   // console.log(dateList);
                 });
-                tmpDateText = tmpDateText.substring(0, tmpDateText.length - 2);
                 if (tmpDateText.length > 20) {
                   tmpDateText = tmpDateText.substring(0, 20);
                   tmpDateText = tmpDateText + ' ...';
                 }
               }
+              // console.log(tmpDateSelected);
+              //setText when ongoing
+              //   else {
+              //     tmpDateSelected.map((item, index) => {
+              //       if (tmpDateSelected[index] === 1) {
+              //         tmpDateText = tmpDateText + wow[index - 1] + ', ';
+              //       }
+              //       // console.log(dateList);
+              //     });
+              //     tmpDateText = tmpDateText.substring(0, tmpDateText.length - 2);
+              //     if (tmpDateText.length > 20) {
+              //       tmpDateText = tmpDateText.substring(0, 20);
+              //       tmpDateText = tmpDateText + ' ...';
+              //     }
+              //   }
               setOnDateText(tmpDateText);
               // console.log(tmpDateText);
 
@@ -601,7 +642,7 @@ const HomePage = ({navigation, screenProps}) => {
             } else {
               memberSelected.map((item, index) => {
                 if (item === true) {
-                  memInt += Math.pow(2, index + 1);
+                  memInt += Math.pow(2, index);
                   tmpMemText = tmpMemText + memberList[index] + ', ';
                 }
               });
@@ -621,10 +662,11 @@ const HomePage = ({navigation, screenProps}) => {
             } else {
               dateSelected.map((item, index) => {
                 if (item === true) {
-                  dateInt += Math.pow(2, index + 1);
+                  dateInt += Math.pow(2, index);
                   tmpDateText = tmpDateText + dateList[index] + ', ';
                 }
               });
+              console.log(dateInt);
             }
             tmpDateText = tmpDateText.substring(0, tmpDateText.length - 2);
             if (tmpDateText.length > 20) {
@@ -636,6 +678,7 @@ const HomePage = ({navigation, screenProps}) => {
             let min_age = multiSliderValue[0];
             let max_age = multiSliderValue[1];
             // console.log(memInt);
+
             setLoading(true);
             axios
               .post(global.config.api_host + 'core/match_request/', {
@@ -1150,7 +1193,7 @@ const HomePage = ({navigation, screenProps}) => {
                   </Button>
                 </View>
 
-                <View name="인원선택list" style={styles.itemList}>
+                <View name="날짜선택list" style={styles.itemList}>
                   <Button
                     onPress={() => {
                       {
@@ -1158,6 +1201,7 @@ const HomePage = ({navigation, screenProps}) => {
                           setDateMainSelected(!dateMainSelected);
                           setDateItemNo(0);
                           setDateSelected([
+                            false,
                             false,
                             false,
                             false,
@@ -1204,8 +1248,11 @@ const HomePage = ({navigation, screenProps}) => {
                           onPress={() => {
                             let tmpNo = dateItemNo;
                             let tmp;
-                            console.log(dateItemNo);
-                            console.log(tmpNo);
+                            if (dateMainSelected === true) {
+                              setDateMainSelected(!dateMainSelected);
+                              setDateItemNo(0);
+                              tmpNo = 0;
+                            }
                             if (dateSelected[index] === false) {
                               setDateItemNo(tmpNo + 1);
                               if (tmpNo + 1 === 1) {

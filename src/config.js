@@ -1,5 +1,5 @@
 module.exports = global.config = {
-  app_version: '2.0.15',
+  app_version: '2.0.16',
   api_host: 'https://daepo.pe.kr/',
   user_info_const: {
     TOKEN: 0,

@@ -11,7 +11,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 Moment.lang('kr');
 
 const iso_to_string = time => {
-  if (Moment(time).diff(Moment(new Date()), 'date') > 0) {
+  if (Moment(time).diff(Moment(), 'days') > 0) {
     return Moment(time).format('M월 D일');
   }
   return Moment(time).format('a h:mm');
@@ -144,7 +144,7 @@ const ChattingPreview = ({
                 ? Moment(parseInt(lastMessage.time)).format('M월 DD일')
                 : Moment(parseInt(lastMessage.time)).format('a h:mm')
               : iso_to_string(created_at)} */}
-            {Moment(parseInt(lastMessage.time)).diff(Moment.now(), 'day') > 0
+            {Moment(parseInt(lastMessage.time)).diff(Moment(), 'days') > 0
               ? Moment(parseInt(lastMessage.time)).format('M월 DD일')
               : Moment(parseInt(lastMessage.time)).format('a h:mm')}
           </CustomTextRegular>
