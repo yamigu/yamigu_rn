@@ -206,13 +206,11 @@ const ProfileDetailScreen = ({navigation}) => {
             initialPage={viewpagerIndex}
             style={styles.viewPager}
             indicator={_renderDotIndicator()}>
-            {feedList.map(item => {
+            {feedList.map((item, index) => {
               return (
-                <Image
-                  style={styles.viewPage}
-                  key="1"
-                  source={{uri: item.img_src}}
-                />
+                <View style={styles.viewPageWrapper} key={index}>
+                  <Image style={styles.viewPage} source={{uri: item.img_src}} />
+                </View>
               );
             })}
           </IndicatorViewPager>
@@ -452,8 +450,8 @@ const ProfileDetailScreen = ({navigation}) => {
                 </CustomTextRegular>
               </View>
             ) : null}
-            {friendList.map(friend => (
-              <ListItem noIndent style={styles.friendsListItem}>
+            {friendList.map((friend, index) => (
+              <ListItem noIndent style={styles.friendsListItem} key={index}>
                 <Body>
                   <ProfileCard
                     size={50}
@@ -537,7 +535,12 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
   },
+  viewPageWrapper: {
+    flex: 1,
+  },
   viewPage: {
+    width: '100%',
+    height: '100%',
     resizeMode: 'cover',
   },
   viewPager: {
