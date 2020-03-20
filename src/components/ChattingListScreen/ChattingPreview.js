@@ -136,7 +136,7 @@ const ChattingPreview = ({
       <Body style={styles.chatPreviewBody}>
         <View style={styles.chatPreviewBodyTextView}>
           <CustomTextMedium size={16} color={palette.black}>
-            ㅇ{partner.nickname}
+            {partner.nickname}
           </CustomTextMedium>
           <CustomTextRegular size={12} color={palette.gray}>
             {/* {approved && lastMessage !== undefined
