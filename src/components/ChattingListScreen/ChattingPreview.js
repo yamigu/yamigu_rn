@@ -19,6 +19,7 @@ const iso_to_string = time => {
 const ChattingPreview = ({
   style,
   label,
+  created_at,
   navigation,
   hasVerified,
   uid,
@@ -26,14 +27,19 @@ const ChattingPreview = ({
   approved,
   cancelled,
   roomId,
+  greet,
 }) => {
   const [lastMessage, setLastMessage] = useState({
     message: '',
-    time: 123123123123,
+    time: 0,
   });
   const [isNew, setIsNew] = useState(false);
   useEffect(() => {
     let focused = true;
+    setLastMessage({
+      message: greet,
+      time: Moment(created_at).format('x'),
+    });
     const focusListener = navigation.addListener('didFocus', () => {
       focused = true;
     });
@@ -45,16 +51,20 @@ const ChattingPreview = ({
       .ref('message/' + roomId)
       .limitToLast(1)
       .on('child_added', result => {
-        setLastMessage(result.val());
+        if (
+          result.val().idSender === partner.uid ||
+          result.val().idSender === uid
+        ) {
+          setLastMessage(result.val());
+        }
         if (focused) {
-          console.log('newMessage!!');
           firebase
             .database()
             .ref('user/' + uid + '/chat/' + roomId)
             .once('child_added', unread => {
-              console.log('unread message?');
               console.log(unread.val());
               if (unread.val() === true) setIsNew(true);
+              else setIsNew(false);
             });
         }
       });
@@ -126,13 +136,15 @@ const ChattingPreview = ({
       <Body style={styles.chatPreviewBody}>
         <View style={styles.chatPreviewBodyTextView}>
           <CustomTextMedium size={16} color={palette.black}>
-            {partner.nickname}
+            ㅇ{partner.nickname}
           </CustomTextMedium>
           <CustomTextRegular size={12} color={palette.gray}>
             {/* {approved && lastMessage !== undefined
               ? lastMessage.message
               : '미팅 신청이 들어왔어요!'} */}
-            {lastMessage.message}
+            {lastMessage.message.length <= 20
+              ? lastMessage.message
+              : lastMessage.message.slice(0, 20) + '...'}
           </CustomTextRegular>
         </View>
       </Body>

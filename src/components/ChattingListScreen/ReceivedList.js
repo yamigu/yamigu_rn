@@ -5,7 +5,7 @@ import {CustomTextMedium, CustomTextBold} from '../common/CustomText';
 import {ListItem, List, Badge} from 'native-base';
 import ChattingPreview from './ChattingPreview';
 
-const ReceivedList = ({style, navigation, chatList}) => (
+const ReceivedList = ({style, navigation, chatList, hasVerified, uid}) => (
   <List style={[styles.list, style]}>
     {chatList.length > 0 ? (
       <ListItem itemDivider style={styles.listItemHeader}>
@@ -21,9 +21,21 @@ const ReceivedList = ({style, navigation, chatList}) => (
         </View>
       </ListItem>
     ) : null}
-    {chatList.map(item => {
+    {chatList.map((item, index) => {
       return (
-        <ChattingPreview style={{marginVertical: 9}} navigation={navigation} />
+        <ChattingPreview
+          key={index}
+          hasVerified={hasVerified}
+          style={{marginVertical: 9}}
+          navigation={navigation}
+          uid={uid}
+          created_at={item.created_at}
+          approved={item.approved_on !== null ? true : false}
+          cancelled={item.canceled_on !== null ? true : false}
+          roomId={item.id}
+          partner={item.partner}
+          greet={item.greet}
+        />
       );
     })}
   </List>

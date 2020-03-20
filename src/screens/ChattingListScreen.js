@@ -149,7 +149,9 @@ const ChattingListScreen = ({navigation}) => {
         textContent={'채팅 목록 불러오는중...'}
       />
       <ReceivedList
+        uid={userInfo[global.config.user_info_const.UID]}
         hasVerified={hasVerified}
+        style={{marginTop: 12}}
         navigation={navigation}
         chatList={receivedList}
       />

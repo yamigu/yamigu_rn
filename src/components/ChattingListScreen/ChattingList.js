@@ -15,7 +15,6 @@ const ChattingList = ({style, navigation, chatList, hasVerified, uid}) => (
       </View>
     </ListItem>
     {chatList.map((item, index) => {
-      console.log(item);
       return (
         <ChattingPreview
           key={index}
@@ -28,6 +27,7 @@ const ChattingList = ({style, navigation, chatList, hasVerified, uid}) => (
           cancelled={item.canceled_on !== null ? true : false}
           roomId={item.id}
           partner={item.partner}
+          greet={item.greet}
         />
       );
     })}

@@ -17,6 +17,8 @@ import TouchableByPlatform from '~/components/common/TouchableByPlatform';
 import ReceivedItem from '~/components/ChattingScreen/ReceivedItem';
 import MoreModal from '~/components/ChattingScreen/MoreModal';
 import SentItem from '~/components/ChattingScreen/SentItem';
+import ManagerItem from '~/components/ChattingScreen/ManagerItem';
+
 import {HeaderBackButton} from 'react-navigation-stack';
 import {SafeAreaView} from 'react-navigation';
 import {createRef} from 'react';
@@ -365,6 +367,19 @@ const ChattingScreen = ({navigation}) => {
                   return (
                     <SentItem key={index} text={item.message} time={fortime} />
                   );
+                } else if (item.idSender === '1158459711') {
+                  return (
+                    <View key={index}>
+                      <ManagerItem text={item.message} time={fortime} />
+                      <View style={styles.cancelledBoxWrapper}>
+                        <View style={styles.cancelledBox}>
+                          <CustomTextRegular size={12} color={palette.black}>
+                            야미구님이 나갔습니다.
+                          </CustomTextRegular>
+                        </View>
+                      </View>
+                    </View>
+                  );
                 } else
                   return (
                     <ReceivedItem
@@ -387,7 +402,7 @@ const ChattingScreen = ({navigation}) => {
             <View style={styles.cancelledBoxWrapper}>
               <View style={styles.cancelledBox}>
                 <CustomTextRegular size={12} color={palette.black}>
-                  상대방이 채팅방을 나갔습니다.
+                  {partnerInfo.nickname}님이 채팅방을 나갔습니다.
                 </CustomTextRegular>
               </View>
             </View>
@@ -541,7 +556,7 @@ const styles = StyleSheet.create({
     padding: 0,
     margin: 0,
     flex: 1,
-    paddingTop: 15,
+    paddingTop: 0,
   },
   container: {
     flexDirection: 'column',

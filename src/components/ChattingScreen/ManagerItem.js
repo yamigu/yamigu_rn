@@ -6,9 +6,7 @@ import palette from '~/lib/styles/palette';
 import {CustomTextMedium, CustomTextRegular} from '../common/CustomText';
 
 const deviceWidth = Dimensions.get('window').width;
-const ManagerItem = ({manager, nickname, text, time, uid}) => {
-  // uid 로 avata 가져와서 저장해놓기
-
+const ManagerItem = ({text, time}) => {
   return (
     <ListItem avatar style={styles.listItem}>
       <Left style={styles.left}>
@@ -29,21 +27,15 @@ const ManagerItem = ({manager, nickname, text, time, uid}) => {
             style={styles.alignLeft}>
             야미구
           </CustomTextRegular>
-          <View
-            style={
-              manager
-                ? [styles.chattingBox, {backgroundColor: '#FFF7F0'}]
-                : styles.chattingBox
-            }>
+          <View style={[styles.chattingBox, {backgroundColor: '#FFF7F0'}]}>
             <CustomTextRegular size={14} color={palette.black}>
-              안녕하세요, 야미구 매칭 축하드려요! 두 분과 친구들과 만날 약속을
-              빨리 잡아 즐거운 미팅 하시길 바래요!
+              {text}
             </CustomTextRegular>
           </View>
         </View>
         <View style={{justifyContent: 'flex-end'}}>
           <CustomTextRegular color={palette.gray} size={10}>
-            오후 5:13
+            {time}
           </CustomTextRegular>
         </View>
       </Body>
@@ -53,7 +45,8 @@ const ManagerItem = ({manager, nickname, text, time, uid}) => {
 const styles = StyleSheet.create({
   listItem: {
     marginLeft: 15,
-    marginTop: 15,
+    marginBottom: 15,
+    marginTop: 0,
     paddingTop: 0,
     paddingLeft: 0,
     paddingBottom: 0,
