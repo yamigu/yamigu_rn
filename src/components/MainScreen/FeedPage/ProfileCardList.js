@@ -21,7 +21,7 @@ const ProfileCardList = ({
           <ProfileCardFeed
             loading={item.loading}
             style={{marginTop: 0}}
-            key={index}
+            key={item.profile.uid}
             location={item.profile.location}
             height={item.profile.height}
             verified={item.profile.verified}

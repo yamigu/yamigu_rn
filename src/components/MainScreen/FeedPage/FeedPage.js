@@ -15,9 +15,11 @@ import MyFeedManage from './MyFeedManage';
 import {Content, Container} from 'native-base';
 import axios from 'axios';
 import AsyncStorage from '@react-native-community/async-storage';
+import Moment from 'moment-timezone';
 
 import '~/config';
-
+Moment.locale('ko');
+Moment.tz.setDefault('Asia/Seoul');
 const FeedPage = props => {
   const [myFeedManageProp, setMyFeedManageProp] = useState([]);
   const [myFeed, setMyFeed] = useState([]);
@@ -28,9 +30,13 @@ const FeedPage = props => {
   const [hasProfile, setHasProfile] = useState(false);
   const [likeNum, setLikeNum] = useState(0);
   const [page, setPage] = useState(null);
+  const [lastTime, setLastTime] = useState(0);
+
   const _scroll = useRef();
 
   const retrieveFeeds = hasProfile => {
+    if (Moment.now() - lastTime < 1000) return;
+    setLastTime(Moment.now());
     return new Promise((resolve, reject) => {
       //setProfileCardProp(feeds);
       axios
