@@ -49,13 +49,13 @@ const ChattingPreview = ({
     firebase
       .database()
       .ref('message/' + roomId)
-      .limitToLast(1)
+      .limitToLast(2)
       .on('child_added', result => {
         if (
           result.val().idSender === partner.uid ||
           result.val().idSender === uid
         ) {
-          setLastMessage(result.val());
+          if (result.val().message !== '') setLastMessage(result.val());
         }
         if (focused) {
           firebase

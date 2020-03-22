@@ -173,6 +173,20 @@ const ChattingScreen = ({navigation}) => {
         action: 'CANCEL',
       })
       .then(() => {
+        const key = firebase
+          .database()
+          .ref('message/' + roomId)
+          .push().key;
+        firebase
+          .database()
+          .ref('message/' + roomId)
+          .child(key)
+          .update({
+            key: key,
+            idSender: userInfo[global.config.user_info_const.UID],
+            message: '',
+            time: Moment.now(),
+          });
         navigation.goBack();
       });
   };
@@ -247,11 +261,9 @@ const ChattingScreen = ({navigation}) => {
     setPartnerInfo(navigation.getParam('partner', ''));
     setRoomId(room);
     retrieveInfo(room);
-    // navigation.setParams({
-    //   partner: navigation.getParam('partner', ''),
-    //   approved: navigation.getParam('approved', false),
-    //   requestDecline: () => requestDecline(room),
-    // });
+    navigation.setParams({
+      requestDecline: () => requestDecline(room),
+    });
     // setApprovoed(navigation.getParam('approved', false));
     // setCancelled(navigation.getParam('cancelled', false));
     global_messageList.length = 0; // 배열 초기화
@@ -273,14 +285,17 @@ const ChattingScreen = ({navigation}) => {
           .ref('message/' + room)
           .on('child_added', result => {
             if (!focus) return;
+
             global_messageList.push(result.val());
             if (
               lastMessage !== undefined &&
               lastMessage.time > result.val().time
             )
               return;
+            if (result.val().message === '') {
+              retrieveInfo(room);
+            }
             const unique = global_messageList.filter((item, i) => {
-              retrieveInfo();
               return (
                 global_messageList.findIndex((item2, j) => {
                   return item.key === item2.key;
@@ -367,7 +382,9 @@ const ChattingScreen = ({navigation}) => {
                   Moment(parseInt(item.time)).diff(Moment.now(), 'day') > 0
                     ? Moment(parseInt(item.time)).format('M월 DD일 a h:mm')
                     : Moment(parseInt(item.time)).format('a h:mm');
-                if (
+                if (item.message === '') {
+                  return null;
+                } else if (
                   item.idSender === userInfo[global.config.user_info_const.UID]
                 ) {
                   return (
@@ -404,6 +421,7 @@ const ChattingScreen = ({navigation}) => {
                           ? false
                           : true
                       }
+                      style={index === 0 ? {marginTop: 16} : null}
                     />
                   );
               })}

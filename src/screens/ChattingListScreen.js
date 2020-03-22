@@ -31,6 +31,7 @@ const ChattingListScreen = ({navigation}) => {
         Alert.alert('로그인 및 회원가입이 필요한 서비스입니다.', '', [
           {
             onPress: () => {
+              setLoading(false);
               navigation.pop();
               navigation.navigate('Login');
             },
@@ -46,6 +47,7 @@ const ChattingListScreen = ({navigation}) => {
         Alert.alert('로그인 및 회원가입이 필요한 서비스입니다.', '', [
           {
             onPress: () => {
+              setLoading(false);
               navigation.pop();
               navigation.navigate('Signup');
             },
@@ -61,11 +63,13 @@ const ChattingListScreen = ({navigation}) => {
         Alert.alert('소속인증이 필요한 서비스입니다.', '', [
           {
             onPress: () => {
+              setLoading(false);
               navigation.pop();
               navigation.navigate('IV', {needBtn: true});
             },
           },
         ]);
+        resolve(false);
       }
       setHasVeirifed(jUserValue[global.config.user_info_const.VERIFIED]);
       resolve(jUserValue);
@@ -77,7 +81,6 @@ const ChattingListScreen = ({navigation}) => {
       console.log('getUserval');
       const result = await getUserVal();
       if (!result) {
-        setLoading(false);
         return;
       }
       const result2 = await retrieveChatList(result);
