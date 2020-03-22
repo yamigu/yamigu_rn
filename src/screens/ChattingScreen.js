@@ -227,11 +227,16 @@ const ChattingScreen = ({navigation}) => {
       global.config.api_host + 'core/chat/detail/' + room + '/',
     );
     const approved_data = result.data.approved_on;
+    const canceled_data = result.data.canceled_on;
+
     if (approved_data !== null) {
       setApprovoed(true);
       navigation.setParams({
         approved: true,
       });
+    }
+    if (canceled_data !== null) {
+      setCancelled(true);
     }
   };
   useEffect(() => {
@@ -275,6 +280,7 @@ const ChattingScreen = ({navigation}) => {
             )
               return;
             const unique = global_messageList.filter((item, i) => {
+              retrieveInfo();
               return (
                 global_messageList.findIndex((item2, j) => {
                   return item.key === item2.key;
@@ -365,7 +371,12 @@ const ChattingScreen = ({navigation}) => {
                   item.idSender === userInfo[global.config.user_info_const.UID]
                 ) {
                   return (
-                    <SentItem key={index} text={item.message} time={fortime} />
+                    <SentItem
+                      key={index}
+                      text={item.message}
+                      time={fortime}
+                      style={index === 0 ? {marginTop: 16} : null}
+                    />
                   );
                 } else if (item.idSender === '1158459711') {
                   return (

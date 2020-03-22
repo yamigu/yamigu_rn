@@ -7,9 +7,9 @@ import {CustomTextMedium, CustomTextRegular} from '../common/CustomText';
 
 const deviceWidth = Dimensions.get('window').width;
 
-const ReceivedItem = ({nickname, text, time, uid}) => {
+const ReceivedItem = ({nickname, text, time, uid, style}) => {
   return (
-    <ListItem style={styles.listItem}>
+    <ListItem style={[styles.listItem, style]}>
       <Body style={styles.bodySent}>
         <View style={styles.chattingBox}>
           <CustomTextRegular color={palette.black} size={14}>

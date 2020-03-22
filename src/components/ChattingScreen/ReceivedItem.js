@@ -15,11 +15,12 @@ const ReceivedItem = ({
   time,
   partnerInfo,
   hasProfile,
+  style,
 }) => {
   // uid 로 avata 가져와서 저장해놓기
 
   return (
-    <ListItem avatar style={styles.listItem}>
+    <ListItem avatar style={[styles.listItem, style]}>
       <Left style={styles.left}>
         <TouchableByPlatform
           onPress={() => {
