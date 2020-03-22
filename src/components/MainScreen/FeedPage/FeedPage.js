@@ -35,8 +35,6 @@ const FeedPage = props => {
   const _scroll = useRef();
 
   const retrieveFeeds = hasProfile => {
-    if (Moment.now() - lastTime < 1000) return;
-    setLastTime(Moment.now());
     return new Promise((resolve, reject) => {
       //setProfileCardProp(feeds);
       axios
@@ -46,6 +44,7 @@ const FeedPage = props => {
           console.log(result.data.results);
           let data = [];
           let count = 0;
+          console.log(result.data.next);
           setPage(result.data.next);
           result.data.results.map((item, index) => {
             if (item.feed_list.length === 0) {
@@ -53,6 +52,7 @@ const FeedPage = props => {
               if (hasProfile === false && count > 1) return;
               data[count] = item;
               count++;
+
               setProfileCardProp(data);
             }
           });
@@ -77,7 +77,14 @@ const FeedPage = props => {
             console.log(item);
             data.push(item);
           });
-          setProfileCardProp(data);
+          const unique = data.filter((item, i) => {
+            return (
+              data.findIndex((item2, j) => {
+                return item.profile.uid === item2.profile.uid;
+              }) === i
+            );
+          });
+          setProfileCardProp(unique);
 
           resolve(true);
         })
@@ -88,6 +95,8 @@ const FeedPage = props => {
     });
   };
   const retrieveBothLikes = () => {
+    if (Moment.now() - lastTime < 1000) return;
+    setLastTime(Moment.now());
     return new Promise((resolve, reject) => {
       axios
         .get(global.config.api_host + 'core/both_like/')
