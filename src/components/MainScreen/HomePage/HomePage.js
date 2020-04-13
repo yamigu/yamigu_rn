@@ -642,7 +642,7 @@ const HomePage = ({navigation, screenProps}) => {
               memInt = 0;
             } else {
               memberSelected.map((item, index) => {
-                if (item === true) {
+                if (item === true && index) {
                   memInt += Math.pow(2, index);
                   tmpMemText = tmpMemText + memberList[index] + ', ';
                 }
@@ -662,12 +662,11 @@ const HomePage = ({navigation, screenProps}) => {
               dateInt = 0;
             } else {
               dateSelected.map((item, index) => {
-                if (item === true) {
+                if (item === true && index) {
                   dateInt += Math.pow(2, index);
                   tmpDateText = tmpDateText + dateList[index] + ', ';
                 }
               });
-              console.log(dateInt);
             }
             tmpDateText = tmpDateText.substring(0, tmpDateText.length - 2);
             if (tmpDateText.length > 20) {
@@ -736,7 +735,7 @@ const HomePage = ({navigation, screenProps}) => {
           } else {
             memberSelected.map((item, index) => {
               if (item === true) {
-                memInt += Math.pow(2, index + 1);
+                memInt += Math.pow(2, index);
                 tmpMemText = tmpMemText + memberList[index] + ', ';
               }
             });
@@ -756,7 +755,7 @@ const HomePage = ({navigation, screenProps}) => {
           } else {
             dateSelected.map((item, index) => {
               if (item === true) {
-                dateInt += Math.pow(2, index + 1);
+                dateInt += Math.pow(2, index);
                 tmpDateText = tmpDateText + dateList[index] + ', ';
               }
             });
