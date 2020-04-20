@@ -25,7 +25,7 @@ const KakaoLoginButton = ({onPress}) => {
             fontWeight: 'bold',
             fontSize: 16,
           }}>
-          Kakao 로그인
+          Kakao로 로그인
         </Text>
       </TouchableOpacity>
     </View>

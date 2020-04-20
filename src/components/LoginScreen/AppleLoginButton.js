@@ -24,7 +24,7 @@ const AppleLoginButton = ({onPress}) => {
             fontWeight: 'bold',
             fontSize: 16,
           }}>
-          Apple 로그인
+          Apple로 로그인
         </Text>
       </TouchableOpacity>
     </View>
