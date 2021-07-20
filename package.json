@@ -29,7 +29,7 @@
     "native-base": "2.13.8",
     "react": "16.9.0",
     "react-moment": "0.9.7",
-    "react-native": "^0.61.5",
+    "react-native": "^0.62.3",
     "react-native-MultiSlider": "0.2.1",
     "react-native-action-button": "^2.8.5",
     "react-native-best-viewpager": "^1.0.2",
